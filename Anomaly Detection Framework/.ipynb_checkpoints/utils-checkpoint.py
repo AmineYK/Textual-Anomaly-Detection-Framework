@@ -36,6 +36,10 @@ def import_dataset(name="20NewsGroups", full_dataset_=False, batch_size=64):
 
         train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
         test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)
+        
+        if full_dataset_:
+            full_dataset = concatenate_datasets([dataset['train'], dataset['test']])
+            return DataLoader(full_dataset, batch_size=batch_size, shuffle=True)
 
         return train_dataloader, test_dataloader
 
@@ -53,6 +57,10 @@ def import_dataset(name="20NewsGroups", full_dataset_=False, batch_size=64):
 
         train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
         test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)
+        
+        if full_dataset_:
+            full_dataset = concatenate_datasets([dataset['train'], dataset['test']])
+            return DataLoader(full_dataset, batch_size=batch_size, shuffle=True)
 
         return train_dataloader, test_dataloader
 
@@ -63,6 +71,10 @@ def import_dataset(name="20NewsGroups", full_dataset_=False, batch_size=64):
 
         train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
         test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)
+        
+        if full_dataset_:
+            full_dataset = concatenate_datasets([dataset['train'], dataset['test']])
+            return DataLoader(full_dataset, batch_size=batch_size, shuffle=True)
 
         return train_dataloader, test_dataloader
    
