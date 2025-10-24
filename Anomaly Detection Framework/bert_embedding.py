@@ -1,23 +1,47 @@
 import torch
 from transformers import AutoTokenizer, AutoModel
-from typing import Dict, Any
 from torch.utils.data import DataLoader
 import numpy as np
 
 
-# BERT Enmbedding Extractor Class
-#--------------------------------
 
-class BERTEmbeddingExtractor:
+class EmbeddingEncoder:
+    def __init__(self, model=None, model_name=None, type_emd='glove', device='cuda'):
+        
+        if model is not None and type_emd == 'glove':
+            self.model = GloVeEmbeddingEncoder(model, device)
+            
+        elif model is not None and type_emd == 'fasttext':
+            self.model = FastTextEmbeddingEncoder(model, device)
+            
+        elif model_name is not None:
+            self.model = BERTEmbeddingEncoder(model_name, device) 
+            
+        else : raise Exception ("'model' & 'model_name' are None type, at least one is requered")
+        
+        
+    def forward(self, dataloader):
+        
+        return self.model.forward(dataloader)
+
+
+class BERTEmbeddingEncoder:
     def __init__(self, model_name, device):
 
-        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = device
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModel.from_pretrained(model_name).to(self.device)
         self.model.eval()
+        
+    def forward(self, dataloader):
+        
+        def add_col(example, col_name, embedding):
+            example[col_name] = embedding
+            return example
 
-    def encode_batch(self, texts) -> Dict[str, Any]:
-      
+        dataset = dataloader.dataset
+        texts = dataset['text']
+        
         inputs = self.tokenizer(
             texts,
             padding=True,
@@ -31,34 +55,79 @@ class BERTEmbeddingExtractor:
 
         last_hidden = outputs.last_hidden_state  
         cls_emb = last_hidden[:, 0, :]           
-        mean_emb = last_hidden.mean(dim=1)       
-
+        mean_emb = last_hidden.mean(dim=1)   
         
-        return {
-            "CLS": cls_emb.cpu().numpy(),
-            "embedding": last_hidden.cpu().numpy(),
-            "embedding_mean": mean_emb.cpu().numpy()
-        }
-
-
-# Extract Embedding
-#------------------
-
-def extract_embeddings(dataset, extractor, batch_size = 32):
-
-    def process(batch):
-
-        emb = extractor.encode_batch(batch["text"])
+        dataset = dataset.map(add_col,fn_kwargs={"col_name": 'bert_cls', "embedding": cls_emb.cpu().numpy()} )
+        dataset = dataset.map(add_col,fn_kwargs={"col_name": 'bert_embedding', "embedding": last_hidden.cpu().numpy()} )
+        dataset = dataset.map(add_col,fn_kwargs={"col_name": 'bert_embedding_mean', "embedding": mean_emb.cpu().numpy()} )
         
-        # here it's a fusion of the dicts
-        batch.update(emb)
-      
-        return batch
-
-    return DataLoader(dataset.dataset.map(
-        process,
-        batched=True,
-        batch_size=batch_size
-    ), batch_size=batch_size, shuffle=True)  
+        return DataLoader(dataset, batch_size = dataloader.batch_size)
     
+    
+class GloVeEmbeddingEncoder:
+    def __init__(self, model, device):
+
+        self.device = device 
+        self.model = model
+        self.embedding_dim = self.model.vector_size
+        
+        
+    def forward(self, dataloader):
+        
+        def add_col(example, col_name, embedding):
+            example[col_name] = np.array(embedding)
+            return example
+        
+        dataset = dataloader.dataset
+        texts = dataset['text']
+        
+        vectors = []
+        for text in texts:
+            words = [w for w in text.split() if w in self.model.key_to_index]
+            if words:
+                emb = torch.tensor([self.model[w] for w in words]).mean(dim=0)
+            else:
+                emb = torch.zeros(self.embedding_dim)
+            vectors.append(emb.cpu().numpy())
+        
+        # dataset = dataset.map(add_col,fn_kwargs={"col_name": 'glove_embedding', "embedding": emb} )
+        # vectors = torch.stack(vectors).cpu().numpy()
+        dataset = dataset.add_column("glove_embedding",vectors) 
+
+        return DataLoader(dataset, batch_size = dataloader.batch_size)
+    
+    
+class FastTextEmbeddingEncoder:
+    def __init__(self, model, device):
+
+        self.device = device
+        self.model = model
+        self.embedding_dim = self.model.vector_size
+        
+        
+    def forward(self, dataloader):
+        
+        def add_col(example, col_name, embedding):
+            example[col_name] = embedding
+            return example
+        
+        dataset = dataloader.dataset
+        texts = dataset['text']
+        
+        vectors = []
+        for text in texts:
+            words = [w for w in text.split() if w in self.model.key_to_index]
+            if words:
+                emb = torch.tensor([self.model[w] for w in words]).mean(dim=0)
+            else:
+                emb = torch.zeros(self.embedding_dim)
+            vectors.append(emb.cpu().numpy())
+        
+        # vectors = torch.stack(vectors).cpu().numpy()
+        # dataset = dataset.map(add_col,fn_kwargs={"col_name": 'fasttext_embedding', "embedding": vectors} )
+        
+        dataset = dataset.add_column("fasttext_embedding",vectors) 
+
+        return DataLoader(dataset, batch_size = dataloader.batch_size)
+
      
