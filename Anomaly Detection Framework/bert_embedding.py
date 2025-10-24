@@ -2,6 +2,8 @@ import torch
 from transformers import AutoTokenizer, AutoModel
 from torch.utils.data import DataLoader
 import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+
 
 
 
@@ -13,16 +15,43 @@ class EmbeddingEncoder:
             
         elif model is not None and type_emd == 'fasttext':
             self.model = FastTextEmbeddingEncoder(model, device)
+                              
+        elif model is not None and type_emd == 'tfidf':
+            self.model = TFIDFEmbeddingEncoder(model) 
             
-        elif model_name is not None:
+        elif model_name is not None and type_emd == 'bert':
             self.model = BERTEmbeddingEncoder(model_name, device) 
-            
+      
         else : raise Exception ("'model' & 'model_name' are None type, at least one is requered")
         
         
     def forward(self, dataloader):
         
         return self.model.forward(dataloader)
+    
+    
+    
+class TFIDFEmbeddingEncoder:
+    def __init__(self, tfidf_vectorizer):
+        
+        self.vectorizer = tfidf_vectorizer
+        self.fitted = False
+
+    def forward(self, dataloader):
+
+        dataset = dataloader.dataset
+        texts = dataset['text']
+        
+        if not self.fitted:
+            vectors = self.vectorizer.fit_transform(texts)
+            self.fitted = True
+        else:
+            vectors = self.vectorizer.transform(texts)
+        
+        vectors = vectors.toarray()
+        dataset = dataset.add_column("tfidf_embedding", list(vectors))
+        
+        return DataLoader(dataset, batch_size=dataloader.batch_size)
 
 
 class BERTEmbeddingEncoder:
