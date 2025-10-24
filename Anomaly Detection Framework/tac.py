@@ -5,154 +5,77 @@ disable_progress_bar()
 import numpy as np
 from torch.utils.data import DataLoader
 
-# Filtring documents per class (20NewsGroups)
-#--------------------------------------------
 
-def get_documents_from_class(dataset, class_name="comp.graphics", compl=True, verbose=False):
+############################################
+############### ADD COLUMN #################
+############################################
 
-    tac = time.time()
-
-    subset_class = dataset.filter(lambda x: x["label_text"] == class_name)
-    if compl:
-        subset_compl = dataset.filter(lambda x: x["label_text"] != class_name)
-
-    tic = time.time()
-
-    if verbose:
-        print(f"Documents of '{class_name}' class extracted in {np.round(tic-tac,2)}s\n\n")
-
-    if compl: return subset_class, subset_compl
-    return subset_class
-
-
-def add_col(example,anomaly_class = 0):
-    
-    example["anomaly_label"] = anomaly_class
+def add_col(example, anomaly_class):
+    example["anomaly_class"] = anomaly_class
     return example
 
 
-# Textual Anomaly Contamination TAC (20NewsGroups)
-#-------------------------------------------------
+############################################
+################## TAC  ####################
+############################################
 
-# def textual_anomaly_contamination(dataset, inlier_topic, anomaly_type, nb_documents = 100, anomaly_rate = 0.1, batch_size=32, seed=42): 
-
-#     intlier_subset, anoamlie_subset = get_documents_from_class(dataset.dataset, inlier_topic, compl=True)
-
-#     # must verify that the number of document for this category >= nb_documents * (1 - anomaly_rate)
-#     assert intlier_subset.num_rows >= int(nb_documents * (1 - anomaly_rate)), f"There is not enough documents in the requested category ({inlier_topic}). Please reduce the number of documents to at least {intlier_subset.num_rows}"
-
-#     if anomaly_type == "independent":
-#         type_anomalie_subset = anoamlie_subset.filter(lambda x: x["label_text"].split(".")[0] != inlier_topic.split(".")[0])
-
-#     elif anomaly_type == "contexual":
-#         type_anomalie_subset = anoamlie_subset.filter(
-#     lambda x: (
-#         (x["label_text"].split(".")[0] == inlier_topic.split(".")[0]) and
-#         (x["label_text"].split(".")[1] != inlier_topic.split(".")[1])
-#       )
-#     ) 
-
-
-#     nb_anomaly_samples = int(nb_documents * anomaly_rate)
-#     nb_inlier_samples = nb_documents - nb_anomaly_samples
-
-#     # selecting indices 
-#     anom_indices = np.random.randint(0,type_anomalie_subset.num_rows,nb_anomaly_samples)
-#     final_anomaly_subset = type_anomalie_subset.select(anom_indices)
-#     final_anomaly_subset = final_anomaly_subset.map(add_col,fn_kwargs={"anomaly_class": 1} )
-
-
-#     inlier_indices = np.random.randint(0,intlier_subset.num_rows,nb_inlier_samples)
-#     final_inlier_subset = intlier_subset.select(inlier_indices)
-#     final_inlier_subset = final_inlier_subset.map(add_col,fn_kwargs={"anomaly_class": 0} )
-
-#     TAC_dataset = concatenate_datasets([final_inlier_subset, final_anomaly_subset]).shuffle(seed=seed)
-
-
-#     # verifications
-#     assert TAC_dataset.num_rows == nb_documents, "The right number of documents is not selected"
-#     assert TAC_dataset['anomaly_label'].count(1) == int(nb_documents * anomaly_rate), "The right number of anomaly documents is not selected"
-#     assert TAC_dataset['anomaly_label'].count(0) == nb_documents - int(nb_documents * anomaly_rate), "The right number of inlier documents is not selected"
-
-#     # in the inlier subset : there is no text with different 'inlier_topic' label
-#     assert (TAC_dataset.filter(lambda x: x['anomaly_label'] == 0).filter(lambda x: x['label_text'] != inlier_topic)).num_rows == 0, "There is document in the inlier subset with wrong label"
-
-#     if anomaly_type == "independent":
-#         assert (TAC_dataset.filter(lambda x: x['anomaly_label'] == 1)
-#     .filter(lambda x: x["label_text"].split(".")[0] == inlier_topic.split(".")[0])).num_rows == 0, "The independ anomalies are not well constructed"
-
-#     if anomaly_type == "contexual":
-#         assert (TAC_dataset.filter(lambda x: x['anomaly_label'] == 1)
-#     .filter(lambda x: (x["label_text"].split(".")[0] == inlier_topic.split(".")[0]) and
-#           (x["label_text"].split(".")[1] != inlier_topic.split(".")[1]))).num_rows == int(nb_documents * anomaly_rate), "The contexual anomalies are not well constructed"
-
-
-#     return DataLoader(TAC_dataset, batch_size=batch_size, shuffle=True)  
-
-
-
-def textual_anomaly_contamination(dataloader, dataset_name, inlier_topic, type_tac, batch_size=64):
+def textual_anomaly_contamination(dataloader, dataset_name, inlier_topic, type_tac, anomaly_rate=0.1, batch_size=64):
     
     dataset = dataloader.dataset
     
     if dataset_name == '20NewsGroups':
-        return textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac, batch_size)
+        return textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac, anomaly_rate, batch_size)
         
     if dataset_name == 'Reuters':
-        return textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac, batch_size)
+        return textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac, anomaly_rate, batch_size)
     
     if dataset_name == 'WOS':
-        return textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac, batch_size)
+        return textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac, anomaly_rate, batch_size)
     
     if dataset_name == 'DBpedia14':
-        return textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac, batch_size)
+        return textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac, anomaly_rate, batch_size)
         
     if dataset_name == 'AGNews':
-        return textual_anomaly_contamination_agnews(dataset, inlier_topic, type_tac, batch_size)
-        
+        return textual_anomaly_contamination_agnews(dataset, inlier_topic, type_tac, anomaly_rate, batch_size)
         
     raise Exception("'dataset_name' not found")
-        
+
+
+############################################
+############ Reuters Ruff/Pantin ###########
+############################################
+
+def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff', anomaly_rate=0.1, batch_size=64):
     
-        
-
-
-# Textual Anomaly Contamination TAC (Reuters Ruff)
-#-------------------------------------------------
-
-def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff', batch_size=64):
+    dataset_one_label = dataset.filter(lambda x: len(x['topics']) == 1)
     
-    # same strategy for both r'ruff' and 'pantin' method
-    dataset_one_label = dataset.filter( lambda x : len(x['topics']) == 1)
-        
     #############################################
     ################## RUFF  ####################
     #############################################
     
-    
     if type_tac == 'ruff':
-        values, counts = np.unique(dataset_one_label[:]['topics'],return_counts=True)
+        values, counts = np.unique(dataset_one_label[:]['topics'], return_counts=True)
         selected_labels = values[counts >= 100]
-
-        dataset_ruff = dataset_one_label.filter(lambda x : x['topics'] in selected_labels)
-
+        dataset_ruff = dataset_one_label.filter(lambda x: x['topics'] in selected_labels)
     
         if inlier_topic not in selected_labels:
-            raise Exception(" Warning ! the inlier topic requested does't exsite with this tac methode !")
-        else:  
-            intlier_dataset_ruff = dataset_ruff.filter(lambda x : x['topics'] == [inlier_topic])
-            anomaly_dataset_ruff = dataset_ruff.filter(lambda x : x['topics'] != [inlier_topic])
+            raise Exception(" Warning ! the inlier topic requested doesn't exist with this TAC method !")
+        
+        inlier_dataset_ruff = dataset_ruff.filter(lambda x: x['topics'] == [inlier_topic])
+        anomaly_dataset_ruff = dataset_ruff.filter(lambda x: x['topics'] != [inlier_topic])
+            
+        n_anomalies = int((anomaly_rate * inlier_dataset_ruff.num_rows) / (1 - anomaly_rate))
+        anomaly_indices = np.random.randint(0, anomaly_dataset_ruff.num_rows, n_anomalies)
+        anomaly_dataset_ruff = anomaly_dataset_ruff.select(anomaly_indices)
+        
+        inlier_dataset_ruff = inlier_dataset_ruff.map(add_col, fn_kwargs={"anomaly_class": 0})
+        anomaly_dataset_ruff = anomaly_dataset_ruff.map(add_col, fn_kwargs={"anomaly_class": 1})
 
-            assert intlier_dataset_ruff.num_rows + anomaly_dataset_ruff.num_rows == dataset_ruff.num_rows, "some samples of original dataset are missing in the training and the testing dataset" 
+        return DataLoader(inlier_dataset_ruff, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset_ruff, batch_size=batch_size, shuffle=True)
 
-            return DataLoader(intlier_dataset_ruff, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset_ruff, batch_size=batch_size, shuffle=True) 
-
-    
-    
     #############################################
     ################# PANTIN ####################
     #############################################
-    
     
     if type_tac == 'pantin':
         parent_topics = {
@@ -182,34 +105,36 @@ def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff'
         topic_map = {topic: parent for parent, topics in parent_topics.items() for topic in topics}
 
         def add_parent_topic(row):
-
             row["parent_topic"] = topic_map.get(row["topics"][0], "unknown")
-
             return row
 
         dataset_pantin = dataset_one_label.map(add_parent_topic)
         
         if inlier_topic not in parent_topics.keys():
-            raise Exception(" Warning ! the inlier topic requested does't exsite with this tac methode !")           
-        else:  
-            intlier_dataset_pantin = dataset_pantin.filter(lambda x : x['parent_topic'] == inlier_topic)
-            anomaly_dataset_pantin = dataset_pantin.filter(lambda x : x['parent_topic'] != inlier_topic)
+            raise Exception(" Warning ! the inlier topic requested doesn't exist with this TAC method !")           
+            
+        inlier_dataset_pantin = dataset_pantin.filter(lambda x: x['parent_topic'] == inlier_topic)
+        anomaly_dataset_pantin = dataset_pantin.filter(lambda x: x['parent_topic'] != inlier_topic)
+            
+        n_anomalies = int((anomaly_rate * inlier_dataset_pantin.num_rows) / (1 - anomaly_rate))
+        anomaly_indices = np.random.randint(0, anomaly_dataset_pantin.num_rows, n_anomalies)
+        anomaly_dataset_pantin = anomaly_dataset_pantin.select(anomaly_indices)
+        
+        inlier_dataset_pantin = inlier_dataset_pantin.map(add_col, fn_kwargs={"anomaly_class": 0})
+        anomaly_dataset_pantin = anomaly_dataset_pantin.map(add_col, fn_kwargs={"anomaly_class": 1})
 
-            assert intlier_dataset_pantin.num_rows + anomaly_dataset_pantin.num_rows == dataset_pantin.num_rows, "some samples of original dataset are missing in the training and the testing dataset" 
-
-            return DataLoader(intlier_dataset_pantin, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset_pantin, batch_size=batch_size, shuffle=True) 
-
+        return DataLoader(inlier_dataset_pantin, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset_pantin, batch_size=batch_size, shuffle=True)
+    
     raise Exception(" the 'type_tac' selected is not available for this dataset ")
-    
-    
-# Textual Anomaly Contamination TAC (20NewsGroups Ruff & Pantin)
-#-----------------------------------------------------
 
-def textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac='ruff', batch_size=64):
-   
+
+############################################
+############ 20Newsgroups ##################
+############################################
+
+def textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac='ruff', anomaly_rate=0.1, batch_size=64):
     
     if type_tac == 'ruff':
-        
         groups = {
             "computer": [
                 "comp.graphics", "comp.os.ms-windows.misc", "comp.sys.ibm.pc.hardware",
@@ -231,9 +156,7 @@ def textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac='
                 "talk.religion.misc", "alt.atheism", "soc.religion.christian"
             ]
         }
-        
     elif type_tac == 'pantin':
-        
         groups = {
             "computer": [
                 "comp.graphics", "comp.os.ms-windows.misc", "comp.sys.ibm.pc.hardware",
@@ -243,7 +166,7 @@ def textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac='
                 "rec.motorcycles", "rec.autos"
             ],
             "sports": [
-                 "rec.sport.baseball", "rec.sport.hockey"
+                "rec.sport.baseball", "rec.sport.hockey"
             ],
             "science": [
                 "sci.crypt", "sci.electronics", "sci.med", "sci.space"
@@ -258,8 +181,8 @@ def textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac='
                 "talk.religion.misc", "alt.atheism", "soc.religion.christian"
             ]
         }
-        
-    else: raise Exception(" the 'type_tac' selected is not available for this dataset ")
+    else:
+        raise Exception(" the 'type_tac' selected is not available for this dataset ")
 
     topic_map = {label: topic for topic, labels in groups.items() for label in labels}
 
@@ -270,159 +193,125 @@ def textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac='
     dataset = dataset.map(add_topic_label)
 
     if inlier_topic not in list(groups.keys()):
+        raise Exception(" Warning ! the inlier topic requested doesn't exist with this TAC method !")
 
-        raise Exception(" Warning ! the inlier topic requested does't exsite with this tac methode !")
-
-    else:
-
-        intlier_dataset_ruff = dataset.filter(lambda x : x['topic_label_text'] == inlier_topic)
-        intlier_dataset_ruff = intlier_dataset_ruff.map(add_col,fn_kwargs={"anomaly_class": 0} )
-
-        anomaly_dataset_ruff = dataset.filter(lambda x : x['topic_label_text'] != inlier_topic)
-        anomaly_dataset_ruff = anomaly_dataset_ruff.map(add_col,fn_kwargs={"anomaly_class": 1} )
-
-        assert intlier_dataset_ruff.num_rows + anomaly_dataset_ruff.num_rows == dataset.num_rows, "some samples of original dataset are missing in the training and the testing dataset" 
-
-
-    return DataLoader(intlier_dataset_ruff, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset_ruff, batch_size=batch_size, shuffle=True) 
-
-
-
-# Textual Anomaly Contamination TAC (WOS Pantin)
-#-----------------------------------------------------
-
-def textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac='pantin', batch_size=64):
+    inlier_dataset = dataset.filter(lambda x: x['topic_label_text'] == inlier_topic)
+    anomaly_dataset = dataset.filter(lambda x: x['topic_label_text'] != inlier_topic)
     
-    ###############################################
-    ################## PANTIN  ####################
-    ###############################################
+    n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
+    anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
+    anomaly_dataset = anomaly_dataset.select(anomaly_indices)
+
+    inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
+    anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
+
+    return DataLoader(inlier_dataset, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset, batch_size=batch_size, shuffle=True)
+
+
+############################################
+################## WOS #####################
+############################################
+
+def textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac='pantin', anomaly_rate=0.1, batch_size=64):
     
-    if type_tac == 'pantin':
-        
-        level_1_mapping = {
-            "Computer_Science" : 0,
-            "Electrical_Engineering" : 1,
-            "Psychology" : 2,
-            "Mechanical_Engineering" : 3,
-            "Civil_Engineering" : 4,
-            "Medical_Science" : 5,
-            "Biochemistry" : 6
-        }
-        
-
-        if inlier_topic not in list(level_1_mapping.keys()):
-
-            raise Exception(" Warning ! the inlier topic requested does't exsite with this tac methode !")
-
-        else:
-            
-            # inlier_topic_int = np.array(list(level_1_mapping.keys()))[np.array(list(level_1_mapping.values())) == inlier_topic][0]
-
-            intlier_dataset_pantin = dataset.filter(lambda x: x['label_level_1'] == level_1_mapping[inlier_topic])
-            intlier_dataset_pantin = intlier_dataset_pantin.map(add_col,fn_kwargs={"anomaly_class": 0} )
-
-            anomaly_dataset_pantin = dataset.filter(lambda x: x['label_level_1'] != level_1_mapping[inlier_topic])
-            anomaly_dataset_pantin = anomaly_dataset_pantin.map(add_col,fn_kwargs={"anomaly_class": 1} )
-
-        
-            assert intlier_dataset_pantin.num_rows + anomaly_dataset_pantin.num_rows == dataset.num_rows, "some samples of original dataset are missing in the training and the testing dataset" 
-
-
-        return DataLoader(intlier_dataset_pantin, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset_pantin, batch_size=batch_size, shuffle=True) 
+    if type_tac != 'pantin':
+        raise Exception(" the 'type_tac' selected is not available for this dataset ")
     
-    raise Exception(" the 'type_tac' selected is not available for this dataset ")
+    level_1_mapping = {
+        "Computer_Science": 0,
+        "Electrical_Engineering": 1,
+        "Psychology": 2,
+        "Mechanical_Engineering": 3,
+        "Civil_Engineering": 4,
+        "Medical_Science": 5,
+        "Biochemistry": 6
+    }
     
+    if inlier_topic not in level_1_mapping:
+        raise Exception(" Warning ! the inlier topic requested doesn't exist with this TAC method !")
     
-# Textual Anomaly Contamination TAC (DBedia 14 Pantin)
-#-----------------------------------------------------
-
-def textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac='pantin', batch_size=64):
+    inlier_dataset = dataset.filter(lambda x: x['label_level_1'] == level_1_mapping[inlier_topic])
+    anomaly_dataset = dataset.filter(lambda x: x['label_level_1'] != level_1_mapping[inlier_topic])
     
-    ###############################################
-    ################## PANTIN  ####################
-    ###############################################
+    n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
+    anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
+    anomaly_dataset = anomaly_dataset.select(anomaly_indices)
     
-    if type_tac == 'pantin':
-        
-        level_1_mapping = {
-            "Company": 0,
-            "Educational Institution": 1,
-            "Artist": 2,
-            "Athlete": 3,
-            "Office Holder": 4,
-            "Mean Of Transportation": 5,
-            "Building": 6,
-            "Natural Place": 7,
-            "Village": 8,
-            "Animal": 9,
-            "Plant": 10,
-            "Album": 11,
-            "Film": 12,
-            "Written Work": 13
-        }
-        
+    inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
+    anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
 
-        if inlier_topic not in list(level_1_mapping.keys()):
-
-            raise Exception(" Warning ! the inlier topic requested does't exsite with this tac methode !")
-
-        else:
-            
-            # inlier_topic_int = np.array(list(level_1_mapping.keys()))[np.array(list(level_1_mapping.values())) == inlier_topic][0]
-
-            intlier_dataset_pantin = dataset.filter(lambda x: x['label'] == level_1_mapping[inlier_topic])
-            intlier_dataset_pantin = intlier_dataset_pantin.map(add_col,fn_kwargs={"anomaly_class": 0} )
-
-            anomaly_dataset_pantin = dataset.filter(lambda x: x['label'] != level_1_mapping[inlier_topic])
-            anomaly_dataset_pantin = anomaly_dataset_pantin.map(add_col,fn_kwargs={"anomaly_class": 1} )
-
-        
-            assert intlier_dataset_pantin.num_rows + anomaly_dataset_pantin.num_rows == dataset.num_rows, "some samples of original dataset are missing in the training and the testing dataset" 
+    return DataLoader(inlier_dataset, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset, batch_size=batch_size, shuffle=True)
 
 
-        return DataLoader(intlier_dataset_pantin, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset_pantin, batch_size=batch_size, shuffle=True) 
+############################################
+############ DBPedia14 #####################
+############################################
+
+def textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac='pantin', anomaly_rate=0.1, batch_size=64):
     
-    raise Exception(" the 'type_tac' selected is not available for this dataset ")
+    if type_tac != 'pantin':
+        raise Exception(" the 'type_tac' selected is not available for this dataset ")
     
+    level_1_mapping = {
+        "Company": 0,
+        "Educational Institution": 1,
+        "Artist": 2,
+        "Athlete": 3,
+        "Office Holder": 4,
+        "Mean Of Transportation": 5,
+        "Building": 6,
+        "Natural Place": 7,
+        "Village": 8,
+        "Animal": 9,
+        "Plant": 10,
+        "Album": 11,
+        "Film": 12,
+        "Written Work": 13
+    }
     
-# Textual Anomaly Contamination TAC (DBedia 14 Pantin)
-#-----------------------------------------------------
+    if inlier_topic not in level_1_mapping:
+        raise Exception(" Warning ! the inlier topic requested doesn't exist with this TAC method !")
 
-def textual_anomaly_contamination_agnews(dataset, inlier_topic, type_tac='fate', batch_size=64):
+    inlier_dataset = dataset.filter(lambda x: x['label'] == level_1_mapping[inlier_topic])
+    anomaly_dataset = dataset.filter(lambda x: x['label'] != level_1_mapping[inlier_topic])
     
-    ###############################################
-    ################## PANTIN  ####################
-    ###############################################
+    n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
+    anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
+    anomaly_dataset = anomaly_dataset.select(anomaly_indices)
     
-    if type_tac == 'fate':
-        
-        mapping = {
-            "World" : 0,
-            "Sports" : 1,
-            "Business" : 2,
-            "Sci/Tech" : 3
-        }
+    inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
+    anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
+
+    return DataLoader(inlier_dataset, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset, batch_size=batch_size, shuffle=True)
 
 
-        if inlier_topic not in list(mapping.keys()):
+############################################
+################## AGNews ##################
+############################################
 
-            raise Exception(" Warning ! the inlier topic requested does't exsite with this tac methode !")
-
-        else:
-            
-            # inlier_topic_int = np.array(list(level_1_mapping.keys()))[np.array(list(level_1_mapping.values())) == inlier_topic][0]
-
-            intlier_dataset_fate = dataset.filter(lambda x: x['label'] == mapping[inlier_topic])
-            intlier_dataset_fate = intlier_dataset_fate.map(add_col,fn_kwargs={"anomaly_class": 0} )
-
-            anomaly_dataset_fate = dataset.filter(lambda x: x['label'] != mapping[inlier_topic])
-            anomaly_dataset_fate = anomaly_dataset_fate.map(add_col,fn_kwargs={"anomaly_class": 1} )
-
-        
-            assert intlier_dataset_fate.num_rows + anomaly_dataset_fate.num_rows == dataset.num_rows, "some samples of original dataset are missing in the training and the testing dataset" 
-
-
-        return DataLoader(intlier_dataset_fate, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset_fate, batch_size=batch_size, shuffle=True) 
+def textual_anomaly_contamination_agnews(dataset, inlier_topic, type_tac='fate', anomaly_rate=0.1, batch_size=64):
     
+    if type_tac != 'fate':
+        raise Exception(" the 'type_tac' selected is not available for this dataset ")
     
-    raise Exception(" the 'type_tac' selected is not available for this dataset ")
+    mapping = {
+        "World": 0,
+        "Sports": 1,
+        "Business": 2,
+        "Sci/Tech": 3
+    }
+    
+    if inlier_topic not in mapping:
+        raise Exception(" Warning ! the inlier topic requested doesn't exist with this TAC method !")
+
+    inlier_dataset = dataset.filter(lambda x: x['label'] == mapping[inlier_topic])
+    anomaly_dataset = dataset.filter(lambda x: x['label'] != mapping[inlier_topic])
+    
+    n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
+    anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
+    anomaly_dataset = anomaly_dataset.select(anomaly_indices)
+    
+    inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
+    anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
+
+    return DataLoader(inlier_dataset, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset, batch_size=batch_size, shuffle=True)
