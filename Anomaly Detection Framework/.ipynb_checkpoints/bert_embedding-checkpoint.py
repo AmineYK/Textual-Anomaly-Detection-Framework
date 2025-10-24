@@ -5,7 +5,9 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-
+################################################
+################## ENCODER  ####################
+################################################
 
 class EmbeddingEncoder:
     def __init__(self, model=None, model_name=None, type_emd='glove', device='cuda'):
@@ -29,7 +31,10 @@ class EmbeddingEncoder:
         
         return self.model.forward(dataloader)
     
-    
+
+################################################
+################### TDFIDF  ####################
+################################################
     
 class TFIDFEmbeddingEncoder:
     def __init__(self, tfidf_vectorizer):
@@ -53,6 +58,11 @@ class TFIDFEmbeddingEncoder:
         
         return DataLoader(dataset, batch_size=dataloader.batch_size)
 
+
+    
+################################################
+#################### BERT  #####################
+################################################    
 
 class BERTEmbeddingEncoder:
     def __init__(self, model_name, device):
@@ -93,6 +103,10 @@ class BERTEmbeddingEncoder:
         return DataLoader(dataset, batch_size = dataloader.batch_size)
     
     
+################################################
+#################### GloVe  ####################
+################################################
+    
 class GloVeEmbeddingEncoder:
     def __init__(self, model, device):
 
@@ -124,7 +138,12 @@ class GloVeEmbeddingEncoder:
         dataset = dataset.add_column("glove_embedding",vectors) 
 
         return DataLoader(dataset, batch_size = dataloader.batch_size)
-    
+  
+
+###################################################
+#################### FastText  ####################
+###################################################
+
     
 class FastTextEmbeddingEncoder:
     def __init__(self, model, device):
