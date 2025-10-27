@@ -1,4 +1,4 @@
-# 🧠 Textual Anomaly Detection Framework
+# Textual Anomaly Detection Framework
 
 ## Overview
 
@@ -7,20 +7,20 @@ It provides all the necessary components to go from raw document datasets to mod
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
-### 🧩 Textual Anomaly Contamination
+### Textual Anomaly Contamination
 Automatically constructs contaminated datasets by selecting one category as *inlier* and introducing anomalies from other categories.
 
-### 🔡 Flexible Embedding Module
+### Flexible Embedding Module
 Supports multiple text representation methods:
 - **TF-IDF**
 - **GloVe**
 - **FastText**
 - **BERT**
 
-### 🤖 Modeling and Evaluation
+### Modeling and Evaluation
 Easily apply and compare different anomaly detection algorithms on the generated datasets with consistent evaluation metrics.
 
-### 🔁 End-to-End Pipeline
+### End-to-End Pipeline
 From dataset preparation to results visualization, the framework handles every step of the anomaly detection process.
