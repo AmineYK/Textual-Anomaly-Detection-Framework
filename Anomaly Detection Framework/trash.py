@@ -179,3 +179,156 @@ def add_col(example,anomaly_class = 0):
 
 
 #     return DataLoader(TAC_dataset, batch_size=batch_size, shuffle=True)  
+
+
+from Dataset import ADdatasets
+from Tac import tac
+from Embedding import embedding_encoder
+import argparse
+import logging
+from torch.utils.data import DataLoader
+
+# --- Configuration du logger ---
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def main(args):
+
+    logger.info("#######################")
+    logger.info("Loading Dataset...")
+    logger.info("########################\n")
+    dataset = ADdatasets.ADDataset(args.dataset_name, args.full_dataset_, args.preprocessing)
+
+    if args.full_dataset_ or args.dataset_name == 'WOS':
+        dataset_complet, _ = dataset.get_splits()
+        dataset_train, dataset_test = None, None
+    else:
+        dataset_train, dataset_test = dataset.get_splits()
+        dataset_complet = None
+
+    if dataset_complet is None :
+        print(dataset_train)
+        print(dataset_test)
+    else:
+        print(dataset_complet)
+
+    logger.info("################################")
+    logger.info("Textual Anomaly Contamination...")
+    logger.info("#################################\n")
+
+    if dataset_complet is None :
+        inlier_dataset_train, anomaly_dataset_train = tac.textual_anomaly_contamination(dataset_train, args.dataset_name, args.inlier_topic, args.type_tac, args.anomaly_rate)
+        inlier_dataset_test, anomaly_dataset_test = tac.textual_anomaly_contamination(dataset_test, args.dataset_name, args.inlier_topic, args.type_tac, args.anomaly_rate)
+    else:
+        inlier_dataset_complet, anomaly_dataset_complet = tac.textual_anomaly_contamination(dataset_complet, args.dataset_name, args.inlier_topic, args.type_tac, args.anomaly_rate)
+
+
+    logger.info("################################")
+    logger.info("Embedding Encodage...")
+    logger.info("#################################\n")
+
+    emb_encoder = embedding_encoder.EmbeddingEncoder(args.model_name, args.type_emb)
+
+    if dataset_complet is None :
+        inlier_dataset_train_emb = emb_encoder.forward(inlier_dataset_train)
+        anomaly_dataset_train_emb = emb_encoder.forward(anomaly_dataset_train)
+
+        inlier_dataset_test_emb = emb_encoder.forward(inlier_dataset_test)
+        anomaly_dataset_test_emb = emb_encoder.forward(anomaly_dataset_test)
+
+    else:
+        inlier_dataset_complet_emb = emb_encoder.forward(inlier_dataset_complet)
+        anomaly_dataset_complet_emb = emb_encoder.forward(anomaly_dataset_complet)
+
+
+    logger.info("################################")
+    logger.info("Dataloader Creation...")
+    logger.info("#################################\n")
+
+    wrapper_inlier_dataset_emb = ADdatasets.DatasetWrapper(inlier_dataset_emb, args.type_emb)
+    inlier_dataloader = DataLoader(wrapper_inlier_dataset_emb, batch_size=args.batch_size, shuffle=args.shuffle)
+
+    wrapper_anomaly_dataset_emb = ADdatasets.DatasetWrapper(anomaly_dataset_emb, args.type_emb)
+    anomaly_dataloader = DataLoader(wrapper_anomaly_dataset_emb, batch_size=args.batch_size, shuffle=args.shuffle)
+
+    print(inlier_dataloader)
+    print(anomaly_dataloader)
+    
+
+
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Main script")
+
+    parser.add_argument(
+        "--dataset_name",
+        type=str,
+        default="20NewsGroups",
+        help="Dataset naming (ex: '20newsgroups', 'reuters', etc.)"
+    )
+
+    parser.add_argument(
+        "--full_dataset_",
+        action="store_true",
+        help="full dataset"
+    )
+
+    parser.add_argument(
+        "--preprocessing",
+        action="store_true",
+        help="preprocessing function"
+    )
+
+    parser.add_argument(
+        "--inlier_topic",
+        type=str,
+        default="science",
+        help="The inlier category of the dataset"
+    )
+
+    parser.add_argument(
+        "--type_tac",
+        type=str,
+        default="ruff",
+        help="The type of anomaly contamintion for the dataset"
+    )
+
+    parser.add_argument(
+        "--anomaly_rate",
+        type=float,
+        default=0.1,
+        help="The rate of anomaly samples in the final dataset"
+    )
+
+    parser.add_argument(
+        "--model_name",
+        type=str,
+        default="distilbert-base-uncased",
+        help="The name of the model"
+    )
+
+    parser.add_argument(
+        "--type_emb",
+        type=str,
+        default="bert",
+        help="The type of embedding encodage"
+    )
+
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=64,
+        help="The batch size"
+    )
+
+    parser.add_argument(
+        "--shuffle",
+        action="store_true",
+        help="suffle for dataloader"
+    )
+
+
+
+    args = parser.parse_args()
+    main(args)
