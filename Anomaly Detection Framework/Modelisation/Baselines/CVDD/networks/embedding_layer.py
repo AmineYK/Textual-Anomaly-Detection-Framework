@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 import torch
 from transformers import AutoModel, AutoTokenizer
 import numpy as np
-import fasttext
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
@@ -21,29 +20,49 @@ class BaseEmbeddingEncoder(nn.Module, ABC):
 
 
 class BERTEmbeddingEncoder(BaseEmbeddingEncoder):
-    def __init__(self, bert_name='distilbert-base-uncased'):
+    def __init__(self, bert_name='distilbert-base-uncased', trainable=False):
         super().__init__()
         self.tokenizer = AutoTokenizer.from_pretrained(bert_name)
         self.model = AutoModel.from_pretrained(bert_name)
         self.embedding_size = self.model.config.hidden_size
 
+        for param in self.model.parameters():
+            param.requires_grad = trainable
+
     def forward(self, texts):
-        # texts: list[str]
-        encoded = self.tokenizer(texts, padding=True, truncation=True, return_tensors='pt')
-        outputs = self.model(**encoded)
-        hidden_states = outputs.last_hidden_state  # (batch_size, seq_len, hidden_size)
-        return hidden_states.permute(1, 0, 2)  # (seq_len, batch_size, hidden_size)
+
+        # the case when texts is already tokenized
+        if type(texts) == torch.Tensor:
+            encoded = texts
+            outputs = self.model(encoded)
+            hidden_states = outputs.last_hidden_state  # (batch_size, seq_len, hidden_size)
+            return hidden_states.permute(1, 0, 2)  # (seq_len, batch_size, hidden_size)
+        
+        # the case when texts is str or list[str]
+        elif type(texts) == str:
+            texts = [texts]
+            encoded = self.tokenizer(texts, padding=True, truncation=True, return_tensors='pt')
+            outputs = self.model(**encoded)
+            hidden_states = outputs.last_hidden_state  # (batch_size, seq_len, hidden_size)
+            return hidden_states.permute(1, 0, 2)  # (seq_len, batch_size, hidden_size)
+        
+        elif type(texts) == list:
+            encoded = self.tokenizer(texts, padding=True, truncation=True, return_tensors='pt')
+            outputs = self.model(**encoded)
+            hidden_states = outputs.last_hidden_state  # (batch_size, seq_len, hidden_size)
+            return hidden_states.permute(1, 0, 2)  # (seq_len, batch_size, hidden_size)
+        
+        else : raise Exception("The input type is not considered ! it must be str or list[str] or torch.tensor")
     
 
 
 
 class GloVeEmbeddingEncoder(BaseEmbeddingEncoder):
-    def __init__(self, glove_path, vocab, embedding_dim=300):
+    def __init__(self, glove_path, vocab, embedding_dim=300, trainable=False):
         super().__init__()
         self.embedding_size = embedding_dim
         self.embedding = nn.Embedding(len(vocab), embedding_dim)
 
-        # Charger les poids GloVe
         weights_matrix = np.zeros((len(vocab), embedding_dim))
         with open(glove_path, 'r', encoding='utf-8') as f:
             for line in f:
@@ -54,55 +73,31 @@ class GloVeEmbeddingEncoder(BaseEmbeddingEncoder):
                     weights_matrix[vocab[word]] = vector
         self.embedding.weight.data.copy_(torch.from_numpy(weights_matrix))
 
+        self.embedding.weight.requires_grad = trainable
+
     def forward(self, x):
         # x: (sentence_length, batch_size)
         embedded = self.embedding(x)
         return embedded  # (sentence_length, batch_size, embedding_size)
     
 
-# class FastTextEmbeddingEncoder(BaseEmbeddingEncoder):
-#     def __init__(self, fasttext_path, vocab, embedding_dim=300):
-#         super().__init__()
-#         self.model = fasttext.load_model(fasttext_path)
-#         self.embedding_size = embedding_dim
-#         self.embedding = nn.Embedding(len(vocab), embedding_dim)
 
-#         weights_matrix = np.zeros((len(vocab), embedding_dim))
-#         for word, idx in vocab.items():
-#             weights_matrix[idx] = self.model.get_word_vector(word)
-#         self.embedding.weight.data.copy_(torch.from_numpy(weights_matrix))
-
-#     def forward(self, x):
-#         return self.embedding(x)
-
-
-
-class FastTextVecEmbeddingEncoder(BaseEmbeddingEncoder):
+class FastTextEmbeddingEncoder(BaseEmbeddingEncoder):
     def __init__(self, fasttext_path, vocab, trainable=False):
-        """
-        Args:
-            vec_path: chemin vers le fichier .vec FastText
-            vocab: dictionnaire {mot: index}
-            trainable: bool, si True on peut fine-tuner les embeddings
-        """
+
         super().__init__()
         self.vocab = vocab
 
-        # Initialisation aléatoire des poids
         vocab_size = len(vocab)
         embedding_dim = None
         weights_matrix = None
 
-        print(f"Loading FastText .vec embeddings from {fasttext_path} ...")
         with open(fasttext_path, 'r', encoding='utf-8', errors='ignore') as f:
             first_line = f.readline().strip().split()
             if len(first_line) == 2:
-                # Première ligne = header (vocab_size, dim)
                 embedding_dim = int(first_line[1])
             else:
-                # Pas de header
                 embedding_dim = len(first_line) - 1
-                # remettre la première ligne dans le parsing
                 f.seek(0)
 
             weights_matrix = np.random.normal(scale=0.6, size=(vocab_size, embedding_dim))
@@ -149,18 +144,20 @@ class EmbeddingFactory:
 
         if embedding_type == 'bert':
             return BERTEmbeddingEncoder(
-                bert_name=kwargs.get('bert_name', 'distilbert-base-uncased')
+                bert_name=kwargs.get('bert_name', 'distilbert-base-uncased'),
+                trainable=kwargs.get('trainable', False)
             )
 
         elif embedding_type == 'glove':
             return GloVeEmbeddingEncoder(
                 glove_path=kwargs['glove_path'],
                 vocab=kwargs['vocab'],
-                embedding_dim=kwargs.get('embedding_dim', 300)
+                embedding_dim=kwargs.get('embedding_dim', 300),
+                trainable=kwargs.get('trainable', False)
             )
 
         elif embedding_type == 'fasttext':
-            return FastTextVecEmbeddingEncoder(
+            return FastTextEmbeddingEncoder(
                 fasttext_path=kwargs['fasttext_path'],
                 vocab=kwargs['vocab'],
                 trainable=kwargs.get('trainable', False)

@@ -96,7 +96,7 @@ class BERTEmbeddingEncoder:
             padding=True,
             truncation=True,
             return_tensors="pt"
-        ).to(self.device)
+        )
 
         
         with torch.no_grad():
