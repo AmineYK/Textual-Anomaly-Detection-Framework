@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 import numpy as np
 
-from Modelisation.Baselines.CVDD.networks.self_attention import SelfAttention
+from .self_attention import SelfAttention
 
 
 class BaseNet(nn.Module):
