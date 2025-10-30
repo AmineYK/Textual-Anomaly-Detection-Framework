@@ -1,9 +1,9 @@
-from Data_Preparation.Dataset import ADdatasets
-from Data_Preparation.Tac import tac
-from Data_Preparation.Embedding import embedding_encoder
+from Data_Preparation.Dataset.ADdatasets import ADDataset, CVDDDatasetWrapper, DatasetWrapper, MergedDatasetWrapper
+from Data_Preparation.Tac.tac import textual_anomaly_contamination
+from Data_Preparation.Embedding.embedding_encoder import EmbeddingEncoder
 import argparse
 import logging
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, ConcatDataset
 import time
 from transformers import AutoTokenizer
 from Modelisation.Baselines.OCSVM import ocsvm
@@ -18,13 +18,69 @@ import numpy as np
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def data_preparation(args, logger, ADdatasets, tac, embedding_encoder):
+
+# def cvdd_model_pipeline():
+
+#     corpus = inlier_dataset_train['text']
+#     vocab = utils.build_vocab(corpus,min_freq=1)
+#     tokenizer = AutoTokenizer.from_pretrained('distilbert-base-uncased')
+#     # print(vocab)
+#     cvdd_dataset = CVDDDatasetWrapper(inlier_dataset_train, embedding_type='bert', tokenizer=tokenizer)
+#     dl = DataLoader(cvdd_dataset, batch_size=32, shuffle=True)
+#     # print(dl)
+#     # print(cvdd_dataset.__getitem__(1)[0])
+    
+
+#     pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name='distilbert-base-uncased', trainable=False)
+
+#     # pretrained_model = embedding_layer.EmbeddingFactory.create('glove',
+#     #                             glove_path='./Modelisation/Baselines/CVDD/embedding_models/glove.6B.300d.txt',
+#     #                             vocab=vocab,
+#     #                             embedding_dim=300,
+#     #                             trainable=False)
+    
+#     # pretrained_model = embedding_layer.EmbeddingFactory.create('fasttext',
+#     #                             fasttext_path='./Modelisation/Baselines/CVDD/embedding_models/wiki-news-300d-1M.vec',
+#     #                             vocab=vocab,
+#     #                             embedding_dim=300,
+#     #                             trainable=False)
+
+#     # corpus = inlier_dataset_train['text']
+#     # pretrained_model = embedding_layer.EmbeddingFactory.create(
+#     #     'tfidf',
+#     #     corpus=corpus,
+#     #     max_features=1000
+#     # )
+    
+    
+#     attention_size = 250
+#     n_attention_heads = 2
+#     model = cvdd_Net.CVDDNet(pretrained_model, attention_size, n_attention_heads)
+#     print(model)
+
+#     for batch in dl:
+#         inputs, labels, texts = batch
+        
+#         # GloVe / FastText / BERT
+#         x = inputs.transpose(0, 1)  # shape (seq_len, batch_size)
+#         print(x.shape)
+
+
+
+#         cosine_dists, context_weights, A = model(x)
+#         print(cosine_dists.shape)
+#         print(context_weights.shape)
+#         print(A.shape)
+
+#         break
+
+def data_preparation(args, logger, embedding_encoding = False):
 
     logger.info("################################")
     logger.info("Loading Dataset...")
     logger.info("################################\n")
 
-    dataset = ADdatasets.ADDataset(args.dataset_name, args.full_dataset_, args.preprocessing)
+    dataset = ADDataset(args.dataset_name, args.full_dataset_, args.preprocessing)
 
     if args.full_dataset_ or args.dataset_name == 'WOS':
         dataset_complet, _ = dataset.get_splits()
@@ -38,135 +94,120 @@ def data_preparation(args, logger, ADdatasets, tac, embedding_encoder):
     logger.info("#################################\n")
 
     if dataset_complet is None:
-        inlier_dataset_train, anomaly_dataset_train = tac.textual_anomaly_contamination(
+        inlier_dataset_train, anomaly_dataset_train = textual_anomaly_contamination(
             dataset_train, args.dataset_name, args.inlier_topic, args.type_tac, args.anomaly_rate
         )
-        inlier_dataset_test, anomaly_dataset_test = tac.textual_anomaly_contamination(
+        # inlier_dataloader_train = DataLoader(inlier_dataset_train, batch_size=args.batch_size, shuffle=args.shuffle)
+        # anomaly_dataloader_train = DataLoader(anomaly_dataset_train, batch_size=args.batch_size, shuffle=args.shuffle)
+
+        inlier_dataset_test, anomaly_dataset_test = textual_anomaly_contamination(
             dataset_test, args.dataset_name, args.inlier_topic, args.type_tac, args.anomaly_rate
         )
+        # inlier_dataloader_test = DataLoader(inlier_dataset_test, batch_size=args.batch_size, shuffle=args.shuffle)
+        # anomaly_dataloader_test = DataLoader(anomaly_dataset_test, batch_size=args.batch_size, shuffle=args.shuffle)
+
+        # if false the return will be plain texts --> without encoding
+        if not embedding_encoding:
+
+            if args.training_mode == 'two_classes':
+                return {
+                        "train": ConcatDataset([inlier_dataset_train, anomaly_dataset_train]),
+                        "test": ConcatDataset([inlier_dataset_test, anomaly_dataset_test])
+                    }
+            else:
+                return {
+                    "inlier_train": inlier_dataset_train,
+                    "anomaly_train": anomaly_dataset_train,
+                    "inlier_test": inlier_dataset_test,
+                    "anomaly_test": anomaly_dataset_test
+                }
+
     else:
-        inlier_dataset_complet, anomaly_dataset_complet = tac.textual_anomaly_contamination(
+        inlier_dataset_complet, anomaly_dataset_complet = textual_anomaly_contamination(
             dataset_complet, args.dataset_name, args.inlier_topic, args.type_tac, args.anomaly_rate
         )
+        # inlier_dataloader_complet = DataLoader(inlier_dataset_complet, batch_size=args.batch_size, shuffle=args.shuffle)
+        # anomaly_dataloader_complet = DataLoader(anomaly_dataset_complet, batch_size=args.batch_size, shuffle=args.shuffle)
+
+        # if false the return will be plain texts --> without encoding
+        if not embedding_encoding:
+            if args.training_mode == 'two_classes':
+                return {
+                            "complet": ConcatDataset([inlier_dataset_complet, anomaly_dataset_complet])
+                    }
+            else:
+                return {
+                            "inlier": inlier_dataset_complet,
+                            "anomaly": anomaly_dataset_complet
+                    }
 
 
-    corpus = inlier_dataset_train['text']
-    vocab = utils.build_vocab(corpus,min_freq=1)
-    tokenizer = AutoTokenizer.from_pretrained('distilbert-base-uncased')
-    # print(vocab)
-    cvdd_dataset = ADdatasets.CVDDDatasetWrapper(inlier_dataset_train, embedding_type='bert', tokenizer=tokenizer)
-    dl = DataLoader(cvdd_dataset, batch_size=32, shuffle=True)
-    # print(dl)
-    # print(cvdd_dataset.__getitem__(1)[0])
-    
+    # continue the process of tokenization and embedding of the texts to get dataloaders with embeddings
+    if embedding_encoding:
 
-    pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name='distilbert-base-uncased', trainable=False)
+        logger.info("################################")
+        logger.info("Embedding Encodage...")
+        logger.info("#################################\n")
 
-    # pretrained_model = embedding_layer.EmbeddingFactory.create('glove',
-    #                             glove_path='./Modelisation/Baselines/CVDD/embedding_models/glove.6B.300d.txt',
-    #                             vocab=vocab,
-    #                             embedding_dim=300,
-    #                             trainable=False)
-    
-    # pretrained_model = embedding_layer.EmbeddingFactory.create('fasttext',
-    #                             fasttext_path='./Modelisation/Baselines/CVDD/embedding_models/wiki-news-300d-1M.vec',
-    #                             vocab=vocab,
-    #                             embedding_dim=300,
-    #                             trainable=False)
+        emb_encoder = EmbeddingEncoder(args.emb_model, args.type_emb)
 
-    # corpus = inlier_dataset_train['text']
-    # pretrained_model = embedding_layer.EmbeddingFactory.create(
-    #     'tfidf',
-    #     corpus=corpus,
-    #     max_features=1000
-    # )
-    
-    
-    attention_size = 250
-    n_attention_heads = 2
-    model = cvdd_Net.CVDDNet(pretrained_model, attention_size, n_attention_heads)
-    print(model)
+        if dataset_complet is None:
+            inlier_dataset_train_emb = emb_encoder.forward(inlier_dataset_train)
+            anomaly_dataset_train_emb = emb_encoder.forward(anomaly_dataset_train)
+            inlier_dataset_test_emb = emb_encoder.forward(inlier_dataset_test)
+            anomaly_dataset_test_emb = emb_encoder.forward(anomaly_dataset_test)
+        else:
+            inlier_dataset_complet_emb = emb_encoder.forward(inlier_dataset_complet)
+            anomaly_dataset_complet_emb = emb_encoder.forward(anomaly_dataset_complet)
 
-    for batch in dl:
-        inputs, labels, texts = batch
-        
-        # GloVe / FastText / BERT
-        x = inputs.transpose(0, 1)  # shape (seq_len, batch_size)
-        print(x.shape)
+        logger.info("################################")
+        logger.info("Dataloader Creation...")
+        logger.info("#################################\n")
 
+        if dataset_complet is not None:
+            wrapper_inlier_complet = DatasetWrapper(inlier_dataset_complet_emb, args.type_emb)
+            wrapper_anomaly_complet = DatasetWrapper(anomaly_dataset_complet_emb, args.type_emb)
 
+            inlier_dataloader = DataLoader(wrapper_inlier_complet, batch_size=args.batch_size, shuffle=args.shuffle)
+            anomaly_dataloader = DataLoader(wrapper_anomaly_complet, batch_size=args.batch_size, shuffle=args.shuffle)
 
-        cosine_dists, context_weights, A = model(x)
-        print(cosine_dists.shape)
-        print(context_weights.shape)
-        print(A.shape)
+            if args.training_mode == 'two_classes':
+                
+                combined_dataset = MergedDatasetWrapper([wrapper_inlier_complet, wrapper_anomaly_complet])
+                combined_dataloader = DataLoader(combined_dataset, batch_size=args.batch_size, shuffle=args.shuffle)
+                return {"complet": combined_dataloader}
 
-        break
+            return {"inlier": inlier_dataloader, "anomaly": anomaly_dataloader}
 
+        else:
+            wrapper_inlier_train = DatasetWrapper(inlier_dataset_train_emb, args.type_emb)
+            wrapper_anomaly_train = DatasetWrapper(anomaly_dataset_train_emb, args.type_emb)
+            wrapper_inlier_test = DatasetWrapper(inlier_dataset_test_emb, args.type_emb)
+            wrapper_anomaly_test = DatasetWrapper(anomaly_dataset_test_emb, args.type_emb)
 
-    # logger.info("################################")
-    # logger.info("Embedding Encodage...")
-    # logger.info("#################################\n")
+            inlier_dataloader_train = DataLoader(wrapper_inlier_train, batch_size=args.batch_size, shuffle=args.shuffle)
+            anomaly_dataloader_train = DataLoader(wrapper_anomaly_train, batch_size=args.batch_size, shuffle=args.shuffle)
+            inlier_dataloader_test = DataLoader(wrapper_inlier_test, batch_size=args.batch_size, shuffle=args.shuffle)
+            anomaly_dataloader_test = DataLoader(wrapper_anomaly_test, batch_size=args.batch_size, shuffle=args.shuffle)
 
-    # emb_encoder = embedding_encoder.EmbeddingEncoder(args.model_name, args.type_emb)
+            if args.training_mode == 'two_classes':
+                combined_train_dataset = MergedDatasetWrapper([wrapper_inlier_train, wrapper_anomaly_train])
+                combined_test_dataset = MergedDatasetWrapper([wrapper_inlier_test, wrapper_anomaly_test])
 
-    # if dataset_complet is None:
-    #     inlier_dataset_train_emb = emb_encoder.forward(inlier_dataset_train)
-    #     anomaly_dataset_train_emb = emb_encoder.forward(anomaly_dataset_train)
-    #     inlier_dataset_test_emb = emb_encoder.forward(inlier_dataset_test)
-    #     anomaly_dataset_test_emb = emb_encoder.forward(anomaly_dataset_test)
-    # else:
-    #     inlier_dataset_complet_emb = emb_encoder.forward(inlier_dataset_complet)
-    #     anomaly_dataset_complet_emb = emb_encoder.forward(anomaly_dataset_complet)
+                combined_dataloader_train = DataLoader(combined_train_dataset, batch_size=args.batch_size, shuffle=args.shuffle)
+                combined_dataloader_test = DataLoader(combined_test_dataset, batch_size=args.batch_size, shuffle=args.shuffle)
 
-    # logger.info("################################")
-    # logger.info("Dataloader Creation...")
-    # logger.info("#################################\n")
+                return {
+                    "train": combined_dataloader_train,
+                    "test": combined_dataloader_test
+                }
 
-    # if dataset_complet is not None:
-    #     wrapper_inlier_complet = ADdatasets.DatasetWrapper(inlier_dataset_complet_emb, args.type_emb)
-    #     wrapper_anomaly_complet = ADdatasets.DatasetWrapper(anomaly_dataset_complet_emb, args.type_emb)
-
-    #     inlier_dataloader = DataLoader(wrapper_inlier_complet, batch_size=args.batch_size, shuffle=args.shuffle)
-    #     anomaly_dataloader = DataLoader(wrapper_anomaly_complet, batch_size=args.batch_size, shuffle=args.shuffle)
-
-    #     if args.training_mode == 'two_classes':
-            
-    #         combined_dataset = ADdatasets.MergedDatasetWrapper([wrapper_inlier_complet, wrapper_anomaly_complet])
-    #         combined_dataloader = DataLoader(combined_dataset, batch_size=args.batch_size, shuffle=args.shuffle)
-    #         return {"complet": combined_dataloader}
-
-    #     return {"inlier": inlier_dataloader, "anomaly": anomaly_dataloader}
-
-    # else:
-    #     wrapper_inlier_train = ADdatasets.DatasetWrapper(inlier_dataset_train_emb, args.type_emb)
-    #     wrapper_anomaly_train = ADdatasets.DatasetWrapper(anomaly_dataset_train_emb, args.type_emb)
-    #     wrapper_inlier_test = ADdatasets.DatasetWrapper(inlier_dataset_test_emb, args.type_emb)
-    #     wrapper_anomaly_test = ADdatasets.DatasetWrapper(anomaly_dataset_test_emb, args.type_emb)
-
-    #     inlier_dataloader_train = DataLoader(wrapper_inlier_train, batch_size=args.batch_size, shuffle=args.shuffle)
-    #     anomaly_dataloader_train = DataLoader(wrapper_anomaly_train, batch_size=args.batch_size, shuffle=args.shuffle)
-    #     inlier_dataloader_test = DataLoader(wrapper_inlier_test, batch_size=args.batch_size, shuffle=args.shuffle)
-    #     anomaly_dataloader_test = DataLoader(wrapper_anomaly_test, batch_size=args.batch_size, shuffle=args.shuffle)
-
-    #     if args.training_mode == 'two_classes':
-    #         combined_train_dataset = ADdatasets.MergedDatasetWrapper([wrapper_inlier_train, wrapper_anomaly_train])
-    #         combined_test_dataset = ADdatasets.MergedDatasetWrapper([wrapper_inlier_test, wrapper_anomaly_test])
-
-    #         combined_dataloader_train = DataLoader(combined_train_dataset, batch_size=args.batch_size, shuffle=args.shuffle)
-    #         combined_dataloader_test = DataLoader(combined_test_dataset, batch_size=args.batch_size, shuffle=args.shuffle)
-
-    #         return {
-    #             "train": combined_dataloader_train,
-    #             "test": combined_dataloader_test
-    #         }
-
-    #     return {
-    #         "inlier_train": inlier_dataloader_train,
-    #         "anomaly_train": anomaly_dataloader_train,
-    #         "inlier_test": inlier_dataloader_test,
-    #         "anomaly_test": anomaly_dataloader_test
-    #     }
+            return {
+                "inlier_train": inlier_dataloader_train,
+                "anomaly_train": anomaly_dataloader_train,
+                "inlier_test": inlier_dataloader_test,
+                "anomaly_test": anomaly_dataloader_test
+            }
     
 
 
@@ -181,12 +222,17 @@ def main(args):
         f"inlier_topic='{args.inlier_topic}', "
         f"type_tac='{args.type_tac}', "
         f"anomaly_rate={args.anomaly_rate}, "
-        f"embedding='{args.type_emb}' ({args.model_name}). \n\n"
+        f"embedding='{args.type_emb}' ({args.emb_model}). \n\n"
     )
 
-    data_preparation(args, logger, ADdatasets, tac, embedding_encoder)
+    required_encoding = False
 
-    # dl = data_preparation(args, logger, ADdatasets, tac, embedding_encoder)
+    # if args.ad_model == 'ocsvm':
+    #     required_encoding = True
+        
+        
+    dp_dict = data_preparation(args, logger, embedding_encoding=required_encoding)
+    print(dp_dict)
 
     # # training_mode = 'one_class' --> return train/test in any dataset there is anomaly and inlier subset
     # # training_mode = 'two_classes' --> return train/test and separate anomaly and inlier subset to get 4 dataloaders
@@ -276,7 +322,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--model_name",
+        "--emb_model",
         type=str,
         default="distilbert-base-uncased",
         help="The name of the model"
