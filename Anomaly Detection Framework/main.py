@@ -19,60 +19,74 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-# def cvdd_model_pipeline():
+def cvdd_model_pipeline(data_train, embedding_type, seq_len, batch_size, shuffle, tokenizer=None, vocab=None):
 
-#     corpus = inlier_dataset_train['text']
-#     vocab = utils.build_vocab(corpus,min_freq=1)
-#     tokenizer = AutoTokenizer.from_pretrained('distilbert-base-uncased')
-#     # print(vocab)
-#     cvdd_dataset = CVDDDatasetWrapper(inlier_dataset_train, embedding_type='bert', tokenizer=tokenizer)
-#     dl = DataLoader(cvdd_dataset, batch_size=32, shuffle=True)
-#     # print(dl)
-#     # print(cvdd_dataset.__getitem__(1)[0])
+
+    if embedding_type == 'bert' and tokenizer is not None:
+        cvdd_dataset = CVDDDatasetWrapper(data_train, embedding_type='bert', tokenizer=tokenizer, seq_len=seq_len)
+    else:
+        raise Exception(f"when 'embedding_type' = '{embedding_type}', the parameters 'bert_name' and 'tokenizer' is required")
+
+    corpus = data_train['text']
+    vocab = utils.build_vocab(corpus,min_freq=1)
+
+    if embedding_type == 'glove' and vocab is not None:
+        cvdd_dataset = CVDDDatasetWrapper(data_train, embedding_type='glove', vocab=vocab, seq_len=seq_len)
+    else:
+        raise Exception(f"when 'embedding_type' = '{embedding_type}', the parameter 'vocab' is required")
+    
+    if embedding_type == 'fasttext' and vocab is not None:
+        cvdd_dataset = CVDDDatasetWrapper(data_train, embedding_type='fasttext', vocab=vocab, seq_len=seq_len)
+    else:
+        raise Exception(f"when 'embedding_type' = '{embedding_type}', the parameter 'vocab' is required")
+
+    dl = DataLoader(cvdd_dataset, batch_size=batch_size, shuffle=shuffle)
+    print(dl)
+    print(cvdd_dataset.__getitem__(1)[0])
     
 
-#     pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name='distilbert-base-uncased', trainable=False)
+    # pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name='distilbert-base-uncased', trainable=False)
 
-#     # pretrained_model = embedding_layer.EmbeddingFactory.create('glove',
-#     #                             glove_path='./Modelisation/Baselines/CVDD/embedding_models/glove.6B.300d.txt',
-#     #                             vocab=vocab,
-#     #                             embedding_dim=300,
-#     #                             trainable=False)
+    # pretrained_model = embedding_layer.EmbeddingFactory.create('glove',
+    #                             glove_path='./Modelisation/Baselines/CVDD/embedding_models/glove.6B.300d.txt',
+    #                             vocab=vocab,
+    #                             embedding_dim=300,
+    #                             trainable=False)
     
-#     # pretrained_model = embedding_layer.EmbeddingFactory.create('fasttext',
-#     #                             fasttext_path='./Modelisation/Baselines/CVDD/embedding_models/wiki-news-300d-1M.vec',
-#     #                             vocab=vocab,
-#     #                             embedding_dim=300,
-#     #                             trainable=False)
+    # pretrained_model = embedding_layer.EmbeddingFactory.create('fasttext',
+    #                             fasttext_path='./Modelisation/Baselines/CVDD/embedding_models/wiki-news-300d-1M.vec',
+    #                             vocab=vocab,
+    #                             embedding_dim=300,
+    #                             trainable=False)
 
-#     # corpus = inlier_dataset_train['text']
-#     # pretrained_model = embedding_layer.EmbeddingFactory.create(
-#     #     'tfidf',
-#     #     corpus=corpus,
-#     #     max_features=1000
-#     # )
+    # corpus = inlier_dataset_train['text']
+    # pretrained_model = embedding_layer.EmbeddingFactory.create(
+    #     'tfidf',
+    #     corpus=corpus,
+    #     max_features=1000
+    # )
     
     
-#     attention_size = 250
-#     n_attention_heads = 2
-#     model = cvdd_Net.CVDDNet(pretrained_model, attention_size, n_attention_heads)
-#     print(model)
+    # attention_size = 250
+    # n_attention_heads = 2
+    # model = cvdd_Net.CVDDNet(pretrained_model, attention_size, n_attention_heads)
+    # print(model)
 
-#     for batch in dl:
-#         inputs, labels, texts = batch
+    # for batch in dl:
+    #     inputs, labels, texts = batch
         
-#         # GloVe / FastText / BERT
-#         x = inputs.transpose(0, 1)  # shape (seq_len, batch_size)
-#         print(x.shape)
+    #     # GloVe / FastText / BERT
+    #     x = inputs.transpose(0, 1)  # shape (seq_len, batch_size)
+    #     print(x.shape)
 
 
 
-#         cosine_dists, context_weights, A = model(x)
-#         print(cosine_dists.shape)
-#         print(context_weights.shape)
-#         print(A.shape)
+    #     cosine_dists, context_weights, A = model(x)
+    #     print(cosine_dists.shape)
+    #     print(context_weights.shape)
+    #     print(A.shape)
 
-#         break
+    #     break
 
 def data_preparation(args, logger, embedding_encoding = False):
 
@@ -214,6 +228,12 @@ def data_preparation(args, logger, embedding_encoding = False):
 
 def main(args):
 
+    # some exceptions 
+    if args.ad_model == 'ocsvm' and args.training_mode == 'two_classes':
+        raise Exception(f"Warning ! the 'training_mode' : '{args.training_mode}' is not possible with '{args.ad_model}' model")
+    if args.ad_model == 'cvdd' and args.training_mode == 'two_classes':
+        raise Exception(f"Warning ! the 'training_mode' : '{args.training_mode}' is not possible with '{args.ad_model}' model")
+
     start = time.time()
 
     logger.info(
@@ -225,51 +245,61 @@ def main(args):
         f"embedding='{args.type_emb}' ({args.emb_model}). \n\n"
     )
 
-    required_encoding = False
-
-    # if args.ad_model == 'ocsvm':
-    #     required_encoding = True
-        
+    # if 'ad_model' is 'oscvm' : required_encoding is True else False 
+    required_encoding = args.ad_model == 'ocsvm'
         
     dp_dict = data_preparation(args, logger, embedding_encoding=required_encoding)
     print(dp_dict)
 
-    # # training_mode = 'one_class' --> return train/test in any dataset there is anomaly and inlier subset
-    # # training_mode = 'two_classes' --> return train/test and separate anomaly and inlier subset to get 4 dataloaders
-    # if args.training_mode == 'two_classes':
+    # training_mode = 'one_class' --> return train/test in any dataset there is anomaly and inlier subset
+    # training_mode = 'two_classes' --> return train/test and separate anomaly and inlier subset to get 4 dataloaders
 
-    #     if args.full_dataset_ or args.dataset_name == 'WOS':
-    #         dataloader_complet = dl['complet']
-    #     else:
-    #         dataloader_train = dl['train']
-    #         dataloader_test = dl['test']
 
-    # else:
-    #     if args.full_dataset_ or args.dataset_name == 'WOS':
-    #         dataloader_train = dl['inlier']
-    #         dataloader_test = dl['anomaly']
-    #     else:
-    #         inlier_dataloader_train = dl['inlier_train']
-    #         anomaly_dataloader_train = dl['anomaly_train']
+    end = time.time()
+    logger.info(f"Data Preparation ends after : {end - start:.2f} seconds")
 
-    #         inlier_dataloader_test = dl['inlier_test']
-    #         anomaly_dataloader_test = dl['anomaly_test']
+    if args.training_mode == 'one_class':
+        if args.full_dataset_ or args.dataset_name == 'WOS':
+            dataloader_inlier = dp_dict['inlier']
+            dataloader_anomaly = dp_dict['anomaly']
 
-    # end = time.time()
-    # logger.info(f"Data Preparation ends after : {end - start:.2f} seconds")
+            data_train = dataloader_inlier
+        else:
+            inlier_dataloader_train = dp_dict['inlier_train']
+            anomaly_dataloader_train = dp_dict['anomaly_train']
 
-    # if args.ad_model == 'ocsvm':
+            inlier_dataloader_test = dp_dict['inlier_test']
+            anomaly_dataloader_test = dp_dict['anomaly_test']
 
-    #     clf, y_pred, scores = ocsvm.One_Class_SVM(dataloader_train.dataset.inputs, dataloader_train.dataset.labels, False)
-    #     auc, f1, precision, recall, fpr95 = ev.evaluation(dataloader_train.dataset.labels, scores, y_pred, verbose=False)
+            data_train = inlier_dataloader_train
 
-    #     print(clf, end="\n\n")
 
-    #     print(auc)
-    #     print(f1)
-    #     print(precision)
-    #     print(recall)
-    #     print(fpr95)
+    if args.ad_model == 'ocsvm':
+
+        clf, y_pred_train, scores_train = ocsvm.One_Class_SVM(data_train.dataset.inputs, data_train.dataset.labels, False)
+
+        ds = ConcatDataset([inlier_dataloader_test.dataset, anomaly_dataloader_test.dataset])
+        inputs_test = [x for x, _, _ in ds]
+        labels_test = [y.item() for _, y, _ in ds]
+
+        y_pred_test = clf.predict(inputs_test)           
+        scores_test = clf.decision_function(inputs_test)
+
+        auc, f1, precision, recall, fpr95 = ev.evaluation(labels_test, scores_test, y_pred_test, verbose=False)
+
+        print(clf, end="\n\n")
+
+        print(auc)
+        print(f1)
+        print(precision)
+        print(recall)
+        print(fpr95)
+
+    elif args.ad_model =='cvdd':
+
+        if args.type_emb == 'bert':
+            tokenizer = AutoTokenizer.from_pretrained(args.emb_model)
+            cvdd_model_pipeline(data_train, args.type_emb, 250, args.batch_size, args.shuffle, tokenizer=tokenizer)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Main script")

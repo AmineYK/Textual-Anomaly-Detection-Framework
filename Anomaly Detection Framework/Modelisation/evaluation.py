@@ -4,7 +4,11 @@ from sklearn.metrics import roc_auc_score, roc_curve, f1_score, precision_score,
 
 
 def fpr95_score(y_true, scores):
+    print(y_true)
+    print(scores)
     fpr, tpr, thresholds = roc_curve(y_true, scores, pos_label=1)  # 1 = anomalie
+    print(fpr)
+    print(tpr)
     idx = np.where(tpr >= 0.95)[0][0]
     return fpr[idx]
 
