@@ -36,8 +36,6 @@ class CVDDNet(nn.Module):
             hidden = hidden.permute(1,0,2)
             
         # hidden.shape = (sentence_length, batch_size, hidden_size)
-        print("hidden : ")
-        print(hidden.shape)
 
         M, A = self.self_attention(hidden)
         # A.shape = (batch_size, n_attention_heads, sentence_length)
