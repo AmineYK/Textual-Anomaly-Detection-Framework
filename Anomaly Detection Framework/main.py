@@ -61,29 +61,10 @@ def cvdd_model_pipeline(data_train, attention_size, n_attention_heads, embedding
         
 
     dl = DataLoader(cvdd_dataset, batch_size=batch_size, shuffle=shuffle)
-    print(dl)
-    print(cvdd_dataset.__getitem__(1)[0])
     
     model = cvdd_Net.CVDDNet(pretrained_model, attention_size, n_attention_heads)
-    print(model)
 
-    return model
-
-    # for batch in dl:
-    #     inputs, labels, texts = batch
-        
-    #     # GloVe / FastText / BERT
-    #     x = inputs.transpose(0, 1)  # shape (seq_len, batch_size)
-    #     print(x.shape)
-
-
-
-    #     cosine_dists, context_weights, A = model(x)
-    #     print(cosine_dists.shape)
-    #     print(context_weights.shape)
-    #     print(A.shape)
-
-    #     break
+    return model, dl
 
 def data_preparation(args, logger, embedding_encoding = False):
 
@@ -299,8 +280,6 @@ def main(args):
 
     elif args.ad_model =='cvdd':
 
-
-
         if args.type_emb == 'bert':
             tokenizer = AutoTokenizer.from_pretrained(args.emb_model)
             vocab = None
@@ -310,10 +289,26 @@ def main(args):
             vocab = utils.build_vocab(corpus,min_freq=1)
             tokenizer = None
 
+        model, dl = cvdd_model_pipeline(data_train, args.attention_size, args.n_attention_heads, args.type_emb, 200, args.batch_size, args.shuffle, tokenizer, vocab)
+        for batch in dl:
+            inputs, labels, texts = batch
+            print(inputs, end="\n\n")
+            print(labels, end="\n\n")
+            print(texts, end="\n\n")
 
-        
-        model = cvdd_model_pipeline(data_train, args.attention_size, args.n_attention_heads, args.type_emb, 200, args.batch_size, args.shuffle, tokenizer, vocab)
-        print(model)
+            
+            # GloVe / FastText / BERT
+            x = inputs.transpose(0, 1)  # shape (seq_len, batch_size)
+            print(x.shape)
+
+
+
+            cosine_dists, context_weights, A = model(x)
+            print(cosine_dists.shape)
+            print(context_weights.shape)
+            print(A.shape)
+
+            break
 
 
 if __name__ == "__main__":
