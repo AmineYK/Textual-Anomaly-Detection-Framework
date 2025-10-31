@@ -4,6 +4,9 @@ from torch.utils.data import DataLoader
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from gensim.models import KeyedVectors
+from abc import ABC, abstractmethod
+
+import os
 
 
 ################################################
@@ -28,18 +31,32 @@ class EmbeddingEncoder:
         else : raise Exception ("'model' & 'model_name' are None type, at least one is requered")
         
         
-    def forward(self, dataloader):
+    def forward(self, dataset):
         
-        return self.model.forward(dataloader)
+        return self.model.forward(dataset)
+    
+
+################################################
+################## ABSTRACT ####################
+################################################
+
+class BaseEmbeddingEncoder(ABC):
+    def __init__(self, model_name=None):
+        self.model_name = model_name
+
+    @abstractmethod
+    def forward(self, dataset):
+        pass
     
 
 ################################################
 ################### TDFIDF  ####################
 ################################################
     
-class TFIDFEmbeddingEncoder:
+class TFIDFEmbeddingEncoder(BaseEmbeddingEncoder):
     def __init__(self,model_name):
-        
+    
+        super().__init__(model_name)
         self.model_name = model_name
         self.vectorizer = TfidfVectorizer(
             max_features=10000,      
@@ -76,9 +93,10 @@ class TFIDFEmbeddingEncoder:
 #################### BERT  #####################
 ################################################    
 
-class BERTEmbeddingEncoder:
+class BERTEmbeddingEncoder(BaseEmbeddingEncoder):
     def __init__(self, model_name):
 
+        super().__init__(model_name)
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModel.from_pretrained(model_name)
         self.model.eval()
@@ -97,8 +115,7 @@ class BERTEmbeddingEncoder:
             truncation=True,
             return_tensors="pt"
         )
-
-        
+      
         with torch.no_grad():
             outputs = self.model(**inputs)
 
@@ -117,11 +134,17 @@ class BERTEmbeddingEncoder:
 #################### GloVe  ####################
 ################################################
     
-class GloVeEmbeddingEncoder:
+class GloVeEmbeddingEncoder(BaseEmbeddingEncoder):
     def __init__(self, model_name):
 
+        super().__init__(model_name)
         self.model_name = model_name
-        self.model = KeyedVectors.load(f"emb_models/{self.model_name}", mmap='r')
+
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        model_path = os.path.join(base_dir, '..', 'emb_models', self.model_name)
+        self.model = KeyedVectors.load(model_path, mmap='r')
+
+        # self.model = KeyedVectors.load(f"Data_Preparation/emb_models/{self.model_name}", mmap='r')
         self.embedding_dim = self.model.vector_size
         
         
@@ -137,7 +160,7 @@ class GloVeEmbeddingEncoder:
         for text in texts:
             words = [w for w in text.split() if w in self.model.key_to_index]
             if words:
-                emb = torch.tensor([self.model[w] for w in words]).mean(dim=0)
+                emb = torch.tensor(np.array([self.model[w] for w in words])).mean(dim=0)
             else:
                 emb = torch.zeros(self.embedding_dim)
             vectors.append(emb.cpu().numpy())
@@ -154,11 +177,17 @@ class GloVeEmbeddingEncoder:
 ###################################################
 
     
-class FastTextEmbeddingEncoder:
+class FastTextEmbeddingEncoder(BaseEmbeddingEncoder):
     def __init__(self, model_name):
-
+        
+        super().__init__(model_name)
         self.model_name = model_name
-        self.model = KeyedVectors.load(f"emb_models/{self.model_name}", mmap='r')
+
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        model_path = os.path.join(base_dir, '..', 'emb_models', self.model_name)
+        self.model = KeyedVectors.load(model_path, mmap='r')
+
+        # self.model = KeyedVectors.load(f"Data_Preparation/emb_models/{self.model_name}", mmap='r')
         self.embedding_dim = self.model.vector_size
         
         
@@ -174,7 +203,7 @@ class FastTextEmbeddingEncoder:
         for text in texts:
             words = [w for w in text.split() if w in self.model.key_to_index]
             if words:
-                emb = torch.tensor([self.model[w] for w in words]).mean(dim=0)
+                emb = torch.tensor(np.array([self.model[w] for w in words])).mean(dim=0)
             else:
                 emb = torch.zeros(self.embedding_dim)
             vectors.append(emb.cpu().numpy())

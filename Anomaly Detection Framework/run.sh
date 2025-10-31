@@ -39,7 +39,12 @@ cd "$(dirname "$0")" || exit 1
 
 
 
-python3 main.py --dataset_name Reuters --training_mode one_class --inlier_topic energy --type_tac pantin --anomaly_rate 0.1 --emb_model tfidf --type_emb tfidf --batch_size 32 --shuffle
+# python3 main.py --dataset_name Reuters --training_mode one_class --inlier_topic energy --type_tac pantin --anomaly_rate 0.1 --emb_model tfidf --type_emb tfidf --batch_size 32 --shuffle
+# python3 main.py --dataset_name Reuters --training_mode one_class --inlier_topic energy --type_tac pantin --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove --batch_size 32 --shuffle --ad_model ocsvm --nu 0.4 --kernel "rbf" --gamma "scale"
+python3 main.py --dataset_name Reuters --training_mode one_class --inlier_topic energy --type_tac pantin --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove --batch_size 32 --shuffle --ad_model cvdd --attention_size 150 --n_attention_heads 2
+
+
+
 
 
 

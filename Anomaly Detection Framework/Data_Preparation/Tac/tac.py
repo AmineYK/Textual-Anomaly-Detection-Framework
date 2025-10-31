@@ -1,9 +1,6 @@
-import time
-from datasets import concatenate_datasets
 from datasets.utils.logging import disable_progress_bar
 disable_progress_bar()
 import numpy as np
-from torch.utils.data import DataLoader
 
 
 ############################################
@@ -19,13 +16,13 @@ def add_col(example, anomaly_class):
 ################## TAC  ####################
 ############################################
 
-def textual_anomaly_contamination(dataset, dataset_name, inlier_topic, type_tac, anomaly_rate=0.1):
+def textual_anomaly_contamination(dataset, dataset_name, inlier_topic, type_tac, anomaly_rate=0.1, is_trainset=None):
     
     if dataset_name == '20NewsGroups':
         return textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac, anomaly_rate)
         
     if dataset_name == 'Reuters':
-        return textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac, anomaly_rate)
+        return textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac, anomaly_rate, is_trainset)
     
     if dataset_name == 'WOS':
         return textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac, anomaly_rate)
@@ -43,7 +40,7 @@ def textual_anomaly_contamination(dataset, dataset_name, inlier_topic, type_tac,
 ############ Reuters Ruff/Pantin ###########
 ############################################
 
-def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff', anomaly_rate=0.1):
+def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff', anomaly_rate=0.1, is_trainset=True):
     
     dataset_one_label = dataset.filter(lambda x: len(x['topics']) == 1)
     
@@ -52,12 +49,16 @@ def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff'
     #############################################
     
     if type_tac == 'ruff':
-        values, counts = np.unique(dataset_one_label[:]['topics'], return_counts=True)
-        selected_labels = values[counts >= 100]
-        dataset_ruff = dataset_one_label.filter(lambda x: x['topics'] in selected_labels)
-    
-        if inlier_topic not in selected_labels:
-            raise Exception(" Warning ! the inlier topic requested doesn't exist with this TAC method !")
+
+        if is_trainset:
+            values, counts = np.unique(dataset_one_label[:]['topics'], return_counts=True)
+            selected_labels = values[counts >= 100]
+            dataset_ruff = dataset_one_label.filter(lambda x: x['topics'] in selected_labels)
+        
+            if inlier_topic not in selected_labels:
+                raise Exception(" Warning ! the inlier topic requested doesn't exist with this TAC method !")
+        else:
+            dataset_ruff = dataset_one_label
         
         inlier_dataset_ruff = dataset_ruff.filter(lambda x: x['topics'] == [inlier_topic])
         anomaly_dataset_ruff = dataset_ruff.filter(lambda x: x['topics'] != [inlier_topic])

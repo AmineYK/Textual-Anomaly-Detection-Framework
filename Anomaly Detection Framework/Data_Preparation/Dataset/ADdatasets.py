@@ -88,9 +88,7 @@ class DatasetWrapper(Dataset):
 
 class MergedDatasetWrapper(Dataset):
     def __init__(self, datasets):
-        """
-        datasets : liste de DatasetWrapper
-        """
+
         self.texts = sum([ds.texts for ds in datasets], [])
         self.labels = torch.cat([torch.tensor(ds.labels) for ds in datasets])
         self.inputs = torch.cat([torch.tensor(ds.inputs) for ds in datasets])
@@ -103,18 +101,9 @@ class MergedDatasetWrapper(Dataset):
     
 
 class CVDDDatasetWrapper(Dataset):
-    """
-    Wrapper universel pour datasets après TAC.
-    Supporte 4 embeddings : BERT, GloVe, FastText, TF-IDF.
-    """
+
     def __init__(self, dataset, embedding_type, vocab=None, tokenizer=None, seq_len=150):
-        """
-        dataset : HuggingFace dataset après TAC
-        embedding_type : 'bert', 'glove', 'fasttext', 'tfidf'
-        vocab : dict {word: idx} pour glove/fasttext
-        tokenizer : tokenizer HuggingFace pour BERT
-        seq_len : longueur max des séquences
-        """
+
         self.dataset = dataset
         self.texts = self.dataset['text']
         self.labels = self.dataset['anomaly_class']
@@ -136,7 +125,6 @@ class CVDDDatasetWrapper(Dataset):
                 raise Exception(f"{self.embedding_type} encodding requires the parameter vocab")
 
             else:
-                    # convertir texte en indices
                 indices = [self.vocab.get(w, self.vocab['<UNK>']) for w in text.split()]
                 if len(indices) < self.seq_len:
                     indices += [self.vocab['<PAD>']] * (self.seq_len - len(indices))
@@ -153,10 +141,11 @@ class CVDDDatasetWrapper(Dataset):
                                     padding='max_length',
                                     max_length = self.seq_len,
                                     return_tensors='pt')
-                inputs = tokens['input_ids'].squeeze(0)  # shape (seq_len,)
+                # shape (seq_len,)
+                inputs = tokens['input_ids'].squeeze(0)  
 
         elif self.embedding_type == 'tfidf':
-            # tfidf embeddings doivent déjà être calculés et stockés dans dataset['tfidf_embedding']
+            # tfidf embeddings must be calculated already
             inputs = torch.tensor(self.dataset['tfidf_embedding'][idx], dtype=torch.float32)
 
         else:

@@ -78,7 +78,8 @@ class GloVeEmbeddingEncoder(BaseEmbeddingEncoder):
     def forward(self, x):
         # x: (sentence_length, batch_size)
         embedded = self.embedding(x)
-        return embedded  # (sentence_length, batch_size, embedding_size)
+        # (sentence_length, batch_size, embedding_size)
+        return embedded  
     
 
 
@@ -131,8 +132,8 @@ class TFIDFEmbeddingEncoder(BaseEmbeddingEncoder):
     def forward(self, texts):
         tfidf_vectors = self.vectorizer.transform(texts).toarray()
         tensor = torch.tensor(tfidf_vectors, dtype=torch.float32)
-        # TF-IDF n’a pas de structure séquentielle, donc ici shape = (batch_size, embedding_size)
-        return tensor.unsqueeze(0)  # (1, batch_size, embedding_size)
+        # (1, batch_size, embedding_size)
+        return tensor.unsqueeze(0)  
 
 
 class EmbeddingFactory:

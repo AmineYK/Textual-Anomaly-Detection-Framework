@@ -2,39 +2,14 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-import numpy as np
-
 from .self_attention import SelfAttention
 from .embedding_layer import BERTEmbeddingEncoder
 
 
-class BaseNet(nn.Module):
-    """Base class for all neural networks."""
-
-    def __init__(self):
-        super().__init__()
-        self.embedding = None  # embedding layer of class nn.Embedding()
-
-    def forward(self, *input):
-        """
-        Forward pass logic
-        :return: Network output
-        """
-        raise NotImplementedError
-
-    def summary(self):
-        """Network summary."""
-        net_parameters = filter(lambda p: p.requires_grad, self.parameters())
-        params = sum([np.prod(p.size()) for p in net_parameters])
-        self.logger.info('Trainable parameters: {}'.format(params))
-        self.logger.info(self)
-
-
-class CVDDNet(BaseNet):
+class CVDDNet(nn.Module):
 
     def __init__(self, pretrained_model, attention_size=100, n_attention_heads=1):
         super().__init__()
-
         # Load pretrained model (which provides a hidden representation per word, e.g. word vector or language model)
         self.pretrained_model = pretrained_model
         self.hidden_size = pretrained_model.embedding_size
