@@ -15,8 +15,6 @@ import numpy as np
 from datasets import concatenate_datasets
 from Data_Preparation.utils import data_preparation
 
-
-# --- Configuration du logger ---
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -86,66 +84,6 @@ def save_results(args, auc, ap, fpr95,
 
     with open(filepath, "w") as f:
         f.write(existing_content)
-
-
-
-
-
-
-def cvdd_model_pipeline(data_train, data_test, attention_size, n_attention_heads, embedding_type, seq_len, batch_size, shuffle, tokenizer=None, vocab=None):
-
-
-    # ================================
-    # ------------ BERT --------------
-    # ================================
-    if embedding_type == 'bert':
-        if tokenizer is not None:
-            cvdd_dataset_train = CVDDDatasetWrapper(data_train, embedding_type='bert', tokenizer=tokenizer, seq_len=seq_len)
-            cvdd_dataset_test = CVDDDatasetWrapper(data_test, embedding_type='bert', tokenizer=tokenizer, seq_len=seq_len)
-            pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name='distilbert-base-uncased', trainable=True)
-        else:
-            raise Exception(f"when 'embedding_type' = '{embedding_type}', the parameters 'bert_name' and 'tokenizer' is required")
-
-    # ================================
-    # ----------- GLOVE --------------
-    # ================================
-    elif embedding_type == 'glove': 
-        if vocab is not None:
-            cvdd_dataset_train = CVDDDatasetWrapper(data_train, embedding_type='glove', vocab=vocab, seq_len=seq_len)
-            cvdd_dataset_test = CVDDDatasetWrapper(data_test, embedding_type='glove', vocab=vocab, seq_len=seq_len)
-            pretrained_model = embedding_layer.EmbeddingFactory.create('glove',
-                                    glove_path='./Modelisation/Baselines/CVDD/embedding_models/glove.6B.300d.txt',
-                                    vocab=vocab,
-                                    embedding_dim=300,
-                                    trainable=True)
-        else:
-            raise Exception(f"when 'embedding_type' = '{embedding_type}', the parameter 'vocab' is required")
-        
-    # ================================
-    # ----------- FASTTEXT -----------
-    # ================================
-    elif embedding_type == 'fasttext':
-        if vocab is not None:
-            cvdd_dataset_train = CVDDDatasetWrapper(data_train, embedding_type='fasttext', vocab=vocab, seq_len=seq_len)   
-            cvdd_dataset_test = CVDDDatasetWrapper(data_test, embedding_type='fasttext', vocab=vocab, seq_len=seq_len)   
-            pretrained_model = embedding_layer.EmbeddingFactory.create('fasttext',
-                                    fasttext_path='./Modelisation/Baselines/CVDD/embedding_models/wiki-news-300d-1M.vec',
-                                    vocab=vocab,
-                                    embedding_dim=300,
-                                    trainable=True)
-        else:
-            raise Exception(f"when 'embedding_type' = '{embedding_type}', the parameter 'vocab' is required")
-        
-    else: raise Exception(f" the 'embedding_type' {embedding_type} is not possible with CVDD, please choose ('bert','glove','fasttext')")
-        
-
-    dl_train = DataLoader(cvdd_dataset_train, batch_size=batch_size, shuffle=shuffle)
-    dl_test = DataLoader(cvdd_dataset_test, batch_size=batch_size, shuffle=shuffle)
-    
-    model = cvdd_Net.CVDDNet(pretrained_model, attention_size, n_attention_heads)
-
-    return model, dl_train, dl_test
-
 
 
 def main(args):
@@ -224,7 +162,7 @@ def main(args):
             vocab = utils.build_vocab(corpus,min_freq=1)
             tokenizer = None
 
-        model, dl_train, dl_test = cvdd_model_pipeline(data_train, data_test, args.attention_size, args.n_attention_heads, 
+        model, dl_train, dl_test = utils.cvdd_model_pipeline(data_train, data_test, args.attention_size, args.n_attention_heads, 
                                                        args.type_emb, 500, args.batch_size, args.shuffle, tokenizer, vocab)
 
         cvdd_trainer = cvdd_Net.CVDDTrainer(optimizer_name='adam', learning_rate=args.lr, lr_milestones=(args.lr_milestones[0], args.lr_milestones[1]),
@@ -332,46 +270,46 @@ if __name__ == "__main__":
         parser.add_argument("--attention_size", type=int, default=300, help="Attention dimension for CVDD model")
         parser.add_argument("--n_attention_heads", type=int, default=4, help="Number of attention heads")
 
+        parser.add_argument(
+            "--lambda_p",
+            type=float,
+            default=1.0,
+            help="Lmabda_p"
+        )
+
+        parser.add_argument(
+            "--alpha_scheduler",
+            type=str,
+            default="logarithmic",
+            help="scheduler"
+        )
+
+        parser.add_argument(
+            "--n_epochs",
+            type=int,
+            default=100,
+            help="Number of epochs"
+        )   
+
+        parser.add_argument(
+            "--lr",
+            type=float,
+            default=0.01,
+            help="learning_rate"
+        )   
+
+        parser.add_argument(
+            "--lr_milestones",
+            type=int,
+            nargs='+',
+            default=[40, 60],
+            help="lr_milestones"
+        )   
     elif args.ad_model == "ocsvm":
         
         parser.add_argument("--nu", type=float, default=0.1, help="OCSVM nu parameter")
         parser.add_argument("--kernel", type=str, default="rbf", help="OCSVM kernel")
         parser.add_argument("--gamma", type=float, default=1, help="OCSVM gamme parameter")
 
-    parser.add_argument(
-        "--lambda_p",
-        type=float,
-        default=1.0,
-        help="Lmabda_p"
-    )
-
-    parser.add_argument(
-        "--alpha_scheduler",
-        type=str,
-        default="logarithmic",
-        help="scheduler"
-    )
-
-    parser.add_argument(
-        "--n_epochs",
-        type=int,
-        default=100,
-        help="Number of epochs"
-    )   
-
-    parser.add_argument(
-        "--lr",
-        type=float,
-        default=0.01,
-        help="learning_rate"
-    )   
-
-    parser.add_argument(
-        "--lr_milestones",
-        type=int,
-        nargs='+',
-        default=[40, 60],
-        help="lr_milestones"
-    )   
     args = parser.parse_args()
     main(args)

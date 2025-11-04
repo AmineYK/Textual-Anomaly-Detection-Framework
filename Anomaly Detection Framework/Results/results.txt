@@ -1,90 +1,56 @@
 ========================================
-Dataset:        reuters
-Inlier class:   acq
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: glove
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.5902 ± 0.0184
+Avg Precision:  0.1211 ± 0.0085
+FPR@95:         0.8389 ± 0.0220
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
 Embedding type: glove
 AD model:       cvdd
 ----------------------------------------
-AUC:            0.6143
-Avg Precision:  0.2514
-FPR@95:         0.7429
+AUC:            0.5149 ± 0.0173
+Avg Precision:  0.1074 ± 0.0037
+FPR@95:         0.9460 ± 0.0090
 ========================================
 
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: fasttext
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.6097 ± 0.0203
+Avg Precision:  0.1334 ± 0.0085
+FPR@95:         0.8155 ± 0.0297
+========================================
 
 ========================================
-Dataset:        reuters
-Inlier class:   acq
+Dataset:        20newsgroups
+Inlier class:   recreation
 Embedding type: glove
 AD model:       ocsvm
 ----------------------------------------
-AUC:            0.9796
-Avg Precision:  0.8211
-FPR@95:         0.0429
+AUC:            0.5091 ± 0.0191
+Avg Precision:  0.0985 ± 0.0018
+FPR@95:         0.9006 ± 0.0131
 ========================================
 
 ========================================
-Dataset:        reuters
-Inlier class:   crude
-Embedding type: glove
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: fasttext
 AD model:       ocsvm
 ----------------------------------------
-AUC:            0.9091
-Avg Precision:  0.5778
-FPR@95:         0.1818
-========================================
-
-========================================
-Dataset:        reuters
-Inlier class:   trade
-Embedding type: glove
-AD model:       ocsvm
-----------------------------------------
-AUC:            0.9810
-Avg Precision:  0.8056
-FPR@95:         0.0286
-========================================
-
-========================================
-Dataset:        reuters
-Inlier class:   money-fx
-Embedding type: glove
-AD model:       ocsvm
-----------------------------------------
-AUC:            0.3077
-Avg Precision:  0.1000
-FPR@95:         0.6923
-========================================
-
-========================================
-Dataset:        reuters
-Inlier class:   interest
-Embedding type: glove
-AD model:       ocsvm
-----------------------------------------
-AUC:            1.0000
-Avg Precision:  1.0000
-FPR@95:         0.0000
-========================================
-
-========================================
-Dataset:        reuters
-Inlier class:   ship
-Embedding type: glove
-AD model:       ocsvm
-----------------------------------------
-AUC:            1.0000
-Avg Precision:  1.0000
-FPR@95:         0.0000
-========================================
-
-========================================
-Dataset:        reuters
-Inlier class:   earn
-Embedding type: glove
-AD model:       ocsvm
-----------------------------------------
-AUC:            0.9762
-Avg Precision:  0.8333
-FPR@95:         0.0476
+AUC:            0.5135 ± 0.0075
+Avg Precision:  0.0994 ± 0.0036
+FPR@95:         0.9134 ± 0.0380
 ========================================
 
 ========================================
@@ -93,19 +59,239 @@ Inlier class:   science
 Embedding type: glove
 AD model:       ocsvm
 ----------------------------------------
-AUC:            0.5617
-Avg Precision:  0.1227
-FPR@95:         0.8955
+AUC:            0.5316 ± 0.0207
+Avg Precision:  0.1069 ± 0.0033
+FPR@95:         0.9206 ± 0.0254
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: fasttext
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.4585 ± 0.0086
+Avg Precision:  0.0997 ± 0.0071
+FPR@95:         0.9493 ± 0.0163
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: glove
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.5198 ± 0.0285
+Avg Precision:  0.0978 ± 0.0071
+FPR@95:         0.8017 ± 0.0429
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: fasttext
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.6005 ± 0.0111
+Avg Precision:  0.1209 ± 0.0037
+FPR@95:         0.7897 ± 0.0912
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: glove
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.5292 ± 0.0215
+Avg Precision:  0.1250 ± 0.0084
+FPR@95:         0.9578 ± 0.0222
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: fasttext
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.5392 ± 0.0373
+Avg Precision:  0.1115 ± 0.0133
+FPR@95:         0.9365 ± 0.0196
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: glove
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.6439 ± 0.0120
+Avg Precision:  0.1562 ± 0.0033
+FPR@95:         0.7989 ± 0.0432
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: fasttext
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.5458 ± 0.0173
+Avg Precision:  0.1285 ± 0.0191
+FPR@95:         0.9432 ± 0.0047
 ========================================
 
 ========================================
 Dataset:        reuters
 Inlier class:   earn
 Embedding type: glove
-AD model:       cvdd
+AD model:       ocsvm
 ----------------------------------------
-AUC:            0.7381
-Avg Precision:  0.3333
-FPR@95:         0.4762
+AUC:            0.9603 ± 0.0112
+Avg Precision:  0.6667 ± 0.1179
+FPR@95:         0.0476 ± 0.0000
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: fasttext
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9444 ± 0.0786
+Avg Precision:  0.8704 ± 0.1833
+FPR@95:         0.1111 ± 0.1571
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: glove
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.7558 ± 0.0956
+Avg Precision:  0.3738 ± 0.1598
+FPR@95:         0.6048 ± 0.1782
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: fasttext
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.8497 ± 0.0448
+Avg Precision:  0.3909 ± 0.0572
+FPR@95:         0.3286 ± 0.0606
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: glove
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.6397 ± 0.1467
+Avg Precision:  0.2479 ± 0.1027
+FPR@95:         0.7374 ± 0.2104
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: fasttext
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.8990 ± 0.0577
+Avg Precision:  0.5689 ± 0.1783
+FPR@95:         0.2020 ± 0.1221
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: glove
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.5651 ± 0.2071
+Avg Precision:  0.2390 ± 0.2081
+FPR@95:         0.6857 ± 0.2690
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: fasttext
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.7333 ± 0.0433
+Avg Precision:  0.3618 ± 0.1587
+FPR@95:         0.6190 ± 0.2242
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: glove
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.8974 ± 0.0959
+Avg Precision:  0.5833 ± 0.3118
+FPR@95:         0.1026 ± 0.0959
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: fasttext
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.5128 ± 0.2019
+Avg Precision:  0.1525 ± 0.0456
+FPR@95:         0.4872 ± 0.2019
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: glove
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.5385 ± 0.3323
+Avg Precision:  0.4007 ± 0.4239
+FPR@95:         0.4615 ± 0.3323
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: fasttext
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.3077 ± 0.2878
+Avg Precision:  0.1208 ± 0.0566
+FPR@95:         0.6923 ± 0.2878
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: glove
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9286 ± 0.1010
+Avg Precision:  0.7500 ± 0.3536
+FPR@95:         0.0714 ± 0.1010
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: fasttext
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9048 ± 0.0673
+Avg Precision:  0.5556 ± 0.3143
+FPR@95:         0.0952 ± 0.0673
 ========================================
 
