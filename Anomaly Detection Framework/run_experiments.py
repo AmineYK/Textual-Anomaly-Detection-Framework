@@ -2,10 +2,6 @@ import os
 
 # === Paramètres ===
 list_dataset_name = ["20newsgroups", "reuters"]
-# list_list_inlier_topic = [
-#     ["computer"],
-#     ["earn"]
-# ]
 
 list_list_inlier_topic = [
     ["computer", "recreation", "science", "miscellaneous", "politics", "religion"],
@@ -14,6 +10,47 @@ list_list_inlier_topic = [
 
 list_embeddings = ["glove", "fasttext"]
 list_models = ["ocsvm"]
+
+# ocsvm_params_dict = {
+#     "20newsgroups": {
+#         "computer": {"nu": 0.05, "kernel": "rbf", "gamma": 0.5},
+#         "recreation": {"nu": 0.1, "kernel": "rbf", "gamma": 1.0},
+#         "science": {"nu": 0.05, "kernel": "rbf", "gamma": 0.8},
+#         "miscellaneous": {"nu": 0.1, "kernel": "linear", "gamma": 1.0},
+#         "politics": {"nu": 0.05, "kernel": "rbf", "gamma": 0.6},
+#         "religion": {"nu": 0.05, "kernel": "linear", "gamma": 1.0},
+#     },
+#     "reuters": {
+#         "earn": {"nu": 0.05, "kernel": "rbf", "gamma": 1.0},
+#         "acq": {"nu": 0.1, "kernel": "rbf", "gamma": 0.8},
+#         "crude": {"nu": 0.05, "kernel": "linear", "gamma": 1.0},
+#         "trade": {"nu": 0.05, "kernel": "rbf", "gamma": 0.5},
+#         "money-fx": {"nu": 0.05, "kernel": "rbf", "gamma": 0.6},
+#         "interest": {"nu": 0.1, "kernel": "linear", "gamma": 1.0},
+#         "ship": {"nu": 0.05, "kernel": "rbf", "gamma": 0.7},
+#     }
+# }
+
+ocsvm_params_dict = {
+    '20newsgroups': {
+        'computer':      {'kernel': 'sigmoid', 'nu': 0.1,  'gamma': 1},
+        'recreation':    {'kernel': 'sigmoid', 'nu': 0.1,  'gamma': 1},
+        'science':       {'kernel': 'rbf',     'nu': 0.1,  'gamma': 0.001},
+        'miscellaneous': {'kernel': 'sigmoid', 'nu': 0.05, 'gamma': 1},
+        'politics':      {'kernel': 'rbf',     'nu': 0.15, 'gamma': 1},
+        'religion':      {'kernel': 'sigmoid', 'nu': 0.05, 'gamma': 1}
+    },
+    'reuters': {
+        'earn':     {'kernel': 'sigmoid', 'nu': 0.05, 'gamma': 0.001},
+        'acq':      {'kernel': 'rbf',     'nu': 0.05, 'gamma': 1},
+        'crude':    {'kernel': 'rbf',     'nu': 0.15, 'gamma': 1},
+        'trade':    {'kernel': 'rbf',     'nu': 0.05, 'gamma': 1},
+        'money-fx': {'kernel': 'rbf',     'nu': 0.05, 'gamma': 1},
+        'interest': {'kernel': 'rbf',     'nu': 0.05, 'gamma': 0.1},
+        'ship':     {'kernel': 'sigmoid', 'nu': 0.1,  'gamma': 0.01}
+    }
+}
+
 
 for i, dataset_name in enumerate(list_dataset_name):
     list_inlier_topic = list_list_inlier_topic[i]
@@ -46,11 +83,9 @@ for i, dataset_name in enumerate(list_dataset_name):
                         f"--lr_milestones 10 15"
                     )
                 elif ad_model == "ocsvm":
-                    cmd += (
-                        f"--nu 0.05 "
-                        f"--kernel rbf "
-                        f"--gamma 0.1"
-                    )
+                    params = ocsvm_params_dict[dataset_name][inlier_topic]
+                    cmd += f"--nu {params['nu']} --kernel {params['kernel']} --gamma {params['gamma']}"
+
 
                 # # === Log & exécution ===
                 # os.makedirs("logs", exist_ok=True)

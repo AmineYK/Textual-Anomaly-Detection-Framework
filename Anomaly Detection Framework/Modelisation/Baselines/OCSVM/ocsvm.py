@@ -6,18 +6,17 @@ import numpy as np
 
 def One_Class_SVM(embeddings, args):
 
-    print("\nOCSVM model training start...")
+    # print("\nOCSVM model training start...")
     start = time.time()
     
     clf = OCSVM(**args)
-    print(clf)
 
     clf.fit(np.array(embeddings))
     y_pred = clf.predict(embeddings)           
     scores = clf.decision_function(embeddings)
     end = time.time()
 
-    print(f"\nOCSVM model training finish after {end-start} seconds")
+    # print(f"\nOCSVM model training finish after {end-start} seconds")
     
     # if verbose : 
     #     tsne = TSNE(
