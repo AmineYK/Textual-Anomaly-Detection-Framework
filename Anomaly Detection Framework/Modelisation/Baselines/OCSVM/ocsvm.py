@@ -2,6 +2,7 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 from pyod.models.ocsvm import OCSVM
 import time
+import numpy as np
 
 def One_Class_SVM(embeddings, args):
 
@@ -9,8 +10,9 @@ def One_Class_SVM(embeddings, args):
     start = time.time()
     
     clf = OCSVM(**args)
+    print(clf)
 
-    clf.fit(embeddings)
+    clf.fit(np.array(embeddings))
     y_pred = clf.predict(embeddings)           
     scores = clf.decision_function(embeddings)
     end = time.time()
@@ -33,7 +35,9 @@ def One_Class_SVM(embeddings, args):
     #     plt.ylabel("Feature 2")
     #     plt.show()
 
+    # return clf
     return clf, y_pred, scores
+
 
     
             

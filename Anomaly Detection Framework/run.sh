@@ -2,32 +2,52 @@
 
 cd "$(dirname "$0")" || exit 1
 
-# python3 main.py --dataset_name 20NewsGroups --inlier_topic science \
-#     --type_tac ruff --anomaly_rate 0.1
+##############################
+######### REUTERS ############
+##############################
 
-# python3 main.py --dataset_name 20NewsGroups --inlier_topic science \
-#     --type_tac pantin --anomaly_rate 0.1
-
-# python3 main.py --dataset_name Reuters --inlier_topic energy \
-#     --type_tac pantin --anomaly_rate 0.1
-
-# python3 main.py --dataset_name Reuters --inlier_topic acq \
-#     --type_tac ruff --anomaly_rate 0.1
-
-# python3 main.py --dataset_name WOS --inlier_topic Civil_Engineering \
-#     --type_tac pantin --anomaly_rate 0.1
-
-# python3 main.py --dataset_name DBpedia14 --inlier_topic Animal \
-#     --type_tac pantin --anomaly_rate 0.1
-
-
-# python3 main.py --dataset_name reuters --training_mode one_class --inlier_topic interest \
-#     --type_tac ruff --anomaly_rate 0.1 --emb_model fasttext_300d.kv --type_emb fasttext \
-#     --batch_size 64 --shuffle --ad_model ocsvm
 
 python3 main.py --dataset_name reuters --training_mode one_class --inlier_topic acq \
     --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \
-    --batch_size 64 --shuffle --ad_model ocsvm 
+    --batch_size 64 --shuffle --ad_model cvdd --attention_size 150 --n_attention_heads 10 \
+    --lambda_p 1.0 --alpha_scheduler "logarithmic" --n_epochs 40 --lr 0.01 --lr_milestones 20 30
+
+# python3 main.py --dataset_name reuters --training_mode one_class --inlier_topic earn \
+#     --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \
+#     --batch_size 64 --shuffle --ad_model ocsvm --nu 0.05 --kernel 'rbf' --gamma 0.1
+
+# python3 main.py --dataset_name reuters --training_mode one_class --inlier_topic acq \
+#     --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \
+#     --batch_size 64 --shuffle --ad_model ocsvm --nu 0.05 --kernel 'rbf' --gamma 1
+
+# python3 main.py --dataset_name reuters --training_mode one_class --inlier_topic crude \
+#     --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \
+#     --batch_size 64 --shuffle --ad_model ocsvm --nu 0.05 --kernel 'rbf' --gamma 1
+
+# python3 main.py --dataset_name reuters --training_mode one_class --inlier_topic trade \
+#     --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \
+#     --batch_size 64 --shuffle --ad_model ocsvm --nu 0.05 --kernel 'rbf' --gamma 1
+
+# python3 main.py --dataset_name reuters --training_mode one_class --inlier_topic money-fx \
+#     --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \
+#     --batch_size 64 --shuffle --ad_model ocsvm --nu 0.05 --kernel 'rbf' --gamma 1
+
+# python3 main.py --dataset_name reuters --training_mode one_class --inlier_topic interest \
+#     --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \
+#     --batch_size 64 --shuffle --ad_model ocsvm --nu 0.05 --kernel 'rbf' --gamma 1
+
+# python3 main.py --dataset_name reuters --training_mode one_class --inlier_topic ship \
+#     --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \
+#     --batch_size 64 --shuffle --ad_model ocsvm --nu 0.05 --kernel 'rbf' --gamma 1
+
+###################################
+######### 20NewsGroups ############
+###################################
+
+# python3 main.py --dataset_name 20newsgroups --training_mode one_class --inlier_topic science \
+#     --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \
+#     --batch_size 64 --shuffle --ad_model ocsvm --nu 0.05 --kernel 'rbf' --gamma 1
+
 
 # python3 main.py --dataset_name reuters --training_mode one_class --inlier_topic acq \
 # --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \

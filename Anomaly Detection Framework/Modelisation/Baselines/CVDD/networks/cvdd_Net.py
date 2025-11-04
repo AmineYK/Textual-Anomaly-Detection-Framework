@@ -56,8 +56,8 @@ class CVDDNet(nn.Module):
 
 class CVDDTrainer:
 
-    def __init__(self, optimizer_name='adam', learning_rate=1e-3, lr_milestones=(20,70), n_epochs=100, 
-                 lambda_p=0.0, alpha_scheduler='hard', weight_decay=1e-6):
+    def __init__(self, optimizer_name='adam', learning_rate=1e-2, lr_milestones=(40,60), n_epochs=100, 
+                 lambda_p=0.0, alpha_scheduler='logaritmic', weight_decay=1e-6):
         
         self.optimizer_name = optimizer_name
         self.weight_decay = weight_decay

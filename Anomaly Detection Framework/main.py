@@ -102,7 +102,7 @@ def cvdd_model_pipeline(data_train, data_test, attention_size, n_attention_heads
         if tokenizer is not None:
             cvdd_dataset_train = CVDDDatasetWrapper(data_train, embedding_type='bert', tokenizer=tokenizer, seq_len=seq_len)
             cvdd_dataset_test = CVDDDatasetWrapper(data_test, embedding_type='bert', tokenizer=tokenizer, seq_len=seq_len)
-            pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name='distilbert-base-uncased', trainable=False)
+            pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name='distilbert-base-uncased', trainable=True)
         else:
             raise Exception(f"when 'embedding_type' = '{embedding_type}', the parameters 'bert_name' and 'tokenizer' is required")
 
@@ -206,12 +206,6 @@ def main(args):
 
         auc, ap, fpr95 = ev.evaluation(data_test.labels, scores_test, verbose=False)
 
-        print(clf, end="\n\n")
-
-        print(auc)
-        print(ap)
-        print(fpr95)
-
         save_results(args, auc, ap, fpr95,
                  output_dir="/home/youcefk251/My Thesis/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results",
                  filename="results.txt",
@@ -230,10 +224,12 @@ def main(args):
             vocab = utils.build_vocab(corpus,min_freq=1)
             tokenizer = None
 
-        model, dl_train, dl_test = cvdd_model_pipeline(data_train, data_test, args.attention_size, args.n_attention_heads, args.type_emb, 200, args.batch_size, args.shuffle, tokenizer, vocab)
+        model, dl_train, dl_test = cvdd_model_pipeline(data_train, data_test, args.attention_size, args.n_attention_heads, 
+                                                       args.type_emb, 500, args.batch_size, args.shuffle, tokenizer, vocab)
 
-        cvdd_trainer = cvdd_Net.CVDDTrainer(optimizer_name='adam', learning_rate=1e-2, lr_milestones=(20,25), n_epochs=30, 
-                 lambda_p=0.0, alpha_scheduler='linear', weight_decay=1e-6)
+        cvdd_trainer = cvdd_Net.CVDDTrainer(optimizer_name='adam', learning_rate=args.lr, lr_milestones=(args.lr_milestones[0], args.lr_milestones[1]),
+                                            n_epochs=args.n_epochs, lambda_p=args.lambda_p,
+                                            alpha_scheduler=args.alpha_scheduler, weight_decay=1e-4)
         
         model_trained = cvdd_trainer.train(model, dl_train)
         auc, ap, fpr95, _ = cvdd_trainer.test(model_trained, dl_test, ad_score='context_dist_mean')
@@ -340,10 +336,42 @@ if __name__ == "__main__":
         
         parser.add_argument("--nu", type=float, default=0.1, help="OCSVM nu parameter")
         parser.add_argument("--kernel", type=str, default="rbf", help="OCSVM kernel")
-        parser.add_argument("--gamma", type=str, default="scale", help="OCSVM gamme parameter")
+        parser.add_argument("--gamma", type=float, default=1, help="OCSVM gamme parameter")
 
+    parser.add_argument(
+        "--lambda_p",
+        type=float,
+        default=1.0,
+        help="Lmabda_p"
+    )
 
+    parser.add_argument(
+        "--alpha_scheduler",
+        type=str,
+        default="logarithmic",
+        help="scheduler"
+    )
 
+    parser.add_argument(
+        "--n_epochs",
+        type=int,
+        default=100,
+        help="Number of epochs"
+    )   
 
+    parser.add_argument(
+        "--lr",
+        type=float,
+        default=0.01,
+        help="learning_rate"
+    )   
+
+    parser.add_argument(
+        "--lr_milestones",
+        type=int,
+        nargs='+',
+        default=[40, 60],
+        help="lr_milestones"
+    )   
     args = parser.parse_args()
     main(args)
