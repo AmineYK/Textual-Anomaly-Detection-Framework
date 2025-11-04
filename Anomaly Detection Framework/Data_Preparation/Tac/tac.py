@@ -1,9 +1,7 @@
-import time
-from datasets import concatenate_datasets
 from datasets.utils.logging import disable_progress_bar
 disable_progress_bar()
 import numpy as np
-from torch.utils.data import DataLoader
+from datasets import concatenate_datasets
 
 
 ############################################
@@ -19,24 +17,22 @@ def add_col(example, anomaly_class):
 ################## TAC  ####################
 ############################################
 
-def textual_anomaly_contamination(dataloader, dataset_name, inlier_topic, type_tac, anomaly_rate=0.1, batch_size=64):
+def textual_anomaly_contamination(dataset, dataset_name, inlier_topic, type_tac, anomaly_rate=0.1, is_trainset=True):
     
-    dataset = dataloader.dataset
-    
-    if dataset_name == '20NewsGroups':
-        return textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac, anomaly_rate, batch_size)
+    if dataset_name == '20newsgroups':
+        return textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac, anomaly_rate, is_trainset)
         
-    if dataset_name == 'Reuters':
-        return textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac, anomaly_rate, batch_size)
+    if dataset_name == 'reuters':
+        return textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac, anomaly_rate, is_trainset)
     
-    if dataset_name == 'WOS':
-        return textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac, anomaly_rate, batch_size)
+    if dataset_name == 'wos':
+        return textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac, anomaly_rate, is_trainset)
     
-    if dataset_name == 'DBpedia14':
-        return textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac, anomaly_rate, batch_size)
+    if dataset_name == 'dppedia14':
+        return textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac, anomaly_rate, is_trainset)
         
-    if dataset_name == 'AGNews':
-        return textual_anomaly_contamination_agnews(dataset, inlier_topic, type_tac, anomaly_rate, batch_size)
+    if dataset_name == 'agnews':
+        return textual_anomaly_contamination_agnews(dataset, inlier_topic, type_tac, anomaly_rate, is_trainset)
         
     raise Exception("'dataset_name' not found")
 
@@ -45,7 +41,7 @@ def textual_anomaly_contamination(dataloader, dataset_name, inlier_topic, type_t
 ############ Reuters Ruff/Pantin ###########
 ############################################
 
-def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff', anomaly_rate=0.1, batch_size=64):
+def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff', anomaly_rate=0.1, is_trainset=True):
     
     dataset_one_label = dataset.filter(lambda x: len(x['topics']) == 1)
     
@@ -54,12 +50,16 @@ def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff'
     #############################################
     
     if type_tac == 'ruff':
-        values, counts = np.unique(dataset_one_label[:]['topics'], return_counts=True)
-        selected_labels = values[counts >= 100]
-        dataset_ruff = dataset_one_label.filter(lambda x: x['topics'] in selected_labels)
-    
-        if inlier_topic not in selected_labels:
-            raise Exception(" Warning ! the inlier topic requested doesn't exist with this TAC method !")
+
+        if is_trainset:
+            values, counts = np.unique(dataset_one_label[:]['topics'], return_counts=True)
+            selected_labels = values[counts >= 100]
+            dataset_ruff = dataset_one_label.filter(lambda x: x['topics'] in selected_labels)
+        
+            if inlier_topic not in selected_labels:
+                raise Exception(" Warning ! the inlier topic requested doesn't exist with this TAC method !")
+        else:
+            dataset_ruff = dataset_one_label
         
         inlier_dataset_ruff = dataset_ruff.filter(lambda x: x['topics'] == [inlier_topic])
         anomaly_dataset_ruff = dataset_ruff.filter(lambda x: x['topics'] != [inlier_topic])
@@ -71,7 +71,8 @@ def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff'
         inlier_dataset_ruff = inlier_dataset_ruff.map(add_col, fn_kwargs={"anomaly_class": 0})
         anomaly_dataset_ruff = anomaly_dataset_ruff.map(add_col, fn_kwargs={"anomaly_class": 1})
 
-        return DataLoader(inlier_dataset_ruff, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset_ruff, batch_size=batch_size, shuffle=True)
+        if is_trainset : return inlier_dataset_ruff, anomaly_dataset_ruff
+        else: return concatenate_datasets([inlier_dataset_ruff,anomaly_dataset_ruff])
 
     #############################################
     ################# PANTIN ####################
@@ -123,7 +124,8 @@ def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff'
         inlier_dataset_pantin = inlier_dataset_pantin.map(add_col, fn_kwargs={"anomaly_class": 0})
         anomaly_dataset_pantin = anomaly_dataset_pantin.map(add_col, fn_kwargs={"anomaly_class": 1})
 
-        return DataLoader(inlier_dataset_pantin, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset_pantin, batch_size=batch_size, shuffle=True)
+        if is_trainset : return inlier_dataset_pantin, anomaly_dataset_pantin
+        else: return concatenate_datasets([inlier_dataset_pantin,anomaly_dataset_pantin])
     
     raise Exception(" the 'type_tac' selected is not available for this dataset ")
 
@@ -132,7 +134,7 @@ def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff'
 ############ 20Newsgroups ##################
 ############################################
 
-def textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac='ruff', anomaly_rate=0.1, batch_size=64):
+def textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac='ruff', anomaly_rate=0.1, is_trainset=True):
     
     if type_tac == 'ruff':
         groups = {
@@ -205,14 +207,15 @@ def textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac='
     inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
     anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
 
-    return DataLoader(inlier_dataset, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset, batch_size=batch_size, shuffle=True)
+    if is_trainset : return inlier_dataset, anomaly_dataset
+    else: return concatenate_datasets([inlier_dataset,anomaly_dataset])
 
 
 ############################################
 ################## WOS #####################
 ############################################
 
-def textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac='pantin', anomaly_rate=0.1, batch_size=64):
+def textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac='pantin', anomaly_rate=0.1, is_trainset=True):
     
     if type_tac != 'pantin':
         raise Exception(" the 'type_tac' selected is not available for this dataset ")
@@ -240,14 +243,15 @@ def textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac='pantin', 
     inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
     anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
 
-    return DataLoader(inlier_dataset, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset, batch_size=batch_size, shuffle=True)
+    if is_trainset : return inlier_dataset, anomaly_dataset
+    else: return concatenate_datasets([inlier_dataset,anomaly_dataset])
 
 
 ############################################
 ############ DBPedia14 #####################
 ############################################
 
-def textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac='pantin', anomaly_rate=0.1, batch_size=64):
+def textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac='pantin', anomaly_rate=0.1, is_trainset=True):
     
     if type_tac != 'pantin':
         raise Exception(" the 'type_tac' selected is not available for this dataset ")
@@ -282,14 +286,15 @@ def textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac='pan
     inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
     anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
 
-    return DataLoader(inlier_dataset, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset, batch_size=batch_size, shuffle=True)
+    if is_trainset : return inlier_dataset, anomaly_dataset
+    else: return concatenate_datasets([inlier_dataset,anomaly_dataset])
 
 
 ############################################
 ################## AGNews ##################
 ############################################
 
-def textual_anomaly_contamination_agnews(dataset, inlier_topic, type_tac='fate', anomaly_rate=0.1, batch_size=64):
+def textual_anomaly_contamination_agnews(dataset, inlier_topic, type_tac='fate', anomaly_rate=0.1, is_trainset=True):
     
     if type_tac != 'fate':
         raise Exception(" the 'type_tac' selected is not available for this dataset ")
@@ -314,4 +319,5 @@ def textual_anomaly_contamination_agnews(dataset, inlier_topic, type_tac='fate',
     inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
     anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
 
-    return DataLoader(inlier_dataset, batch_size=batch_size, shuffle=True), DataLoader(anomaly_dataset, batch_size=batch_size, shuffle=True)
+    if is_trainset : return inlier_dataset, anomaly_dataset
+    else: return concatenate_datasets([inlier_dataset,anomaly_dataset])

@@ -1,41 +1,41 @@
 
-  # *****************************
-    if name == "Enron":
+#   # *****************************
+#     if name == "Enron":
 
-        dataset = load_dataset("corbt/enron-emails")
+#         dataset = load_dataset("corbt/enron-emails")
 
-        return DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
+#         return DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
   
-  # *****************************
-    if name == "SMS Sp.":
+#   # *****************************
+#     if name == "SMS Sp.":
     
-        dataset =  load_dataset("ucirvine/sms_spam")
+#         dataset =  load_dataset("ucirvine/sms_spam")
 
-        return DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
+#         return DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
     
     
     
-  # *****************************
-    if name == "SST2":
+#   # *****************************
+#     if name == "SST2":
 
-        dataset =  load_dataset("rungalileo/sst2")
+#         dataset =  load_dataset("rungalileo/sst2")
 
-        train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
-        test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)
-        validation_dataloader = DataLoader(dataset['validation'], batch_size=batch_size, shuffle=True)
+#         train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
+#         test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)
+#         validation_dataloader = DataLoader(dataset['validation'], batch_size=batch_size, shuffle=True)
 
-        return train_dataloader, test_dataloader, validation_dataloader
+#         return train_dataloader, test_dataloader, validation_dataloader
     
-    # *****************************
-    if name == "IMDB":
+#     # *****************************
+#     if name == "IMDB":
 
-        dataset =  load_dataset("stanfordnlp/imdb")
+#         dataset =  load_dataset("stanfordnlp/imdb")
 
-        train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
-        test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)
-        unsupervised_dataloader = DataLoader(dataset['unsupervised'], batch_size=batch_size, shuffle=True)
+#         train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
+#         test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)
+#         unsupervised_dataloader = DataLoader(dataset['unsupervised'], batch_size=batch_size, shuffle=True)
 
-        return train_dataloader, test_dataloader, unsupervised_dataloader
+#         return train_dataloader, test_dataloader, unsupervised_dataloader
     
     
     
@@ -99,27 +99,27 @@
 
 
 
-def get_documents_from_class(dataset, class_name="comp.graphics", compl=True, verbose=False):
+# def get_documents_from_class(dataset, class_name="comp.graphics", compl=True, verbose=False):
 
-    tac = time.time()
+#     tac = time.time()
 
-    subset_class = dataset.filter(lambda x: x["label_text"] == class_name)
-    if compl:
-        subset_compl = dataset.filter(lambda x: x["label_text"] != class_name)
+#     subset_class = dataset.filter(lambda x: x["label_text"] == class_name)
+#     if compl:
+#         subset_compl = dataset.filter(lambda x: x["label_text"] != class_name)
 
-    tic = time.time()
+#     tic = time.time()
 
-    if verbose:
-        print(f"Documents of '{class_name}' class extracted in {np.round(tic-tac,2)}s\n\n")
+#     if verbose:
+#         print(f"Documents of '{class_name}' class extracted in {np.round(tic-tac,2)}s\n\n")
 
-    if compl: return subset_class, subset_compl
-    return subset_class
+#     if compl: return subset_class, subset_compl
+#     return subset_class
 
 
-def add_col(example,anomaly_class = 0):
+# def add_col(example,anomaly_class = 0):
     
-    example["anomaly_label"] = anomaly_class
-    return example
+#     example["anomaly_label"] = anomaly_class
+#     return example
 
 
 # Textual Anomaly Contamination TAC (20NewsGroups)
@@ -179,3 +179,266 @@ def add_col(example,anomaly_class = 0):
 
 
 #     return DataLoader(TAC_dataset, batch_size=batch_size, shuffle=True)  
+
+
+from Dataset import ADdatasets
+from Tac import tac
+from Embedding import embedding_encoder
+import argparse
+import logging
+from torch.utils.data import DataLoader
+
+# --- Configuration du logger ---
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def main(args):
+
+    logger.info("#######################")
+    logger.info("Loading Dataset...")
+    logger.info("########################\n")
+    dataset = ADdatasets.ADDataset(args.dataset_name, args.full_dataset_, args.preprocessing)
+
+    if args.full_dataset_ or args.dataset_name == 'WOS':
+        dataset_complet, _ = dataset.get_splits()
+        dataset_train, dataset_test = None, None
+    else:
+        dataset_train, dataset_test = dataset.get_splits()
+        dataset_complet = None
+
+    if dataset_complet is None :
+        print(dataset_train)
+        print(dataset_test)
+    else:
+        print(dataset_complet)
+
+    logger.info("################################")
+    logger.info("Textual Anomaly Contamination...")
+    logger.info("#################################\n")
+
+    if dataset_complet is None :
+        inlier_dataset_train, anomaly_dataset_train = tac.textual_anomaly_contamination(dataset_train, args.dataset_name, args.inlier_topic, args.type_tac, args.anomaly_rate)
+        inlier_dataset_test, anomaly_dataset_test = tac.textual_anomaly_contamination(dataset_test, args.dataset_name, args.inlier_topic, args.type_tac, args.anomaly_rate)
+    else:
+        inlier_dataset_complet, anomaly_dataset_complet = tac.textual_anomaly_contamination(dataset_complet, args.dataset_name, args.inlier_topic, args.type_tac, args.anomaly_rate)
+
+
+    logger.info("################################")
+    logger.info("Embedding Encodage...")
+    logger.info("#################################\n")
+
+    emb_encoder = embedding_encoder.EmbeddingEncoder(args.model_name, args.type_emb)
+
+    if dataset_complet is None :
+        inlier_dataset_train_emb = emb_encoder.forward(inlier_dataset_train)
+        anomaly_dataset_train_emb = emb_encoder.forward(anomaly_dataset_train)
+
+        inlier_dataset_test_emb = emb_encoder.forward(inlier_dataset_test)
+        anomaly_dataset_test_emb = emb_encoder.forward(anomaly_dataset_test)
+
+    else:
+        inlier_dataset_complet_emb = emb_encoder.forward(inlier_dataset_complet)
+        anomaly_dataset_complet_emb = emb_encoder.forward(anomaly_dataset_complet)
+
+
+    logger.info("################################")
+    logger.info("Dataloader Creation...")
+    logger.info("#################################\n")
+
+    wrapper_inlier_dataset_emb = ADdatasets.DatasetWrapper(inlier_dataset_emb, args.type_emb)
+    inlier_dataloader = DataLoader(wrapper_inlier_dataset_emb, batch_size=args.batch_size, shuffle=args.shuffle)
+
+    wrapper_anomaly_dataset_emb = ADdatasets.DatasetWrapper(anomaly_dataset_emb, args.type_emb)
+    anomaly_dataloader = DataLoader(wrapper_anomaly_dataset_emb, batch_size=args.batch_size, shuffle=args.shuffle)
+
+    print(inlier_dataloader)
+    print(anomaly_dataloader)
+    
+
+
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Main script")
+
+    parser.add_argument(
+        "--dataset_name",
+        type=str,
+        default="20NewsGroups",
+        help="Dataset naming (ex: '20newsgroups', 'reuters', etc.)"
+    )
+
+    parser.add_argument(
+        "--full_dataset_",
+        action="store_true",
+        help="full dataset"
+    )
+
+    parser.add_argument(
+        "--preprocessing",
+        action="store_true",
+        help="preprocessing function"
+    )
+
+    parser.add_argument(
+        "--inlier_topic",
+        type=str,
+        default="science",
+        help="The inlier category of the dataset"
+    )
+
+    parser.add_argument(
+        "--type_tac",
+        type=str,
+        default="ruff",
+        help="The type of anomaly contamintion for the dataset"
+    )
+
+    parser.add_argument(
+        "--anomaly_rate",
+        type=float,
+        default=0.1,
+        help="The rate of anomaly samples in the final dataset"
+    )
+
+    parser.add_argument(
+        "--model_name",
+        type=str,
+        default="distilbert-base-uncased",
+        help="The name of the model"
+    )
+
+    parser.add_argument(
+        "--type_emb",
+        type=str,
+        default="bert",
+        help="The type of embedding encodage"
+    )
+
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=64,
+        help="The batch size"
+    )
+
+    parser.add_argument(
+        "--shuffle",
+        action="store_true",
+        help="suffle for dataloader"
+    )
+
+
+
+    args = parser.parse_args()
+    main(args)
+
+
+
+# def data_preparation(args, logger, embedding_encoding = False):
+
+#     logger.info("################################")
+#     logger.info("Loading Dataset...")
+#     logger.info("################################\n")
+
+#     dataset = ADDataset(args.dataset_name, args.full_dataset_, args.preprocessing)
+
+#     if args.full_dataset_ or args.dataset_name == 'WOS':
+#         dataset_complet, _ = dataset.get_splits()
+#         dataset_train, dataset_test_ = None, None
+#     else:
+#         dataset_train, dataset_test_ = dataset.get_splits()
+#         dataset_complet = None
+
+#     logger.info("################################")
+#     logger.info("Textual Anomaly Contamination...")
+#     logger.info("#################################\n")
+
+#     if dataset_complet is None:
+#         inlier_dataset_train, anomaly_dataset_train = textual_anomaly_contamination(
+#             dataset_train, args.dataset_name, args.inlier_topic, args.type_tac, args.anomaly_rate, is_trainset=True
+#         )
+
+#         dataset_test = textual_anomaly_contamination(
+#             dataset_test_, args.dataset_name, args.inlier_topic, args.type_tac, args.anomaly_rate, is_trainset=False
+#         )
+
+#         # if false the return will be plain texts --> without encoding
+#         if not embedding_encoding:
+
+#             if args.training_mode == 'two_classes':
+#                 return {
+#                         "train": concatenate_datasets([inlier_dataset_train, anomaly_dataset_train]),
+#                         "test": dataset_test
+#                     }
+#             else:
+#                 return {
+#                     "inlier_train": inlier_dataset_train,
+#                     "anomaly_train": anomaly_dataset_train,
+#                     "test": dataset_test
+#                 }
+
+#     else:
+#         inlier_dataset_complet, anomaly_dataset_complet = textual_anomaly_contamination(
+#             dataset_complet, args.dataset_name, args.inlier_topic, args.type_tac, args.anomaly_rate, is_trainset=True
+#         )
+#         # if false the return will be plain texts --> without encoding
+#         if not embedding_encoding:
+#             if args.training_mode == 'two_classes':
+#                 return {
+#                             "complet": concatenate_datasets([inlier_dataset_complet, anomaly_dataset_complet])
+#                     }
+#             else:
+#                 return {
+#                             "inlier": inlier_dataset_complet,
+#                             "anomaly": anomaly_dataset_complet
+#                     }
+
+#     # continue the process of tokenization and embedding of the texts to get dataloaders with embeddings
+#     if embedding_encoding:
+
+#         logger.info("################################")
+#         logger.info("Embedding Encodage...")
+#         logger.info("#################################\n")
+
+#         emb_encoder = EmbeddingEncoder(args.emb_model, args.type_emb)
+
+#         if dataset_complet is None:
+#             inlier_dataset_train_emb = emb_encoder.forward(inlier_dataset_train)
+#             anomaly_dataset_train_emb = emb_encoder.forward(anomaly_dataset_train)
+#             dataset_test_emb = emb_encoder.forward(dataset_test)
+#         else:
+#             inlier_dataset_complet_emb = emb_encoder.forward(inlier_dataset_complet)
+#             anomaly_dataset_complet_emb = emb_encoder.forward(anomaly_dataset_complet)
+
+#         logger.info("################################")
+#         logger.info("Dataloader Creation...")
+#         logger.info("#################################\n")
+
+#         if dataset_complet is not None:
+
+#             if args.training_mode == 'two_classes':
+#                 return {
+#                             "complet": concatenate_datasets([inlier_dataset_complet_emb, anomaly_dataset_complet_emb])
+#                     }
+#             else:
+#                 return {
+#                             "inlier": inlier_dataset_complet_emb,
+#                             "anomaly": anomaly_dataset_complet_emb
+#                     }
+
+#         else:
+
+#             if args.training_mode == 'two_classes':
+
+#                 return {
+#                     "train": concatenate_datasets([inlier_dataset_train_emb, anomaly_dataset_train_emb]),
+#                     "test": dataset_test_emb
+#                 }
+
+#             else:
+#                 return {
+#                 "inlier_train": inlier_dataset_train_emb,
+#                 "anomaly_train": anomaly_dataset_train_emb,
+#                 "test": dataset_test_emb
+#             }
