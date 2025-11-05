@@ -102,7 +102,7 @@ def cvdd_model_pipeline(data_train, data_test, attention_size, n_attention_heads
         
 
     dl_train = DataLoader(cvdd_dataset_train, batch_size=batch_size, shuffle=shuffle)
-    dl_test = DataLoader(cvdd_dataset_test, batch_size=batch_size, shuffle=shuffle)
+    dl_test = DataLoader(cvdd_dataset_test, batch_size=batch_size, shuffle=False)
     
     model = cvdd_Net.CVDDNet(pretrained_model, attention_size, n_attention_heads)
 

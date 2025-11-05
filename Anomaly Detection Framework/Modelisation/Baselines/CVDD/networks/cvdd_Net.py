@@ -225,6 +225,7 @@ class CVDDTrainer:
                 ))
 
                 att_weights += A[best_att_head][:][range(len(idx))].cpu().data.numpy().tolist()
+                # att_weights += A[range(len(idx)), best_att_head].cpu().data.numpy().tolist()
 
                 AAT = A @ A.transpose(1, 2)
                 att_matrix += torch.mean(AAT, 0).cpu().data.numpy()

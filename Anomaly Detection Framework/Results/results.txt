@@ -284,3 +284,91 @@ Avg Precision:  0.4722 ± 0.3747
 FPR@95:         0.1905 ± 0.1468
 ========================================
 
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.8776
+Avg Precision:  0.2986
+FPR@95:         0.1714
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.5219
+Avg Precision:  0.1103
+FPR@95:         0.9606
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.1190
+Avg Precision:  0.0739
+FPR@95:         0.9048
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.3434
+Avg Precision:  0.0854
+FPR@95:         0.9394
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.4667
+Avg Precision:  0.1079
+FPR@95:         0.8286
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.6154
+Avg Precision:  0.1667
+FPR@95:         0.3846
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.6154
+Avg Precision:  0.1667
+FPR@95:         0.3846
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.1429
+Avg Precision:  0.0769
+FPR@95:         0.8571
+========================================
+

@@ -1,15 +1,17 @@
 import os
 
 # === Paramètres ===
-list_dataset_name = ["20newsgroups", "reuters"]
+list_dataset_name = ["reuters"]
+# list_dataset_name = ["20newsgroups", "reuters"]
 
 list_list_inlier_topic = [
-    ["computer", "recreation", "science", "miscellaneous", "politics", "religion"],
+    # ["computer", "recreation", "science", "miscellaneous", "politics", "religion"],
     ["earn", "acq", "crude", "trade", "money-fx", "interest", "ship"]
 ]
 
-list_embeddings = ["glove", "fasttext"]
-list_models = ["ocsvm"]
+list_embeddings = ["glove"]
+# list_embeddings = ["glove", "fasttext"]
+list_models = ["cvdd"]
 
 # ocsvm_params_dict = {
 #     "20newsgroups": {
@@ -59,7 +61,7 @@ for i, dataset_name in enumerate(list_dataset_name):
             for ad_model in list_models:
 
                 cmd = (
-                    f"python3 main_all_runs.py "
+                    f"python3 main.py "
                     f"--dataset_name {dataset_name} "
                     f"--training_mode one_class "
                     f"--inlier_topic {inlier_topic} "
@@ -78,9 +80,9 @@ for i, dataset_name in enumerate(list_dataset_name):
                         f"--n_attention_heads 10 "
                         f"--lambda_p 1.0 "
                         f"--alpha_scheduler logarithmic "
-                        f"--n_epochs 20 "
+                        f"--n_epochs 40 "
                         f"--lr 0.01 "
-                        f"--lr_milestones 10 15"
+                        f"--lr_milestones 20 30"
                     )
                 elif ad_model == "ocsvm":
                     params = ocsvm_params_dict[dataset_name][inlier_topic]
