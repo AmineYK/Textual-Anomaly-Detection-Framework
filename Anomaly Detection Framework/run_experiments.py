@@ -61,9 +61,10 @@ for i, dataset_name in enumerate(list_dataset_name):
             for ad_model in list_models:
 
                 cmd = (
-                    f"python3 main.py "
+                    f"python3 main_all_runs.py "
                     f"--dataset_name {dataset_name} "
                     f"--training_mode one_class "
+                    f"--device cuda "
                     f"--inlier_topic {inlier_topic} "
                     f"--type_tac ruff "
                     f"--anomaly_rate 0.1 "

@@ -63,11 +63,12 @@ def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff'
         
         inlier_dataset_ruff = dataset_ruff.filter(lambda x: x['topics'] == [inlier_topic])
         anomaly_dataset_ruff = dataset_ruff.filter(lambda x: x['topics'] != [inlier_topic])
-            
+         
+        # if is_trainset:
         n_anomalies = int((anomaly_rate * inlier_dataset_ruff.num_rows) / (1 - anomaly_rate))
         anomaly_indices = np.random.randint(0, anomaly_dataset_ruff.num_rows, n_anomalies)
         anomaly_dataset_ruff = anomaly_dataset_ruff.select(anomaly_indices)
-        
+
         inlier_dataset_ruff = inlier_dataset_ruff.map(add_col, fn_kwargs={"anomaly_class": 0})
         anomaly_dataset_ruff = anomaly_dataset_ruff.map(add_col, fn_kwargs={"anomaly_class": 1})
 

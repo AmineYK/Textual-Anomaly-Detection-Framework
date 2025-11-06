@@ -57,7 +57,7 @@ class CVDDNet(nn.Module):
 class CVDDTrainer:
 
     def __init__(self, optimizer_name='adam', learning_rate=1e-2, lr_milestones=(40,60), n_epochs=100, 
-                 lambda_p=0.0, alpha_scheduler='logaritmic', weight_decay=1e-6):
+                 lambda_p=0.0, alpha_scheduler='logaritmic', weight_decay=1e-6, device='cuda'):
         
         self.optimizer_name = optimizer_name
         self.weight_decay = weight_decay
@@ -82,6 +82,8 @@ class CVDDTrainer:
         self.test_auc = 0.0
         self.test_scores = None
         self.test_att_weights = None
+        
+        self.device = torch.device(device)
 
 
     def train(self, model, dl_train):
@@ -112,6 +114,7 @@ class CVDDTrainer:
         if self.alpha_scheduler == 'hard':
             alphas = [100.0] * 4
 
+        model = model.to(self.device)
         model.train()
         alpha_i = 0
 
@@ -135,14 +138,14 @@ class CVDDTrainer:
 
             for inputs, labels, texts, idx in dl_train:
 
-                inputs = inputs.transpose(0, 1)
+                inputs = inputs.transpose(0, 1).to(self.device)
                 
                 self.optimizer.zero_grad() 
 
                 cosine_dists, context_weights, A = model(inputs)
                 scores = context_weights * cosine_dists
 
-                I = torch.eye(model.n_attention_heads)
+                I = torch.eye(model.n_attention_heads).to(self.device)
                 CCT = model.c @ model.c.transpose(1, 2)
                 P = torch.mean((CCT.squeeze() - I) ** 2)
 
@@ -188,6 +191,7 @@ class CVDDTrainer:
 
         logger = logging.getLogger()
         logger.info('\nStarting testing...')
+    
 
         n_attention_heads = model.n_attention_heads
         epoch_loss = 0.0
@@ -201,12 +205,12 @@ class CVDDTrainer:
 
         with torch.no_grad():
             for inputs, labels, texts, idx in dl_test:
-
+                inputs = inputs.transpose(0, 1).to(self.device)
                 cosine_dists, context_weights, A = model(inputs)
                 scores = context_weights * cosine_dists
                 _, best_att_head = torch.min(scores, dim=1)
 
-                I = torch.eye(n_attention_heads)
+                I = torch.eye(n_attention_heads).to(self.device)
                 CCT = model.c @ model.c.transpose(1, 2)
                 P = torch.mean((CCT.squeeze() - I) ** 2)
 
