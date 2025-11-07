@@ -176,7 +176,7 @@ class CVDDTrainer:
             self.train_att_matrix = self.train_att_matrix.tolist()
 
 
-        c = np.squeeze(model.c.data.numpy())
+        c = np.squeeze(model.c.data.cpu().numpy())
         c = c.tolist()
 
         self.train_time = time.time() - start_time

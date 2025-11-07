@@ -301,9 +301,9 @@ Inlier class:   computer
 Embedding type: glove
 AD model:       cvdd
 ----------------------------------------
-AUC:            0.5219
-Avg Precision:  0.1103
-FPR@95:         0.9606
+AUC:            0.5733 ± 0.0151
+Avg Precision:  0.1172 ± 0.0064
+FPR@95:         0.9220 ± 0.0098
 ========================================
 
 ========================================
@@ -312,9 +312,9 @@ Inlier class:   earn
 Embedding type: glove
 AD model:       cvdd
 ----------------------------------------
-AUC:            0.1190
-Avg Precision:  0.0739
-FPR@95:         0.9048
+AUC:            0.9524 ± 0.0000
+Avg Precision:  0.6250 ± 0.0417
+FPR@95:         0.0476 ± 0.0000
 ========================================
 
 ========================================
@@ -323,9 +323,9 @@ Inlier class:   crude
 Embedding type: glove
 AD model:       cvdd
 ----------------------------------------
-AUC:            0.3434
-Avg Precision:  0.0854
-FPR@95:         0.9394
+AUC:            1.0000 ± 0.0000
+Avg Precision:  1.0000 ± 0.0000
+FPR@95:         0.0000 ± 0.0000
 ========================================
 
 ========================================
@@ -334,9 +334,9 @@ Inlier class:   trade
 Embedding type: glove
 AD model:       cvdd
 ----------------------------------------
-AUC:            0.4667
-Avg Precision:  0.1079
-FPR@95:         0.8286
+AUC:            1.0000 ± 0.0000
+Avg Precision:  1.0000 ± 0.0000
+FPR@95:         0.0000 ± 0.0000
 ========================================
 
 ========================================
@@ -345,9 +345,9 @@ Inlier class:   money-fx
 Embedding type: glove
 AD model:       cvdd
 ----------------------------------------
-AUC:            0.6154
-Avg Precision:  0.1667
-FPR@95:         0.3846
+AUC:            0.6923 ± 0.0000
+Avg Precision:  0.2000 ± 0.0000
+FPR@95:         0.3077 ± 0.0000
 ========================================
 
 ========================================
@@ -356,9 +356,9 @@ Inlier class:   interest
 Embedding type: glove
 AD model:       cvdd
 ----------------------------------------
-AUC:            0.6154
-Avg Precision:  0.1667
-FPR@95:         0.3846
+AUC:            1.0000 ± 0.0000
+Avg Precision:  1.0000 ± 0.0000
+FPR@95:         0.0000 ± 0.0000
 ========================================
 
 ========================================
@@ -367,8 +367,206 @@ Inlier class:   ship
 Embedding type: glove
 AD model:       cvdd
 ----------------------------------------
-AUC:            0.1429
-Avg Precision:  0.0769
-FPR@95:         0.8571
+AUC:            1.0000 ± 0.0000
+Avg Precision:  1.0000 ± 0.0000
+FPR@95:         0.0000 ± 0.0000
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.5055 ± 0.0000
+Avg Precision:  0.7846 ± 0.0000
+FPR@95:         0.9403 ± 0.0000
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.5651 ± 0.0168
+Avg Precision:  0.1245 ± 0.0093
+FPR@95:         0.9569 ± 0.0445
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.6188 ± 0.0423
+Avg Precision:  0.1417 ± 0.0139
+FPR@95:         0.8405 ± 0.0590
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.5872 ± 0.0000
+Avg Precision:  0.8903 ± 0.0000
+FPR@95:         0.9238 ± 0.0000
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: glove
+AD model:       cvdd
+----------------------------------------
+AUC:            0.5779 ± 0.0146
+Avg Precision:  0.1210 ± 0.0099
+FPR@95:         0.8733 ± 0.0345
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            0.5494 ± 0.0137
+Avg Precision:  0.1331 ± 0.0080
+FPR@95:         0.9576 ± 0.0185
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            0.5141 ± 0.0000
+Avg Precision:  0.7917 ± 0.0000
+FPR@95:         0.9642 ± 0.0000
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            0.5297 ± 0.0219
+Avg Precision:  0.1195 ± 0.0098
+FPR@95:         0.9186 ± 0.0347
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            0.5037 ± 0.0000
+Avg Precision:  0.9483 ± 0.0000
+FPR@95:         0.9026 ± 0.0000
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            0.5706 ± 0.0253
+Avg Precision:  0.1317 ± 0.0122
+FPR@95:         0.9075 ± 0.0134
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            0.5514 ± 0.0000
+Avg Precision:  0.8894 ± 0.0000
+FPR@95:         0.8977 ± 0.0000
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            0.9143 ± 0.0356
+Avg Precision:  0.5267 ± 0.1158
+FPR@95:         0.1048 ± 0.0467
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            0.5954 ± 0.0000
+Avg Precision:  0.8852 ± 0.0000
+FPR@95:         1.0000 ± 0.0000
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            0.7364 ± 0.1242
+Avg Precision:  0.2870 ± 0.1167
+FPR@95:         0.4364 ± 0.2131
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            0.8153 ± 0.0000
+Avg Precision:  0.9764 ± 0.0000
+FPR@95:         0.7143 ± 0.0000
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            0.8273 ± 0.0000
+Avg Precision:  0.9886 ± 0.0000
+FPR@95:         0.3846 ± 0.0000
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            1.0000 ± 0.0000
+Avg Precision:  1.0000 ± 0.0000
+FPR@95:         0.0000 ± 0.0000
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: fasttext
+AD model:       cvdd
+----------------------------------------
+AUC:            0.8354 ± 0.0000
+Avg Precision:  0.9911 ± 0.0000
+FPR@95:         0.5714 ± 0.0000
 ========================================
 

@@ -22,7 +22,7 @@ import re
 import os
 
 def save_results(args, auc, ap, fpr95,
-                 output_dir="/home/youcefk251/My Thesis/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results",
+                 output_dir="/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results",
                  filename="results.txt",
                  overwrite=None):  # naive, smart, None
 
@@ -129,7 +129,9 @@ def main(args):
 
             data_test = dp_dict['test']
             data_train = inlier_dataset_train
+    
 
+    
     if args.ad_model == 'ocsvm':
 
         ocsvm_kwargs = {
@@ -168,12 +170,19 @@ def main(args):
         cvdd_trainer = cvdd_Net.CVDDTrainer(optimizer_name='adam', learning_rate=args.lr, lr_milestones=(args.lr_milestones[0], args.lr_milestones[1]),
                                             n_epochs=args.n_epochs, lambda_p=args.lambda_p,
                                             alpha_scheduler=args.alpha_scheduler, weight_decay=1e-4)
+        logger.info('################################')
+        logger.info('Model Training...')
+        logger.info('################################')
         
         model_trained = cvdd_trainer.train(model, dl_train)
+        
+        logger.info('################################')
+        logger.info(f'Model Testing on {n_runs} runs ...')
+        logger.info('################################')
         auc, ap, fpr95, _ = cvdd_trainer.test(model_trained, dl_test, ad_score='context_dist_mean')
 
         save_results(args, auc, ap, fpr95,
-                 output_dir="/home/youcefk251/My Thesis/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results",
+                 output_dir="/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results",
                  filename="results.txt",
                  overwrite="smart")
         
