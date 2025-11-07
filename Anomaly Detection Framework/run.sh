@@ -7,7 +7,7 @@ cd "$(dirname "$0")" || exit 1
 ##############################
 
 
-python3 main.py --dataset_name 20newsgroups --training_mode one_class --device 'cpu' --preprocessing --inlier_topic computer \
+python3 main.py --dataset_name 20newsgroups --training_mode one_class --device 'cuda' --preprocessing --inlier_topic computer \
     --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \
     --batch_size 64 --shuffle --ad_model cvdd --attention_size 150 --n_attention_heads 10 \
     --lambda_p 1.0 --alpha_scheduler "logarithmic" --n_epochs 5 --lr 0.01 --lr_milestones 2 3

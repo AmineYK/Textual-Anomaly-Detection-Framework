@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 from .self_attention import SelfAttention
 from .embedding_layer import BERTEmbeddingEncoder
-from .utils import initialize_context_vectors
+from Modelisation.Baselines.CVDD.utils import initialize_context_vectors
 import numpy as np
 import torch.optim as optim
 import time
