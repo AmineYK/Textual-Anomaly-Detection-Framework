@@ -1,5 +1,6 @@
-import os
+
 import re
+import os
 
 def save_results(args, auc_mean, ap_mean, fpr_mean, auc_std=None, ap_std=None, fpr_std=None,
                  output_dir="/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results",
