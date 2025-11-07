@@ -7,7 +7,7 @@ import torch
 parent_dir = Path(__file__).resolve().parent.parent
 sys.path.append(str(parent_dir))
 
-from utils import preprocess
+from Data_Preparation.utils import preprocess
 
 ADdatasetNamingDict = {
     '20newsgroups' : ['SetFit/20_newsgroups'],
