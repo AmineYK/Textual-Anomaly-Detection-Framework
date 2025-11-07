@@ -442,3 +442,69 @@ if __name__ == "__main__":
 #                 "anomaly_train": anomaly_dataset_train_emb,
 #                 "test": dataset_test_emb
 #             }
+
+
+
+# def run_multiple_times(args, n_runs=10):
+#     """Exécute n_runs fois le modèle et retourne les moyennes et écarts-types."""
+#     aucs, aps, fprs = [], [], []
+
+#     for i in range(n_runs):
+#         print(f"\n===== Run {i + 1}/{n_runs} for model {args.ad_model} =====")
+
+#         # --- Refaire la préparation des données à chaque run ---
+#         required_encoding = args.ad_model == 'ocsvm'
+#         dp_dict = data_preparation(args, logger, embedding_encoding=required_encoding)
+
+#         if args.training_mode == 'one_class':
+#             if args.full_dataset_ or args.dataset_name == 'WOS':
+#                 dataset_inlier = dp_dict['inlier']
+#                 dataset_anomaly = dp_dict['anomaly']
+#                 data_train = dataset_inlier
+#             else:
+#                 inlier_dataset_train = dp_dict['inlier_train']
+#                 anomaly_dataset_train = dp_dict['anomaly_train']
+#                 data_test = dp_dict['test']
+#                 data_train = inlier_dataset_train
+
+#         # === OCSVM ===
+#         if args.ad_model == 'ocsvm':
+#             ocsvm_kwargs = {"nu": args.nu, "kernel": args.kernel, "gamma": args.gamma}
+#             clf, _, _ = ocsvm.One_Class_SVM(data_train.inputs, ocsvm_kwargs)
+#             scores_test = clf.decision_function(data_test.inputs)
+#             auc, ap, fpr95 = ev.evaluation(data_test.labels, scores_test, verbose=False)
+
+#         # === CVDD ===
+#         elif args.ad_model == 'cvdd':
+#             if args.type_emb == 'bert':
+#                 tokenizer = AutoTokenizer.from_pretrained(args.emb_model)
+#                 vocab = None
+#             elif args.type_emb in ('glove', 'fasttext'):
+#                 corpus = data_train['text']
+#                 vocab = utils.build_vocab(corpus, min_freq=1)
+#                 tokenizer = None
+
+#             model, dl_train, dl_test = utils.cvdd_model_pipeline(
+#                 data_train, data_test, args.attention_size, args.n_attention_heads,
+#                 args.type_emb, 500, args.batch_size, args.shuffle, tokenizer, vocab
+#             )
+
+#             cvdd_trainer = cvdd_Net.CVDDTrainer(
+#                 optimizer_name='adam', learning_rate=args.lr, lr_milestones=(args.lr_milestones[0], args.lr_milestones[1]),
+#                 n_epochs=args.n_epochs, lambda_p=args.lambda_p,
+#                 alpha_scheduler=args.alpha_scheduler, weight_decay=1e-4
+#             )
+
+#             model_trained = cvdd_trainer.train(model, dl_train)
+#             auc, ap, fpr95, _ = cvdd_trainer.test(model_trained, dl_test, ad_score='context_dist_mean')
+
+#         aucs.append(auc)
+#         aps.append(ap)
+#         fprs.append(fpr95)
+
+#     # Moyenne et écart-type
+#     auc_mean, auc_std = np.mean(aucs), np.std(aucs)
+#     ap_mean, ap_std = np.mean(aps), np.std(aps)
+#     fpr_mean, fpr_std = np.mean(fprs), np.std(fprs)
+
+#     return auc_mean, ap_mean, fpr_mean, auc_std, ap_std, fpr_std

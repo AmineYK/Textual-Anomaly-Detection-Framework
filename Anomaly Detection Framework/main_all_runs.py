@@ -1,6 +1,5 @@
-from Data_Preparation.Dataset.ADdatasets import ADDataset, CVDDDatasetWrapper
+from Data_Preparation.Dataset.ADdatasets import  CVDDDatasetWrapper
 from Data_Preparation.Tac.tac import textual_anomaly_contamination
-from Data_Preparation.Embedding.embedding_encoder import EmbeddingEncoder
 import argparse
 import logging
 from torch.utils.data import DataLoader
@@ -8,25 +7,21 @@ import time
 from transformers import AutoTokenizer
 from Modelisation.Baselines.OCSVM import ocsvm
 import Modelisation.evaluation as ev
-import Modelisation.Baselines.CVDD.networks.utils as utils
-from Modelisation.Baselines.CVDD.networks import embedding_layer, cvdd_Net
-import torch
+import Modelisation.Baselines.CVDD.utils as utils
+from Modelisation.Baselines.CVDD.networks import cvdd_Net
 import numpy as np
-from datasets import concatenate_datasets
 from Data_Preparation.utils import data_preparation
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-import re
-import os
+import os, re
 
 def save_results(args, auc_mean, ap_mean, fpr_mean, auc_std=None, ap_std=None, fpr_std=None,
                  output_dir="/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results",
                  filename="results.txt",
-                 overwrite=None):  # overwrite: "naive", "smart", or None
+                 overwrite=None): 
 
-    import os, re
+
 
     os.makedirs(output_dir, exist_ok=True)
     filepath = os.path.join(output_dir, filename)
@@ -36,7 +31,7 @@ def save_results(args, auc_mean, ap_mean, fpr_mean, auc_std=None, ap_std=None, f
         with open(filepath, "r") as f:
             existing_content = f.read()
 
-    # --- Pattern unique d’identification du bloc ---
+  
     pattern = (
         rf"Dataset:\s*{re.escape(args.dataset_name)}\s*"
         rf"Inlier class:\s*{re.escape(args.inlier_topic)}\s*"
@@ -44,7 +39,7 @@ def save_results(args, auc_mean, ap_mean, fpr_mean, auc_std=None, ap_std=None, f
         rf"AD model:\s*{re.escape(args.ad_model)}"
     )
 
-    # --- Bloc de texte à écrire ---
+
     def fmt(mean, std):
         """Formate 'mean ± std' si std est fourni, sinon seulement mean."""
         return f"{mean:.4f} ± {std:.4f}" if std is not None else f"{mean:.4f}"
@@ -62,11 +57,9 @@ def save_results(args, auc_mean, ap_mean, fpr_mean, auc_std=None, ap_std=None, f
         "========================================\n\n"
     )
 
-    # --- Recherche si un bloc identique existe déjà ---
     match = re.search(pattern, existing_content)
 
     if match:
-        # Repère l'ancien bloc complet
         old_block_pattern = (
             r"========================================\n"
             + pattern +
@@ -80,7 +73,6 @@ def save_results(args, auc_mean, ap_mean, fpr_mean, auc_std=None, ap_std=None, f
         else:
             old_auc = -1
 
-        # --- Logique de remplacement ---
         do_replace = False
         if overwrite == "naive":
             do_replace = True
@@ -99,75 +91,9 @@ def save_results(args, auc_mean, ap_mean, fpr_mean, auc_std=None, ap_std=None, f
         existing_content += new_block
         print(f"Nouveaux résultats ajoutés pour ({args.dataset_name}, {args.inlier_topic}, {args.type_emb}, {args.ad_model}).")
 
-    # --- Écriture dans le fichier ---
     with open(filepath, "w") as f:
         f.write(existing_content)
 
-
-
-# def run_multiple_times(args, n_runs=10):
-#     """Exécute n_runs fois le modèle et retourne les moyennes et écarts-types."""
-#     aucs, aps, fprs = [], [], []
-
-#     for i in range(n_runs):
-#         print(f"\n===== Run {i + 1}/{n_runs} for model {args.ad_model} =====")
-
-#         # --- Refaire la préparation des données à chaque run ---
-#         required_encoding = args.ad_model == 'ocsvm'
-#         dp_dict = data_preparation(args, logger, embedding_encoding=required_encoding)
-
-#         if args.training_mode == 'one_class':
-#             if args.full_dataset_ or args.dataset_name == 'WOS':
-#                 dataset_inlier = dp_dict['inlier']
-#                 dataset_anomaly = dp_dict['anomaly']
-#                 data_train = dataset_inlier
-#             else:
-#                 inlier_dataset_train = dp_dict['inlier_train']
-#                 anomaly_dataset_train = dp_dict['anomaly_train']
-#                 data_test = dp_dict['test']
-#                 data_train = inlier_dataset_train
-
-#         # === OCSVM ===
-#         if args.ad_model == 'ocsvm':
-#             ocsvm_kwargs = {"nu": args.nu, "kernel": args.kernel, "gamma": args.gamma}
-#             clf, _, _ = ocsvm.One_Class_SVM(data_train.inputs, ocsvm_kwargs)
-#             scores_test = clf.decision_function(data_test.inputs)
-#             auc, ap, fpr95 = ev.evaluation(data_test.labels, scores_test, verbose=False)
-
-#         # === CVDD ===
-#         elif args.ad_model == 'cvdd':
-#             if args.type_emb == 'bert':
-#                 tokenizer = AutoTokenizer.from_pretrained(args.emb_model)
-#                 vocab = None
-#             elif args.type_emb in ('glove', 'fasttext'):
-#                 corpus = data_train['text']
-#                 vocab = utils.build_vocab(corpus, min_freq=1)
-#                 tokenizer = None
-
-#             model, dl_train, dl_test = utils.cvdd_model_pipeline(
-#                 data_train, data_test, args.attention_size, args.n_attention_heads,
-#                 args.type_emb, 500, args.batch_size, args.shuffle, tokenizer, vocab
-#             )
-
-#             cvdd_trainer = cvdd_Net.CVDDTrainer(
-#                 optimizer_name='adam', learning_rate=args.lr, lr_milestones=(args.lr_milestones[0], args.lr_milestones[1]),
-#                 n_epochs=args.n_epochs, lambda_p=args.lambda_p,
-#                 alpha_scheduler=args.alpha_scheduler, weight_decay=1e-4
-#             )
-
-#             model_trained = cvdd_trainer.train(model, dl_train)
-#             auc, ap, fpr95, _ = cvdd_trainer.test(model_trained, dl_test, ad_score='context_dist_mean')
-
-#         aucs.append(auc)
-#         aps.append(ap)
-#         fprs.append(fpr95)
-
-#     # Moyenne et écart-type
-#     auc_mean, auc_std = np.mean(aucs), np.std(aucs)
-#     ap_mean, ap_std = np.mean(aps), np.std(aps)
-#     fpr_mean, fpr_std = np.mean(fprs), np.std(fprs)
-
-#     return auc_mean, ap_mean, fpr_mean, auc_std, ap_std, fpr_std
 
 def run_multiple_times(args, n_runs=10):
     """Entraîne une seule fois le modèle, mais teste plusieurs fois sur des jeux de test différents."""
@@ -231,16 +157,13 @@ def run_multiple_times(args, n_runs=10):
     logger.info('################################')
     logger.info(f'Model Testing on {n_runs} runs ...')
     logger.info('################################')
-    for i in range(n_runs):
-        print(f"\n===== Test {i + 1}/{n_runs} =====")
-
+    for _ in range(n_runs):
 
         data_test = textual_anomaly_contamination(
             dp_dict['test'], args.dataset_name,
             args.inlier_topic, args.type_tac,
             args.anomaly_rate, is_trainset=False
         )
-        print(data_test.num_rows)
 
         if args.ad_model == 'ocsvm':
             scores_test = model_trained.decision_function(data_test.inputs)

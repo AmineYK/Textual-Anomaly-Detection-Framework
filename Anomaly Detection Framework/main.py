@@ -1,18 +1,11 @@
-from Data_Preparation.Dataset.ADdatasets import ADDataset, CVDDDatasetWrapper
-from Data_Preparation.Tac.tac import textual_anomaly_contamination
-from Data_Preparation.Embedding.embedding_encoder import EmbeddingEncoder
 import argparse
 import logging
-from torch.utils.data import DataLoader
 import time
 from transformers import AutoTokenizer
 from Modelisation.Baselines.OCSVM import ocsvm
 import Modelisation.evaluation as ev
-import Modelisation.Baselines.CVDD.networks.utils as utils
-from Modelisation.Baselines.CVDD.networks import embedding_layer, cvdd_Net
-import torch
-import numpy as np
-from datasets import concatenate_datasets
+import Modelisation.Baselines.CVDD.utils as utils
+from Modelisation.Baselines.CVDD.networks import cvdd_Net
 from Data_Preparation.utils import data_preparation
 
 logging.basicConfig(level=logging.INFO)
@@ -21,10 +14,10 @@ logger = logging.getLogger(__name__)
 import re
 import os
 
-def save_results(args, auc, ap, fpr95,
+def save_results(args, auc_mean, ap_mean, fpr_mean, auc_std=None, ap_std=None, fpr_std=None,
                  output_dir="/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results",
                  filename="results.txt",
-                 overwrite=None):  # naive, smart, None
+                 overwrite=None): 
 
     os.makedirs(output_dir, exist_ok=True)
     filepath = os.path.join(output_dir, filename)
@@ -34,13 +27,18 @@ def save_results(args, auc, ap, fpr95,
         with open(filepath, "r") as f:
             existing_content = f.read()
 
-    # On inclut maintenant ad_model dans le pattern
+  
     pattern = (
         rf"Dataset:\s*{re.escape(args.dataset_name)}\s*"
         rf"Inlier class:\s*{re.escape(args.inlier_topic)}\s*"
         rf"Embedding type:\s*{re.escape(args.type_emb)}\s*"
         rf"AD model:\s*{re.escape(args.ad_model)}"
     )
+
+
+    def fmt(mean, std):
+        """Formate 'mean ± std' si std est fourni, sinon seulement mean."""
+        return f"{mean:.4f} ± {std:.4f}" if std is not None else f"{mean:.4f}"
 
     new_block = (
         "========================================\n"
@@ -49,25 +47,32 @@ def save_results(args, auc, ap, fpr95,
         f"Embedding type: {args.type_emb}\n"
         f"AD model:       {args.ad_model}\n"
         "----------------------------------------\n"
-        f"AUC:            {auc:.4f}\n"
-        f"Avg Precision:  {ap:.4f}\n"
-        f"FPR@95:         {fpr95:.4f}\n"
+        f"AUC:            {fmt(auc_mean, auc_std)}\n"
+        f"Avg Precision:  {fmt(ap_mean, ap_std)}\n"
+        f"FPR@95:         {fmt(fpr_mean, fpr_std)}\n"
         "========================================\n\n"
     )
 
     match = re.search(pattern, existing_content)
-    
-    if match:
-        old_block_pattern = r"========================================\n" + pattern + r".*?========================================\n\n"
-        old_block = re.search(old_block_pattern, existing_content, flags=re.DOTALL).group(0)
 
-        old_auc_match = re.search(r"AUC:\s*([\d.]+)", old_block)
-        old_auc = float(old_auc_match.group(1)) if old_auc_match else -1
+    if match:
+        old_block_pattern = (
+            r"========================================\n"
+            + pattern +
+            r".*?========================================\n\n"
+        )
+        old_block = re.search(old_block_pattern, existing_content, flags=re.DOTALL)
+        if old_block:
+            old_block = old_block.group(0)
+            old_auc_match = re.search(r"AUC:\s*([\d.]+)", old_block)
+            old_auc = float(old_auc_match.group(1)) if old_auc_match else -1
+        else:
+            old_auc = -1
 
         do_replace = False
         if overwrite == "naive":
             do_replace = True
-        elif overwrite == "smart" and auc > old_auc:
+        elif overwrite == "smart" and auc_mean > old_auc:
             do_replace = True
         elif overwrite is None:
             do_replace = False
@@ -139,9 +144,9 @@ def main(args):
         "kernel": args.kernel,
         "gamma": args.gamma
         }
-        clf, y_pred_train, scores_train = ocsvm.One_Class_SVM(data_train.inputs, ocsvm_kwargs)
+        clf, _, _ = ocsvm.One_Class_SVM(data_train.inputs, ocsvm_kwargs)
 
-        y_pred_test = clf.predict(data_test.inputs)           
+        _ = clf.predict(data_test.inputs)           
         scores_test = clf.decision_function(data_test.inputs)
 
         auc, ap, fpr95 = ev.evaluation(data_test.labels, scores_test, verbose=False)
@@ -169,7 +174,7 @@ def main(args):
 
         cvdd_trainer = cvdd_Net.CVDDTrainer(optimizer_name='adam', learning_rate=args.lr, lr_milestones=(args.lr_milestones[0], args.lr_milestones[1]),
                                             n_epochs=args.n_epochs, lambda_p=args.lambda_p,
-                                            alpha_scheduler=args.alpha_scheduler, weight_decay=1e-4)
+                                            alpha_scheduler=args.alpha_scheduler, weight_decay=1e-4, device=args.device)
         logger.info('################################')
         logger.info('Model Training...')
         logger.info('################################')
@@ -177,7 +182,7 @@ def main(args):
         model_trained = cvdd_trainer.train(model, dl_train)
         
         logger.info('################################')
-        logger.info(f'Model Testing on {n_runs} runs ...')
+        logger.info(f'Model Testing ...')
         logger.info('################################')
         auc, ap, fpr95, _ = cvdd_trainer.test(model_trained, dl_test, ad_score='context_dist_mean')
 
@@ -215,6 +220,13 @@ if __name__ == "__main__":
         "--preprocessing",
         action="store_true",
         help="preprocessing function"
+    )
+
+    parser.add_argument(
+        "--device",
+        type=str,
+        default="cuda",
+        help="The type of device"
     )
 
     parser.add_argument(
