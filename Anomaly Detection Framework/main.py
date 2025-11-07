@@ -72,7 +72,7 @@ def main(args):
 
         auc, ap, fpr95 = ev.evaluation(data_test.labels, scores_test, verbose=False)
 
-        save_results(args, auc, ap, fpr95,
+        utils.save_results(args, auc, ap, fpr95,
                  output_dir="/home/youcefk251/My Thesis/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results",
                  filename="results.txt",
                  overwrite="smart")
