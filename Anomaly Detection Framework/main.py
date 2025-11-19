@@ -8,6 +8,7 @@ from Modelisation.Baselines.CVDD.utils import build_vocab, cvdd_model_pipeline
 from Modelisation.Baselines.CVDD.networks import cvdd_Net
 from Data_Preparation.utils import data_preparation
 import utils
+from Modelisation.FlowMatching.flow_matching import *
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -56,6 +57,23 @@ def main(args):
             data_test = dp_dict['test']
             data_train = inlier_dataset_train
     
+
+    if args.model == 'fm':
+
+        device = torch.device(args.device)
+
+        input_dim = 384
+        latent_dim = 256
+        n_batchs = 1
+        sinu = False
+
+        target = Tensor(make_moons(n_batchs, noise=0.05)[0])
+        source = "sphere"
+
+        flow_model = FlowMatching(source, target, input_dim, latent_dim, sinu, device).to(device)
+        optimizer = torch.optim.Adam(flow_model.parameters(), 1e-5)
+        loss_fn = nn.MSELoss()
+        print(flow_model)
 
     
     if args.ad_model == 'ocsvm':
