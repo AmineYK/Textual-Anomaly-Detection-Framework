@@ -6,7 +6,8 @@ from torch import nn, Tensor
 import math
 from sklearn.mixture import GaussianMixture
 from sklearn.metrics import roc_auc_score, average_precision_score, roc_curve
-from Modelisation.FlowMatching.utils import anomaly_score
+# from Modelisation.FlowMatching.utils import anomaly_score
+from flow_matching.solver import ODESolver
 
 class SinusoidalTimeEmbedding(nn.Module):
     def __init__(self, dim, device, max_period=10000):
@@ -40,6 +41,14 @@ class FlowMatching(nn.Module):
             gmm = GaussianMixture(n_components=n_components, covariance_type='full', random_state=42)
             gmm.fit(self.target)
             self.gmm = gmm
+            
+        if self.source == 'target-noised':
+            noise = torch.randn(self.target.shape[0], self.target.shape[1])
+            self.target_noised = self.target + noise
+            
+        if self.source == 'point-mean':
+            self.point_mean = self.target.mean(dim=0).to(self.device)
+            
         
         self.input_dim = input_dim
         self.latent_dim = latent_dim
@@ -61,12 +70,12 @@ class FlowMatching(nn.Module):
         )
         
     def forward(self, x, t):
-        # t = t.expand(x.shape[0], 1)
+        t = t.expand(x.shape[0], 1)
         if self.sinusoidal:
             t = self.time_embedding(t).to(self.device)
             
         xt = torch.cat([x, t], dim=1)
-        # xt = torch.cat([x, t], dim=1)
+
         return self.net(xt)
     
     def sampling_source(self, n_samples):
@@ -90,72 +99,108 @@ class FlowMatching(nn.Module):
         if self.source == 'sphere-noised':
             z = torch.randn(n_samples, self.input_dim)
             z = z / z.norm(dim=1, keepdim=True)
-            noise = torch.randn_like(z) * 0.3
+            noise = torch.randn_like(z) * 0.25
             return Tensor(z + noise).to(self.device)
-
-    def interpolation(self, n_samples):
         
+        if self.source == 'point-mean':
+            return self.point_mean.repeat(n_samples).reshape(-1,self.input_dim)
+            
+        
+    def interpolation(self, n_samples, x1=None):
+
         # source sampling
         x0 = self.sampling_source(n_samples)
         
         # target sampling ( get n_samples examples from the all target dataset )
         # replace --> avec ou sans remise
-        idx = np.random.choice(self.target.shape[0], n_samples, replace=True)
-        x1 = self.target[idx].to(self.device)
+        if x1 is None : idx = np.random.choice(self.target.shape[0], n_samples, replace=True)
+        
+        if self.source == 'target-noised':
+            x0 = self.target_noised[idx].to(self.device)
+        
+        if x1 is None : x1 = self.target[idx].to(self.device)
         
         # sampling the time between 0 ad 1
         t = torch.rand(n_samples, 1).to(self.device)
-
+        # t = torch.rand(n_samples).to(self.device)
         xt = (1 - t) * x0 + t * x1
         ut = x1 - x0
         
         return xt, t, ut
     
-    def step(self, x_t: Tensor, t_start: Tensor, t_end: Tensor) -> Tensor:
-        t_start = t_start.view(1, 1).expand(x_t.shape[0], 1)
-        # For simplicity, using midpoint ODE solver in this example
-        return x_t + (t_end - t_start) * self(x_t + self(x_t, t_start) * (t_end - t_start) / 2,
-        t_start + (t_end - t_start) / 2)
+
+    
     
 
 
 class FlowMatchingTrainer():
-    def __init__(self, flow_model, optimizer, loss_fn, n_steps, batch_size, verbose=True):
+    def __init__(self, flow_model, dataloader, optimizer, loss_fn, n_epochs, verbose=True):
 
         self.flow_model = flow_model
         self.optimizer = optimizer
         self.loss_fn = loss_fn
-        self.n_steps = n_steps
-        self.batch_size = batch_size
+        self.n_epochs = n_epochs
         self.verbose = verbose
+        self.dataloader = dataloader
 
     def train(self):
 
-        if self.verbose: recons_err = []
+        for s in range(self.n_epochs):
 
-        for s in range(self.n_steps):
+            for data, in self.dataloader:
 
-            xt, t, ut = self.flow_model.interpolation(self.batch_size)
+                xt, t, ut = self.flow_model.interpolation(data.shape[0], data)
+                vt =  self.flow_model(xt, t)
 
-            vt =  self.flow_model(xt, t)
+                self.optimizer.zero_grad()
 
-            if self.verbose:
-                x_recons = xt - vt * t
-                recons_err.append(torch.norm(xt - x_recons).item())
+                loss = self.loss_fn(vt, ut)
+                loss.backward()
 
-            self.optimizer.zero_grad()
-            loss = self.loss_fn(vt, ut)
+                self.optimizer.step()
+            
+            if self.verbose and s % (self.n_epochs // 5) == 0:
+                print(f" step {s} -> loss : {loss.item():.5f}")
 
-            if self.verbose and s % (self.n_steps//10) == 0: 
-                print(f" step {s} -> loss : {loss.item():.5f}, recon_err : {np.mean(recons_err):.5f}")
-                recons_err = []
+    def forward_flow(self, x_0, solver_type='midpoint', n_steps=10):
+            
+        solver = ODESolver(velocity_model=self.flow_model)
 
-            loss.backward()
-            self.optimizer.step()
+        time_steps = torch.linspace(0.0, 1.0, n_steps)
+        x_inter_source_to_target = solver.sample(x_init=x_0, method=solver_type, step_size=1.0 / n_steps, time_grid=time_steps, return_intermediates=True)
 
-    def test(self, flow_model, X_test, y_test):
-        scores = anomaly_score(X_test, flow_model, n_steps=100)[2].cpu().detach()
+        return x_inter_source_to_target
 
+    def backward_flow(self,x_1, solver_type='midpoint', n_steps=10):
+        solver = ODESolver(velocity_model=self.flow_model)
+
+        time_steps = torch.linspace(1.0, 0.0, n_steps)
+        x_inter_target_to_source = solver.sample(x_init=x_1, method=solver_type, step_size=1.0 / n_steps, time_grid=time_steps, return_intermediates=True)
+
+        return x_inter_target_to_source
+    
+    def forward_backward_flow(self, x_1, solver_type='midpoint', n_steps=10):
+        solver = ODESolver(velocity_model=self.flow_model)
+
+        time_steps = torch.linspace(1.0, 0.0, n_steps)
+        x_inter_target_to_source = solver.sample(x_init=x_1, method=solver_type, step_size=1.0 / n_steps, time_grid=time_steps, return_intermediates=True)
+
+        time_steps = torch.linspace(0.0, 1.0, n_steps)
+        x_inter_source_to_target_recons = solver.sample(x_init=x_inter_target_to_source[-1], method=solver_type, step_size=1.0 / n_steps, time_grid=time_steps, return_intermediates=True)
+
+        return x_inter_source_to_target_recons
+
+
+    def test(self, X_test, y_test, score_type='norm', solver_type='midpoint', n_steps=10):
+
+        if score_type == 'norm':
+            x_source_after_backward = self.backward_flow(X_test, solver_type, n_steps)[-1]
+            scores = (x_source_after_backward ** 2).sum(dim=1).cpu().detach()
+
+        if score_type == 'recons':
+            x_target_after_forward_backward = self.forward_backward_flow(X_test, solver_type, n_steps)[-1]
+            scores = ((torch.norm(x_target_after_forward_backward - X_test, dim=1)** 2)).cpu().detach()
+ 
         auc = roc_auc_score(y_test, scores)
         ap = average_precision_score(y_test, scores)
         fpr, tpr, thresholds = roc_curve(y_test, scores)
@@ -165,5 +210,3 @@ class FlowMatchingTrainer():
         print(f"AUC: {auc:.4f} | FPR@95: {fpr95:.4f} | AP: {ap:.4f}")  
 
         return auc, fpr95, ap 
-
-    
