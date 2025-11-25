@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from gensim.models import KeyedVectors
 from abc import ABC, abstractmethod
-
+from sentence_transformers import SentenceTransformer
 import os
 
 
@@ -14,8 +14,8 @@ import os
 ################################################
 
 class EmbeddingEncoder:
-    def __init__(self, model_name=None, type_emd='glove'):
-        
+    def __init__(self, model_name=None, type_emd='glove', device='cuda'):
+
         if type_emd == 'glove':
             self.model = GloVeEmbeddingEncoder(model_name)
             
@@ -27,6 +27,9 @@ class EmbeddingEncoder:
             
         elif type_emd == 'bert':
             self.model = BERTEmbeddingEncoder(model_name) 
+
+        elif type_emd == 'setencebert':
+            self.model = SetenceBERTEmbeddingEncoder(model_name, device) 
       
         else : raise Exception ("'model' & 'model_name' are None type, at least one is requered")
         
@@ -88,7 +91,27 @@ class TFIDFEmbeddingEncoder(BaseEmbeddingEncoder):
         return dataset
 
 
-    
+################################################
+############## SentenceBERT  ###################
+################################################  
+
+
+
+class SetenceBERTEmbeddingEncoder(BaseEmbeddingEncoder):
+    def __init__(self, model_name, device):
+        super().__init__(model_name)
+
+        self.model_name = model_name
+        self.device = device
+
+        self.setencebert_model = SentenceTransformer('all-MiniLM-L6-v2', device=device)
+
+
+    def forward(self, X):
+        return self.setencebert_model.encode(X, convert_to_tensor=True, batch_size=32)
+
+
+
 ################################################
 #################### BERT  #####################
 ################################################    
