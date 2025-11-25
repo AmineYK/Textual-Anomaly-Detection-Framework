@@ -64,10 +64,10 @@ def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff'
         inlier_dataset_ruff = dataset_ruff.filter(lambda x: x['topics'] == [inlier_topic])
         anomaly_dataset_ruff = dataset_ruff.filter(lambda x: x['topics'] != [inlier_topic])
          
-        if is_trainset:
-            n_anomalies = int((anomaly_rate * inlier_dataset_ruff.num_rows) / (1 - anomaly_rate))
-            anomaly_indices = np.random.randint(0, anomaly_dataset_ruff.num_rows, n_anomalies)
-            anomaly_dataset_ruff = anomaly_dataset_ruff.select(anomaly_indices)
+        # if is_trainset:
+        n_anomalies = int((anomaly_rate * inlier_dataset_ruff.num_rows) / (1 - anomaly_rate))
+        anomaly_indices = np.random.randint(0, anomaly_dataset_ruff.num_rows, n_anomalies)
+        anomaly_dataset_ruff = anomaly_dataset_ruff.select(anomaly_indices)
 
         inlier_dataset_ruff = inlier_dataset_ruff.map(add_col, fn_kwargs={"anomaly_class": 0})
         anomaly_dataset_ruff = anomaly_dataset_ruff.map(add_col, fn_kwargs={"anomaly_class": 1})
@@ -118,10 +118,10 @@ def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff'
         inlier_dataset_pantin = dataset_pantin.filter(lambda x: x['parent_topic'] == inlier_topic)
         anomaly_dataset_pantin = dataset_pantin.filter(lambda x: x['parent_topic'] != inlier_topic)
             
-        if is_trainset:
-            n_anomalies = int((anomaly_rate * inlier_dataset_pantin.num_rows) / (1 - anomaly_rate))
-            anomaly_indices = np.random.randint(0, anomaly_dataset_pantin.num_rows, n_anomalies)
-            anomaly_dataset_pantin = anomaly_dataset_pantin.select(anomaly_indices)
+        # if is_trainset:
+        n_anomalies = int((anomaly_rate * inlier_dataset_pantin.num_rows) / (1 - anomaly_rate))
+        anomaly_indices = np.random.randint(0, anomaly_dataset_pantin.num_rows, n_anomalies)
+        anomaly_dataset_pantin = anomaly_dataset_pantin.select(anomaly_indices)
 
         inlier_dataset_pantin = inlier_dataset_pantin.map(add_col, fn_kwargs={"anomaly_class": 0})
         anomaly_dataset_pantin = anomaly_dataset_pantin.map(add_col, fn_kwargs={"anomaly_class": 1})
@@ -202,10 +202,10 @@ def textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac='
     inlier_dataset = dataset.filter(lambda x: x['topic_label_text'] == inlier_topic)
     anomaly_dataset = dataset.filter(lambda x: x['topic_label_text'] != inlier_topic)
     
-    if is_trainset:
-        n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
-        anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
-        anomaly_dataset = anomaly_dataset.select(anomaly_indices)
+    # if is_trainset:
+    n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
+    anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
+    anomaly_dataset = anomaly_dataset.select(anomaly_indices)
 
     inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
     anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
@@ -239,10 +239,10 @@ def textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac='pantin', 
     inlier_dataset = dataset.filter(lambda x: x['label_level_1'] == level_1_mapping[inlier_topic])
     anomaly_dataset = dataset.filter(lambda x: x['label_level_1'] != level_1_mapping[inlier_topic])
     
-    if is_trainset:
-        n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
-        anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
-        anomaly_dataset = anomaly_dataset.select(anomaly_indices)
+    # if is_trainset:
+    n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
+    anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
+    anomaly_dataset = anomaly_dataset.select(anomaly_indices)
     
     inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
     anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
@@ -283,10 +283,10 @@ def textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac='pan
     inlier_dataset = dataset.filter(lambda x: x['label'] == level_1_mapping[inlier_topic])
     anomaly_dataset = dataset.filter(lambda x: x['label'] != level_1_mapping[inlier_topic])
     
-    if is_trainset:
-        n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
-        anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
-        anomaly_dataset = anomaly_dataset.select(anomaly_indices)
+# if is_trainset:
+    n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
+    anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
+    anomaly_dataset = anomaly_dataset.select(anomaly_indices)
     
     inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
     anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
@@ -317,10 +317,10 @@ def textual_anomaly_contamination_agnews(dataset, inlier_topic, type_tac='fate',
     inlier_dataset = dataset.filter(lambda x: x['label'] == mapping[inlier_topic])
     anomaly_dataset = dataset.filter(lambda x: x['label'] != mapping[inlier_topic])
     
-    if is_trainset:
-        n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
-        anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
-        anomaly_dataset = anomaly_dataset.select(anomaly_indices)
+    # if is_trainset:
+    n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
+    anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
+    anomaly_dataset = anomaly_dataset.select(anomaly_indices)
     
     inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
     anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})

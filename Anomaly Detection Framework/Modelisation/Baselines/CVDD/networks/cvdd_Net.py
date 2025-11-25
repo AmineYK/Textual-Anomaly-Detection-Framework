@@ -15,10 +15,10 @@ from Modelisation.evaluation import fpr95_score
 
 class CVDDNet(nn.Module):
 
-    def __init__(self, pretrained_model, attention_size=100, n_attention_heads=1):
+    def __init__(self, pretrained_model, attention_size=100, n_attention_heads=1, device='cuda'):
         super().__init__()
         # Load pretrained model (which provides a hidden representation per word, e.g. word vector or language model)
-        self.pretrained_model = pretrained_model
+        self.pretrained_model = pretrained_model.to(device)
         self.hidden_size = pretrained_model.embedding_size
 
         # Set self-attention module
@@ -85,15 +85,15 @@ class CVDDTrainer:
         
         self.device = torch.device(device)
 
-
     def train(self, model, dl_train):
 
         logger = logging.getLogger()
         logger.info('Starting training...')
+        print("Starting training...")
         start_time = time.time()
 
         model.c.data = torch.from_numpy(
-                initialize_context_vectors(model, dl_train)[np.newaxis, :])
+                initialize_context_vectors(model, dl_train, self.device)[np.newaxis, :])
         parameters = filter(lambda p: p.requires_grad, model.parameters())
 
         if self.optimizer_name == 'adam':
@@ -169,6 +169,8 @@ class CVDDTrainer:
             epoch_train_time = time.time() - epoch_start_time
             logger.info(f'| Epoch: {epoch + 1:03}/{self.n_epochs:03} | Train Time: {epoch_train_time:.3f}s '
             f'| Train Loss: {epoch_loss / n_batches:.6f} |')
+            print(f'| Epoch: {epoch + 1:03}/{self.n_epochs:03} | Train Time: {epoch_train_time:.3f}s '
+            f'| Train Loss: {epoch_loss / n_batches:.6f} |')
 
 
             self.train_dists = np.concatenate(dists_per_head)
@@ -182,6 +184,8 @@ class CVDDTrainer:
         self.train_time = time.time() - start_time
         logger.info('Training Time: {:.3f}s'.format(self.train_time))
         logger.info('Finished training. \n')
+        print('Training Time: {:.3f}s'.format(self.train_time))
+        print('Finished training. \n')
         
         return model
 
@@ -205,7 +209,10 @@ class CVDDTrainer:
 
         with torch.no_grad():
             for inputs, labels, texts, idx in dl_test:
+                # print(inputs.shape)
+                # inputs = inputs.to(self.device)
                 inputs = inputs.transpose(0, 1).to(self.device)
+                
                 cosine_dists, context_weights, A = model(inputs)
                 scores = context_weights * cosine_dists
                 _, best_att_head = torch.min(scores, dim=1)
@@ -228,7 +235,8 @@ class CVDDTrainer:
                     best_att_head.cpu().data.numpy().tolist()
                 ))
 
-                att_weights += A[best_att_head][:][range(len(idx))].cpu().data.numpy().tolist()
+                # att_weights += A[best_att_head][:][range(len(idx))].cpu().data.numpy().tolist()
+                att_weights += A[range(len(idx)), best_att_head].cpu().data.numpy().tolist()
                 # att_weights += A[range(len(idx)), best_att_head].cpu().data.numpy().tolist()
 
                 AAT = A @ A.transpose(1, 2)

@@ -26,9 +26,9 @@ class EmbeddingEncoder:
             self.model = TFIDFEmbeddingEncoder(model_name) 
             
         elif type_emd == 'bert':
-            self.model = BERTEmbeddingEncoder(model_name) 
+            self.model = BERTEmbeddingEncoder(model_name, device) 
 
-        elif type_emd == 'setencebert':
+        elif type_emd == 'sentencebert':
             self.model = SetenceBERTEmbeddingEncoder(model_name, device) 
       
         else : raise Exception ("'model' & 'model_name' are None type, at least one is requered")
@@ -107,51 +107,75 @@ class SetenceBERTEmbeddingEncoder(BaseEmbeddingEncoder):
         self.setencebert_model = SentenceTransformer('all-MiniLM-L6-v2', device=device)
 
 
-    def forward(self, X):
-        return self.setencebert_model.encode(X, convert_to_tensor=True, batch_size=32)
+    def forward(self, dataset, text_column="text"):
 
+        def compute_embedding(batch):
+                texts = batch[text_column]
+                emb = self.setencebert_model.encode(
+                    texts,
+                    convert_to_tensor=True,
+                    batch_size=32
+                ).cpu().numpy()
 
+                return {"sbert_embeddings": np.array(emb)}
+
+        dataset = dataset.map(
+            compute_embedding,
+            batched=True,
+            batch_size=64
+        )
+        
+        return dataset
 
 ################################################
 #################### BERT  #####################
-################################################    
+################################################   
 
 class BERTEmbeddingEncoder(BaseEmbeddingEncoder):
-    def __init__(self, model_name):
-
+    def __init__(self, model_name, device):
         super().__init__(model_name)
+        
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModel.from_pretrained(model_name)
-        self.model.eval()
         
+        self.device = device
+        self.model.to(device)
+        self.model.eval()
+
     def forward(self, dataset):
         
-        def add_col(example, col_name, embedding):
-            example[col_name] = embedding
-            return example
-        
-        texts = dataset['text']
-        
-        inputs = self.tokenizer(
-            texts,
-            padding=True,
-            truncation=True,
-            return_tensors="pt"
-        )
-      
-        with torch.no_grad():
-            outputs = self.model(**inputs)
+        def compute_embeddings(batch):
+            texts = batch["text"]
 
-        last_hidden = outputs.last_hidden_state  
-        cls_emb = last_hidden[:, 0, :]           
-        mean_emb = last_hidden.mean(dim=1)   
-        
-        dataset = dataset.map(add_col,fn_kwargs={"col_name": 'bert_cls', "embedding": cls_emb.cpu().numpy()} )
-        dataset = dataset.map(add_col,fn_kwargs={"col_name": 'bert_embedding', "embedding": last_hidden.cpu().numpy()} )
-        dataset = dataset.map(add_col,fn_kwargs={"col_name": 'bert_embedding_mean', "embedding": mean_emb.cpu().numpy()} )
-        
+            inputs = self.tokenizer(
+                texts,
+                padding=True,
+                truncation=True,
+                return_tensors="pt"
+            ).to(self.device)
+
+            with torch.no_grad():
+                outputs = self.model(**inputs)
+
+            last_hidden = outputs.last_hidden_state        
+            cls_emb = last_hidden[:, 0, :]              
+            mean_emb = last_hidden.mean(dim=1)            
+
+            return {
+                "bert_cls": cls_emb.cpu().numpy(),
+                # "bert_embedding": last_hidden.cpu().numpy(),
+                "bert_embedding_mean": mean_emb.cpu().numpy(),
+            }
+
+        dataset = dataset.map(
+            compute_embeddings,
+            batched=True,
+            batch_size=32, 
+            keep_in_memory=True
+        )
+
         return dataset
-    
+
     
 ################################################
 #################### GloVe  ####################

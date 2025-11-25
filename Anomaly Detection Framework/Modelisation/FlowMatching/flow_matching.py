@@ -32,6 +32,8 @@ class FlowMatching(nn.Module):
         super().__init__()
         
         self.target = target
+        self.target_centroid = self.target.mean(dim=0)
+        self.target_cov_mat = torch.cov(self.target.T)
         self.source = source
         self.device = device
         self.sinusoidal = sinusoidal
@@ -81,7 +83,12 @@ class FlowMatching(nn.Module):
     def sampling_source(self, n_samples):
         
         if self.source == 'gaussian':
-            return torch.randn(n_samples, self.input_dim).to(self.device)
+            # return torch.randn(n_samples, self.input_dim).to(self.device)
+            eps = 1e-2
+            cov_reg = self.target_cov_mat + eps * torch.eye(self.target_cov_mat.size(0))
+
+            distri = torch.distributions.MultivariateNormal(self.target_centroid, covariance_matrix=cov_reg)
+            return distri.sample((n_samples,)).to(self.device)
         
         if self.source == 'circle': return Tensor(make_circles(n_samples=n_samples, noise=0.1, factor=0.5)[0]).to(self.device)
     
@@ -119,7 +126,7 @@ class FlowMatching(nn.Module):
             x0 = self.target_noised[idx].to(self.device)
         
         if x1 is None : x1 = self.target[idx].to(self.device)
-        
+
         # sampling the time between 0 ad 1
         t = torch.rand(n_samples, 1).to(self.device)
         # t = torch.rand(n_samples).to(self.device)
@@ -134,33 +141,34 @@ class FlowMatching(nn.Module):
 
 
 class FlowMatchingTrainer():
-    def __init__(self, flow_model, dataloader, optimizer, loss_fn, n_epochs, verbose=True):
+    def __init__(self, flow_model,  verbose=True):
 
         self.flow_model = flow_model
-        self.optimizer = optimizer
-        self.loss_fn = loss_fn
-        self.n_epochs = n_epochs
         self.verbose = verbose
-        self.dataloader = dataloader
 
-    def train(self):
+    def train(self, dataloader, lr, weight_decay, loss_fn, n_epochs, optimizer_type='adam'):
+        
+        if optimizer_type == 'adam':
+            optimizer = torch.optim.Adam(self.flow_model.parameters(), lr=lr, weight_decay=weight_decay)
 
-        for s in range(self.n_epochs):
+        for s in range(n_epochs):
 
-            for data, in self.dataloader:
+            for data, in dataloader:
 
                 xt, t, ut = self.flow_model.interpolation(data.shape[0], data)
                 vt =  self.flow_model(xt, t)
 
-                self.optimizer.zero_grad()
+                optimizer.zero_grad()
 
-                loss = self.loss_fn(vt, ut)
+                loss = loss_fn(vt, ut)
                 loss.backward()
 
-                self.optimizer.step()
+                optimizer.step()
             
-            if self.verbose and s % (self.n_epochs // 5) == 0:
+            if self.verbose and s % (n_epochs // 5) == 0:
                 print(f" step {s} -> loss : {loss.item():.5f}")
+                
+        return self.flow_model
 
     def forward_flow(self, x_0, solver_type='midpoint', n_steps=10):
             
@@ -194,8 +202,8 @@ class FlowMatchingTrainer():
     def test(self, X_test, y_test, score_type='norm', solver_type='midpoint', n_steps=10):
 
         if score_type == 'norm':
-            x_source_after_backward = self.backward_flow(X_test, solver_type, n_steps)[-1]
-            scores = (x_source_after_backward ** 2).sum(dim=1).cpu().detach()
+            x_source_after_backward = self.backward_flow(X_test, solver_type, n_steps)[-1].cpu().detach()
+            scores = ((x_source_after_backward - self.flow_model.target_centroid) ** 2).sum(dim=1)
 
         if score_type == 'recons':
             x_target_after_forward_backward = self.forward_backward_flow(X_test, solver_type, n_steps)[-1]
