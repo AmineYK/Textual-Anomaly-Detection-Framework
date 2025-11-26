@@ -11,7 +11,7 @@ from Data_Preparation.utils import preprocess
 
 ADdatasetNamingDict = {
     '20newsgroups' : ['SetFit/20_newsgroups'],
-    'reuters' : ['ucirvine/reuters21578', 'ModHayes'],
+    'reuters' : ['ucirvine/reuters21578', 'ModLewissss'], #ModHayes
     'wos' : ["HDLTex/web_of_science", 'WOS46985'],
     'dbpedia14' : ['fancyzhx/dbpedia_14'],
     'agnews' : ['fancyzhx/ag_news']

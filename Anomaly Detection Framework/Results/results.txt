@@ -570,3 +570,179 @@ Avg Precision:  0.9911 ± 0.0000
 FPR@95:         0.5714 ± 0.0000
 ========================================
 
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9527 ± 0.0037
+Avg Precision:  0.7244 ± 0.0362
+FPR@95:         0.2161 ± 0.0132
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9249 ± 0.0140
+Avg Precision:  0.7904 ± 0.0266
+FPR@95:         0.5458 ± 0.1423
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9450 ± 0.0055
+Avg Precision:  0.5612 ± 0.0209
+FPR@95:         0.2108 ± 0.0251
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9371 ± 0.0048
+Avg Precision:  0.7441 ± 0.0161
+FPR@95:         0.3537 ± 0.0231
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.8213 ± 0.0133
+Avg Precision:  0.3297 ± 0.0185
+FPR@95:         0.5926 ± 0.0342
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.7717 ± 0.0043
+Avg Precision:  0.2864 ± 0.0127
+FPR@95:         0.7281 ± 0.0271
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9459 ± 0.0181
+Avg Precision:  0.6461 ± 0.0301
+FPR@95:         0.2157 ± 0.0608
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9494 ± 0.0195
+Avg Precision:  0.7900 ± 0.0488
+FPR@95:         0.2188 ± 0.0601
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9425 ± 0.0062
+Avg Precision:  0.7404 ± 0.0264
+FPR@95:         0.3004 ± 0.0611
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9241 ± 0.0046
+Avg Precision:  0.7530 ± 0.0191
+FPR@95:         0.4934 ± 0.1143
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9303 ± 0.0121
+Avg Precision:  0.7442 ± 0.0389
+FPR@95:         0.4026 ± 0.0721
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9196 ± 0.0182
+Avg Precision:  0.7268 ± 0.0324
+FPR@95:         0.4899 ± 0.1228
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9594 ± 0.0030
+Avg Precision:  0.6261 ± 0.0280
+FPR@95:         0.0862 ± 0.0068
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9625 ± 0.0055
+Avg Precision:  0.8157 ± 0.0200
+FPR@95:         0.2006 ± 0.0291
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9917 ± 0.0102
+Avg Precision:  0.9441 ± 0.0584
+FPR@95:         0.0533 ± 0.0614
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9730 ± 0.0384
+Avg Precision:  0.9175 ± 0.1025
+FPR@95:         0.1387 ± 0.1696
+========================================
+

@@ -83,12 +83,12 @@ class FlowMatching(nn.Module):
     def sampling_source(self, n_samples):
         
         if self.source == 'gaussian':
-            # return torch.randn(n_samples, self.input_dim).to(self.device)
-            eps = 1e-2
-            cov_reg = self.target_cov_mat + eps * torch.eye(self.target_cov_mat.size(0))
+            return torch.randn(n_samples, self.input_dim).to(self.device)
+#             eps = 1e-2
+#             cov_reg = self.target_cov_mat + eps * torch.eye(self.target_cov_mat.size(0))
 
-            distri = torch.distributions.MultivariateNormal(self.target_centroid, covariance_matrix=cov_reg)
-            return distri.sample((n_samples,)).to(self.device)
+#             distri = torch.distributions.MultivariateNormal(self.target_centroid, covariance_matrix=cov_reg)
+#             return distri.sample((n_samples,)).to(self.device)
         
         if self.source == 'circle': return Tensor(make_circles(n_samples=n_samples, noise=0.1, factor=0.5)[0]).to(self.device)
     
@@ -203,7 +203,8 @@ class FlowMatchingTrainer():
 
         if score_type == 'norm':
             x_source_after_backward = self.backward_flow(X_test, solver_type, n_steps)[-1].cpu().detach()
-            scores = ((x_source_after_backward - self.flow_model.target_centroid) ** 2).sum(dim=1)
+            # scores = ((x_source_after_backward - self.flow_model.target_centroid) ** 2).sum(dim=1)
+            scores = (x_source_after_backward ** 2).sum(dim=1)
 
         if score_type == 'recons':
             x_target_after_forward_backward = self.forward_backward_flow(X_test, solver_type, n_steps)[-1]

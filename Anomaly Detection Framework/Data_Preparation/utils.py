@@ -13,17 +13,24 @@ def preprocess(dataset):
 
         text = text.lower()
         text = text.translate(str.maketrans("", "", string.punctuation))
-        text = re.sub(r"\d+", "", text)
-        text = re.sub(r"\s+", " ", text)
+        text = re.sub(r'<.*?>', ' ', text)  
+        text = re.sub(r'\d+', ' ', text)  
+        text = re.sub(r'\W+', ' ', text) 
+        text = re.sub(r'\s+', ' ', text) 
+
         return text.strip()
 
-    splits = [split for split in ['train', 'test'] if split in dataset]
+    for split in ['train', 'test']:
+        if split in dataset and 'text' in dataset[split]:
 
-    for split in splits:
-        if 'text' in dataset[split]:
             dataset[split]['text'] = dataset[split]['text'].apply(clean_text)
 
+            dataset[split] = dataset[split][dataset[split]['text'] != ""]
+
+            dataset[split] = dataset[split].reset_index(drop=True)
+
     return dataset
+
 
 
 # Dataset Importing
@@ -53,7 +60,7 @@ def import_dataset(name="20newsgroups", full_dataset_=False, batch_size=64):
   # *****************************
     if name == "reuters":
 
-        dataset = load_dataset('ucirvine/reuters21578', 'ModHayes') 
+        dataset = load_dataset('ucirvine/reuters21578', 'ModApte')  #ModHayes  ModLewis
 
         train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
         test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)
