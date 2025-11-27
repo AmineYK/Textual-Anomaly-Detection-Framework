@@ -746,3 +746,116 @@ Avg Precision:  0.9175 ± 0.1025
 FPR@95:         0.1387 ± 0.1696
 ========================================
 
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.8049 ± 0.0181
+Avg Precision:  0.4442 ± 0.0316
+FPR@95:         0.7155 ± 0.0697
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.8847 ± 0.0123
+Avg Precision:  0.6365 ± 0.0284
+FPR@95:         0.5698 ± 0.1017
+========================================
+
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9503 ± 0.0328
+Avg Precision:  0.8171 ± 0.1139
+FPR@95:         0.3704 ± 0.1887
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9276 ± 0.0620
+Avg Precision:  0.8475 ± 0.1410
+FPR@95:         0.5136 ± 0.2568
+========================================
+
+
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9604 ± 0.0418
+Avg Precision:  0.8599 ± 0.1026
+FPR@95:         0.2851 ± 0.0990
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9387 ± 0.0427
+Avg Precision:  0.8748 ± 0.0999
+FPR@95:         0.4874 ± 0.2437
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9413 ± 0.0485
+Avg Precision:  0.5884 ± 0.1052
+FPR@95:         0.1139 ± 0.1317
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9344 ± 0.0605
+Avg Precision:  0.5865 ± 0.1197
+FPR@95:         0.1278 ± 0.1212
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9409 ± 0.0255
+Avg Precision:  0.8520 ± 0.0226
+FPR@95:         0.6661 ± 0.4091
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9652 ± 0.0090
+Avg Precision:  0.8833 ± 0.0142
+FPR@95:         0.4050 ± 0.1529
+========================================
+
