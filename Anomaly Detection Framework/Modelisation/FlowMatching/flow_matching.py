@@ -134,10 +134,7 @@ class FlowMatching(nn.Module):
         ut = x1 - x0
         
         return xt, t, ut
-    
 
-    
-    
 
 
 class FlowMatchingTrainer():
