@@ -892,3 +892,91 @@ Avg Precision:  0.8833 ± 0.0142
 FPR@95:         0.4050 ± 0.1529
 ========================================
 
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9323 ± 0.0008
+Avg Precision:  0.5322 ± 0.0094
+FPR@95:         0.1999 ± 0.0117
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.8412 ± 0.0109
+Avg Precision:  0.4303 ± 0.0086
+FPR@95:         0.6555 ± 0.0829
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9951 ± 0.0009
+Avg Precision:  0.9650 ± 0.0038
+FPR@95:         0.0154 ± 0.0051
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.9937 ± 0.0006
+Avg Precision:  0.9625 ± 0.0027
+FPR@95:         0.0222 ± 0.0048
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.9097 ± 0.0102
+Avg Precision:  0.6570 ± 0.0243
+FPR@95:         0.4701 ± 0.0801
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.8876 ± 0.0095
+Avg Precision:  0.6510 ± 0.0221
+FPR@95:         0.6345 ± 0.0883
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci/Tech
+Embedding type: sentence_bert
+AD model:       flow-matching
+----------------------------------------
+AUC:            0.8510 ± 0.0101
+Avg Precision:  0.4188 ± 0.0249
+FPR@95:         0.5914 ± 0.0887
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci/Tech
+Embedding type: sentence_bert
+AD model:       ocsvm
+----------------------------------------
+AUC:            0.8819 ± 0.0087
+Avg Precision:  0.5828 ± 0.0204
+FPR@95:         0.5961 ± 0.0938
+========================================
+
