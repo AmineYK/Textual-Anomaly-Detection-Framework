@@ -1,0 +1,27 @@
+\begin{table}[ht]
+\centering
+\begin{tabular}{l|cc|cc}
+\hline
+ & \multicolumn{2}{c|}{GloVe} & \multicolumn{2}{c}{FastText} \\
+Class & OC-SVM & CVDD & OC-SVM & CVDD \\
+\hline
+\multicolumn{5}{l}{\textbf{20newsgroups}} \\
+computer & 0.5902 ± 0.0184 & 0.5149 ± 0.0173 & 0.6097 ± 0.0203 & - \\
+recreation & 0.5091 ± 0.0191 & - & 0.5135 ± 0.0075 & - \\
+science & 0.5316 ± 0.0207 & - & 0.4585 ± 0.0086 & - \\
+miscellaneous & 0.5198 ± 0.0285 & - & 0.6005 ± 0.0111 & - \\
+politics & 0.5292 ± 0.0215 & - & 0.5392 ± 0.0373 & - \\
+religion & 0.6439 ± 0.0120 & - & 0.5458 ± 0.0173 & - \\
+\multicolumn{5}{l}{\textbf{reuters}} \\
+earn & 0.9603 ± 0.0112 & - & 0.9444 ± 0.0786 & - \\
+acq & 0.7558 ± 0.0956 & - & 0.8497 ± 0.0448 & - \\
+crude & 0.6397 ± 0.1467 & - & 0.8990 ± 0.0577 & - \\
+trade & 0.5651 ± 0.2071 & - & 0.7333 ± 0.0433 & - \\
+money-fx & 0.8974 ± 0.0959 & - & 0.5128 ± 0.2019 & - \\
+interest & 0.5385 ± 0.3323 & - & 0.3077 ± 0.2878 & - \\
+ship & 0.9286 ± 0.1010 & - & 0.9048 ± 0.0673 & - \\
+\hline
+\end{tabular}
+\caption{AUC des modèles AD pour différents embeddings et datasets, avec écart type.}
+\label{tab:ad_results}
+\end{table}

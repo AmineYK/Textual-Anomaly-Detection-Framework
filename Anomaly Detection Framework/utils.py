@@ -3,8 +3,10 @@ from collections import defaultdict
 import numpy as np
 import os
 
-INPUT_FILE = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/results.txt"
-OUTPUT_TEX = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/tables.tex"
+BASE_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results"
+OUTPUT_TEX = os.path.join(BASE_DIR, "tables.tex")
+
+DATASETS = ["reuters", "agnews", "20newsgroups"]
 
 pattern = {
     "dataset": re.compile(r"Dataset:\s*(.*)"),
@@ -13,36 +15,48 @@ pattern = {
     "auc": re.compile(r"AUC:\s*([\d.]+)\s*±\s*([\d.]+)")
 }
 
+# results[dataset][inlier_class][model] = (mean, std)
 results = defaultdict(lambda: defaultdict(dict))
 
-with open(INPUT_FILE, "r") as f:
-    block = {"dataset": None, "inlier": None, "model": None, "auc": None}
+def load_all_results():
+    """Lit results.txt dans chaque dossier dataset."""
+    for ds in DATASETS:
+        folder = os.path.join(BASE_DIR, ds)
+        filepath = os.path.join(folder, "results.txt")
 
-    for line in f:
-        line = line.strip()
+        if not os.path.exists(filepath):
+            print(f"Aucun fichier trouvé pour {ds}: {filepath}")
+            continue
 
-        if m := pattern["dataset"].search(line):
-            block["dataset"] = m.group(1).strip()
-
-        if m := pattern["inlier"].search(line):
-            block["inlier"] = m.group(1).strip()
-
-        if m := pattern["model"].search(line):
-            block["model"] = m.group(1).strip()
-
-        if m := pattern["auc"].search(line):
-            block["auc"] = (float(m.group(1)), float(m.group(2)))
-
-        if line.startswith("========================================"):
-
-            if block["dataset"] and block["inlier"] and block["model"] and block["auc"]:
-                ds = block["dataset"]
-                ic = block["inlier"]
-                model = block["model"]
-                auc = block["auc"]
-                results[ds][ic][model] = auc
-
+        with open(filepath, "r") as f:
             block = {"dataset": None, "inlier": None, "model": None, "auc": None}
+
+            for line in f:
+                line = line.strip()
+
+                if m := pattern["dataset"].search(line):
+                    block["dataset"] = m.group(1).strip()
+
+                if m := pattern["inlier"].search(line):
+                    block["inlier"] = m.group(1).strip()
+
+                if m := pattern["model"].search(line):
+                    block["model"] = m.group(1).strip()
+
+                if m := pattern["auc"].search(line):
+                    block["auc"] = (float(m.group(1)), float(m.group(2)))
+
+                if line.startswith("========================================"):
+
+                    if block["dataset"] and block["inlier"] and block["model"] and block["auc"]:
+                        ds_name = block["dataset"]
+                        ic = block["inlier"]
+                        model = block["model"]
+                        auc = block["auc"]
+
+                        results[ds_name][ic][model] = auc
+
+                    block = {"dataset": None, "inlier": None, "model": None, "auc": None}
 
 MODEL_ORDER = [
     "ocsvm",
@@ -93,7 +107,7 @@ def generate_global_table(results):
             else:
                 row.append(None)
         global_means.append(row)
-
+        
     best_idx = {}
     sec_idx = {}
     for col in range(len(datasets)):
@@ -181,6 +195,7 @@ def generate_dataset_tables(results):
         for r, model in enumerate(MODEL_ORDER):
 
             row = [MODEL_LATEX[model]]
+            
 
             for c, ic in enumerate(inlier_classes):
 
@@ -205,11 +220,16 @@ def generate_dataset_tables(results):
         latex.append(f"\\label{{tab:{ds}}}")
         latex.append("\\end{table}\n")
 
+
         latex_all.append("\n".join(latex))
 
     return "\n\n".join(latex_all)
 
 def create_tables():
+
+    print("Lecture des fichiers dans chaque dataset...")
+    load_all_results()
+
     global_table = generate_global_table(results)
     dataset_tables = generate_dataset_tables(results)
 
@@ -221,7 +241,8 @@ def create_tables():
         f.write("\n\n")
         f.write(dataset_tables)
 
-    print(f"fichier généré : {OUTPUT_TEX}")
+    print(f"Fichier LaTeX généré : {OUTPUT_TEX}")
+
 
     
 def save_results(
@@ -231,12 +252,14 @@ def save_results(
     ad_model,
     auc_mean, ap_mean, fpr_mean,
     auc_std=None, ap_std=None, fpr_std=None,
-    output_dir="/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results",
+    output_dir=BASE_DIR,   # BASE_DIR défini plus haut
     filename="results.txt",
-    overwrite=None
+    overwrite='smart'
 ):  
-    os.makedirs(output_dir, exist_ok=True)
-    filepath = os.path.join(output_dir, filename)
+    dataset_folder = os.path.join(output_dir, dataset_name)
+    os.makedirs(dataset_folder, exist_ok=True)
+
+    filepath = os.path.join(dataset_folder, filename)
 
     existing_content = ""
     if os.path.exists(filepath):

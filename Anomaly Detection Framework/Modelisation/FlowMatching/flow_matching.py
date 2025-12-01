@@ -105,6 +105,14 @@ class FlowMatching(nn.Module):
         
         if self.source == 'sphere-noised':
             z = torch.randn(n_samples, self.input_dim)
+            
+            
+#             eps = 1e-2
+#             cov_reg = self.target_cov_mat + eps * torch.eye(self.target_cov_mat.size(0))
+
+#             distri = torch.distributions.MultivariateNormal(self.target_centroid, covariance_matrix=cov_reg)
+#             z = distri.sample((n_samples,)).to(self.device)
+            
             z = z / z.norm(dim=1, keepdim=True)
             noise = torch.randn_like(z) * 0.25
             return Tensor(z + noise).to(self.device)
@@ -213,6 +221,6 @@ class FlowMatchingTrainer():
         idx = np.where(tpr >= 0.95)[0][0]
         fpr95 = fpr[idx]
 
-        print(f"AUC: {auc:.4f} | FPR@95: {fpr95:.4f} | AP: {ap:.4f}")  
+        print(f"FM --> AUC: {auc:.4f} | FPR@95: {fpr95:.4f} | AP: {ap:.4f}")  
 
         return auc, fpr95, ap 
