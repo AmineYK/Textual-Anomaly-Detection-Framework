@@ -73,7 +73,7 @@ def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff'
         anomaly_dataset_ruff = anomaly_dataset_ruff.map(add_col, fn_kwargs={"anomaly_class": 1})
 
         if is_trainset : return inlier_dataset_ruff, anomaly_dataset_ruff
-        else: return concatenate_datasets([inlier_dataset_ruff,anomaly_dataset_ruff])
+        else: return concatenate_datasets([inlier_dataset_ruff,anomaly_dataset_ruff]).shuffle(seed=42)
 
     #############################################
     ################# PANTIN ####################
@@ -127,7 +127,7 @@ def textual_anomaly_contamination_reuters(dataset, inlier_topic, type_tac='ruff'
         anomaly_dataset_pantin = anomaly_dataset_pantin.map(add_col, fn_kwargs={"anomaly_class": 1})
 
         if is_trainset : return inlier_dataset_pantin, anomaly_dataset_pantin
-        else: return concatenate_datasets([inlier_dataset_pantin,anomaly_dataset_pantin])
+        else: return concatenate_datasets([inlier_dataset_pantin,anomaly_dataset_pantin]).shuffle(seed=42)
     
     raise Exception(" the 'type_tac' selected is not available for this dataset ")
 
@@ -211,7 +211,7 @@ def textual_anomaly_contamination_20newsgroups(dataset, inlier_topic, type_tac='
     anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
 
     if is_trainset : return inlier_dataset, anomaly_dataset
-    else: return concatenate_datasets([inlier_dataset,anomaly_dataset])
+    else: return concatenate_datasets([inlier_dataset,anomaly_dataset]).shuffle(seed=42)
 
 
 ############################################
@@ -248,7 +248,7 @@ def textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac='pantin', 
     anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
 
     if is_trainset : return inlier_dataset, anomaly_dataset
-    else: return concatenate_datasets([inlier_dataset,anomaly_dataset])
+    else: return concatenate_datasets([inlier_dataset,anomaly_dataset]).shuffle(seed=42)
 
 
 ############################################
@@ -292,7 +292,7 @@ def textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac='pan
     anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
 
     if is_trainset : return inlier_dataset, anomaly_dataset
-    else: return concatenate_datasets([inlier_dataset,anomaly_dataset])
+    else: return concatenate_datasets([inlier_dataset,anomaly_dataset]).shuffle(seed=42)
 
 
 ############################################
@@ -326,4 +326,4 @@ def textual_anomaly_contamination_agnews(dataset, inlier_topic, type_tac='fate',
     anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
 
     if is_trainset : return inlier_dataset, anomaly_dataset
-    else: return concatenate_datasets([inlier_dataset,anomaly_dataset])
+    else: return concatenate_datasets([inlier_dataset,anomaly_dataset]).shuffle(seed=42)

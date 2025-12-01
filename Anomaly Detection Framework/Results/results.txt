@@ -980,3 +980,190 @@ Avg Precision:  0.5828 ± 0.0204
 FPR@95:         0.5961 ± 0.0938
 ========================================
 
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.9012 ± 0.0054
+Avg Precision:  0.4882 ± 0.0163
+FPR@95:         0.3594 ± 0.0225
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.9908 ± 0.0021
+Avg Precision:  0.9512 ± 0.0085
+FPR@95:         0.0252 ± 0.0028
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.9000 ± 0.0068
+Avg Precision:  0.6277 ± 0.0185
+FPR@95:         0.4795 ± 0.0224
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci/Tech
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.9010 ± 0.0059
+Avg Precision:  0.5842 ± 0.0305
+FPR@95:         0.4775 ± 0.0456
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.8774 ± 0.0195
+Avg Precision:  0.8276 ± 0.0219
+FPR@95:         0.9900 ± 0.0092
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.6980 ± 0.0198
+Avg Precision:  0.4141 ± 0.0244
+FPR@95:         1.0000 ± 0.0000
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.9650 ± 0.0511
+Avg Precision:  0.8969 ± 0.0678
+FPR@95:         0.2347 ± 0.3833
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.8720 ± 0.0708
+Avg Precision:  0.7141 ± 0.1536
+FPR@95:         0.8512 ± 0.2975
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.9590 ± 0.0262
+Avg Precision:  0.7030 ± 0.1566
+FPR@95:         0.0833 ± 0.0497
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.7918 ± 0.1416
+Avg Precision:  0.7448 ± 0.1406
+FPR@95:         0.8207 ± 0.3586
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.9347 ± 0.0718
+Avg Precision:  0.8703 ± 0.0650
+FPR@95:         0.4321 ± 0.4659
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.9333 ± 0.0113
+Avg Precision:  0.7770 ± 0.0292
+FPR@95:         0.4322 ± 0.1101
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.9217 ± 0.0067
+Avg Precision:  0.5716 ± 0.0417
+FPR@95:         0.3124 ± 0.0253
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.7669 ± 0.0116
+Avg Precision:  0.2745 ± 0.0189
+FPR@95:         0.6718 ± 0.0329
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.9397 ± 0.0167
+Avg Precision:  0.7254 ± 0.0720
+FPR@95:         0.2319 ± 0.0643
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.9351 ± 0.0078
+Avg Precision:  0.7239 ± 0.0557
+FPR@95:         0.3376 ± 0.0635
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: sentence_bert
+AD model:       RSRAE
+----------------------------------------
+AUC:            0.9171 ± 0.0125
+Avg Precision:  0.6468 ± 0.0265
+FPR@95:         0.3955 ± 0.0896
+========================================
+
