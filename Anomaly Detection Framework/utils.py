@@ -2,6 +2,9 @@ import re
 from collections import defaultdict
 import numpy as np
 import os
+        
+from datetime import datetime
+
 
 BASE_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results"
 OUTPUT_TEX = os.path.join(BASE_DIR, "tables.tex")
@@ -60,7 +63,7 @@ def load_all_results():
 
 MODEL_ORDER = [
     "ocsvm",
-    "ae",
+    "AE",
     "RSRAE",
     "CVDD",
     "FATE",
@@ -70,7 +73,7 @@ MODEL_ORDER = [
 
 MODEL_LATEX = {
     "ocsvm": "OCSVM",
-    "ae": "AE",
+    "AE": "AE",
     "RSRAE": "RSRAE",
     "CVDD": "CVDD",
     "FATE": "FATE",
@@ -331,3 +334,50 @@ def save_results(
     with open(filepath, "w") as f:
         f.write(existing_content)
 
+
+
+def save_hyperparameters(dataset_name, inlier_topic,
+                         batch_size=32,
+                         latent_dim=256,
+                         sinu=False,
+                         batchnorm=False,
+                         dropout=0.1,
+                         lr=1e-4,
+                         weight_decay=1e-6,
+                         n_epochs=25,
+                         target=None,
+                         source='sphere',
+                         save_dir="Results"):
+    
+    os.makedirs(save_dir, exist_ok=True)
+
+    filename = "hyperparams.txt"
+    filepath = os.path.join(save_dir, filename)
+
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    content = [
+        "========================================",
+        f"Run date : {now}",
+        f"dataset_name : {dataset_name}",
+        f"inlier_topic : {inlier_topic}",
+        "",
+        "Hyperparameters :",
+        f"batch_size : {batch_size}",
+        f"latent_dim : {latent_dim}",
+        f"sinu : {sinu}",
+        f"batchnorm : {batchnorm}",
+        f"dropout : {dropout}",
+        f"lr : {lr}",
+        f"weight_decay : {weight_decay}",
+        f"n_epochs : {n_epochs}",
+        f"source : {source}",
+        f"target : {target}",
+        "========================================",
+        "\n"
+    ]
+
+    with open(filepath, "a") as f:
+        f.write("\n".join(content))
+
+    print(f"Hyperparameters saved to: {filepath}")

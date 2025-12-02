@@ -6,9 +6,9 @@ Inlier class:   computer
 Embedding type: sentence_bert
 AD model:       flow-matching
 ----------------------------------------
-AUC:            0.9527 ± 0.0037
-Avg Precision:  0.7244 ± 0.0362
-FPR@95:         0.2161 ± 0.0132
+AUC:            0.9506 ± 0.0113
+Avg Precision:  0.8211 ± 0.0264
+FPR@95:         0.2969 ± 0.0858
 ========================================
 
 ========================================
@@ -17,9 +17,9 @@ Inlier class:   computer
 Embedding type: sentence_bert
 AD model:       ocsvm
 ----------------------------------------
-AUC:            0.9249 ± 0.0140
-Avg Precision:  0.7904 ± 0.0266
-FPR@95:         0.5458 ± 0.1423
+AUC:            0.9235 ± 0.0149
+Avg Precision:  0.7735 ± 0.0281
+FPR@95:         0.4814 ± 0.1085
 ========================================
 
 
@@ -31,9 +31,9 @@ Inlier class:   recreation
 Embedding type: sentence_bert
 AD model:       flow-matching
 ----------------------------------------
-AUC:            0.9450 ± 0.0055
-Avg Precision:  0.5612 ± 0.0209
-FPR@95:         0.2108 ± 0.0251
+AUC:            0.9450 ± 0.0050
+Avg Precision:  0.7194 ± 0.0202
+FPR@95:         0.2304 ± 0.0193
 ========================================
 
 ========================================
@@ -42,9 +42,9 @@ Inlier class:   recreation
 Embedding type: sentence_bert
 AD model:       ocsvm
 ----------------------------------------
-AUC:            0.9371 ± 0.0048
-Avg Precision:  0.7441 ± 0.0161
-FPR@95:         0.3537 ± 0.0231
+AUC:            0.9252 ± 0.0109
+Avg Precision:  0.7051 ± 0.0227
+FPR@95:         0.3795 ± 0.0790
 ========================================
 
 
@@ -57,9 +57,9 @@ Inlier class:   science
 Embedding type: sentence_bert
 AD model:       flow-matching
 ----------------------------------------
-AUC:            0.8213 ± 0.0133
-Avg Precision:  0.3297 ± 0.0185
-FPR@95:         0.5926 ± 0.0342
+AUC:            0.8095 ± 0.0178
+Avg Precision:  0.3464 ± 0.0257
+FPR@95:         0.6049 ± 0.0602
 ========================================
 
 ========================================
@@ -68,9 +68,9 @@ Inlier class:   science
 Embedding type: sentence_bert
 AD model:       ocsvm
 ----------------------------------------
-AUC:            0.7717 ± 0.0043
-Avg Precision:  0.2864 ± 0.0127
-FPR@95:         0.7281 ± 0.0271
+AUC:            0.7703 ± 0.0195
+Avg Precision:  0.2761 ± 0.0234
+FPR@95:         0.7102 ± 0.0384
 ========================================
 
 
@@ -82,9 +82,9 @@ Inlier class:   miscellaneous
 Embedding type: sentence_bert
 AD model:       flow-matching
 ----------------------------------------
-AUC:            0.9459 ± 0.0181
-Avg Precision:  0.6461 ± 0.0301
-FPR@95:         0.2157 ± 0.0608
+AUC:            0.9516 ± 0.0132
+Avg Precision:  0.7776 ± 0.0446
+FPR@95:         0.2152 ± 0.0833
 ========================================
 
 ========================================
@@ -93,9 +93,9 @@ Inlier class:   miscellaneous
 Embedding type: sentence_bert
 AD model:       ocsvm
 ----------------------------------------
-AUC:            0.9494 ± 0.0195
-Avg Precision:  0.7900 ± 0.0488
-FPR@95:         0.2188 ± 0.0601
+AUC:            0.9423 ± 0.0159
+Avg Precision:  0.7848 ± 0.0535
+FPR@95:         0.2683 ± 0.1015
 ========================================
 
 
@@ -107,9 +107,9 @@ Inlier class:   politics
 Embedding type: sentence_bert
 AD model:       flow-matching
 ----------------------------------------
-AUC:            0.9425 ± 0.0062
-Avg Precision:  0.7404 ± 0.0264
-FPR@95:         0.3004 ± 0.0611
+AUC:            0.9504 ± 0.0079
+Avg Precision:  0.7866 ± 0.0252
+FPR@95:         0.2361 ± 0.0513
 ========================================
 
 ========================================
@@ -118,9 +118,9 @@ Inlier class:   politics
 Embedding type: sentence_bert
 AD model:       ocsvm
 ----------------------------------------
-AUC:            0.9241 ± 0.0046
-Avg Precision:  0.7530 ± 0.0191
-FPR@95:         0.4934 ± 0.1143
+AUC:            0.9245 ± 0.0114
+Avg Precision:  0.7434 ± 0.0325
+FPR@95:         0.4149 ± 0.0682
 ========================================
 
 
@@ -131,9 +131,9 @@ Inlier class:   religion
 Embedding type: sentence_bert
 AD model:       flow-matching
 ----------------------------------------
-AUC:            0.9303 ± 0.0121
-Avg Precision:  0.7442 ± 0.0389
-FPR@95:         0.4026 ± 0.0721
+AUC:            0.9353 ± 0.0106
+Avg Precision:  0.7570 ± 0.0192
+FPR@95:         0.3410 ± 0.0975
 ========================================
 
 ========================================
@@ -142,9 +142,9 @@ Inlier class:   religion
 Embedding type: sentence_bert
 AD model:       ocsvm
 ----------------------------------------
-AUC:            0.9196 ± 0.0182
-Avg Precision:  0.7268 ± 0.0324
-FPR@95:         0.4899 ± 0.1228
+AUC:            0.9186 ± 0.0142
+Avg Precision:  0.7038 ± 0.0234
+FPR@95:         0.4406 ± 0.1099
 ========================================
 
 ========================================
@@ -153,9 +153,9 @@ Inlier class:   computer
 Embedding type: sentence_bert
 AD model:       RSRAE
 ----------------------------------------
-AUC:            0.9333 ± 0.0113
-Avg Precision:  0.7770 ± 0.0292
-FPR@95:         0.4322 ± 0.1101
+AUC:            0.9053 ± 0.0164
+Avg Precision:  0.6565 ± 0.0407
+FPR@95:         0.5140 ± 0.1056
 ========================================
 
 ========================================
@@ -164,9 +164,9 @@ Inlier class:   recreation
 Embedding type: sentence_bert
 AD model:       RSRAE
 ----------------------------------------
-AUC:            0.9217 ± 0.0067
-Avg Precision:  0.5716 ± 0.0417
-FPR@95:         0.3124 ± 0.0253
+AUC:            0.9202 ± 0.0084
+Avg Precision:  0.5860 ± 0.0212
+FPR@95:         0.2999 ± 0.0627
 ========================================
 
 ========================================
@@ -175,9 +175,9 @@ Inlier class:   science
 Embedding type: sentence_bert
 AD model:       RSRAE
 ----------------------------------------
-AUC:            0.7669 ± 0.0116
-Avg Precision:  0.2745 ± 0.0189
-FPR@95:         0.6718 ± 0.0329
+AUC:            0.7443 ± 0.0246
+Avg Precision:  0.2275 ± 0.0236
+FPR@95:         0.6759 ± 0.0493
 ========================================
 
 ========================================
@@ -186,9 +186,9 @@ Inlier class:   miscellaneous
 Embedding type: sentence_bert
 AD model:       RSRAE
 ----------------------------------------
-AUC:            0.9397 ± 0.0167
-Avg Precision:  0.7254 ± 0.0720
-FPR@95:         0.2319 ± 0.0643
+AUC:            0.9466 ± 0.0150
+Avg Precision:  0.7920 ± 0.0389
+FPR@95:         0.2694 ± 0.1025
 ========================================
 
 ========================================
@@ -197,9 +197,9 @@ Inlier class:   politics
 Embedding type: sentence_bert
 AD model:       RSRAE
 ----------------------------------------
-AUC:            0.9351 ± 0.0078
-Avg Precision:  0.7239 ± 0.0557
-FPR@95:         0.3376 ± 0.0635
+AUC:            0.9219 ± 0.0106
+Avg Precision:  0.6549 ± 0.0348
+FPR@95:         0.3723 ± 0.0586
 ========================================
 
 ========================================
@@ -208,7 +208,74 @@ Inlier class:   religion
 Embedding type: sentence_bert
 AD model:       RSRAE
 ----------------------------------------
-AUC:            0.9171 ± 0.0125
-Avg Precision:  0.6468 ± 0.0265
-FPR@95:         0.3955 ± 0.0896
+AUC:            0.9264 ± 0.0079
+Avg Precision:  0.6200 ± 0.0237
+FPR@95:         0.3111 ± 0.0687
 ========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: sentence_bert
+AD model:       AE
+----------------------------------------
+AUC:            0.9405 ± 0.0053
+Avg Precision:  0.6872 ± 0.0201
+FPR@95:         0.2448 ± 0.0264
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: sentence_bert
+AD model:       AE
+----------------------------------------
+AUC:            0.8015 ± 0.0158
+Avg Precision:  0.3398 ± 0.0250
+FPR@95:         0.6274 ± 0.0457
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: sentence_bert
+AD model:       AE
+----------------------------------------
+AUC:            0.9443 ± 0.0192
+Avg Precision:  0.7675 ± 0.0571
+FPR@95:         0.2597 ± 0.0885
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: sentence_bert
+AD model:       AE
+----------------------------------------
+AUC:            0.9504 ± 0.0078
+Avg Precision:  0.7804 ± 0.0245
+FPR@95:         0.2413 ± 0.0343
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: sentence_bert
+AD model:       AE
+----------------------------------------
+AUC:            0.9341 ± 0.0080
+Avg Precision:  0.7263 ± 0.0195
+FPR@95:         0.3145 ± 0.0357
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: sentence_bert
+AD model:       AE
+----------------------------------------
+AUC:            0.9498 ± 0.0112
+Avg Precision:  0.8220 ± 0.0267
+FPR@95:         0.3056 ± 0.0879
+========================================
+

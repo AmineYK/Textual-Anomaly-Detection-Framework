@@ -1,0 +1,18 @@
+========================================
+Run date : 2025-12-02 18:24:35
+dataset_name : 20newsgroups
+inlier_topic : computer
+
+Hyperparameters :
+batch_size : 32
+latent_dim : 256
+sinu : False
+batchnorm : False
+dropout : 0.1
+lr : 0.0001
+weight_decay : 1e-06
+n_epochs : 25
+source : sphere
+target : torch.Size([2576, 384])
+========================================
+

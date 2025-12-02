@@ -28,7 +28,7 @@ class SinusoidalTimeEmbedding(nn.Module):
 
 
 class FlowMatching(nn.Module):
-    def __init__(self, source, target, input_dim=64, latent_dim=256, sinusoidal=False, device='cuda'):
+    def __init__(self, source, target, input_dim=64, latent_dim=256, sinusoidal=False, dropout=0.3, batchnorm=False, device='cuda'):
         super().__init__()
         
         self.target = target
@@ -63,14 +63,28 @@ class FlowMatching(nn.Module):
             # because of concatenation of time embedding with x
             first_dim = input_dim * 2
         
-        self.net = nn.Sequential(
-            nn.Linear(first_dim, latent_dim),
-            nn.Tanh(),
-            nn.Linear(latent_dim, latent_dim),
-            nn.Tanh(),
-            nn.Linear(latent_dim, input_dim)
-        )
+        layers = [nn.Linear(first_dim, latent_dim)]
         
+        if batchnorm : 
+            layers.append(nn.BatchNorm1d(latent_dim))
+            
+        layers.append(nn.Tanh())
+        if dropout is not None:
+            layers.append(nn.Dropout(dropout))
+        
+        layers.append(nn.Linear(latent_dim, latent_dim))
+        
+        if batchnorm : 
+            layers.append(nn.BatchNorm1d(latent_dim))
+        layers.append(nn.Tanh())
+                
+        if dropout is not None:
+            layers.append(nn.Dropout(dropout))
+            
+        layers.append(nn.Linear(latent_dim, input_dim))
+        
+        self.net = nn.Sequential(*layers)
+
     def forward(self, x, t):
         t = t.expand(x.shape[0], 1)
         if self.sinusoidal:
