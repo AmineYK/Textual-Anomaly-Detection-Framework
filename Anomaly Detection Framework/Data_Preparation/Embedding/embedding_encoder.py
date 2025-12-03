@@ -34,9 +34,9 @@ class EmbeddingEncoder:
         else : raise Exception ("'model' & 'model_name' are None type, at least one is requered")
         
         
-    def forward(self, dataset):
+    def forward(self, dataset, text_column='text'):
         
-        return self.model.forward(dataset)
+        return self.model.forward(dataset, text_column)
     
 
 ################################################
