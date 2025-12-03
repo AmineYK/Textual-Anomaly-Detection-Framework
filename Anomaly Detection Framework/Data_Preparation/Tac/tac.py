@@ -28,7 +28,7 @@ def textual_anomaly_contamination(dataset, dataset_name, inlier_topic, type_tac,
     if dataset_name == 'wos':
         return textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac, anomaly_rate, is_trainset)
     
-    if dataset_name == 'dppedia14':
+    if dataset_name == 'dbpedia14':
         return textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac, anomaly_rate, is_trainset)
         
     if dataset_name == 'agnews':
