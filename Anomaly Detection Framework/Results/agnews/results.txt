@@ -163,3 +163,58 @@ Avg Precision:  0.5929 ± 0.0211
 FPR@95:         0.4044 ± 0.0534
 ========================================
 
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: sentence_bert
+AD model:       TCCM
+----------------------------------------
+AUC:            0.9241 ± 0.0065
+Avg Precision:  0.5851 ± 0.0123
+FPR@95:         0.2776 ± 0.0497
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: sentence_bert
+AD model:       TCCM
+----------------------------------------
+AUC:            0.9733 ± 0.0064
+Avg Precision:  0.8623 ± 0.0164
+FPR@95:         0.1150 ± 0.0305
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: sentence_bert
+AD model:       TCCM
+----------------------------------------
+AUC:            0.8883 ± 0.0085
+Avg Precision:  0.5188 ± 0.0206
+FPR@95:         0.4828 ± 0.1002
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci/Tech
+Embedding type: sentence_bert
+AD model:       TCCM
+----------------------------------------
+AUC:            0.8767 ± 0.0078
+Avg Precision:  0.4387 ± 0.0203
+FPR@95:         0.4833 ± 0.0613
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: sentence_bert
+AD model:       AE
+----------------------------------------
+AUC:            0.9137 ± 0.0082
+Avg Precision:  0.5110 ± 0.0191
+FPR@95:         0.3053 ± 0.0433
+========================================
+

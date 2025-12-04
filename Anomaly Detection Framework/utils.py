@@ -9,7 +9,7 @@ from datetime import datetime
 BASE_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results"
 OUTPUT_TEX = os.path.join(BASE_DIR, "tables.tex")
 
-DATASETS = ["reuters", "agnews", "20newsgroups"]
+DATASETS = ["reuters", "agnews", "20newsgroups", "dbpedia14"]
 
 pattern = {
     "dataset": re.compile(r"Dataset:\s*(.*)"),
@@ -67,7 +67,7 @@ MODEL_ORDER = [
     "RSRAE",
     "CVDD",
     "FATE",
-    "FM_AD_tab",
+    "TCCM",
     "flow-matching"
 ]
 
@@ -77,7 +77,7 @@ MODEL_LATEX = {
     "RSRAE": "RSRAE",
     "CVDD": "CVDD",
     "FATE": "FATE",
-    "FM_AD_tab": "FM\\_AD\\_tab",
+    "TCCM": "TCCM",
     "flow-matching": "\\textbf{BasicFM}"
 }
 
@@ -165,7 +165,6 @@ def generate_dataset_tables(results):
 
     for ds in results:
         inlier_classes = list(results[ds].keys())
-
         auc_matrix = []
         for model in MODEL_ORDER:
             row_vals = []
@@ -247,7 +246,6 @@ def create_tables():
     print(f"Fichier LaTeX généré : {OUTPUT_TEX}")
 
 
-    
 def save_results(
     dataset_name,
     inlier_topic,
@@ -255,7 +253,8 @@ def save_results(
     ad_model,
     auc_mean, ap_mean, fpr_mean,
     auc_std=None, ap_std=None, fpr_std=None,
-    output_dir=BASE_DIR,   # BASE_DIR défini plus haut
+    train_time=None,             
+    output_dir=BASE_DIR,            
     filename="results.txt",
     overwrite='smart'
 ):  
@@ -280,12 +279,15 @@ def save_results(
         """Formate 'mean ± std' si std est fourni, sinon seulement mean."""
         return f"{mean:.4f} ± {std:.4f}" if std is not None else f"{mean:.4f}"
 
+    time_str = f"{train_time:.2f} sec" if train_time is not None else "N/A"
+
     new_block = (
         "========================================\n"
         f"Dataset:        {dataset_name}\n"
         f"Inlier class:   {inlier_topic}\n"
         f"Embedding type: {type_emb}\n"
         f"AD model:       {ad_model}\n"
+        f"Training time:  {time_str}\n"    
         "----------------------------------------\n"
         f"AUC:            {fmt(auc_mean, auc_std)}\n"
         f"Avg Precision:  {fmt(ap_mean, ap_std)}\n"
@@ -333,6 +335,7 @@ def save_results(
 
     with open(filepath, "w") as f:
         f.write(existing_content)
+
 
 
 

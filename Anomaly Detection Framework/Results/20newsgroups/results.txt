@@ -279,3 +279,69 @@ Avg Precision:  0.8220 ± 0.0267
 FPR@95:         0.3056 ± 0.0879
 ========================================
 
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: sentence_bert
+AD model:       TCCM
+----------------------------------------
+AUC:            0.9463 ± 0.0127
+Avg Precision:  0.7904 ± 0.0296
+FPR@95:         0.3223 ± 0.1097
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: sentence_bert
+AD model:       TCCM
+----------------------------------------
+AUC:            0.9344 ± 0.0048
+Avg Precision:  0.6293 ± 0.0296
+FPR@95:         0.2688 ± 0.0323
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: sentence_bert
+AD model:       TCCM
+----------------------------------------
+AUC:            0.8127 ± 0.0184
+Avg Precision:  0.3309 ± 0.0338
+FPR@95:         0.6148 ± 0.0489
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: sentence_bert
+AD model:       TCCM
+----------------------------------------
+AUC:            0.9350 ± 0.0220
+Avg Precision:  0.6998 ± 0.0634
+FPR@95:         0.2880 ± 0.0864
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: sentence_bert
+AD model:       TCCM
+----------------------------------------
+AUC:            0.9415 ± 0.0101
+Avg Precision:  0.7268 ± 0.0273
+FPR@95:         0.3068 ± 0.0624
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: sentence_bert
+AD model:       TCCM
+----------------------------------------
+AUC:            0.9257 ± 0.0134
+Avg Precision:  0.7176 ± 0.0228
+FPR@95:         0.3927 ± 0.1171
+========================================
+

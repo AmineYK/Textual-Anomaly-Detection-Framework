@@ -1,0 +1,60 @@
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: sentence_bert
+AD model:       flow-matching
+Training time:  N/A
+----------------------------------------
+AUC:            0.9721 ± 0.0020
+Avg Precision:  0.8112 ± 0.0082
+FPR@95:         0.1265 ± 0.0176
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: sentence_bert
+AD model:       AE
+Training time:  N/A
+----------------------------------------
+AUC:            0.9236 ± 0.0039
+Avg Precision:  0.6635 ± 0.0123
+FPR@95:         0.3719 ± 0.0257
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: sentence_bert
+AD model:       RSRAE
+Training time:  N/A
+----------------------------------------
+AUC:            0.9664 ± 0.0025
+Avg Precision:  0.7808 ± 0.0099
+FPR@95:         0.1588 ± 0.0143
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: sentence_bert
+AD model:       ocsvm
+Training time:  N/A
+----------------------------------------
+AUC:            0.9751 ± 0.0022
+Avg Precision:  0.8459 ± 0.0067
+FPR@95:         0.1182 ± 0.0215
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: sentence_bert
+AD model:       TCCM
+Training time:  N/A
+----------------------------------------
+AUC:            0.8531 ± 0.0042
+Avg Precision:  0.3990 ± 0.0134
+FPR@95:         0.5069 ± 0.0229
+========================================
+

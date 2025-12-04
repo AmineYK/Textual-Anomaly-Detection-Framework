@@ -305,3 +305,39 @@ source : sphere
 target : torch.Size([27000, 384])
 ========================================
 
+========================================
+Run date : 2025-12-04 16:56:35
+dataset_name : dbpedia14
+inlier_topic : Company
+
+Hyperparameters :
+batch_size : 1024
+latent_dim : 256
+sinu : False
+batchnorm : False
+dropout : 0.1
+lr : 0.001
+weight_decay : 0.0001
+n_epochs : 50
+source : sphere
+target : torch.Size([36000, 384])
+========================================
+
+========================================
+Run date : 2025-12-04 17:10:04
+dataset_name : dbpedia14
+inlier_topic : Educational Institution
+
+Hyperparameters :
+batch_size : 1024
+latent_dim : 256
+sinu : False
+batchnorm : False
+dropout : 0.1
+lr : 0.001
+weight_decay : 0.0001
+n_epochs : 50
+source : sphere
+target : torch.Size([36000, 384])
+========================================
+

@@ -169,8 +169,9 @@ class CVDDTrainer:
             epoch_train_time = time.time() - epoch_start_time
             logger.info(f'| Epoch: {epoch + 1:03}/{self.n_epochs:03} | Train Time: {epoch_train_time:.3f}s '
             f'| Train Loss: {epoch_loss / n_batches:.6f} |')
-            print(f'| Epoch: {epoch + 1:03}/{self.n_epochs:03} | Train Time: {epoch_train_time:.3f}s '
-            f'| Train Loss: {epoch_loss / n_batches:.6f} |')
+            if epoch % (self.n_epochs//5) == 0:
+                print(f'| Epoch: {epoch + 1:03}/{self.n_epochs:03} | Train Time: {epoch_train_time:.3f}s '
+                f'| Train Loss: {epoch_loss / n_batches:.6f} |')
 
 
             self.train_dists = np.concatenate(dists_per_head)
