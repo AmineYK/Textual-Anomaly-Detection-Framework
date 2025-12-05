@@ -7,29 +7,68 @@ from Data_Preparation.Tac.tac import textual_anomaly_contamination
 from Data_Preparation.Embedding.embedding_encoder import EmbeddingEncoder
 
 
+# def preprocess(dataset):
+
+#     def clean_text(text):
+
+#         text = text.lower()
+#         text = text.translate(str.maketrans("", "", string.punctuation))
+#         text = re.sub(r'<.*?>', ' ', text)  
+#         text = re.sub(r'\d+', ' ', text)  
+#         text = re.sub(r'\W+', ' ', text) 
+#         text = re.sub(r'\s+', ' ', text) 
+
+#         return text.strip()
+
+#     for split in ['train', 'test']:
+#         if split in dataset and 'text' in dataset[split]:
+
+#             dataset[split]['text'] = dataset[split]['text'].apply(clean_text)
+
+#             dataset[split] = dataset[split][dataset[split]['text'] != ""]
+
+#             dataset[split] = dataset[split].reset_index(drop=True)
+
+#     return dataset
+
+# from nltk.corpus import stopwords
+
 def preprocess(dataset):
+    # stop_words = set(stopwords.words("english"))
 
     def clean_text(text):
-
+        # Lowercase
         text = text.lower()
+
+        # Remove punctuation
         text = text.translate(str.maketrans("", "", string.punctuation))
-        text = re.sub(r'<.*?>', ' ', text)  
-        text = re.sub(r'\d+', ' ', text)  
-        text = re.sub(r'\W+', ' ', text) 
-        text = re.sub(r'\s+', ' ', text) 
 
-        return text.strip()
+        # Remove digits
+        text = re.sub(r'\d+', ' ', text)
 
-    for split in ['train', 'test']:
-        if split in dataset and 'text' in dataset[split]:
+        # Remove non-word characters & extra spaces
+        text = re.sub(r'\W+', ' ', text)
+        text = re.sub(r'\s+', ' ', text).strip()
 
-            dataset[split]['text'] = dataset[split]['text'].apply(clean_text)
+        # Tokenize
+        tokens = text.split()
 
-            dataset[split] = dataset[split][dataset[split]['text'] != ""]
+        # Remove stopwords & keep words with len >= 3
+        # tokens = [w for w in tokens if w not in stop_words and len(w) >= 3]
+
+        return " ".join(tokens)
+
+    for split in ["train", "test"]:
+        if split in dataset and "text" in dataset[split]:
+            dataset[split]["text"] = dataset[split]["text"].apply(clean_text)
+
+            # Remove empty texts
+            dataset[split] = dataset[split][dataset[split]["text"] != ""]
 
             dataset[split] = dataset[split].reset_index(drop=True)
 
     return dataset
+
 
 
 

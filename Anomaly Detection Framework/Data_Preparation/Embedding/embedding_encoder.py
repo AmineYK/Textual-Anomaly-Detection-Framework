@@ -103,8 +103,8 @@ class SetenceBERTEmbeddingEncoder(BaseEmbeddingEncoder):
 
         self.model_name = model_name
         self.device = device
-
-        self.setencebert_model = SentenceTransformer('all-MiniLM-L6-v2', device=device)
+# all-MiniLM-L6-v2
+        self.setencebert_model = SentenceTransformer(model_name, device=device)
 
 
     def forward(self, dataset, text_column="text"):
@@ -142,10 +142,10 @@ class BERTEmbeddingEncoder(BaseEmbeddingEncoder):
         self.model.to(device)
         self.model.eval()
 
-    def forward(self, dataset):
+    def forward(self, dataset, text_column="text"):
         
         def compute_embeddings(batch):
-            texts = batch["text"]
+            texts = batch[text_column]
 
             inputs = self.tokenizer(
                 texts,
