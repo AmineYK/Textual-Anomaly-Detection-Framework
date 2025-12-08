@@ -2,7 +2,7 @@ import re
 from collections import defaultdict
 import numpy as np
 import os
-        
+import torch
 from datetime import datetime
 
 
@@ -384,3 +384,85 @@ def save_hyperparameters(dataset_name, inlier_topic,
         f.write("\n".join(content))
 
     print(f"Hyperparameters saved to: {filepath}")
+    
+    
+    
+import re
+
+def load_hyperparams(dataset_name, inlier_topic, file_path):
+    """
+    Lit un fichier de logs contenant plusieurs runs et renvoie les hyperparamètres
+    correspondant au dataset et inlier_topic donnés.
+    """
+    with open(file_path, "r") as f:
+        content = f.read()
+
+    # On sépare chaque run via les blocs "====="
+    blocks = [b.strip() for b in content.split("========================================") if b.strip()]
+
+    # Regex pour matcher dataset + inlier_topic
+    ds_pattern = re.compile(r"dataset_name\s*:\s*(.*)")
+    inlier_pattern = re.compile(r"inlier_topic\s*:\s*(.*)")
+
+    # Hyperparams regex
+    hyper_pattern = re.compile(r"(\w+)\s*:\s*(.*)")
+
+    for block in blocks:
+        # Vérifier dataset_name et inlier_topic
+        ds = ds_pattern.search(block)
+        it = inlier_pattern.search(block)
+
+        if not ds or not it:
+            continue
+
+        if ds.group(1).strip() == dataset_name and it.group(1).strip() == inlier_topic:
+            # Extraire les hyperparamètres dans la section "Hyperparameters :"
+            hypers = {}
+            in_hyper_section = False
+
+            for line in block.splitlines():
+                line = line.strip()
+
+                if line.startswith("Hyperparameters"):
+                    in_hyper_section = True
+                    continue
+
+                if in_hyper_section:
+                    if ":" in line:
+                        key, value = line.split(":", 1)
+                        key = key.strip()
+                        value = value.strip()
+
+                        # Convertir automatiquement en type Python
+                        if value.isdigit():
+                            value = int(value)
+                        else:
+                            try:
+                                value = float(value)
+                            except:
+                                if value.lower() == "true":
+                                    value = True
+                                elif value.lower() == "false":
+                                    value = False
+                                else:
+                                    value = value  # string brut
+
+                        hypers[key] = value
+
+            return hypers
+
+    return None  # Aucun match
+
+
+def load_data_inlier(dataset_name, inlier_topic, save_dir = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Data"):
+
+    path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/ds_train_{inlier_topic}.pt")
+
+    return torch.load(path)['X_inlier']
+
+def load_data_test(dataset_name, inlier_topic, n_run, save_dir = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Data"):
+
+    path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/run{n_run}/ds_test_{inlier_topic}_run{n_run}.pt")
+    ds = torch.load(path)
+    
+    return ds['X_test'], ds['y_test']

@@ -362,8 +362,8 @@ def replace_inliers_with_anomalies(inlier_dataset, anomaly_dataset, anomaly_rate
     anomaly_selected = anomaly_dataset.select(anomaly_indices)
 
     # 3) marquage
-    inlier_kept = inlier_kept.map(add_col, fn_kwargs={"anomaly_class": 0})
-    anomaly_selected = anomaly_selected.map(add_col, fn_kwargs={"anomaly_class": 1})
+    inlier_kept = inlier_kept.map(add_col, fn_kwargs={"anomaly_class": 0}, load_from_cache_file=False, num_proc=1)
+    anomaly_selected = anomaly_selected.map(add_col, fn_kwargs={"anomaly_class": 1}, load_from_cache_file=False, num_proc=1)
 
     # 4) concat final
     return concatenate_datasets([inlier_kept, anomaly_selected]).shuffle(seed=42)

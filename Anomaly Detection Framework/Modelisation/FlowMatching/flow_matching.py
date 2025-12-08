@@ -28,9 +28,10 @@ class SinusoidalTimeEmbedding(nn.Module):
 
 
 class FlowMatching(nn.Module):
-    def __init__(self, source, target, input_dim=64, latent_dim=256, sinusoidal=False, dropout=0.3, batchnorm=False, device='cuda'):
+    def __init__(self, source, target, input_dim=64, latent_dim=256, sinusoidal=False, dropout=0.3, batchnorm=False, device='cuda', seed=42):
         super().__init__()
         
+        self.seed = seed
         self.target = target
         self.target_centroid = self.target.mean(dim=0)
         self.target_cov_mat = torch.cov(self.target.T)
@@ -95,6 +96,9 @@ class FlowMatching(nn.Module):
         return self.net(xt)
     
     def sampling_source(self, n_samples):
+
+        # torch.manual_seed(self.seed) 
+        # torch.cuda.manual_seed_all(self.seed)
         
         if self.source == 'gaussian':
             return torch.randn(n_samples, self.input_dim).to(self.device)

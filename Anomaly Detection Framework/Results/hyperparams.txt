@@ -4,14 +4,14 @@ dataset_name : 20newsgroups
 inlier_topic : computer
 
 Hyperparameters :
-batch_size : 32
+batch_size : 64
 latent_dim : 256
 sinu : False
 batchnorm : False
 dropout : 0.1
 lr : 0.0001
 weight_decay : 1e-06
-n_epochs : 25
+n_epochs : 50
 source : sphere
 target : torch.Size([2576, 384])
 ========================================
@@ -40,14 +40,14 @@ dataset_name : 20newsgroups
 inlier_topic : science
 
 Hyperparameters :
-batch_size : 32
+batch_size : 64
 latent_dim : 256
 sinu : False
 batchnorm : False
 dropout : 0.1
 lr : 0.0001
 weight_decay : 1e-06
-n_epochs : 25
+n_epochs : 100
 source : sphere
 target : torch.Size([2080, 384])
 ========================================
@@ -153,10 +153,10 @@ latent_dim : 256
 sinu : False
 batchnorm : False
 dropout : 0.1
-lr : 0.001
-weight_decay : 1e-05
-n_epochs : 100
-source : uniform
+lr : 1e-4
+weight_decay : 1e-07
+n_epochs : 30
+source : sphere-noised
 target : torch.Size([1437, 384])
 ========================================
 
@@ -167,14 +167,14 @@ dataset_name : reuters
 inlier_topic : interest
 
 Hyperparameters :
-batch_size : 64
+batch_size : 16
 latent_dim : 256
 sinu : False
 batchnorm : False
 dropout : 0.1
-lr : 1e-05
-weight_decay : 1e-05
-n_epochs : 500
+lr : 1e-04
+weight_decay : 1e-04
+n_epochs : 150
 source : sphere-noised
 target : torch.Size([171, 384])
 ========================================
@@ -190,10 +190,10 @@ latent_dim : 256
 sinu : False
 batchnorm : False
 dropout : 0.1
-lr : 0.0001
-weight_decay : 1e-05
-n_epochs : 100
-source : sphere
+lr : 0.001
+weight_decay : 0
+n_epochs : 50
+source : sphere-noised
 target : torch.Size([186, 384])
 ========================================
 
@@ -208,9 +208,9 @@ latent_dim : 256
 sinu : False
 batchnorm : False
 dropout : 0.1
-lr : 0.0001
-weight_decay : 0.0001
-n_epochs : 150
+lr : 1e-3
+weight_decay : 0
+n_epochs : 30
 source : sphere
 target : torch.Size([228, 384])
 ========================================
@@ -226,10 +226,10 @@ latent_dim : 256
 sinu : False
 batchnorm : False
 dropout : 0.1
-lr : 0.0001
-weight_decay : 1e-05
-n_epochs : 150
-source : sphere
+lr : 0.001
+weight_decay : 0
+n_epochs : 50
+source : sphere-noised
 target : torch.Size([98, 384])
 ========================================
 

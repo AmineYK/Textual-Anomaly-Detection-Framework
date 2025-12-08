@@ -14,10 +14,11 @@ Dataset:        agnews
 Inlier class:   World
 Embedding type: sentence_bert
 AD model:       ocsvm
+Training time:  135.01 sec
 ----------------------------------------
-AUC:            0.8427 ± 0.0131
-Avg Precision:  0.4241 ± 0.0136
-FPR@95:         0.6174 ± 0.0721
+AUC:            0.8520 ± 0.0112
+Avg Precision:  0.4505 ± 0.0238
+FPR@95:         0.5534 ± 0.0541
 ========================================
 
 ========================================
@@ -36,10 +37,11 @@ Dataset:        agnews
 Inlier class:   Sports
 Embedding type: sentence_bert
 AD model:       ocsvm
+Training time:  146.64 sec
 ----------------------------------------
-AUC:            0.9937 ± 0.0006
-Avg Precision:  0.9625 ± 0.0027
-FPR@95:         0.0222 ± 0.0048
+AUC:            0.9897 ± 0.0046
+Avg Precision:  0.9482 ± 0.0096
+FPR@95:         0.0199 ± 0.0065
 ========================================
 
 ========================================
@@ -91,10 +93,11 @@ Dataset:        agnews
 Inlier class:   World
 Embedding type: sentence_bert
 AD model:       RSRAE
+Training time:  40.09 sec
 ----------------------------------------
-AUC:            0.8854 ± 0.0096
-Avg Precision:  0.4092 ± 0.0185
-FPR@95:         0.3799 ± 0.0418
+AUC:            0.9069 ± 0.0071
+Avg Precision:  0.4613 ± 0.0169
+FPR@95:         0.2989 ± 0.0471
 ========================================
 
 ========================================
@@ -102,10 +105,11 @@ Dataset:        agnews
 Inlier class:   Sports
 Embedding type: sentence_bert
 AD model:       RSRAE
+Training time:  39.36 sec
 ----------------------------------------
-AUC:            0.9822 ± 0.0040
-Avg Precision:  0.8976 ± 0.0136
-FPR@95:         0.0672 ± 0.0256
+AUC:            0.9848 ± 0.0038
+Avg Precision:  0.9120 ± 0.0106
+FPR@95:         0.0658 ± 0.0208
 ========================================
 
 ========================================
@@ -135,10 +139,11 @@ Dataset:        agnews
 Inlier class:   Sports
 Embedding type: sentence_bert
 AD model:       AE
+Training time:  4.53 sec
 ----------------------------------------
-AUC:            0.9900 ± 0.0032
-Avg Precision:  0.9544 ± 0.0076
-FPR@95:         0.0255 ± 0.0074
+AUC:            0.9891 ± 0.0049
+Avg Precision:  0.9498 ± 0.0056
+FPR@95:         0.0192 ± 0.0051
 ========================================
 
 ========================================
@@ -168,10 +173,11 @@ Dataset:        agnews
 Inlier class:   World
 Embedding type: sentence_bert
 AD model:       TCCM
+Training time:  86.51 sec
 ----------------------------------------
-AUC:            0.9241 ± 0.0065
-Avg Precision:  0.5851 ± 0.0123
-FPR@95:         0.2776 ± 0.0497
+AUC:            0.9306 ± 0.0067
+Avg Precision:  0.5769 ± 0.0267
+FPR@95:         0.2583 ± 0.0393
 ========================================
 
 ========================================
@@ -179,10 +185,11 @@ Dataset:        agnews
 Inlier class:   Sports
 Embedding type: sentence_bert
 AD model:       TCCM
+Training time:  87.14 sec
 ----------------------------------------
-AUC:            0.9733 ± 0.0064
-Avg Precision:  0.8623 ± 0.0164
-FPR@95:         0.1150 ± 0.0305
+AUC:            0.9887 ± 0.0038
+Avg Precision:  0.9323 ± 0.0073
+FPR@95:         0.0337 ± 0.0125
 ========================================
 
 ========================================
@@ -212,9 +219,10 @@ Dataset:        agnews
 Inlier class:   World
 Embedding type: sentence_bert
 AD model:       AE
+Training time:  4.56 sec
 ----------------------------------------
-AUC:            0.9137 ± 0.0082
-Avg Precision:  0.5110 ± 0.0191
-FPR@95:         0.3053 ± 0.0433
+AUC:            0.9230 ± 0.0070
+Avg Precision:  0.5265 ± 0.0266
+FPR@95:         0.2381 ± 0.0356
 ========================================
 
