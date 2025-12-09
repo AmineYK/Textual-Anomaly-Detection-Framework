@@ -1,270 +1,200 @@
-import tensorflow.compat.v1 as tf
-from tensorflow.keras.layers import BatchNormalization
+import Modelisation.evaluation as ev
+from Modelisation.Baselines.baseline import BaselineModel
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
 import numpy as np
 
-class CAE:
-
-    def __init__(self, input_shape, hidden_layer_sizes, intrinsic_size, 
+class CAE(nn.Module):
+    def __init__(self, input_dim, hidden_layer_sizes, intrinsic_size, 
                  norm_type="MSE", loss_norm_type="MSE",
-                 activation=tf.nn.relu, if_rsr=True, enforce_proj=False, all_alt=False,
-                 lambda1=0.1, lambda2=0.1, learning_rate=0.001,
-                 batch_size=128, epoch_size=200, batch_show=10,
-                 normalize=False, bn=True, random_seed=123):
+                 activation=F.relu, if_rsr=True, enforce_proj=False, all_alt=False,
+                 learning_rate=1e-3, lambda1=0.1, lambda2=0.1,
+                 epoch_size=50, batch_show=25, normalize=False, bn=True, seed=123):
+        super().__init__()
         
-        """
-        PARAMETERS:
-            - input_shape: shape of input data, e.g. (28,28,1) for fashion mnist, (10000,) for 20news, etc.
-            - hidden_layer_sizes: number of channels
-            - intrinsic_size: dimension of the latent code z
-            - norm_type: norm for rsr error (z-AA^Tz)
-            - loss_norm_type: norm for error (x-x_tilde)
-            - if_rsr: if true, impose rsr loss
-            - lambda1: weight of the rsr penalty term
-            - batch_show: show validation results after this number of epochs
-            - normalize: if true, do l2 normalization for latent code z
-        """
-
-        self.input_shape = input_shape
-        if len(input_shape) > 1:
-            if self.input_shape[0] % 8 == 0:
-                self.pad3 = 'same'
-            else:
-                self.pad3 = 'valid'
-        
-        self.hidden_layer_sizes = hidden_layer_sizes
-        self.intrinsic_size = intrinsic_size
+        self.input_dim = int(input_dim)
+        self.hidden_layer_sizes = [int(h) for h in hidden_layer_sizes]
+        self.intrinsic_size = int(intrinsic_size)
         self.activation = activation
-        
         self.norm_type = norm_type
         self.loss_norm_type = loss_norm_type
         self.if_rsr = if_rsr
         self.enforce_proj = enforce_proj
         self.all_alt = all_alt
-        self.lambda1 = lambda1
-        self.lambda2 = lambda2
         self.learning_rate = learning_rate
-        
-        self.batch_size = batch_size
         self.epoch_size = epoch_size
         self.batch_show = batch_show
-        
+        self.lambda1 = lambda1
+        self.lambda2 = lambda2
         self.normalize = normalize
         self.bn = bn
-        self.seed = random_seed
         
+        if seed is not None:
+            torch.manual_seed(seed)
+            np.random.seed(seed)
+        
+        # --- Encoder ---
+        self.encoder_fc1 = nn.Linear(self.input_dim, self.hidden_layer_sizes[0])
+        self.encoder_fc2 = nn.Linear(self.hidden_layer_sizes[0], self.hidden_layer_sizes[1])
+        self.encoder_fc3 = nn.Linear(self.hidden_layer_sizes[1], self.hidden_layer_sizes[2])
+        
+        if bn:
+            self.bn1 = nn.BatchNorm1d(self.hidden_layer_sizes[0])
+            self.bn2 = nn.BatchNorm1d(self.hidden_layer_sizes[1])
+            self.bn3 = nn.BatchNorm1d(self.hidden_layer_sizes[2])
+        
+        # --- RSR Layer ---
+        self.A = nn.Parameter(torch.randn(self.hidden_layer_sizes[2], self.intrinsic_size))
+        
+        # --- Decoder ---
+        self.decoder_fc3 = nn.Linear(self.intrinsic_size, self.hidden_layer_sizes[2])
+        self.decoder_fc2 = nn.Linear(self.hidden_layer_sizes[2], self.hidden_layer_sizes[1])
+        self.decoder_fc1 = nn.Linear(self.hidden_layer_sizes[1], self.input_dim)
+        
+        if bn:
+            self.dbn1 = nn.BatchNorm1d(self.hidden_layer_sizes[2])
+            self.dbn2 = nn.BatchNorm1d(self.hidden_layer_sizes[1])
+            self.dbn3 = nn.BatchNorm1d(self.hidden_layer_sizes[0])
 
     def encoder(self, x):
-        if len(self.input_shape) > 1:
-            with tf.variable_scope("encoder"):
-                z = x
-                z = tf.layers.conv2d(z, self.hidden_layer_sizes[0], kernel_size=5, strides=2, padding='same', 
-                                     activation=self.activation, name="conv1")
-                if self.bn:
-                    z = BatchNormalization()(z)
-                z = tf.layers.conv2d(z, self.hidden_layer_sizes[1], kernel_size=5, strides=2, padding='same', 
-                                     activation=self.activation, name="conv2")
-                if self.bn:
-                    z = BatchNormalization()(z)
-                z = tf.layers.conv2d(z, self.hidden_layer_sizes[2], kernel_size=3, strides=2, padding=self.pad3,
-                                     activation=self.activation, name="conv3")
-                if self.bn:
-                    z = BatchNormalization()(z)
-        else:
-            with tf.variable_scope("encoder"):
-                z = x
-                z = tf.layers.dense(z, self.hidden_layer_sizes[0], activation=self.activation, name="fc1")
-                if self.bn:
-                    z = BatchNormalization()(z)
-                z = tf.layers.dense(z, self.hidden_layer_sizes[1], activation=self.activation, name="fc2")
-                if self.bn:
-                    z = BatchNormalization()(z)
-                z = tf.layers.dense(z, self.hidden_layer_sizes[2], activation=self.activation, name="fc3")
-                if self.bn:
-                    z = BatchNormalization()(z)
+        z = self.activation(self.encoder_fc1(x))
+        if self.bn: z = self.bn1(z)
+        z = self.activation(self.encoder_fc2(z))
+        if self.bn: z = self.bn2(z)
+        z = self.activation(self.encoder_fc3(z))
+        if self.bn: z = self.bn3(z)
         return z
-    
-    def rsr(self, y):
-        with tf.variable_scope("rsr"):
-            y = tf.layers.Flatten()(y)
-            A = tf.Variable(tf.random_normal((int(y.get_shape()[-1]), self.intrinsic_size)),
-                            name="layer_rsr")
-            self.A = A
-            z = tf.matmul(y, A)
-        return z
-    
-    
-    def renormalization(self, y):
-        with tf.variable_scope("renormalization"):
-            z = tf.math.l2_normalize(y, axis=-1, name="renormalization")
-        return z
-    
-    
-    def decoder(self, z):
-        if len(self.input_shape) > 1:
-            with tf.variable_scope("decoder"):
-                z = tf.layers.dense(z, self.hidden_layer_sizes[2]*int(self.input_shape[0]/8)*int(self.input_shape[0]/8),
-                                    activation=self.activation, name="revealed")
-                z = tf.reshape(z, (-1, int(self.input_shape[0]/8), int(self.input_shape[0]/8), self.hidden_layer_sizes[2]))
-                if self.bn:
-                    z = BatchNormalization()(z)
-                z = tf.layers.conv2d_transpose(z, self.hidden_layer_sizes[1], kernel_size=3, strides=2, padding=self.pad3,
-                                              activation=self.activation, name="deconv3")
-                if self.bn:
-                    z = BatchNormalization()(z)
-                z = tf.layers.conv2d_transpose(z, self.hidden_layer_sizes[0], kernel_size=5, strides=2, padding='same',
-                                              activation=self.activation, name="deconv2")
-                if self.bn:
-                    z = BatchNormalization()(z)
-                x = tf.layers.conv2d_transpose(z, self.input_shape[2], kernel_size=5, strides=2, padding='same',
-                                              activation=self.activation, 
-                                              name="deconv1")
-        else:
-            with tf.variable_scope("decoder"):
-                z = tf.layers.dense(z, self.hidden_layer_sizes[2], activation=self.activation, name="revealed")
-                if self.bn:
-                    z = BatchNormalization()(z)
-                z = tf.layers.dense(z, self.hidden_layer_sizes[1], activation=self.activation, name="dfc3")
-                if self.bn:
-                    z = BatchNormalization()(z)
-                z = tf.layers.dense(z, self.hidden_layer_sizes[0], activation=self.activation, name="dfc2")
-                if self.bn:
-                    z = BatchNormalization()(z)
-                x = tf.layers.dense(z, self.input_shape[0], activation=self.activation, name="dfc1")
-        return x
 
-    def ae(self, x):
+    def rsr(self, y):
+        z = y @ self.A
+        return z, y
+
+    def renormalization(self, z):
+        return F.normalize(z, p=2, dim=-1)
+
+    def decoder(self, z):
+        z = self.activation(self.decoder_fc3(z))
+        if self.bn: z = self.dbn1(z)
+        z = self.activation(self.decoder_fc2(z))
+        if self.bn: z = self.dbn2(z)
+        x_hat = self.decoder_fc1(z)
+        return x_hat
+    
+    def forward(self, x):
         y = self.encoder(x)
-        y_rsr = self.rsr(y)
+        y_rsr, y_flat = self.rsr(y)
         if self.normalize:
             z = self.renormalization(y_rsr)
         else:
             z = y_rsr
-        x_tilde = self.decoder(z)
-        return y, y_rsr, z, x_tilde
-    
-    
-    def reconstruction_error(self, x, x_tilde):    
-        loss_norm_type = self.loss_norm_type
-        x = tf.reshape(x, (tf.shape(x)[0], -1))
-        x_tilde = tf.reshape(x_tilde, (tf.shape(x_tilde)[0], -1))
-        if loss_norm_type in ['MSE', 'mse', 'Frob', 'F']:
-            return tf.reduce_mean(tf.square(tf.norm(x-x_tilde, ord=2, axis=1)))
-        elif loss_norm_type in ['L1', 'l1']:
-            return tf.reduce_mean(tf.norm(x-x_tilde, ord=1, axis=1))
-        elif loss_norm_type in ['LAD', 'lad', 'L21', 'l21', 'L2', 'l2']:
-            return tf.reduce_mean(tf.norm(x-x_tilde, ord=2, axis=1))
-        else:
-            raise Exception("Norm type error!")
-            
-            
-    def pca_error(self, y, z):
-        norm_type = self.norm_type
-        z = tf.matmul( z , tf.transpose(self.A) )
-        if norm_type in ['MSE', 'mse', 'Frob', 'F']:
-            return tf.reduce_mean(tf.square(tf.norm(y-z, ord=2, axis=1)))
-        elif norm_type in ['L1', 'l1']:
-            return tf.reduce_mean(tf.norm(y-z, ord=1, axis=1))
-        elif norm_type in ['LAD', 'lad', 'L21', 'l21', 'L2', 'l2']:
-            return tf.reduce_mean(tf.norm(y-z, ord=2, axis=1))
-        else:
-            raise Exception("Norm type error!")   
+        x_hat = self.decoder(z)
+        return y_flat, y_rsr, z, x_hat
 
+    # --- Loss functions ---
+    def reconstruction_error(self, x, x_hat):
+        if self.loss_norm_type.lower() in ['mse','f','frob']:
+            return torch.mean(torch.norm(x - x_hat, dim=1)**2)
+        elif self.loss_norm_type.lower() in ['l1']:
+            return torch.mean(torch.norm(x - x_hat, p=1, dim=1))
+        else:
+            return torch.mean(torch.norm(x - x_hat, dim=1))
+
+    def pca_error(self, y, z):
+        z_proj = z @ self.A.T
+        if self.norm_type.lower() in ['mse','f','frob']:
+            return torch.mean(torch.norm(y - z_proj, dim=1)**2)
+        elif self.norm_type.lower() in ['l1']:
+            return torch.mean(torch.norm(y - z_proj, p=1, dim=1))
+        else:
+            return torch.mean(torch.norm(y - z_proj, dim=1))
 
     def proj_error(self):
-        return tf.reduce_mean( tf.square (tf.matmul(tf.transpose(self.A), self.A) - \
-                                          tf.eye(self.intrinsic_size) ) ) 
-            
-            
-    def reconstruction_loss(self, x, x_tilde):    
-        norm_type = self.loss_norm_type
-        x = tf.reshape(x, (tf.shape(x)[0], -1))        
-        x_tilde = tf.reshape(x_tilde, (tf.shape(x_tilde)[0], -1))
-        if norm_type in ['MSE', 'mse', 'Frob', 'F']:
-            return tf.square(tf.norm(x-x_tilde, ord=2, axis=1))
-        elif norm_type in ['L1', 'l1']:
-            return tf.norm(x-x_tilde, ord=1, axis=1)
-        elif norm_type in ['LAD', 'lad', 'L21', 'l21', 'L2', 'l2']:
-            return tf.norm(x-x_tilde, ord=2, axis=1)
-        else:
-            raise Exception("Norm type error!")   
-            
-            
-    def fit(self, x, x_val=None):
-        if len(self.input_shape) > 1:
-            n_samples, n_height, n_width, n_channel = x.shape
-        else:
-            n_samples, n_dim = x.shape
+        I = torch.eye(self.A.size(1), device=self.A.device)
+        return torch.mean((self.A.T @ self.A - I)**2)
+
+    # --- Training function ---
+    def fit(self, X, batch_size=128, x_val=None, device='cuda'):
+        self.to(device)
+        # X = torch.tensor(X, dtype=torch.float32, device=device)
+        n_samples = X.shape[0]
+        n_batch = (n_samples - 1) // batch_size + 1
         
-        with tf.Graph().as_default() as graph:
+        optimizer_main = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
+        optimizer_proj = torch.optim.Adam([self.A], lr=self.learning_rate*10)
+        
+        for epoch in range(self.epoch_size):
+            idx = np.random.permutation(n_samples)
+            for batch_idx in range(n_batch):
+                i_start = batch_idx * batch_size
+                i_end = min((batch_idx + 1) * batch_size, n_samples)
+                x_batch = X[idx[i_start:i_end]]
+                
+                optimizer_main.zero_grad()
+                y_flat, y_rsr, z, x_hat = self.forward(x_batch)
+                
+                loss = self.reconstruction_error(x_batch, x_hat)
+                if self.if_rsr and not self.all_alt:
+                    loss += self.lambda1 * self.pca_error(y_flat, y_rsr) + self.lambda2 * self.proj_error()
+                
+                loss.backward()
+                optimizer_main.step()
+                
+                if self.enforce_proj and self.all_alt:
+                    optimizer_proj.zero_grad()
+                    proj_loss = self.proj_error()
+                    proj_loss.backward()
+                    optimizer_proj.step()
+                
+                if self.all_alt:
+                    optimizer_proj.zero_grad()
+                    pca_loss = self.pca_error(y_flat, y_rsr)
+                    pca_loss.backward()
+                    optimizer_proj.step()
             
-            self.graph = graph
-            if self.seed is not None:
-                tf.set_random_seed(self.seed)
-                np.random.seed(seed=self.seed)
-            
-            if len(self.input_shape) > 1:
-                self.input = x_input = tf.placeholder(
-                        dtype=tf.float32, shape=[None, n_height, n_width, n_channel])
-            else:
-                self.input = x_input = tf.placeholder(
-                        dtype=tf.float32, shape=[None, n_dim])
-            
-            y, y_rsr, z, x_tilde = self.ae(x_input)
-            
-            self.y = y = tf.layers.Flatten()(y)
-            self.y_rsr = y_rsr
-            self.z = z
-            self.x_tilde = x_tilde
-            
-            if self.if_rsr and not self.all_alt:
-                loss = self.reconstruction_error(x_input, x_tilde) + \
-                       self.lambda1 * self.pca_error(y,y_rsr) + \
-                       self.lambda2 * self.proj_error()
-            else:
-                loss = self.reconstruction_error(x_input, x_tilde)
-            
-            minimizer = tf.train.AdamOptimizer(self.learning_rate).minimize(loss)
-            minimizer2 = tf.train.AdamOptimizer(10 * self.learning_rate).minimize(self.proj_error())
-            minimizer3 = tf.train.AdamOptimizer(10 * self.learning_rate).minimize(self.pca_error(y, y_rsr))
+            # --- Display ---
+            if self.batch_show is not None and (epoch+1) % self.batch_show == 0:
+                if x_val is not None:
+                    with torch.no_grad():
+                        x_val_t = torch.tensor(x_val, dtype=torch.float32, device=device)
+                        y_flat_val, y_rsr_val, z_val, x_hat_val = self.forward(x_val_t)
+                        val_loss = self.reconstruction_error(x_val_t, x_hat_val)
+                        print(f"Epoch {epoch+1}/{self.epoch_size} - Val Loss: {val_loss.item():.4f}")
+                else:
+                    print(f"Epoch {epoch+1}/{self.epoch_size} - Loss: {loss.item():.4f}")
 
-
-            n_batch = (n_samples - 1) // self.batch_size + 1
-            
-            init = tf.global_variables_initializer()
-            self.sess = tf.Session(graph=graph)
-            self.sess.run(init)
-            
-            idx = np.arange(n_samples)
-            np.random.shuffle(idx)
-            
-            for epoch in range(self.epoch_size):
-                for batch in range(n_batch):
-                    i_start = batch * self.batch_size
-                    i_end = (batch + 1) * self.batch_size
-                    x_batch = x[ idx[ i_start : i_end ] ]
-                    self.sess.run(minimizer, feed_dict={x_input: x_batch})
-
-                    if self.enforce_proj and self.all_alt:
-                    	self.sess.run(minimizer2, feed_dict={x_input: x_batch})
-
-                    if self.all_alt:
-                    	self.sess.run(minimizer3, feed_dict={x_input: x_batch})
-
-                if self.batch_show is not None:
-                    if (epoch + 1) % self.batch_show == 0:
-                        if x_val is not None:
-                            loss_val = self.sess.run(loss, feed_dict={x_input:x_val})
-                            print(f" epoch {epoch+1}/{self.epoch_size} : loss = {loss_val:.3f}")
-                        
+    def get_latent(self, X, device='cuda'):
+        self.to(device)
+        # X = torch.tensor(X, dtype=torch.float32, device=device)
+        with torch.no_grad():
+            _, _, z, _ = self.forward(X)
+        return z.cpu().numpy()
     
-    def get_latent(self, x):
-        if self.sess is None:
-            raise Exception("Trained model does not exist.")
-        z = self.sess.run(self.z, feed_dict={self.input:x})
-        return z
-    
-    def get_output(self, x):
-        if self.sess is None:
-            raise Exception("Trained model does not exist.")
-        x_tilde = self.sess.run(self.x_tilde, feed_dict={self.input:x})
-        return x_tilde
+    def get_output(self, X, device='cuda'):
+        self.to(device)
+        # X = torch.tensor(X, dtype=torch.float32, device=device)
+        with torch.no_grad():
+            _, _, _, x_hat = self.forward(X)
+        return x_hat.cpu().numpy()
+
+
+class RSRAE(BaselineModel):
+    def __init__(self, args):
+        self.model = CAE(**args)
+
+    def train(self, X_train, device='cuda'):
+        self.model.fit(X_train, 128, None, device)
+        return self.model
+
+    def test(self, X_test, y_test, device='cuda'):
+        with torch.no_grad():
+            features = self.model.get_output(X_test, device=device)
+            flat_output = np.reshape(features, (features.shape[0], -1))
+            flat_input = np.reshape(X_test.cpu().numpy(), (X_test.shape[0], -1))
+
+            cosine_similarity = np.sum(flat_output * flat_input, -1) / (
+                np.linalg.norm(flat_output, axis=-1) + 1e-6) / (
+                np.linalg.norm(flat_input, axis=-1) + 1e-6)
+
+            auc_rsrae, fpr95_rsrae, ap_rsrae = ev.evaluation(y_test, -cosine_similarity, verbose=False)
+            return auc_rsrae, fpr95_rsrae, ap_rsrae 

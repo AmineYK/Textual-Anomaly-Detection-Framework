@@ -23,4 +23,4 @@ def evaluation(y_true, scores, verbose=True):
         print(f"Avg Precision: {ap:.4f}")
         print(f"FPR@95:     {fpr95:.4f}")
 
-    return auc, ap, fpr95
+    return auc, fpr95, ap 

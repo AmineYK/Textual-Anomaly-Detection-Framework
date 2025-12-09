@@ -56,11 +56,11 @@ Dataset:        reuters
 Inlier class:   acq
 Embedding type: sentence_bert
 AD model:       flow-matching
-Training time:  1.63 sec
+Training time:  1.15 sec
 ----------------------------------------
-AUC:            0.9302 ± 0.0189
-Avg Precision:  0.6907 ± 0.0458
-FPR@95:         0.3545 ± 0.0911
+AUC:            0.9322 ± 0.0163
+Avg Precision:  0.7042 ± 0.0333
+FPR@95:         0.3292 ± 0.0807
 ========================================
 
 ========================================
@@ -155,11 +155,11 @@ Dataset:        reuters
 Inlier class:   crude
 Embedding type: sentence_bert
 AD model:       flow-matching
-Training time:  0.18 sec
+Training time:  0.28 sec
 ----------------------------------------
-AUC:            0.8547 ± 0.0815
-Avg Precision:  0.4582 ± 0.1081
-FPR@95:         0.5908 ± 0.3508
+AUC:            0.8518 ± 0.0851
+Avg Precision:  0.4660 ± 0.0946
+FPR@95:         0.6018 ± 0.3587
 ========================================
 
 ========================================

@@ -1,15 +1,21 @@
 #!/bin/bash
 
-cd "$(dirname "$0")" || exit 1
-
-##############################
-######### REUTERS ############
-##############################
+# cd "$(dirname "$0")" || exit 1
 
 
-python3 main.py --dataset_name 20newsgroups --training_mode one_class --device 'cuda' --preprocessing --inlier_topic computer \
-    --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \
-    --batch_size 64 --shuffle --ad_model fm 
+python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic Company  --ocsvm --rsrae --ae --tccm
+# python3 create_data_matrix.py --dataset_name dbpedia14 --type_tac pantin --nu 0.1 \
+#                 --type_encoder sentencebert --model_encoder all-distilroberta-v1 \
+#                 --whichset test --nbruns 10
+
+
+# python3 run_contex_anom.py --dataset_name 20newsgroups --inlier_topic computer --type_tac pantin \
+#                     --nu 0.1 --type_encoder sentencebert --model_encoder all-distilroberta-v1 \
+#                     --whichset test --nbruns 10
+
+# python3 main.py --dataset_name 20newsgroups --training_mode one_class --device 'cuda' --preprocessing --inlier_topic computer \
+#     --type_tac ruff --anomaly_rate 0.1 --emb_model glove_300d.kv --type_emb glove \
+#     --batch_size 64 --shuffle --ad_model fm 
 
 
 # python3 main.py --dataset_name 20newsgroups --training_mode one_class --device 'cuda' --preprocessing --inlier_topic computer \

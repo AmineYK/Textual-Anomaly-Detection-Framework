@@ -244,9 +244,9 @@ latent_dim : 256
 sinu : False
 batchnorm : False
 dropout : 0.1
-lr : 0.0001
-weight_decay : 1e-05
-n_epochs : 100
+lr : 1e-4
+weight_decay : 1e-07
+n_epochs : 30
 source : sphere
 target : torch.Size([27000, 384])
 ========================================
@@ -281,6 +281,24 @@ sinu : False
 batchnorm : False
 dropout : 0.1
 lr : 1e-05
+weight_decay : 1e-06
+n_epochs : 25
+source : sphere
+target : torch.Size([27000, 384])
+========================================
+
+========================================
+Run date : 2025-12-03 17:46:59
+dataset_name : agnews
+inlier_topic : Sci/Tech
+
+Hyperparameters :
+batch_size : 256
+latent_dim : 256
+sinu : False
+batchnorm : False
+dropout : 0.1
+lr : 1e-05
 weight_decay : 1e-05
 n_epochs : 50
 source : sphere
@@ -290,7 +308,7 @@ target : torch.Size([27000, 384])
 ========================================
 Run date : 2025-12-03 17:46:59
 dataset_name : agnews
-inlier_topic : Sci/Tech
+inlier_topic : Sci-Tech
 
 Hyperparameters :
 batch_size : 256

@@ -5,6 +5,9 @@ import string
 import unicodedata
 from Data_Preparation.Tac.tac import textual_anomaly_contamination
 from Data_Preparation.Embedding.embedding_encoder import EmbeddingEncoder
+import numpy as np
+from torch import Tensor
+from Data_Preparation.Tac import tac
 
 
 # def preprocess(dataset):
@@ -121,6 +124,8 @@ def import_dataset(name="20newsgroups", full_dataset_=False, batch_size=64):
     if name == "dbpedia14":
 
         dataset = load_dataset("fancyzhx/dbpedia_14")
+        # dataset = load_dataset("dbpedia_14")
+        
 
         train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
         test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)
@@ -276,3 +281,69 @@ def data_preparation(args, logger, embedding_encoding=False):
                     "anomaly_train": DatasetWrapper(anomaly_train_emb, args.type_emb), 
                     "test": DatasetWrapper(test_emb, args.type_emb)}
 
+
+
+def train_test_val_split(train, test, inlier_topic, dataset_name, type_tac, anomaly_rate, verbose=False):
+    
+    train_inlier, train_anomaly = tac.textual_anomaly_contamination(train, dataset_name, inlier_topic, type_tac, anomaly_rate, True)
+
+    n_inliers_val = int(0.1 * len(train_inlier))
+    inlier_indices = np.random.choice(len(train_inlier), n_inliers_val, replace=False)
+    val_inlier_dataset = train_inlier.select(inlier_indices)
+
+    train_inlier = train_inlier.select([i for i in range(len(train_inlier)) if i not in inlier_indices])
+    
+    n_anomalies_val = int(n_inliers_val / 0.9 * 0.1)
+    anomaly_indices = np.random.choice(len(train_anomaly), n_anomalies_val, replace=False)
+    val_anomaly_dataset = train_anomaly.select(anomaly_indices)
+
+    val_ = concatenate_datasets([val_inlier_dataset, val_anomaly_dataset]).shuffle(seed=42)
+    
+    if verbose:
+        print("TRAINSET")
+        print(train_inlier)
+        print(train_anomaly)
+    
+    if verbose:
+        print("\nVALSET")
+        print(val_)
+        print()
+
+    test_ = tac.textual_anomaly_contamination(test, dataset_name, inlier_topic, type_tac, anomaly_rate, False)
+    # print(test_.filter(lambda x : x['anomaly_class']== 0))
+    # print(test_.filter(lambda x : x['anomaly_class']== 1))
+    if verbose:
+        print("TESTSET")
+        print(test_)
+
+    return train_inlier, train_anomaly, val_, test_
+
+def get_embeddings(sentencebertEncoder, train_reuters_, test_reuters_, inlier_topic, dataset_name, type_tac, anomaly_rate, device, hm='all', text_column='text'):
+
+    train_inlier_reuters, train_anomaly_reuters, val_reuters, test_reuters = train_test_val_split(train_reuters_, test_reuters_, inlier_topic, dataset_name, type_tac, anomaly_rate, False)
+    
+    if hm == 'cvdd':
+        return train_inlier_reuters, train_anomaly_reuters, val_reuters, test_reuters
+
+    if hm == 'all':
+        train_inlier_reuters = sentencebertEncoder.forward(train_inlier_reuters, text_column)
+        test_reuters = sentencebertEncoder.forward(test_reuters, text_column)
+        X_inlier = Tensor(train_inlier_reuters['sbert_embeddings']).to(device)
+        X_test =  Tensor(test_reuters['sbert_embeddings']).to(device)
+        y_test = np.array(test_reuters['anomaly_class'])
+
+        return train_inlier_reuters, test_reuters, X_inlier, X_test, y_test
+    
+    elif hm == 'train':
+        train_inlier_reuters = sentencebertEncoder.forward(train_inlier_reuters, text_column)
+        X_inlier = Tensor(train_inlier_reuters['sbert_embeddings']).to(device)
+        
+        
+        return train_inlier_reuters, _, X_inlier, _, _
+    
+    elif hm == 'test':
+        test_reuters = sentencebertEncoder.forward(test_reuters, text_column)
+        X_test =  Tensor(test_reuters['sbert_embeddings']).to(device)
+        y_test = np.array(test_reuters['anomaly_class'])
+        
+        return _, test_reuters, _, X_test, y_test 

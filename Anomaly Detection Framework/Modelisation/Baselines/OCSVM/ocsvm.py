@@ -1,41 +1,67 @@
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
-from pyod.models.ocsvm import OCSVM
+from pyod.models.ocsvm  import OCSVM as ocsvm_pyod
+import Modelisation.evaluation as ev
 import time
 import numpy as np
+from Modelisation.Baselines.baseline import BaselineModel
 
-def One_Class_SVM(embeddings, args):
+# def One_Class_SVM(embeddings, args):
 
-    # print("\nOCSVM model training start...")
-    start = time.time()
+#     # print("\nOCSVM model training start...")
+#     start = time.time()
     
-    clf = OCSVM(**args)
+#     clf = OCSVM(**args)
 
-    clf.fit(np.array(embeddings))
-    y_pred = clf.predict(embeddings)           
-    scores = clf.decision_function(embeddings)
-    end = time.time()
+#     clf.fit(np.array(embeddings))
+#     y_pred = clf.predict(embeddings)           
+#     scores = clf.decision_function(embeddings)
+#     end = time.time()
 
-    # print(f"\nOCSVM model training finish after {end-start} seconds")
+#     # print(f"\nOCSVM model training finish after {end-start} seconds")
     
-    # if verbose : 
-    #     tsne = TSNE(
-    #         n_components=2,        
-    #         perplexity=30,         
-    #         max_iter=1000,           
-    #         learning_rate=200
-    #     )
+#     # if verbose : 
+#     #     tsne = TSNE(
+#     #         n_components=2,        
+#     #         perplexity=30,         
+#     #         max_iter=1000,           
+#     #         learning_rate=200
+#     #     )
 
-    #     X_tsne = tsne.fit_transform(embeddings)
+#     #     X_tsne = tsne.fit_transform(embeddings)
 
-    #     plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y_true, cmap='coolwarm', s=50)
-    #     plt.title("Reuters - OCSVM ")
-    #     plt.xlabel("Feature 1")
-    #     plt.ylabel("Feature 2")
-    #     plt.show()
+#     #     plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y_true, cmap='coolwarm', s=50)
+#     #     plt.title("Reuters - OCSVM ")
+#     #     plt.xlabel("Feature 1")
+#     #     plt.ylabel("Feature 2")
+#     #     plt.show()
 
-    # return clf
-    return clf, y_pred, scores
+#     # return clf
+#     return clf, y_pred, scores
+
+
+
+class OCSVM(BaselineModel):
+
+    def __init__(self, args):
+        self.model = ocsvm_pyod(**args)
+
+    def train(self, X_train):
+        self.model.fit(np.array(X_train))
+
+        return self.model
+
+    def test(self, X_test, y_test):        
+
+        scores = self.model.decision_function(X_test)
+
+        auc_ocsvm, fpr95_ocsvm, ap_ocsvm = ev.evaluation(y_test, scores, verbose=False)
+
+        return auc_ocsvm, fpr95_ocsvm, ap_ocsvm
+
+
+
+
 
 
     

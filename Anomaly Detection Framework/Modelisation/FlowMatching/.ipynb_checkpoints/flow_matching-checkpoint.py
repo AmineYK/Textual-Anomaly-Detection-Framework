@@ -8,9 +8,6 @@ from sklearn.mixture import GaussianMixture
 from sklearn.metrics import roc_auc_score, average_precision_score, roc_curve
 # from Modelisation.FlowMatching.utils import anomaly_score
 from flow_matching.solver import ODESolver
-from Modelisation.Baselines.baseline import BaselineModel
-from torch.utils.data import TensorDataset, DataLoader
-import Modelisation.evaluation as ev
 
 class SinusoidalTimeEmbedding(nn.Module):
     def __init__(self, dim, device, max_period=10000):
@@ -31,10 +28,9 @@ class SinusoidalTimeEmbedding(nn.Module):
 
 
 class FlowMatching(nn.Module):
-    def __init__(self, source, target, input_dim=64, latent_dim=256, sinusoidal=False, dropout=0.3, batchnorm=False, device='cuda', seed=42):
+    def __init__(self, source, target, input_dim=64, latent_dim=256, sinusoidal=False, dropout=0.3, batchnorm=False, device='cuda'):
         super().__init__()
         
-        self.seed = seed
         self.target = target
         self.target_centroid = self.target.mean(dim=0)
         self.target_cov_mat = torch.cov(self.target.T)
@@ -99,9 +95,6 @@ class FlowMatching(nn.Module):
         return self.net(xt)
     
     def sampling_source(self, n_samples):
-
-        # torch.manual_seed(self.seed) 
-        # torch.cuda.manual_seed_all(self.seed)
         
         if self.source == 'gaussian':
             return torch.randn(n_samples, self.input_dim).to(self.device)
@@ -236,64 +229,12 @@ class FlowMatchingTrainer():
             x_target_after_forward_backward = self.forward_backward_flow(X_test, solver_type, n_steps)[-1]
             scores = ((torch.norm(x_target_after_forward_backward - X_test, dim=1)** 2)).cpu().detach()
  
-        # auc = roc_auc_score(y_test, scores)
-        # ap = average_precision_score(y_test, scores)
-        # fpr, tpr, thresholds = roc_curve(y_test, scores)
-        # idx = np.where(tpr >= 0.95)[0][0]
-        # fpr95 = fpr[idx]
-
-        auc, fpr95, ap = ev.evaluation(y_test, scores, verbose=False)
+        auc = roc_auc_score(y_test, scores)
+        ap = average_precision_score(y_test, scores)
+        fpr, tpr, thresholds = roc_curve(y_test, scores)
+        idx = np.where(tpr >= 0.95)[0][0]
+        fpr95 = fpr[idx]
 
         print(f"FM --> AUC: {auc:.4f} | FPR@95: {fpr95:.4f} | AP: {ap:.4f}")  
 
         return auc, fpr95, ap 
-
-
-
-class BasicFlowMatching(BaselineModel):
-
-    def __init__(self, args):
-
-        self.batch_size = args['batch_size']
-        self.lr = args['lr']
-        self.weight_decay = args["weight_decay"]
-        self.n_epochs = args['n_epochs']
-        self.score_type = args['score_type']
-        self.solver_type = args['solver_type']
-        self.n_steps = args['n_steps']
-
-
-        self.flow_model = FlowMatching(
-            args["source"], 
-            args["target"], 
-            args["input_dim"], 
-            args["latent_dim"], 
-            args["sinu"], 
-            args["dropout"], 
-            args["batchnorm"], 
-            args["device"]
-        ).to(args["device"])
-
-        self.optimizer = torch.optim.Adam(
-            self.flow_model.parameters(), 
-            lr=args["lr"], 
-            weight_decay=args["weight_decay"]
-        )
-
-        self.loss_fn = nn.MSELoss()
-
-        self.fm_trainer = FlowMatchingTrainer(self.flow_model, verbose=False)
-
-    def train(self, X_train):
-
-        X_inlier_dl = DataLoader(TensorDataset(X_train), batch_size=self.batch_size, shuffle=True)
-
-        flow_model_trained = self.fm_trainer.train(X_inlier_dl, self.lr, self.weight_decay, self.loss_fn, self.n_epochs, optimizer_type='adam')
-
-        return flow_model_trained
-
-    def test(self, X_test, y_test):
-        
-        auc_bfm, fpr95_bfm, ap_bfm = self.fm_trainer.test(X_test, y_test, score_type=self.score_type, solver_type=self.solver_type, n_steps=self.n_steps)
-
-        return auc_bfm, fpr95_bfm, ap_bfm
