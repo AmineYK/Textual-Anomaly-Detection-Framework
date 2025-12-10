@@ -81,11 +81,11 @@ Dataset:        reuters
 Inlier class:   interest
 Embedding type: sentence_bert
 AD model:       flow-matching
-Training time:  2.27 sec
+Training time:  2.03 sec
 ----------------------------------------
-AUC:            0.9366 ± 0.0424
-Avg Precision:  0.6796 ± 0.1185
-FPR@95:         0.2479 ± 0.1612
+AUC:            0.9387 ± 0.0362
+Avg Precision:  0.6630 ± 0.0992
+FPR@95:         0.2151 ± 0.1073
 ========================================
 
 ========================================
@@ -107,11 +107,11 @@ Dataset:        reuters
 Inlier class:   money-fx
 Embedding type: sentence_bert
 AD model:       flow-matching
-Training time:  0.21 sec
+Training time:  0.82 sec
 ----------------------------------------
-AUC:            0.8011 ± 0.0791
-Avg Precision:  0.4967 ± 0.1802
-FPR@95:         0.5203 ± 0.1320
+AUC:            0.8839 ± 0.0624
+Avg Precision:  0.6271 ± 0.1834
+FPR@95:         0.4418 ± 0.1991
 ========================================
 
 ========================================
@@ -131,11 +131,11 @@ Dataset:        reuters
 Inlier class:   ship
 Embedding type: sentence_bert
 AD model:       flow-matching
-Training time:  0.17 sec
+Training time:  0.13 sec
 ----------------------------------------
-AUC:            0.8081 ± 0.1313
-Avg Precision:  0.3790 ± 0.1506
-FPR@95:         0.3121 ± 0.2272
+AUC:            0.8293 ± 0.0840
+Avg Precision:  0.3946 ± 0.1548
+FPR@95:         0.3242 ± 0.1746
 ========================================
 
 ========================================
@@ -155,11 +155,11 @@ Dataset:        reuters
 Inlier class:   crude
 Embedding type: sentence_bert
 AD model:       flow-matching
-Training time:  0.28 sec
+Training time:  0.24 sec
 ----------------------------------------
-AUC:            0.8518 ± 0.0851
-Avg Precision:  0.4660 ± 0.0946
-FPR@95:         0.6018 ± 0.3587
+AUC:            0.8914 ± 0.0403
+Avg Precision:  0.4986 ± 0.1023
+FPR@95:         0.4009 ± 0.1689
 ========================================
 
 ========================================
@@ -179,11 +179,11 @@ Dataset:        reuters
 Inlier class:   earn
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  5.06 sec
+Training time:  1.54 sec
 ----------------------------------------
-AUC:            0.9216 ± 0.0434
-Avg Precision:  0.6376 ± 0.1156
-FPR@95:         0.4381 ± 0.3076
+AUC:            0.9378 ± 0.0061
+Avg Precision:  0.5083 ± 0.0270
+FPR@95:         0.1771 ± 0.0269
 ========================================
 
 ========================================
@@ -191,11 +191,11 @@ Dataset:        reuters
 Inlier class:   acq
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  3.45 sec
+Training time:  1.46 sec
 ----------------------------------------
-AUC:            0.8778 ± 0.0276
-Avg Precision:  0.4403 ± 0.2021
-FPR@95:         0.4322 ± 0.2894
+AUC:            0.8434 ± 0.0120
+Avg Precision:  0.2929 ± 0.0272
+FPR@95:         0.3930 ± 0.0701
 ========================================
 
 ========================================
@@ -203,11 +203,11 @@ Dataset:        reuters
 Inlier class:   trade
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  2.23 sec
+Training time:  1.40 sec
 ----------------------------------------
-AUC:            0.9439 ± 0.0244
-Avg Precision:  0.5707 ± 0.0471
-FPR@95:         0.1824 ± 0.1584
+AUC:            0.9330 ± 0.0362
+Avg Precision:  0.6258 ± 0.1091
+FPR@95:         0.2382 ± 0.1809
 ========================================
 
 ========================================
@@ -215,11 +215,11 @@ Dataset:        reuters
 Inlier class:   crude
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  nan sec
+Training time:  1.40 sec
 ----------------------------------------
-AUC:            0.7494 ± 0.0284
-Avg Precision:  0.1803 ± 0.0150
-FPR@95:         0.4835 ± 0.1549
+AUC:            0.8138 ± 0.0505
+Avg Precision:  0.3568 ± 0.0869
+FPR@95:         0.5211 ± 0.1507
 ========================================
 
 ========================================
@@ -227,11 +227,11 @@ Dataset:        reuters
 Inlier class:   ship
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  2.06 sec
+Training time:  1.39 sec
 ----------------------------------------
-AUC:            0.8167 ± 0.1347
-Avg Precision:  0.3464 ± 0.1194
-FPR@95:         0.3030 ± 0.2378
+AUC:            0.7389 ± 0.1433
+Avg Precision:  0.2827 ± 0.1480
+FPR@95:         0.4394 ± 0.2236
 ========================================
 
 ========================================
@@ -239,11 +239,11 @@ Dataset:        reuters
 Inlier class:   money-fx
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  2.26 sec
+Training time:  1.40 sec
 ----------------------------------------
-AUC:            0.7638 ± 0.0594
-Avg Precision:  0.3294 ± 0.1870
-FPR@95:         0.5734 ± 0.1953
+AUC:            0.8662 ± 0.0693
+Avg Precision:  0.5383 ± 0.1742
+FPR@95:         0.5380 ± 0.2445
 ========================================
 
 ========================================
@@ -251,11 +251,11 @@ Dataset:        reuters
 Inlier class:   interest
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  nan sec
+Training time:  1.40 sec
 ----------------------------------------
-AUC:            0.7906 ± 0.0710
-Avg Precision:  0.4582 ± 0.1304
-FPR@95:         0.5205 ± 0.1300
+AUC:            0.8663 ± 0.0623
+Avg Precision:  0.5488 ± 0.1173
+FPR@95:         0.4712 ± 0.1560
 ========================================
 
 ========================================
@@ -263,11 +263,11 @@ Dataset:        reuters
 Inlier class:   acq
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  5.18 sec
 ----------------------------------------
-AUC:            0.8966 ± 0.0325
-Avg Precision:  0.7271 ± 0.0400
-FPR@95:         0.8418 ± 0.3178
+AUC:            0.8617 ± 0.0337
+Avg Precision:  0.6206 ± 0.0403
+FPR@95:         0.8746 ± 0.2488
 ========================================
 
 ========================================
@@ -275,10 +275,10 @@ Dataset:        reuters
 Inlier class:   earn
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  9.03 sec
 ----------------------------------------
-AUC:            0.8698 ± 0.0327
-Avg Precision:  0.7776 ± 0.0377
+AUC:            0.8706 ± 0.0328
+Avg Precision:  0.7802 ± 0.0396
 FPR@95:         1.0000 ± 0.0000
 ========================================
 
@@ -287,11 +287,11 @@ Dataset:        reuters
 Inlier class:   crude
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  0.70 sec
 ----------------------------------------
-AUC:            0.8557 ± 0.0594
-Avg Precision:  0.4479 ± 0.0897
-FPR@95:         0.5294 ± 0.1967
+AUC:            0.8678 ± 0.0835
+Avg Precision:  0.5309 ± 0.1062
+FPR@95:         0.6211 ± 0.3883
 ========================================
 
 ========================================
@@ -299,11 +299,11 @@ Dataset:        reuters
 Inlier class:   trade
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  0.70 sec
 ----------------------------------------
-AUC:            0.9416 ± 0.0341
-Avg Precision:  0.7720 ± 0.1029
-FPR@95:         0.2735 ± 0.1519
+AUC:            0.9089 ± 0.0642
+Avg Precision:  0.7140 ± 0.1152
+FPR@95:         0.4956 ± 0.4263
 ========================================
 
 ========================================
@@ -311,11 +311,11 @@ Dataset:        reuters
 Inlier class:   interest
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  0.47 sec
 ----------------------------------------
-AUC:            0.8880 ± 0.0945
-Avg Precision:  0.6513 ± 0.1340
-FPR@95:         0.5096 ± 0.4037
+AUC:            0.9191 ± 0.0862
+Avg Precision:  0.8126 ± 0.1062
+FPR@95:         0.4342 ± 0.4224
 ========================================
 
 ========================================
@@ -323,11 +323,11 @@ Dataset:        reuters
 Inlier class:   money-fx
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  0.47 sec
 ----------------------------------------
-AUC:            0.8194 ± 0.0874
-Avg Precision:  0.5547 ± 0.1956
-FPR@95:         0.7051 ± 0.2567
+AUC:            0.8257 ± 0.0872
+Avg Precision:  0.5678 ± 0.1523
+FPR@95:         0.8063 ± 0.3606
 ========================================
 
 ========================================
@@ -335,11 +335,11 @@ Dataset:        reuters
 Inlier class:   ship
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  0.24 sec
 ----------------------------------------
-AUC:            0.7914 ± 0.1265
-Avg Precision:  0.3254 ± 0.1238
-FPR@95:         0.3455 ± 0.1974
+AUC:            0.8328 ± 0.1312
+Avg Precision:  0.4026 ± 0.1650
+FPR@95:         0.2848 ± 0.2463
 ========================================
 
 ========================================

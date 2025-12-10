@@ -291,11 +291,58 @@ def textual_anomaly_contamination_wos(dataset, inlier_topic, type_tac='pantin', 
 ############ DBPedia14 #####################
 ############################################
 
-def textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac='pantin', anomaly_rate=0.1, is_trainset=True):
+# def textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac='pantin', anomaly_rate=0.1, is_trainset=True):
     
+#     if type_tac != 'pantin':
+#         raise Exception(" TAC not available ")
+    
+#     level_1_mapping = {
+#         "Company": 0,
+#         "Educational Institution": 1,
+#         "Artist": 2,
+#         "Athlete": 3,
+#         "Office Holder": 4,
+#         "Mean Of Transportation": 5,
+#         "Building": 6,
+#         "Natural Place": 7,
+#         "Village": 8,
+#         "Animal": 9,
+#         "Plant": 10,
+#         "Album": 11,
+#         "Film": 12,
+#         "Written Work": 13
+#     }
+    
+#     if inlier_topic not in level_1_mapping:
+#         raise Exception(" Invalid inlier topic ")
+
+#     inlier_dataset = dataset.filter(lambda x: x['label'] == level_1_mapping[inlier_topic])
+#     anomaly_dataset = dataset.filter(lambda x: x['label'] != level_1_mapping[inlier_topic])
+    
+#     if is_trainset:
+#         n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
+#         anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
+#         anomaly_dataset = anomaly_dataset.select(anomaly_indices)
+    
+#         inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
+#         anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
+
+#         return inlier_dataset, anomaly_dataset
+
+#     else:
+#         return replace_inliers_with_anomalies(inlier_dataset, anomaly_dataset, anomaly_rate)
+
+def textual_anomaly_contamination_dbpedia14(
+    dataset,
+    inlier_topic,
+    type_tac='pantin',
+    anomaly_rate=0.1,
+    is_trainset=True
+):
+
     if type_tac != 'pantin':
-        raise Exception(" TAC not available ")
-    
+        raise Exception("TAC not available")
+
     level_1_mapping = {
         "Company": 0,
         "Educational Institution": 1,
@@ -312,25 +359,67 @@ def textual_anomaly_contamination_dbpedia14(dataset, inlier_topic, type_tac='pan
         "Film": 12,
         "Written Work": 13
     }
-    
-    if inlier_topic not in level_1_mapping:
-        raise Exception(" Invalid inlier topic ")
 
-    inlier_dataset = dataset.filter(lambda x: x['label'] == level_1_mapping[inlier_topic])
-    anomaly_dataset = dataset.filter(lambda x: x['label'] != level_1_mapping[inlier_topic])
-    
+    named_groups = {
+        "organization": [0, 1],
+        "people": [2, 3, 4, 9, 10],
+        "transport": [5],
+        "construction": [6],
+        "places": [7, 8],
+        "media": [11, 12, 13]
+    }
+
+
+    label_to_group = {}
+    for group_name, labels in named_groups.items():
+        for lab in labels:
+            label_to_group[lab] = group_name
+
+
+    if inlier_topic in level_1_mapping:
+
+        inlier_label = level_1_mapping[inlier_topic]
+
+        parent_group = label_to_group[inlier_label]
+
+        full_group = named_groups[parent_group]
+
+        inlier_labels = [inlier_label]
+
+        anomaly_labels = [lab for lab in full_group if lab != inlier_label]
+        print(anomaly_labels)
+
+
+    elif inlier_topic in named_groups:
+
+        inlier_labels = named_groups[inlier_topic]
+        anomaly_labels = None  
+
+    else:
+        raise Exception(f"Invalid inlier_topic: {inlier_topic}")
+
+    if anomaly_labels is not None:
+
+        inlier_dataset = dataset.filter(lambda x: x["label"] in inlier_labels)
+        anomaly_dataset = dataset.filter(lambda x: x["label"] in anomaly_labels)
+    else:
+
+        inlier_dataset = dataset.filter(lambda x: x["label"] in inlier_labels)
+        anomaly_dataset = dataset.filter(lambda x: x["label"] not in inlier_labels)
+
     if is_trainset:
         n_anomalies = int((anomaly_rate * inlier_dataset.num_rows) / (1 - anomaly_rate))
         anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
         anomaly_dataset = anomaly_dataset.select(anomaly_indices)
-    
+
         inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
         anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
 
         return inlier_dataset, anomaly_dataset
 
-    else:
-        return replace_inliers_with_anomalies(inlier_dataset, anomaly_dataset, anomaly_rate)
+    return replace_inliers_with_anomalies(inlier_dataset, anomaly_dataset, anomaly_rate)
+
+
 
 
 ############################################
@@ -376,9 +465,7 @@ def textual_anomaly_contamination_20newsgroups(
     anomaly_rate=0.1,
     is_trainset=True
 ):
-    # -----------------------------------------
-    # 1. Définition des groupes (TAC)
-    # -----------------------------------------
+
     if type_tac == 'ruff':
         groups = {
             "computer": [
@@ -429,9 +516,6 @@ def textual_anomaly_contamination_20newsgroups(
     else:
         raise ValueError("TAC not available.")
 
-    # -----------------------------------------------------
-    # 2. Mapping topic (label_text) → group name (topic_label_text)
-    # -----------------------------------------------------
     topic_map = {label: group for group, labels in groups.items() for label in labels}
 
     def add_topic_label(row):
@@ -440,11 +524,6 @@ def textual_anomaly_contamination_20newsgroups(
 
     dataset = dataset.map(add_topic_label)
 
-    # -----------------------------------------------------
-    # 3. Détection du cas : group name ou subtopic ?
-    # -----------------------------------------------------
-
-    # Cas 1 : inlier_topic est un nom de groupe
     if inlier_topic in groups:
         inlier_subtopics = groups[inlier_topic]
         anomaly_subtopics = [
@@ -455,7 +534,6 @@ def textual_anomaly_contamination_20newsgroups(
         ]
     
     else:
-        # Cas 2 : inlier_topic est un sous-topic → trouver son groupe
         group_found = None
         for group_name, labels in groups.items():
             if inlier_topic in labels:
@@ -467,7 +545,6 @@ def textual_anomaly_contamination_20newsgroups(
 
         inlier_subtopics = [inlier_topic]
 
-        # anomalies = les sous-topics du même groupe uniquement
         anomaly_subtopics = [
             label for label in groups[group_found] if label != inlier_topic
         ]
@@ -476,33 +553,25 @@ def textual_anomaly_contamination_20newsgroups(
         if len(anomaly_subtopics) == 0:
             raise ValueError("Impossible d'avoir anomalies : le groupe contient 1 seule classe.")
 
-    # -----------------------------------------------------
-    # 4. Filtrage du dataset selon ta logique
-    # -----------------------------------------------------
+
     inlier_dataset = dataset.filter(lambda x: x["label_text"] in inlier_subtopics)
     anomaly_dataset = dataset.filter(lambda x: x["label_text"] in anomaly_subtopics)
 
-    # -----------------------------------------------------
-    # 5. Mode TRAINSET → contamination directe
-    # -----------------------------------------------------
+
     if is_trainset:
 
         n_inliers = inlier_dataset.num_rows
         n_anomalies = int((anomaly_rate * n_inliers) / (1 - anomaly_rate))
 
-        # Tirage des anomalies
+
         anomaly_indices = np.random.randint(0, anomaly_dataset.num_rows, n_anomalies)
         anomaly_dataset = anomaly_dataset.select(anomaly_indices)
 
-        # Ajouter colonne anomaly_class
         inlier_dataset = inlier_dataset.map(add_col, fn_kwargs={"anomaly_class": 0})
         anomaly_dataset = anomaly_dataset.map(add_col, fn_kwargs={"anomaly_class": 1})
 
         return inlier_dataset, anomaly_dataset
 
-    # -----------------------------------------------------
-    # 6. Mode TESTSET → contamination via ta fonction
-    # -----------------------------------------------------
     return replace_inliers_with_anomalies(
         inlier_dataset,
         anomaly_dataset,

@@ -72,28 +72,6 @@ FPR@95:         0.5954 ± 0.0910
 
 ========================================
 Dataset:        agnews
-Inlier class:   Sci/Tech
-Embedding type: sentence_bert
-AD model:       flow-matching
-----------------------------------------
-AUC:            0.9026 ± 0.0109
-Avg Precision:  0.5699 ± 0.0240
-FPR@95:         0.4174 ± 0.0681
-========================================
-
-========================================
-Dataset:        agnews
-Inlier class:   Sci/Tech
-Embedding type: sentence_bert
-AD model:       ocsvm
-----------------------------------------
-AUC:            0.8891 ± 0.0103
-Avg Precision:  0.5961 ± 0.0213
-FPR@95:         0.5509 ± 0.0755
-========================================
-
-========================================
-Dataset:        agnews
 Inlier class:   World
 Embedding type: sentence_bert
 AD model:       RSRAE
@@ -130,17 +108,6 @@ FPR@95:         0.4740 ± 0.0631
 
 ========================================
 Dataset:        agnews
-Inlier class:   Sci/Tech
-Embedding type: sentence_bert
-AD model:       RSRAE
-----------------------------------------
-AUC:            0.8725 ± 0.0095
-Avg Precision:  0.4622 ± 0.0232
-FPR@95:         0.4952 ± 0.0702
-========================================
-
-========================================
-Dataset:        agnews
 Inlier class:   Sports
 Embedding type: sentence_bert
 AD model:       AE
@@ -161,17 +128,6 @@ Training time:  4.32 sec
 AUC:            0.9228 ± 0.0087
 Avg Precision:  0.6487 ± 0.0152
 FPR@95:         0.3460 ± 0.0616
-========================================
-
-========================================
-Dataset:        agnews
-Inlier class:   Sci/Tech
-Embedding type: sentence_bert
-AD model:       AE
-----------------------------------------
-AUC:            0.9049 ± 0.0099
-Avg Precision:  0.5929 ± 0.0211
-FPR@95:         0.4044 ± 0.0534
 ========================================
 
 ========================================
@@ -208,17 +164,6 @@ Training time:  26.83 sec
 AUC:            0.9262 ± 0.0073
 Avg Precision:  0.6639 ± 0.0216
 FPR@95:         0.3246 ± 0.0312
-========================================
-
-========================================
-Dataset:        agnews
-Inlier class:   Sci/Tech
-Embedding type: sentence_bert
-AD model:       TCCM
-----------------------------------------
-AUC:            0.8767 ± 0.0078
-Avg Precision:  0.4387 ± 0.0203
-FPR@95:         0.4833 ± 0.0613
 ========================================
 
 ========================================

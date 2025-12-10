@@ -50,7 +50,8 @@ class CAE(nn.Module):
         # --- Decoder ---
         self.decoder_fc3 = nn.Linear(self.intrinsic_size, self.hidden_layer_sizes[2])
         self.decoder_fc2 = nn.Linear(self.hidden_layer_sizes[2], self.hidden_layer_sizes[1])
-        self.decoder_fc1 = nn.Linear(self.hidden_layer_sizes[1], self.input_dim)
+        self.decoder_fc1 = nn.Linear(self.hidden_layer_sizes[1], self.hidden_layer_sizes[0])
+        self.decoder_fc0 = nn.Linear(self.hidden_layer_sizes[0], self.input_dim)
         
         if bn:
             self.dbn1 = nn.BatchNorm1d(self.hidden_layer_sizes[2])
@@ -78,11 +79,14 @@ class CAE(nn.Module):
         if self.bn: z = self.dbn1(z)
         z = self.activation(self.decoder_fc2(z))
         if self.bn: z = self.dbn2(z)
-        x_hat = self.decoder_fc1(z)
+        z = self.activation(self.decoder_fc1(z)) 
+        x_hat = self.decoder_fc0(z)
         return x_hat
     
     def forward(self, x):
+        # print(x.shape)
         y = self.encoder(x)
+        # print(y.shape)
         y_rsr, y_flat = self.rsr(y)
         if self.normalize:
             z = self.renormalization(y_rsr)
@@ -180,10 +184,14 @@ class CAE(nn.Module):
 
 class RSRAE(BaselineModel):
     def __init__(self, args):
+        
+        self.batch_size = args['batch_size']
+        args.pop("batch_size", None)
+        # print(self.batch_size)
         self.model = CAE(**args)
 
     def train(self, X_train, device='cuda'):
-        self.model.fit(X_train, 128, None, device)
+        self.model.fit(X_train, self.batch_size, None, device)
         return self.model
 
     def test(self, X_test, y_test, device='cuda'):

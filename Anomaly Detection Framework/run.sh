@@ -3,10 +3,34 @@
 # cd "$(dirname "$0")" || exit 1
 
 
-python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic Company  --ocsvm --rsrae --ae --tccm
+# python3 run_indep_anom.py --dataset_name reuters --inlier_topic interest --fm
+python3 run_indep_anom.py --dataset_name agnews --runall --rsrae --ae
 # python3 create_data_matrix.py --dataset_name dbpedia14 --type_tac pantin --nu 0.1 \
 #                 --type_encoder sentencebert --model_encoder all-distilroberta-v1 \
 #                 --whichset test --nbruns 10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # python3 run_contex_anom.py --dataset_name 20newsgroups --inlier_topic computer --type_tac pantin \

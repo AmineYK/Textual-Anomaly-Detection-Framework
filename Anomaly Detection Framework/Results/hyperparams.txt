@@ -167,7 +167,7 @@ dataset_name : reuters
 inlier_topic : interest
 
 Hyperparameters :
-batch_size : 16
+batch_size : 64
 latent_dim : 256
 sinu : False
 batchnorm : False
@@ -190,9 +190,9 @@ latent_dim : 256
 sinu : False
 batchnorm : False
 dropout : 0.1
-lr : 0.001
-weight_decay : 0
-n_epochs : 50
+lr : 1e-4
+weight_decay : 1e-6
+n_epochs : 150
 source : sphere-noised
 target : torch.Size([186, 384])
 ========================================
@@ -208,9 +208,9 @@ latent_dim : 256
 sinu : False
 batchnorm : False
 dropout : 0.1
-lr : 1e-3
-weight_decay : 0
-n_epochs : 30
+lr : 1e-4
+weight_decay : 1e-6
+n_epochs : 50
 source : sphere
 target : torch.Size([228, 384])
 ========================================
@@ -226,9 +226,9 @@ latent_dim : 256
 sinu : False
 batchnorm : False
 dropout : 0.1
-lr : 0.001
+lr : 1e-3
 weight_decay : 0
-n_epochs : 50
+n_epochs : 30
 source : sphere-noised
 target : torch.Size([98, 384])
 ========================================

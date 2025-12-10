@@ -164,11 +164,11 @@ Dataset:        20newsgroups
 Inlier class:   computer
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  5.15 sec
+Training time:  1.53 sec
 ----------------------------------------
-AUC:            0.9049 ± 0.0073
-Avg Precision:  0.6307 ± 0.0273
-FPR@95:         0.5736 ± 0.0525
+AUC:            0.9092 ± 0.0070
+Avg Precision:  0.6220 ± 0.0281
+FPR@95:         0.5279 ± 0.0608
 ========================================
 
 ========================================
@@ -176,11 +176,11 @@ Dataset:        20newsgroups
 Inlier class:   recreation
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  4.38 sec
+Training time:  1.45 sec
 ----------------------------------------
-AUC:            0.9068 ± 0.0050
-Avg Precision:  0.4926 ± 0.0229
-FPR@95:         0.3343 ± 0.0497
+AUC:            0.9075 ± 0.0038
+Avg Precision:  0.4920 ± 0.0220
+FPR@95:         0.3343 ± 0.0258
 ========================================
 
 ========================================
@@ -188,11 +188,11 @@ Dataset:        20newsgroups
 Inlier class:   science
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  4.40 sec
+Training time:  1.42 sec
 ----------------------------------------
-AUC:            0.6899 ± 0.0217
-Avg Precision:  0.1739 ± 0.0224
-FPR@95:         0.7437 ± 0.0268
+AUC:            0.6762 ± 0.0200
+Avg Precision:  0.1656 ± 0.0195
+FPR@95:         0.7452 ± 0.0323
 ========================================
 
 ========================================
@@ -200,11 +200,11 @@ Dataset:        20newsgroups
 Inlier class:   miscellaneous
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  2.27 sec
+Training time:  1.43 sec
 ----------------------------------------
-AUC:            0.9546 ± 0.0087
-Avg Precision:  0.7386 ± 0.0382
-FPR@95:         0.2331 ± 0.0723
+AUC:            0.9476 ± 0.0070
+Avg Precision:  0.6988 ± 0.0350
+FPR@95:         0.2625 ± 0.0502
 ========================================
 
 ========================================
@@ -212,11 +212,11 @@ Dataset:        20newsgroups
 Inlier class:   politics
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  3.32 sec
+Training time:  1.46 sec
 ----------------------------------------
-AUC:            0.9220 ± 0.0124
-Avg Precision:  0.5942 ± 0.0367
-FPR@95:         0.2927 ± 0.0778
+AUC:            0.9235 ± 0.0117
+Avg Precision:  0.6030 ± 0.0331
+FPR@95:         0.3175 ± 0.1186
 ========================================
 
 ========================================
@@ -224,11 +224,11 @@ Dataset:        20newsgroups
 Inlier class:   religion
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  3.18 sec
+Training time:  1.47 sec
 ----------------------------------------
-AUC:            0.9345 ± 0.0085
-Avg Precision:  0.5900 ± 0.0288
-FPR@95:         0.2473 ± 0.0542
+AUC:            0.9324 ± 0.0083
+Avg Precision:  0.5556 ± 0.0283
+FPR@95:         0.2613 ± 0.0639
 ========================================
 
 ========================================
@@ -236,11 +236,11 @@ Dataset:        20newsgroups
 Inlier class:   recreation
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  7.39 sec
 ----------------------------------------
-AUC:            0.9402 ± 0.0070
-Avg Precision:  0.6304 ± 0.0324
-FPR@95:         0.2217 ± 0.0426
+AUC:            0.9388 ± 0.0068
+Avg Precision:  0.6962 ± 0.0222
+FPR@95:         0.2530 ± 0.0417
 ========================================
 
 ========================================
@@ -248,11 +248,11 @@ Dataset:        20newsgroups
 Inlier class:   science
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  7.29 sec
 ----------------------------------------
-AUC:            0.7833 ± 0.0142
-Avg Precision:  0.2673 ± 0.0252
-FPR@95:         0.6056 ± 0.0421
+AUC:            0.8052 ± 0.0126
+Avg Precision:  0.3583 ± 0.0247
+FPR@95:         0.6172 ± 0.0430
 ========================================
 
 ========================================
@@ -260,11 +260,11 @@ Dataset:        20newsgroups
 Inlier class:   miscellaneous
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  1.84 sec
 ----------------------------------------
-AUC:            0.9554 ± 0.0074
-Avg Precision:  0.7223 ± 0.0358
-FPR@95:         0.2369 ± 0.0531
+AUC:            0.9563 ± 0.0088
+Avg Precision:  0.7687 ± 0.0330
+FPR@95:         0.2349 ± 0.0806
 ========================================
 
 ========================================
@@ -272,11 +272,11 @@ Dataset:        20newsgroups
 Inlier class:   politics
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  4.87 sec
 ----------------------------------------
-AUC:            0.9432 ± 0.0099
-Avg Precision:  0.6861 ± 0.0257
-FPR@95:         0.2455 ± 0.0758
+AUC:            0.9511 ± 0.0116
+Avg Precision:  0.7796 ± 0.0259
+FPR@95:         0.2391 ± 0.0779
 ========================================
 
 ========================================
@@ -284,11 +284,11 @@ Dataset:        20newsgroups
 Inlier class:   religion
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  4.41 sec
 ----------------------------------------
-AUC:            0.9395 ± 0.0089
-Avg Precision:  0.6466 ± 0.0300
-FPR@95:         0.2577 ± 0.0517
+AUC:            0.9262 ± 0.0125
+Avg Precision:  0.7178 ± 0.0243
+FPR@95:         0.4024 ± 0.1187
 ========================================
 
 ========================================
@@ -296,11 +296,11 @@ Dataset:        20newsgroups
 Inlier class:   computer
 Embedding type: sentence_bert
 AD model:       AE
-Training time:  nan sec
+Training time:  9.32 sec
 ----------------------------------------
-AUC:            0.9332 ± 0.0084
-Avg Precision:  0.7067 ± 0.0294
-FPR@95:         0.3469 ± 0.0704
+AUC:            0.9476 ± 0.0062
+Avg Precision:  0.8161 ± 0.0191
+FPR@95:         0.3219 ± 0.0697
 ========================================
 
 ========================================
