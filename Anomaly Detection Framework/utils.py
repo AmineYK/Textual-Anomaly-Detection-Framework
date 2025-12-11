@@ -460,7 +460,7 @@ def load_data_inlier(dataset_name, inlier_topic, save_dir = "/home/2017025/ayouc
         path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_infec.pt")
     else:
         path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/ds_train_{inlier_topic}.pt")
-
+    
     return torch.load(path)['X_inlier']
 
 def load_data_test(dataset_name, inlier_topic, n_run, save_dir = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Data"):

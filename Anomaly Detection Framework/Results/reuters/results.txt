@@ -191,11 +191,11 @@ Dataset:        reuters
 Inlier class:   acq
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  1.46 sec
+Training time:  6.96 sec
 ----------------------------------------
-AUC:            0.8434 ± 0.0120
-Avg Precision:  0.2929 ± 0.0272
-FPR@95:         0.3930 ± 0.0701
+AUC:            0.8705 ± 0.0330
+Avg Precision:  0.6211 ± 0.0366
+FPR@95:         0.8592 ± 0.2824
 ========================================
 
 ========================================
@@ -215,11 +215,11 @@ Dataset:        reuters
 Inlier class:   crude
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  1.40 sec
+Training time:  7.62 sec
 ----------------------------------------
-AUC:            0.8138 ± 0.0505
-Avg Precision:  0.3568 ± 0.0869
-FPR@95:         0.5211 ± 0.1507
+AUC:            0.8674 ± 0.0806
+Avg Precision:  0.5181 ± 0.0976
+FPR@95:         0.6073 ± 0.3979
 ========================================
 
 ========================================
@@ -227,11 +227,11 @@ Dataset:        reuters
 Inlier class:   ship
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  1.39 sec
+Training time:  0.86 sec
 ----------------------------------------
-AUC:            0.7389 ± 0.1433
-Avg Precision:  0.2827 ± 0.1480
-FPR@95:         0.4394 ± 0.2236
+AUC:            0.8096 ± 0.1303
+Avg Precision:  0.3373 ± 0.1311
+FPR@95:         0.3030 ± 0.2134
 ========================================
 
 ========================================
@@ -251,11 +251,11 @@ Dataset:        reuters
 Inlier class:   interest
 Embedding type: sentence_bert
 AD model:       RSRAE
-Training time:  1.40 sec
+Training time:  0.86 sec
 ----------------------------------------
-AUC:            0.8663 ± 0.0623
-Avg Precision:  0.5488 ± 0.1173
-FPR@95:         0.4712 ± 0.1560
+AUC:            0.9115 ± 0.0941
+Avg Precision:  0.7642 ± 0.1191
+FPR@95:         0.4548 ± 0.4468
 ========================================
 
 ========================================

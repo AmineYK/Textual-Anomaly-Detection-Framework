@@ -130,18 +130,18 @@ def main(args):
             if args.rsrae:
 
                 rsrae_args = {
-                    "input_dim": X_inlier.shape[1], "hidden_layer_sizes": (64,32,16), "intrinsic_size": 8,
-                    "activation": F.relu, "norm_type": 'L21', "loss_norm_type": 'MSE',
-                    "if_rsr": True, "enforce_proj": False, "all_alt": False,
-                    "learning_rate": 1e-4, "lambda1": 0.01, "lambda2": 0.01,
-                    "epoch_size": 100, "batch_show": 50, "normalize": True,
-                    "bn": False, "seed": 123, 'batch_size': X_inlier.shape[0] // 6
+                    "input_dim": X_inlier.shape[1], "hidden_layer_sizes": (64,32,16), "intrinsic_size": 10,
+                    "activation": nn.ReLU(), "norm_type": 'l21', "loss_norm_type": 'mse',
+                    "if_rsr": True, "enforce_proj": True, "all_alt": True,
+                    "learning_rate": 1e-3, "lambda1": 0.1, "lambda2": 0.1,
+                    "epoch_size": 20, "batch_show": 50, "normalize": True,
+                    "bn": False, "seed": 42, 'batch_size': X_inlier.shape[0] // 100
                 }
 
                 rsrae_model = RSRAE(rsrae_args)
 
                 taac = time.time()
-                _ = rsrae_model.train(X_inlier_anoma, device)
+                _ = rsrae_model.train(X_inlier, device)
                 tiic = time.time()
                 
                 print(f"\nRSRAE finishing... after {(tiic-taac)/60:.3f} mn")
@@ -165,8 +165,8 @@ def main(args):
                     "contamination": 0.1,
                     "hidden_neuron_list": [64, 32, 16],
                     "hidden_activation_name": "relu",
-                    "epoch_num": 100,
-                    "batch_size": 64,
+                    "epoch_num": 10,
+                    "batch_size": X_inlier.shape[0] // 100,
                     "dropout_rate": 0.0,
                     "verbose": 0
                 }
@@ -186,27 +186,6 @@ def main(args):
                 list_fpr_ae.append(fpr95_ae)    
                 list_ap_ae.append(ap_ae)  
                 list_time_ae.append((tiic-taac))
-
-
-
-                # ae_args = {
-                #     "input_dim": X_inlier.shape[1], "hidden_layer_sizes": (64,32,16),
-                #     "activation": F.relu, "loss_norm_type": 'MSE',
-                #     "learning_rate": 1e-4, 
-                #     "epoch_size": 100, "batch_show": 50,
-                #     "bn": False, "seed": 123
-                # }
-
-
-                # ae_model = AE_BASELINE(ae_args)
-
-                # taac = time.time()
-                # _ = ae_model.train(X_inlier.cpu())
-                # tiic = time.time()
-                # print(f"\nAE finishing... after {(tiic-taac)/60:.3f} mn")
-                
-                # auc_ae, fpr95_ae, ap_ae = ae_model.test(X_test, y_test)
-                # print(f"AE --> AUC: {auc_ae:.4f} | FPR@95: {fpr95_ae:.4f} | AP: {ap_ae:.4f}\n")
 
 
             ########################################
@@ -277,10 +256,10 @@ def main(args):
                 list_time_fm.append((tiic-taac))
 
 
-        print("AE --> ",inlier_topic ,np.mean(list_auc_ae))
-        print("RSRAE --> ", inlier_topic ,np.mean(list_auc_rsrae))
+        # print("AE --> ",inlier_topic ,np.mean(list_auc_ae))
+        # print(inlier_topic ,np.mean(list_auc_fm))
+        # print("RSRAE --> ", inlier_topic ,np.mean(list_auc_rsrae))
         if args.fm:
-            print(inlier_topic ,np.mean(list_auc_fm))
             save_results(
                 dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb="sentence_bert" ,ad_model="flow-matching",
                 auc_mean=np.mean(list_auc_fm), ap_mean=np.mean(list_ap_fm),fpr_mean=np.mean(list_fpr_fm),
@@ -302,7 +281,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb="sentence_bert" ,ad_model="RSRAE",
             auc_mean=np.mean(list_auc_rsrae), ap_mean=np.mean(list_ap_rsrae),fpr_mean=np.mean(list_fpr_rsrae),
             auc_std = np.std(list_auc_rsrae),ap_std =  np.std(list_ap_rsrae),fpr_std = np.std(list_fpr_rsrae),
-            train_time = np.mean(list_time_rsrae), overwrite='naive'
+            train_time = np.mean(list_time_rsrae), overwrite='smart'
             )
 
         if args.ocsvm:

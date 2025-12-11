@@ -34,7 +34,6 @@ class CAE(nn.Module):
             torch.manual_seed(seed)
             np.random.seed(seed)
         
-        # --- Encoder ---
         self.encoder_fc1 = nn.Linear(self.input_dim, self.hidden_layer_sizes[0])
         self.encoder_fc2 = nn.Linear(self.hidden_layer_sizes[0], self.hidden_layer_sizes[1])
         self.encoder_fc3 = nn.Linear(self.hidden_layer_sizes[1], self.hidden_layer_sizes[2])
@@ -44,10 +43,8 @@ class CAE(nn.Module):
             self.bn2 = nn.BatchNorm1d(self.hidden_layer_sizes[1])
             self.bn3 = nn.BatchNorm1d(self.hidden_layer_sizes[2])
         
-        # --- RSR Layer ---
         self.A = nn.Parameter(torch.randn(self.hidden_layer_sizes[2], self.intrinsic_size))
         
-        # --- Decoder ---
         self.decoder_fc3 = nn.Linear(self.intrinsic_size, self.hidden_layer_sizes[2])
         self.decoder_fc2 = nn.Linear(self.hidden_layer_sizes[2], self.hidden_layer_sizes[1])
         self.decoder_fc1 = nn.Linear(self.hidden_layer_sizes[1], self.hidden_layer_sizes[0])
@@ -57,6 +54,8 @@ class CAE(nn.Module):
             self.dbn1 = nn.BatchNorm1d(self.hidden_layer_sizes[2])
             self.dbn2 = nn.BatchNorm1d(self.hidden_layer_sizes[1])
             self.dbn3 = nn.BatchNorm1d(self.hidden_layer_sizes[0])
+
+        self.loss_fn = nn.MSELoss()
 
     def encoder(self, x):
         z = self.activation(self.encoder_fc1(x))
@@ -68,8 +67,14 @@ class CAE(nn.Module):
         return z
 
     def rsr(self, y):
+        # print("y")
+        # print(y.shape)
+        # print("A")
+        # print(self.A.shape)
         z = y @ self.A
-        return z, y
+        # print("z")
+        # print(z.shape)
+        return z
 
     def renormalization(self, z):
         return F.normalize(z, p=2, dim=-1)
@@ -87,18 +92,19 @@ class CAE(nn.Module):
         # print(x.shape)
         y = self.encoder(x)
         # print(y.shape)
-        y_rsr, y_flat = self.rsr(y)
+        y_rsr = self.rsr(y)
         if self.normalize:
             z = self.renormalization(y_rsr)
         else:
             z = y_rsr
         x_hat = self.decoder(z)
-        return y_flat, y_rsr, z, x_hat
+        return y, y_rsr, z, x_hat
 
-    # --- Loss functions ---
     def reconstruction_error(self, x, x_hat):
         if self.loss_norm_type.lower() in ['mse','f','frob']:
             return torch.mean(torch.norm(x - x_hat, dim=1)**2)
+            # return self.loss_fn(x, x_hat)
+
         elif self.loss_norm_type.lower() in ['l1']:
             return torch.mean(torch.norm(x - x_hat, p=1, dim=1))
         else:
@@ -106,7 +112,10 @@ class CAE(nn.Module):
 
     def pca_error(self, y, z):
         z_proj = z @ self.A.T
+        # z_proj = (y @ self.A) @ self.A.T
+        z_proj = (y @ (self.A @ self.A.T))
         if self.norm_type.lower() in ['mse','f','frob']:
+            # return self.loss_fn(y, z_proj)
             return torch.mean(torch.norm(y - z_proj, dim=1)**2)
         elif self.norm_type.lower() in ['l1']:
             return torch.mean(torch.norm(y - z_proj, p=1, dim=1))
@@ -117,7 +126,6 @@ class CAE(nn.Module):
         I = torch.eye(self.A.size(1), device=self.A.device)
         return torch.mean((self.A.T @ self.A - I)**2)
 
-    # --- Training function ---
     def fit(self, X, batch_size=128, x_val=None, device='cuda'):
         self.to(device)
         # X = torch.tensor(X, dtype=torch.float32, device=device)
@@ -146,17 +154,20 @@ class CAE(nn.Module):
                 
                 if self.enforce_proj and self.all_alt:
                     optimizer_proj.zero_grad()
+                    # juste pour garder le graph de backward
+                    y_flat, y_rsr, z, x_hat = self.forward(x_batch)
                     proj_loss = self.proj_error()
                     proj_loss.backward()
                     optimizer_proj.step()
                 
                 if self.all_alt:
                     optimizer_proj.zero_grad()
+                    # juste pour garder le graph de backward
+                    y_flat, y_rsr, z, x_hat = self.forward(x_batch)
                     pca_loss = self.pca_error(y_flat, y_rsr)
                     pca_loss.backward()
                     optimizer_proj.step()
             
-            # --- Display ---
             if self.batch_show is not None and (epoch+1) % self.batch_show == 0:
                 if x_val is not None:
                     with torch.no_grad():
@@ -180,6 +191,8 @@ class CAE(nn.Module):
         with torch.no_grad():
             _, _, _, x_hat = self.forward(X)
         return x_hat.cpu().numpy()
+
+
 
 
 class RSRAE(BaselineModel):
@@ -206,3 +219,4 @@ class RSRAE(BaselineModel):
 
             auc_rsrae, fpr95_rsrae, ap_rsrae = ev.evaluation(y_test, -cosine_similarity, verbose=False)
             return auc_rsrae, fpr95_rsrae, ap_rsrae 
+
