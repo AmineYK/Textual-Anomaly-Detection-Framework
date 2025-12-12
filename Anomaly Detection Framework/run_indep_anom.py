@@ -13,6 +13,7 @@ from utils import load_data_inlier, load_data_test, load_hyperparams
 from Modelisation.Baselines.RSRAE.model import RSRAE
 from Modelisation.Baselines.AE.autoencoder import AE
 from Modelisation.Baselines.TCCM.model import TCCM
+from Modelisation.Baselines.CVDD.networks.cvdd_Net import CVDDModel
 from Modelisation.FlowMatching.flow_matching import BasicFlowMatching
 from utils import save_results, create_tables
 import numpy as np
@@ -45,9 +46,9 @@ def main(args):
 
 
     # for every inlier category 
-    for inlier_topic in inlier_topics:
+    for i, inlier_topic in enumerate(inlier_topics):
 
-        print(f"------------------------ {inlier_topic} --------------------------")
+        print(f"------------------------ {inlier_topic}({i}/{len(inlier_topics)}) -----------------------------")
 
         if args.fm:
             list_auc_fm = []
@@ -79,9 +80,19 @@ def main(args):
             list_ap_tccm = []
             list_time_tccm = []
 
+        if args.cvdd:
+            list_auc_cvdd = []
+            list_fpr_cvdd = []
+            list_ap_cvdd = []
+            list_time_cvdd = []
+
         # RSRAE --> X_train is infected with some anomalies
         if args.rsrae:
             X_inlier_anoma = load_data_inlier(args.dataset_name, inlier_topic, save_dir, True)
+        
+        if args.cvdd:
+            data_train = load_data_inlier(args.dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
+            
         # load the X_inlier matrix
         X_inlier = load_data_inlier(args.dataset_name, inlier_topic, save_dir)
 
@@ -94,6 +105,8 @@ def main(args):
 
             print(f"+++++++++++++++++++++ run : {n_run} +++++++++++++++++\n")
 
+            if args.cvdd:
+                data_test = load_data_test(args.dataset_name, inlier_topic, n_run, save_dir, is_cvdd=True)
             X_test, y_test = load_data_test(args.dataset_name, inlier_topic, n_run, save_dir)
 
             #########################################
@@ -218,6 +231,46 @@ def main(args):
                 list_time_tccm.append((tiic-taac))  
 
 
+
+            ########################################
+            ################# CVDD #################
+            ########################################  
+
+            if args.cvdd:
+                cvdd_args = {
+                    "type_emb": "fasttext",
+                    # "emb_model": "distilbert-base-uncased",
+                    "emb_model": "distilroberta-base",
+                    "attention_size": 150,
+                    "n_attention_heads": 10,
+                    "lr": 0.001,
+                    "weight_decay": 0,
+                    "lr_milestones": (10, 25),
+                    "n_epochs": 30,
+                    "lambda_p": 1.0,
+                    "alpha_scheduler": "logarithmic",
+                    "seq_len": 100,
+                    "batch_size": 64,
+                    "min_freq": 1,
+                    "device": device
+                }
+
+                cvdd_model = CVDDModel(cvdd_args)
+
+                taac = time.time()
+                cvdd_model_trained, cvdd_trainer = cvdd_model.train(data_train, data_test)
+                tiic = time.time()
+                print(f"\CVDD finishing... after {(tiic-taac)/60:.3f} mn")
+                
+                auc_cvdd, fpr95_cvdd, ap_cvdd = cvdd_model.test(cvdd_model_trained, cvdd_trainer, data_train, data_test)
+                print(f"CVDD --> AUC: {auc_cvdd:.4f} | FPR@95: {fpr95_cvdd:.4f} | AP: {ap_cvdd:.4f}\n")
+                
+                list_auc_cvdd.append(auc_cvdd)
+                list_fpr_cvdd.append(fpr95_cvdd)    
+                list_ap_cvdd.append(ap_cvdd)  
+                list_time_cvdd.append((tiic-taac))  
+
+
             #################################################
 #          ################# Flow Matching #################
 #          ################################################# 
@@ -259,6 +312,7 @@ def main(args):
         # print("AE --> ",inlier_topic ,np.mean(list_auc_ae))
         # print(inlier_topic ,np.mean(list_auc_fm))
         # print("RSRAE --> ", inlier_topic ,np.mean(list_auc_rsrae))
+        print("CVDD --> ", inlier_topic ,np.mean(list_auc_cvdd))
         if args.fm:
             save_results(
                 dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb="sentence_bert" ,ad_model="flow-matching",
@@ -298,6 +352,14 @@ def main(args):
             auc_mean=np.mean(list_auc_tccm), ap_mean=np.mean(list_ap_tccm),fpr_mean=np.mean(list_fpr_tccm),
             auc_std = np.std(list_auc_tccm),ap_std =  np.std(list_ap_tccm),fpr_std = np.std(list_fpr_tccm),
             train_time = np.mean(list_time_tccm), overwrite='naive'
+            )
+
+        if args.cvdd:
+            save_results(
+            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=cvdd_args['type_emb'] ,ad_model="CVDD",
+            auc_mean=np.mean(list_auc_cvdd), ap_mean=np.mean(list_ap_cvdd),fpr_mean=np.mean(list_fpr_cvdd),
+            auc_std = np.std(list_auc_cvdd),ap_std =  np.std(list_ap_cvdd),fpr_std = np.std(list_fpr_cvdd),
+            train_time = np.mean(list_time_cvdd), overwrite='smart'
             )
 
 
@@ -349,6 +411,11 @@ if __name__ == "__main__":
 
     parser.add_argument(
     "--tccm",
+    action="store_true"
+    )  
+
+    parser.add_argument(
+    "--cvdd",
     action="store_true"
     )  
     

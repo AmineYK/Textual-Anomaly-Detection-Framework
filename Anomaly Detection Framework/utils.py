@@ -4,6 +4,7 @@ import numpy as np
 import os
 import torch
 from datetime import datetime
+import datasets
 
 
 BASE_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results"
@@ -454,18 +455,25 @@ def load_hyperparams(dataset_name, inlier_topic, file_path):
     return None  # Aucun match
 
 
-def load_data_inlier(dataset_name, inlier_topic, save_dir = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Data", is_infec=False):
+def load_data_inlier(dataset_name, inlier_topic, save_dir = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Data", is_infec=False, is_cvdd=False):
 
-    if is_infec:
-        path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_infec.pt")
+    if is_cvdd:
+        path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_cvdd.pt")
     else:
-        path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/ds_train_{inlier_topic}.pt")
-    
-    return torch.load(path)['X_inlier']
+        if is_infec:
+            path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_infec.pt")
+        else:
+            path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/ds_train_{inlier_topic}.pt")
 
-def load_data_test(dataset_name, inlier_topic, n_run, save_dir = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Data"):
+    if not is_cvdd : return torch.load(path)['X_inlier']
+    else: return datasets.load_from_disk(path)
 
-    path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/run{n_run}/ds_test_{inlier_topic}_run{n_run}.pt")
-    ds = torch.load(path)
-    
-    return ds['X_test'], ds['y_test']
+def load_data_test(dataset_name, inlier_topic, n_run, save_dir = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Data",is_cvdd=False):
+
+    if is_cvdd:
+        path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/run{n_run}/ds_test_{inlier_topic}_cvdd_run{n_run}.pt")
+        return datasets.load_from_disk(path)
+    else:
+        path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/run{n_run}/ds_test_{inlier_topic}_run{n_run}.pt")
+        ds = torch.load(path)      
+        return ds['X_test'], ds['y_test'] 

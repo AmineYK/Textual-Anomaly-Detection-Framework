@@ -54,7 +54,7 @@ def cvdd_model_pipeline(data_train, data_test, attention_size, n_attention_heads
         if tokenizer is not None:
             cvdd_dataset_train = CVDDDatasetWrapper(data_train, embedding_type='bert', tokenizer=tokenizer, seq_len=seq_len)
             cvdd_dataset_test = CVDDDatasetWrapper(data_test, embedding_type='bert', tokenizer=tokenizer, seq_len=seq_len)
-            pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name='distilbert-base-uncased', trainable=True)
+            pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name='distilroberta-base', trainable=True)
         else:
             raise Exception(f"when 'embedding_type' = '{embedding_type}', the parameters 'bert_name' and 'tokenizer' is required")
 
@@ -66,7 +66,7 @@ def cvdd_model_pipeline(data_train, data_test, attention_size, n_attention_heads
             cvdd_dataset_train = CVDDDatasetWrapper(data_train, embedding_type='glove', vocab=vocab, seq_len=seq_len)
             cvdd_dataset_test = CVDDDatasetWrapper(data_test, embedding_type='glove', vocab=vocab, seq_len=seq_len)
             pretrained_model = embedding_layer.EmbeddingFactory.create('glove',
-                                    glove_path='./Modelisation/Baselines/CVDD/embedding_models/glove.6B.300d.txt',
+                                    glove_path='/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Modelisation/Baselines/CVDD/embedding_models/glove.6B.300d.txt',
                                     vocab=vocab,
                                     embedding_dim=300,
                                     trainable=True)
@@ -81,7 +81,7 @@ def cvdd_model_pipeline(data_train, data_test, attention_size, n_attention_heads
             cvdd_dataset_train = CVDDDatasetWrapper(data_train, embedding_type='fasttext', vocab=vocab, seq_len=seq_len)   
             cvdd_dataset_test = CVDDDatasetWrapper(data_test, embedding_type='fasttext', vocab=vocab, seq_len=seq_len)   
             pretrained_model = embedding_layer.EmbeddingFactory.create('fasttext',
-                                    fasttext_path='./Modelisation/Baselines/CVDD/embedding_models/wiki-news-300d-1M.vec',
+                                    fasttext_path='/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Modelisation/Baselines/CVDD/embedding_models/wiki-news-300d-1M.vec',
                                     vocab=vocab,
                                     embedding_dim=300,
                                     trainable=True)

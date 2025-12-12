@@ -375,3 +375,75 @@ Avg Precision:  0.7654 ± 0.0211
 FPR@95:         0.3792 ± 0.1077
 ========================================
 
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: fasttext
+AD model:       CVDD
+Training time:  13.84 sec
+----------------------------------------
+AUC:            0.7248 ± 0.0799
+Avg Precision:  0.2073 ± 0.0610
+FPR@95:         0.7127 ± 0.0954
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: fasttext
+AD model:       CVDD
+Training time:  11.26 sec
+----------------------------------------
+AUC:            0.6540 ± 0.0831
+Avg Precision:  0.1582 ± 0.0529
+FPR@95:         0.7651 ± 0.0800
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: fasttext
+AD model:       CVDD
+Training time:  12.26 sec
+----------------------------------------
+AUC:            0.6218 ± 0.0448
+Avg Precision:  0.1478 ± 0.0235
+FPR@95:         0.8794 ± 0.0431
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: fasttext
+AD model:       CVDD
+Training time:  7.39 sec
+----------------------------------------
+AUC:            0.8065 ± 0.0298
+Avg Precision:  0.2714 ± 0.0518
+FPR@95:         0.5703 ± 0.1201
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: fasttext
+AD model:       CVDD
+Training time:  10.71 sec
+----------------------------------------
+AUC:            0.7223 ± 0.0770
+Avg Precision:  0.2401 ± 0.0829
+FPR@95:         0.7654 ± 0.0442
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: fasttext
+AD model:       CVDD
+Training time:  9.95 sec
+----------------------------------------
+AUC:            0.7857 ± 0.0609
+Avg Precision:  0.2808 ± 0.0808
+FPR@95:         0.6421 ± 0.0854
+========================================
+
