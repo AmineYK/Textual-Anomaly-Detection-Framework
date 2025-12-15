@@ -16,14 +16,15 @@ pattern = {
     "dataset": re.compile(r"Dataset:\s*(.*)"),
     "inlier": re.compile(r"Inlier class:\s*(.*)"),
     "model": re.compile(r"AD model:\s*(.*)"),
-    "auc": re.compile(r"AUC:\s*([\d.]+)\s*±\s*([\d.]+)")
+    "auc": re.compile(r"AUC:\s*([\d.]+)\s*±\s*([\d.]+)"),
+    "type_emb" : re.compile(r"Embedding type:\s*(.*)")
 }
 
 # results[dataset][inlier_class][model] = (mean, std)
-results = defaultdict(lambda: defaultdict(dict))
+# results = defaultdict(lambda: defaultdict(dict))
+results = defaultdict(lambda: defaultdict(lambda: defaultdict(dict)))
 
 def load_all_results():
-    """Lit results.txt dans chaque dossier dataset."""
     for ds in DATASETS:
         folder = os.path.join(BASE_DIR, ds)
         filepath = os.path.join(folder, "results.txt")
@@ -33,10 +34,19 @@ def load_all_results():
             continue
 
         with open(filepath, "r") as f:
-            block = {"dataset": None, "inlier": None, "model": None, "auc": None}
+            block = {
+                "type_emb": None,
+                "dataset": None,
+                "inlier": None,
+                "model": None,
+                "auc": None
+            }
 
             for line in f:
                 line = line.strip()
+
+                if m := pattern["type_emb"].search(line):
+                    block["type_emb"] = m.group(1).strip()
 
                 if m := pattern["dataset"].search(line):
                     block["dataset"] = m.group(1).strip()
@@ -52,15 +62,15 @@ def load_all_results():
 
                 if line.startswith("========================================"):
 
-                    if block["dataset"] and block["inlier"] and block["model"] and block["auc"]:
+                    if all(block.values()):
+                        te = block["type_emb"]
                         ds_name = block["dataset"]
                         ic = block["inlier"]
                         model = block["model"]
-                        auc = block["auc"]
 
-                        results[ds_name][ic][model] = auc
+                        results[te][ds_name][ic][model] = block["auc"]
 
-                    block = {"dataset": None, "inlier": None, "model": None, "auc": None}
+                    block = {k: None for k in block}
 
 MODEL_ORDER = [
     "ocsvm",
@@ -230,19 +240,27 @@ def generate_dataset_tables(results):
 
 def create_tables():
 
-    print("Lecture des fichiers dans chaque dataset...")
+    print("Lecture des fichiers...")
     load_all_results()
-
-    global_table = generate_global_table(results)
-    dataset_tables = generate_dataset_tables(results)
 
     if os.path.exists(OUTPUT_TEX):
         os.remove(OUTPUT_TEX)
 
     with open(OUTPUT_TEX, "w") as f:
-        f.write(global_table)
-        f.write("\n\n")
-        f.write(dataset_tables)
+
+        for type_emb in results:
+
+            title = type_emb.replace("_", " ").title()
+
+            f.write(f"\\section{{Results with {title}}}\n\n")
+
+            global_table = generate_global_table(results[type_emb])
+            dataset_tables = generate_dataset_tables(results[type_emb])
+
+            f.write(global_table)
+            f.write("\n\n")
+            f.write(dataset_tables)
+            f.write("\n\n")
 
     print(f"Fichier LaTeX généré : {OUTPUT_TEX}")
 
@@ -390,7 +408,7 @@ def save_hyperparameters(dataset_name, inlier_topic,
     
 import re
 
-def load_hyperparams(dataset_name, inlier_topic, file_path):
+def load_hyperparams(dataset_name, inlier_topic, type_emb, file_path):
     """
     Lit un fichier de logs contenant plusieurs runs et renvoie les hyperparamètres
     correspondant au dataset et inlier_topic donnés.
@@ -404,6 +422,7 @@ def load_hyperparams(dataset_name, inlier_topic, file_path):
     # Regex pour matcher dataset + inlier_topic
     ds_pattern = re.compile(r"dataset_name\s*:\s*(.*)")
     inlier_pattern = re.compile(r"inlier_topic\s*:\s*(.*)")
+    typeemb_pattern = re.compile(r"type_emb\s*:\s*(.*)")
 
     # Hyperparams regex
     hyper_pattern = re.compile(r"(\w+)\s*:\s*(.*)")
@@ -412,11 +431,13 @@ def load_hyperparams(dataset_name, inlier_topic, file_path):
         # Vérifier dataset_name et inlier_topic
         ds = ds_pattern.search(block)
         it = inlier_pattern.search(block)
+        te = typeemb_pattern.search(block)
+
 
         if not ds or not it:
             continue
 
-        if ds.group(1).strip() == dataset_name and it.group(1).strip() == inlier_topic:
+        if ds.group(1).strip() == dataset_name and it.group(1).strip() == inlier_topic and te.group(1).strip() == type_emb:
             # Extraire les hyperparamètres dans la section "Hyperparameters :"
             hypers = {}
             in_hyper_section = False
@@ -477,3 +498,45 @@ def load_data_test(dataset_name, inlier_topic, n_run, save_dir = "/home/2017025/
         path = os.path.join(save_dir, f"{dataset_name}/{inlier_topic}/run{n_run}/ds_test_{inlier_topic}_run{n_run}.pt")
         ds = torch.load(path)      
         return ds['X_test'], ds['y_test'] 
+    
+
+def load_fasttext_vec(path):
+    embeddings = {}
+    with open(path, 'r', encoding='utf-8', newline='\n', errors='ignore') as f:
+        first_line = f.readline().split()
+        if len(first_line) == 2:
+            dim = int(first_line[1])
+        else:
+            dim = len(first_line) - 1
+            embeddings[first_line[0]] = np.array(first_line[1:], dtype=np.float32)
+
+        for line in f:
+            values = line.rstrip().split(' ')
+            word = values[0]
+            vec = np.asarray(values[1:], dtype=np.float32)
+            embeddings[word] = vec
+
+    return embeddings, dim
+
+def encode_text(text, ft_vectors, dim):
+    words = text.lower().split()
+    vectors = [ft_vectors[w] for w in words if w in ft_vectors]
+
+    if len(vectors) == 0:
+        return np.zeros(dim)
+
+    return np.mean(vectors, axis=0)
+
+
+def get_data_fasttext(data, ft_path, device):
+    ft_vectors, emb_dim = load_fasttext_vec(ft_path)
+
+    X = np.vstack([
+        encode_text(text, ft_vectors, emb_dim)
+        for text in data['text']
+    ])
+
+    return torch.tensor(X, dtype=torch.float32).to(device)
+
+
+

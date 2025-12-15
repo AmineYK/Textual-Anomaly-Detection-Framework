@@ -2,6 +2,7 @@ import argparse
 import logging
 import torch
 import torch.nn as nn
+from torch import Tensor
 import time
 import tensorflow as tf
 import torch.nn.functional as F
@@ -9,7 +10,7 @@ import torch.nn.functional as F
 from Data_Preparation import utils
 from Data_Preparation.Embedding import embedding_encoder
 from Modelisation.Baselines.OCSVM.ocsvm import OCSVM
-from utils import load_data_inlier, load_data_test, load_hyperparams
+from utils import load_data_inlier, load_data_test, load_hyperparams, get_data_fasttext
 from Modelisation.Baselines.RSRAE.model import RSRAE
 from Modelisation.Baselines.AE.autoencoder import AE
 from Modelisation.Baselines.TCCM.model import TCCM
@@ -43,12 +44,13 @@ def main(args):
 
     save_dir = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Data"
     file_path_hyp = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/hyperparams.txt"
+    ft_path = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Modelisation/Baselines/CVDD/embedding_models/wiki-news-300d-1M.vec"
 
 
     # for every inlier category 
     for i, inlier_topic in enumerate(inlier_topics):
 
-        print(f"------------------------ {inlier_topic}({i}/{len(inlier_topics)}) -----------------------------")
+        print(f"------------------------ {inlier_topic}({i+1}/{len(inlier_topics)}) -----------------------------")
 
         if args.fm:
             list_auc_fm = []
@@ -87,27 +89,48 @@ def main(args):
             list_time_cvdd = []
 
         # RSRAE --> X_train is infected with some anomalies
-        if args.rsrae:
-            X_inlier_anoma = load_data_inlier(args.dataset_name, inlier_topic, save_dir, True)
-        
-        if args.cvdd:
-            data_train = load_data_inlier(args.dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
-            
+        # if args.rsrae:
+        #     X_inlier_anoma = load_data_inlier(args.dataset_name, inlier_topic, save_dir, True)        
+        # if args.cvdd:
+        #     data_train = load_data_inlier(args.dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
         # load the X_inlier matrix
-        X_inlier = load_data_inlier(args.dataset_name, inlier_topic, save_dir)
+        # X_inlier = load_data_inlier(args.dataset_name, inlier_topic, save_dir)
 
+        data_train = load_data_inlier(args.dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
+
+        if args.type_emb == "fasttext":
+            X_inlier = get_data_fasttext(data_train, ft_path, device)
+        
+        elif args.type_emb == 'sentence_bert':
+            X_inlier = Tensor(data_train['sbert_embeddings']).to(device)
+
+        else: raise Exception("type_emb must be completed !")
+        
+        print(X_inlier.shape)
 
         # get the hyperparamter for the FM model for this specific inlier category
-        hyp = load_hyperparams(args.dataset_name, inlier_topic, file_path_hyp)
+        hyp = load_hyperparams(args.dataset_name, inlier_topic, args.type_emb, file_path_hyp)
         print(hyp)
 
-        for n_run in range(1,11):
+        for n_run in range(1,2):
 
             print(f"+++++++++++++++++++++ run : {n_run} +++++++++++++++++\n")
 
-            if args.cvdd:
-                data_test = load_data_test(args.dataset_name, inlier_topic, n_run, save_dir, is_cvdd=True)
-            X_test, y_test = load_data_test(args.dataset_name, inlier_topic, n_run, save_dir)
+            # if args.cvdd:
+            #     data_test = load_data_test(args.dataset_name, inlier_topic, n_run, save_dir, is_cvdd=True)
+            # X_test, y_test = load_data_test(args.dataset_name, inlier_topic, n_run, save_dir)
+
+            data_test = load_data_test(args.dataset_name, inlier_topic, n_run, save_dir, is_cvdd=True)
+            y_test = np.array(data_test['anomaly_class'])
+
+            if args.type_emb == "fasttext":
+                X_test = get_data_fasttext(data_test, ft_path, device)
+        
+            elif args.type_emb == 'sentence_bert':
+                X_test = Tensor(data_test['sbert_embeddings']).to(device)
+
+            else: raise Exception("type_emb must be completed !")
+            
 
             #########################################
             ################# OCSVM #################
@@ -148,7 +171,7 @@ def main(args):
                     "if_rsr": True, "enforce_proj": True, "all_alt": True,
                     "learning_rate": 1e-3, "lambda1": 0.1, "lambda2": 0.1,
                     "epoch_size": 20, "batch_show": 50, "normalize": True,
-                    "bn": False, "seed": 42, 'batch_size': X_inlier.shape[0] // 100
+                    "bn": False, "seed": 42, 'batch_size': X_inlier.shape[0] // 5
                 }
 
                 rsrae_model = RSRAE(rsrae_args)
@@ -179,7 +202,7 @@ def main(args):
                     "hidden_neuron_list": [64, 32, 16],
                     "hidden_activation_name": "relu",
                     "epoch_num": 10,
-                    "batch_size": X_inlier.shape[0] // 100,
+                    "batch_size": X_inlier.shape[0] // 5,
                     "dropout_rate": 0.0,
                     "verbose": 0
                 }
@@ -245,7 +268,7 @@ def main(args):
                     "n_attention_heads": 10,
                     "lr": 0.001,
                     "weight_decay": 0,
-                    "lr_milestones": (10, 25),
+                    "lr_milestones": (15, 25),
                     "n_epochs": 30,
                     "lambda_p": 1.0,
                     "alpha_scheduler": "logarithmic",
@@ -302,6 +325,7 @@ def main(args):
                 print(f"\nFM finishing... after {(tiic-taac)/60:.3f} mn")
 
                 auc_fm, fpr95_fm, ap_fm = fm_model.test(X_test, y_test)
+                print(f"FM --> AUC: {auc_fm:.4f} | FPR@95: {fpr95_fm:.4f} | AP: {ap_fm:.4f}\n")
         
                 list_auc_fm.append(auc_fm)
                 list_fpr_fm.append(fpr95_fm)    
@@ -312,10 +336,10 @@ def main(args):
         # print("AE --> ",inlier_topic ,np.mean(list_auc_ae))
         # print(inlier_topic ,np.mean(list_auc_fm))
         # print("RSRAE --> ", inlier_topic ,np.mean(list_auc_rsrae))
-        print("CVDD --> ", inlier_topic ,np.mean(list_auc_cvdd))
+        # print("CVDD --> ", inlier_topic ,np.mean(list_auc_cvdd))
         if args.fm:
             save_results(
-                dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb="sentence_bert" ,ad_model="flow-matching",
+                dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching",
                 auc_mean=np.mean(list_auc_fm), ap_mean=np.mean(list_ap_fm),fpr_mean=np.mean(list_fpr_fm),
                 auc_std = np.std(list_auc_fm),ap_std =  np.std(list_ap_fm),fpr_std = np.std(list_fpr_fm),
                 train_time = np.mean(list_time_fm),overwrite='smart'
@@ -324,7 +348,7 @@ def main(args):
         
         if args.ae : 
             save_results(
-            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb="sentence_bert" ,ad_model="AE",
+            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="AE",
             auc_mean=np.mean(list_auc_ae), ap_mean=np.mean(list_ap_ae),fpr_mean=np.mean(list_fpr_ae),
             auc_std = np.std(list_auc_ae),ap_std =  np.std(list_ap_ae),fpr_std = np.std(list_fpr_ae),
             train_time = np.mean(list_time_ae),overwrite='naive'
@@ -332,15 +356,15 @@ def main(args):
 
         if args.rsrae:  
             save_results(
-            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb="sentence_bert" ,ad_model="RSRAE",
+            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="RSRAE",
             auc_mean=np.mean(list_auc_rsrae), ap_mean=np.mean(list_ap_rsrae),fpr_mean=np.mean(list_fpr_rsrae),
             auc_std = np.std(list_auc_rsrae),ap_std =  np.std(list_ap_rsrae),fpr_std = np.std(list_fpr_rsrae),
-            train_time = np.mean(list_time_rsrae), overwrite='smart'
+            train_time = np.mean(list_time_rsrae), overwrite='naive'
             )
 
         if args.ocsvm:
             save_results(
-            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb="sentence_bert" ,ad_model="ocsvm",
+            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="ocsvm",
             auc_mean=np.mean(list_auc_ocsvm), ap_mean=np.mean(list_ap_ocsvm),fpr_mean=np.mean(list_fpr_ocsvm),
             auc_std = np.std(list_auc_ocsvm),ap_std =  np.std(list_ap_ocsvm),fpr_std = np.std(list_fpr_ocsvm),
             train_time = np.mean(list_time_ocsvm), overwrite='naive'
@@ -348,7 +372,7 @@ def main(args):
 
         if args.tccm:
             save_results(
-            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb="sentence_bert" ,ad_model="TCCM",
+            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="TCCM",
             auc_mean=np.mean(list_auc_tccm), ap_mean=np.mean(list_ap_tccm),fpr_mean=np.mean(list_fpr_tccm),
             auc_std = np.std(list_auc_tccm),ap_std =  np.std(list_ap_tccm),fpr_std = np.std(list_fpr_tccm),
             train_time = np.mean(list_time_tccm), overwrite='naive'
@@ -356,10 +380,10 @@ def main(args):
 
         if args.cvdd:
             save_results(
-            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=cvdd_args['type_emb'] ,ad_model="CVDD",
+            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="CVDD",
             auc_mean=np.mean(list_auc_cvdd), ap_mean=np.mean(list_ap_cvdd),fpr_mean=np.mean(list_fpr_cvdd),
             auc_std = np.std(list_auc_cvdd),ap_std =  np.std(list_ap_cvdd),fpr_std = np.std(list_fpr_cvdd),
-            train_time = np.mean(list_time_cvdd), overwrite='smart'
+            train_time = np.mean(list_time_cvdd), overwrite='naive'
             )
 
 
@@ -388,6 +412,12 @@ if __name__ == "__main__":
         type=str,
         default="computer"
         )
+
+    parser.add_argument(
+        "--type_emb",
+        type=str,
+        default="sentencebert"
+    )
 
     parser.add_argument(
     "--fm",

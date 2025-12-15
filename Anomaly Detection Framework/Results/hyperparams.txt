@@ -2,6 +2,7 @@
 Run date : 2025-12-02 18:26:25
 dataset_name : 20newsgroups
 inlier_topic : computer
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 64
@@ -20,6 +21,7 @@ target : torch.Size([2576, 384])
 Run date : 2025-12-02 18:27:58
 dataset_name : 20newsgroups
 inlier_topic : recreation
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 32
@@ -38,6 +40,7 @@ target : torch.Size([2074, 384])
 Run date : 2025-12-02 18:30:50
 dataset_name : 20newsgroups
 inlier_topic : science
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 64
@@ -56,6 +59,7 @@ target : torch.Size([2080, 384])
 Run date : 2025-12-02 18:31:24
 dataset_name : 20newsgroups
 inlier_topic : miscellaneous
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 32
@@ -74,6 +78,7 @@ target : torch.Size([520, 384])
 Run date : 2025-12-02 18:32:51
 dataset_name : 20newsgroups
 inlier_topic : politics
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 32
@@ -92,6 +97,7 @@ target : torch.Size([1378, 384])
 Run date : 2025-12-02 18:33:31
 dataset_name : 20newsgroups
 inlier_topic : religion
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 32
@@ -110,6 +116,7 @@ target : torch.Size([1278, 384])
 Run date : 2025-12-03 11:35:48
 dataset_name : reuters
 inlier_topic : earn
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 64
@@ -128,6 +135,7 @@ target : torch.Size([2556, 384])
 Run date : 2025-12-03 11:49:46
 dataset_name : reuters
 inlier_topic : trade
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 64
@@ -146,6 +154,7 @@ target : torch.Size([226, 384])
 Run date : 2025-12-03 12:36:47
 dataset_name : reuters
 inlier_topic : acq
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 64
@@ -165,6 +174,7 @@ target : torch.Size([1437, 384])
 Run date : 2025-12-03 14:47:56
 dataset_name : reuters
 inlier_topic : interest
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 64
@@ -183,6 +193,7 @@ target : torch.Size([171, 384])
 Run date : 2025-12-03 15:03:12
 dataset_name : reuters
 inlier_topic : money-fx
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 64
@@ -201,6 +212,7 @@ target : torch.Size([186, 384])
 Run date : 2025-12-03 15:08:34
 dataset_name : reuters
 inlier_topic : crude
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 128
@@ -219,6 +231,7 @@ target : torch.Size([228, 384])
 Run date : 2025-12-03 15:12:53
 dataset_name : reuters
 inlier_topic : ship
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 128
@@ -237,6 +250,7 @@ target : torch.Size([98, 384])
 Run date : 2025-12-03 15:58:39
 dataset_name : agnews
 inlier_topic : World
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 128
@@ -255,6 +269,7 @@ target : torch.Size([27000, 384])
 Run date : 2025-12-03 16:30:45
 dataset_name : agnews
 inlier_topic : Sports
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 128
@@ -273,6 +288,7 @@ target : torch.Size([27000, 384])
 Run date : 2025-12-03 17:04:16
 dataset_name : agnews
 inlier_topic : Business
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 256
@@ -291,6 +307,7 @@ target : torch.Size([27000, 384])
 Run date : 2025-12-03 17:46:59
 dataset_name : agnews
 inlier_topic : Sci/Tech
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 256
@@ -309,6 +326,7 @@ target : torch.Size([27000, 384])
 Run date : 2025-12-03 17:46:59
 dataset_name : agnews
 inlier_topic : Sci-Tech
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 256
@@ -327,6 +345,7 @@ target : torch.Size([27000, 384])
 Run date : 2025-12-04 16:56:35
 dataset_name : dbpedia14
 inlier_topic : Company
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 1024
@@ -345,6 +364,7 @@ target : torch.Size([36000, 384])
 Run date : 2025-12-04 17:10:04
 dataset_name : dbpedia14
 inlier_topic : Educational Institution
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 1024
@@ -363,6 +383,7 @@ target : torch.Size([36000, 384])
 Run date : 2025-12-05 13:05:41
 dataset_name : dbpedia14
 inlier_topic : Artist
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 2048
@@ -381,6 +402,7 @@ target : torch.Size([36000, 384])
 Run date : 2025-12-05 15:52:54
 dataset_name : dbpedia14
 inlier_topic : Athlete
+type_emb : sentence_bert
 
 Hyperparameters :
 batch_size : 2048
@@ -393,5 +415,24 @@ weight_decay : 0.001
 n_epochs : 30
 source : sphere
 target : torch.Size([36000, 384])
+========================================
+
+========================================
+Run date : 2025-12-03 11:35:48
+dataset_name : reuters
+inlier_topic : earn
+type_emb : fasttext
+
+Hyperparameters :
+batch_size : 64
+latent_dim : 256
+sinu : False
+batchnorm : False
+dropout : 0.1
+lr : 1e-03
+weight_decay : 1e-07
+n_epochs : 30
+source : sphere
+target : torch.Size([2556, 300])
 ========================================
 
