@@ -6,14 +6,12 @@ from .self_attention import SelfAttention
 from .embedding_layer import BERTEmbeddingEncoder
 from Modelisation.Baselines.CVDD.utils import initialize_context_vectors
 import numpy as np
-from Modelisation.Baselines.baseline import BaselineModel
 import torch.optim as optim
 import time
 import logging
 from sklearn.metrics import roc_auc_score, average_precision_score
 from Modelisation.evaluation import fpr95_score
-from Modelisation.Baselines.CVDD.utils import build_vocab, cvdd_model_pipeline
-from transformers import AutoTokenizer
+
 
 class CVDDNet(nn.Module):
 
@@ -89,9 +87,9 @@ class CVDDTrainer:
 
     def train(self, model, dl_train):
 
-        # logger = logging.getLogger()
-        # logger.info('Starting training...')
-        # print("Starting training...")
+        logger = logging.getLogger()
+        logger.info('Starting training...')
+        print("Starting training...")
         start_time = time.time()
 
         model.c.data = torch.from_numpy(
@@ -124,12 +122,12 @@ class CVDDTrainer:
             
             self.scheduler.step()
 
-            # if epoch in self.lr_milestones:
-                # logger.info(f"LR scheduler: new learning rate is %g" % float(self.scheduler.get_last_lr()[0]))
+            if epoch in self.lr_milestones:
+                logger.info(f"LR scheduler: new learning rate is %g" % float(self.scheduler.get_last_lr()[0]))
 
             if epoch in alpha_milestones:
                 model.alpha = float(alphas[alpha_i])
-                # logger.info('  Temperature alpha scheduler: new alpha is %g' % model.alpha)
+                logger.info('  Temperature alpha scheduler: new alpha is %g' % model.alpha)
                 alpha_i += 1
 
             epoch_loss = 0.0
@@ -158,7 +156,7 @@ class CVDDTrainer:
                 dists_per_head += (cosine_dists.cpu().data.numpy(),)
 
                 loss.backward()
-                # torch.nn.utils.clip_grad_norm_(model.parameters(), 0.5)  # clip gradient norms in [-0.5, 0.5]
+                torch.nn.utils.clip_grad_norm_(model.parameters(), 0.5)  # clip gradient norms in [-0.5, 0.5]
                 self.optimizer.step()
 
                 AAT = A @ A.transpose(1, 2)
@@ -169,10 +167,9 @@ class CVDDTrainer:
 
 
             epoch_train_time = time.time() - epoch_start_time
-            # if epoch % (self.n_epochs//2) == 0:
-            #     logger.info(f'| Epoch: {epoch + 1:03}/{self.n_epochs:03} | Train Time: {epoch_train_time:.3f}s '
-            # f'| Train Loss: {epoch_loss / n_batches:.6f} |')
-            if epoch % (self.n_epochs//2) == 0:
+            logger.info(f'| Epoch: {epoch + 1:03}/{self.n_epochs:03} | Train Time: {epoch_train_time:.3f}s '
+            f'| Train Loss: {epoch_loss / n_batches:.6f} |')
+            if epoch % (self.n_epochs//5) == 0:
                 print(f'| Epoch: {epoch + 1:03}/{self.n_epochs:03} | Train Time: {epoch_train_time:.3f}s '
                 f'| Train Loss: {epoch_loss / n_batches:.6f} |')
 
@@ -186,10 +183,10 @@ class CVDDTrainer:
         c = c.tolist()
 
         self.train_time = time.time() - start_time
-        # logger.info('Training Time: {:.3f}s'.format(self.train_time))
-        # logger.info('Finished training. \n')
-        # print('Training Time: {:.3f}s'.format(self.train_time))
-        # print('Finished training. \n')
+        logger.info('Training Time: {:.3f}s'.format(self.train_time))
+        logger.info('Finished training. \n')
+        print('Training Time: {:.3f}s'.format(self.train_time))
+        print('Finished training. \n')
         
         return model
 
@@ -198,7 +195,7 @@ class CVDDTrainer:
     def test(self, model, dl_test, ad_score='context_dist_mean'):
 
         logger = logging.getLogger()
-        # logger.info('\nStarting testing...')
+        logger.info('\nStarting testing...')
     
 
         n_attention_heads = model.n_attention_heads
@@ -215,7 +212,7 @@ class CVDDTrainer:
             for inputs, labels, texts, idx in dl_test:
                 # print(inputs.shape)
                 # inputs = inputs.to(self.device)
-                inputs = inputs['input_ids'].transpose(0, 1).to(self.device)
+                inputs = inputs.transpose(0, 1).to(self.device)
                 
                 cosine_dists, context_weights, A = model(inputs)
                 scores = context_weights * cosine_dists
@@ -239,11 +236,9 @@ class CVDDTrainer:
                     best_att_head.cpu().data.numpy().tolist()
                 ))
 
+                # att_weights += A[best_att_head][:][range(len(idx))].cpu().data.numpy().tolist()
+                att_weights += A[range(len(idx)), best_att_head].cpu().data.numpy().tolist()
                 # att_weights += A[range(len(idx)), best_att_head].cpu().data.numpy().tolist()
-                
-                batch_idx = torch.arange(A.size(0), device=A.device)
-                att_weights += A[batch_idx, best_att_head].cpu().data.numpy().tolist()
-
 
                 AAT = A @ A.transpose(1, 2)
                 att_matrix += torch.mean(AAT, 0).cpu().data.numpy()
@@ -262,7 +257,6 @@ class CVDDTrainer:
         _, labels, scores, _ = zip(*idx_label_score_head)
         labels = np.array(labels)
         scores = np.array(scores)
-        
 
         # Compute metrics
         if np.sum(labels) > 0:
@@ -282,78 +276,26 @@ class CVDDTrainer:
                         best_context = context
                         test_ap = average_precision_score(labels, test_dists[:, context])
                         test_fpr95 = fpr95_score(labels, test_dists[:, context])
-                    # else:
-                    #     print(auc_candidate, test_auc)
         else:
             best_context = None
             test_auc = test_ap = test_fpr95 = 0.0
 
         # Log results
-        # logger.info('Test Loss: {:.6f}'.format(epoch_loss / n_batches))
-        # logger.info('Test AUC: {:.4f}'.format(test_auc))
-        # logger.info('Test AP: {:.4f}'.format(test_ap))
-        # logger.info('Test FPR95: {:.4f}'.format(test_fpr95))
-        # logger.info(f'Test Best Context: {best_context}')
-        # logger.info('Finished testing.')
+        logger.info('Test Loss: {:.6f}'.format(epoch_loss / n_batches))
+        logger.info('Test AUC: {:.4f}'.format(test_auc))
+        logger.info('Test AP: {:.4f}'.format(test_ap))
+        logger.info('Test FPR95: {:.4f}'.format(test_fpr95))
+        logger.info(f'Test Best Context: {best_context}')
+        logger.info('Finished testing.')
 
         return test_auc, test_ap, test_fpr95, best_context
 
 
 
 
-class CVDDModel(BaselineModel):
-    def __init__(self, args):
-
-        self.type_emb = args['type_emb']
-        self.emb_model = args['emb_model']
-        self.attention_size = args['attention_size']
-        self.n_attention_heads = args['n_attention_heads']
-        self.lr = args['lr']
-        self.weight_decay = args['weight_decay']
-        self.lr_milestones = args['lr_milestones']
-        self.n_epochs = args['n_epochs']
-        self.lambda_p = args['lambda_p']
-        self.alpha_scheduler = args['alpha_scheduler']
-        self.seq_len = args['seq_len']  
-        self.batch_size = args['batch_size']
-        self.min_freq = args['min_freq']
-        self.device = args['device']
-
-        self.shuffle = True
-        self.vocab = None
-        self.tokenizer = None
 
 
 
-    def train(self, train_inlier_reuters, test_reuters):
-
-        if self.type_emb == 'bert':
-            self.tokenizer = AutoTokenizer.from_pretrained(self.emb_model)
-            self.vocab = None
-
-        elif self.type_emb in ('glove', 'fasttext'):
-            corpus = train_inlier_reuters['text']
-            self.vocab = build_vocab(corpus, min_freq=self.min_freq)
-            self.tokenizer = None
 
 
-        cvdd_model, dl_train, _ = cvdd_model_pipeline(train_inlier_reuters, test_reuters, self.attention_size, self.n_attention_heads, 
-                                            self.type_emb, self.seq_len, self.batch_size, self.shuffle, self.device, self.tokenizer, self.vocab)
 
-        cvdd_trainer = CVDDTrainer(optimizer_name='adam', learning_rate=self.lr, lr_milestones=self.lr_milestones,
-                                        n_epochs=self.n_epochs, lambda_p=self.lambda_p,
-                                        alpha_scheduler=self.alpha_scheduler, weight_decay=self.weight_decay, device=self.device)
-        
-        model_trained = cvdd_trainer.train(cvdd_model, dl_train)
-
-        return model_trained, cvdd_trainer
-    
-    def test(self, model_trained, cvdd_trainer, train_inlier_reuters, test_reuters):
-
-        _, _, dl_test = cvdd_model_pipeline(train_inlier_reuters, test_reuters, self.attention_size, self.n_attention_heads, 
-                                    self.type_emb, self.seq_len, self.batch_size, self.shuffle, self.device, self.tokenizer, self.vocab)
-
-
-        auc, ap, fpr95, _ = cvdd_trainer.test(model_trained, dl_test, ad_score='context_best')
-
-        return auc, fpr95, ap

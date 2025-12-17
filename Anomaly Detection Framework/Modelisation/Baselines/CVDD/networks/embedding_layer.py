@@ -31,10 +31,18 @@ class BERTEmbeddingEncoder(BaseEmbeddingEncoder):
 
     def forward(self, texts):
 
+        device = self.model.device
+
+        # print(texts.shape)
+        # print()
         # the case when texts is already tokenized
-        if type(texts) == torch.Tensor:
+        if type(texts) == dict:
             encoded = texts
-            outputs = self.model(encoded)
+            # outputs = self.model(encoded)
+            outputs = self.model(
+               input_ids=encoded["input_ids"].to(device),
+            attention_mask=encoded["attention_mask"].to(device)
+            )
             hidden_states = outputs.last_hidden_state  # (batch_size, seq_len, hidden_size)
             return hidden_states.permute(1, 0, 2)  # (seq_len, batch_size, hidden_size)
         

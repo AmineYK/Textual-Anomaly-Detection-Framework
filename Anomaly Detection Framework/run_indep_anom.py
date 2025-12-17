@@ -14,7 +14,8 @@ from utils import load_data_inlier, load_data_test, load_hyperparams, get_data_f
 from Modelisation.Baselines.RSRAE.model import RSRAE
 from Modelisation.Baselines.AE.autoencoder import AE
 from Modelisation.Baselines.TCCM.model import TCCM
-from Modelisation.Baselines.CVDD.networks.cvdd_Net import CVDDModel
+# from Modelisation.Baselines.CVDD.networks.cvdd_Net import CVDDModel
+from Modelisation.Baselines.CVDD.model_sbert import CVDDModel
 from Modelisation.FlowMatching.flow_matching import BasicFlowMatching
 from utils import save_results, create_tables
 import numpy as np
@@ -259,33 +260,54 @@ def main(args):
             ################# CVDD #################
             ########################################  
 
+            # if args.cvdd:
+            #     cvdd_args = {
+            #         "type_emb": "fasttext",
+            #         # "emb_model": "distilbert-base-uncased",
+            #         "emb_model": "distilroberta-base",
+            #         "attention_size": 150,
+            #         "n_attention_heads": 10,
+            #         "lr": 0.001,
+            #         "weight_decay": 0,
+            #         "lr_milestones": (15, 25),
+            #         "n_epochs": 30,
+            #         "lambda_p": 1.0,
+            #         "alpha_scheduler": "logarithmic",
+            #         "seq_len": 100,
+            #         "batch_size": 64,
+            #         "min_freq": 1,
+            #         "device": device
+            #     }
+
+            #     cvdd_model = CVDDModel(cvdd_args)
+
+            #     taac = time.time()
+            #     cvdd_model_trained, cvdd_trainer = cvdd_model.train(data_train, data_test)
+            #     tiic = time.time()
+            #     print(f"\CVDD finishing... after {(tiic-taac)/60:.3f} mn")
+                
+            #     auc_cvdd, fpr95_cvdd, ap_cvdd = cvdd_model.test(cvdd_model_trained, cvdd_trainer, data_train, data_test)
+            #     print(f"CVDD --> AUC: {auc_cvdd:.4f} | FPR@95: {fpr95_cvdd:.4f} | AP: {ap_cvdd:.4f}\n")
+
+
             if args.cvdd:
                 cvdd_args = {
-                    "type_emb": "fasttext",
-                    # "emb_model": "distilbert-base-uncased",
-                    "emb_model": "distilroberta-base",
-                    "attention_size": 150,
-                    "n_attention_heads": 10,
-                    "lr": 0.001,
-                    "weight_decay": 0,
-                    "lr_milestones": (15, 25),
-                    "n_epochs": 30,
-                    "lambda_p": 1.0,
-                    "alpha_scheduler": "logarithmic",
-                    "seq_len": 100,
-                    "batch_size": 64,
-                    "min_freq": 1,
-                    "device": device
+                "n_attention_heads": 8,
+                "lr": 1e-2,
+                "n_epochs": 50,
+                "lambda_p": 0.1,
+                "batch_size": 64,
+                "device": device
                 }
 
                 cvdd_model = CVDDModel(cvdd_args)
 
                 taac = time.time()
-                cvdd_model_trained, cvdd_trainer = cvdd_model.train(data_train, data_test)
+                cvdd_model_trained = cvdd_model.train(data_train)
                 tiic = time.time()
                 print(f"\CVDD finishing... after {(tiic-taac)/60:.3f} mn")
                 
-                auc_cvdd, fpr95_cvdd, ap_cvdd = cvdd_model.test(cvdd_model_trained, cvdd_trainer, data_train, data_test)
+                auc_cvdd, fpr95_cvdd, ap_cvdd = cvdd_model.test(data_test)
                 print(f"CVDD --> AUC: {auc_cvdd:.4f} | FPR@95: {fpr95_cvdd:.4f} | AP: {ap_cvdd:.4f}\n")
                 
                 list_auc_cvdd.append(auc_cvdd)
@@ -336,7 +358,7 @@ def main(args):
         # print("AE --> ",inlier_topic ,np.mean(list_auc_ae))
         # print(inlier_topic ,np.mean(list_auc_fm))
         # print("RSRAE --> ", inlier_topic ,np.mean(list_auc_rsrae))
-        # print("CVDD --> ", inlier_topic ,np.mean(list_auc_cvdd))
+        print("CVDD --> ", inlier_topic ,np.mean(list_auc_cvdd))
         if args.fm:
             save_results(
                 dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching",

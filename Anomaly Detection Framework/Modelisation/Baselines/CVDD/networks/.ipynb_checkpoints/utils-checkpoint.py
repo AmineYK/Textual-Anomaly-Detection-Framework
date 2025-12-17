@@ -16,23 +16,29 @@ def build_vocab(corpus, min_freq=2):
     return vocab
 
 
-def initialize_context_vectors(net, train_loader, device):
+def initialize_context_vectors(net, train_loader):
+    """
+    Initialize the context vectors from an initial run of k-means++ on simple average sentence embeddings
 
-    print("KMean starts")
+    Returns
+    -------
+    centers : ndarray, [n_clusters, n_features]
+    """
 
+    # Get vector representations
     X = ()
     for data in train_loader:
         inputs, _, _, _ = data
+        # text.shape = (sentence_length, batch_size)
 
         X_batch = net.pretrained_model(inputs)
-        # X_batch = net.pretrained_model(
-        # input_ids=inputs["input_ids"].to(device),
-        # attention_mask=inputs["attention_mask"].to(device)
-        # )
+        # X_batch.shape = (sentence_length, batch_size, embedding_size)
 
+        # compute mean and normalize
         X_batch = torch.mean(X_batch, dim=0)
         X_batch = X_batch / torch.norm(X_batch, p=2, dim=1, keepdim=True).clamp(min=1e-08)
         X_batch[torch.isnan(X_batch)] = 0
+        # X_batch.shape = (batch_size, embedding_size)
 
         X += (X_batch.cpu().data.numpy(),)
 
@@ -42,11 +48,11 @@ def initialize_context_vectors(net, train_loader, device):
     kmeans = KMeans(n_clusters=n_attention_heads).fit(X)
     centers = kmeans.cluster_centers_ / np.linalg.norm(kmeans.cluster_centers_, ord=2, axis=1, keepdims=True)
 
-    print("KMeans finish")
+
     return centers
 
 
-def cvdd_model_pipeline(data_train, data_test, emb_model, attention_size, n_attention_heads, embedding_type, seq_len, batch_size, shuffle, device, tokenizer=None, vocab=None):
+def cvdd_model_pipeline(data_train, data_test, attention_size, n_attention_heads, embedding_type, seq_len, batch_size, shuffle, tokenizer=None, vocab=None):
 
     from Data_Preparation.Dataset.ADdatasets import CVDDDatasetWrapper
     from Modelisation.Baselines.CVDD.networks import embedding_layer, cvdd_Net
@@ -58,7 +64,7 @@ def cvdd_model_pipeline(data_train, data_test, emb_model, attention_size, n_atte
         if tokenizer is not None:
             cvdd_dataset_train = CVDDDatasetWrapper(data_train, embedding_type='bert', tokenizer=tokenizer, seq_len=seq_len)
             cvdd_dataset_test = CVDDDatasetWrapper(data_test, embedding_type='bert', tokenizer=tokenizer, seq_len=seq_len)
-            pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name=emb_model, trainable=False)
+            pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name='distilbert-base-uncased', trainable=True)
         else:
             raise Exception(f"when 'embedding_type' = '{embedding_type}', the parameters 'bert_name' and 'tokenizer' is required")
 
@@ -70,7 +76,7 @@ def cvdd_model_pipeline(data_train, data_test, emb_model, attention_size, n_atte
             cvdd_dataset_train = CVDDDatasetWrapper(data_train, embedding_type='glove', vocab=vocab, seq_len=seq_len)
             cvdd_dataset_test = CVDDDatasetWrapper(data_test, embedding_type='glove', vocab=vocab, seq_len=seq_len)
             pretrained_model = embedding_layer.EmbeddingFactory.create('glove',
-                                    glove_path='/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Modelisation/Baselines/CVDD/embedding_models/glove.6B.300d.txt',
+                                    glove_path='./Modelisation/Baselines/CVDD/embedding_models/glove.6B.300d.txt',
                                     vocab=vocab,
                                     embedding_dim=300,
                                     trainable=True)
@@ -85,7 +91,7 @@ def cvdd_model_pipeline(data_train, data_test, emb_model, attention_size, n_atte
             cvdd_dataset_train = CVDDDatasetWrapper(data_train, embedding_type='fasttext', vocab=vocab, seq_len=seq_len)   
             cvdd_dataset_test = CVDDDatasetWrapper(data_test, embedding_type='fasttext', vocab=vocab, seq_len=seq_len)   
             pretrained_model = embedding_layer.EmbeddingFactory.create('fasttext',
-                                    fasttext_path='/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Modelisation/Baselines/CVDD/embedding_models/wiki-news-300d-1M.vec',
+                                    fasttext_path='./Modelisation/Baselines/CVDD/embedding_models/wiki-news-300d-1M.vec',
                                     vocab=vocab,
                                     embedding_dim=300,
                                     trainable=True)
@@ -98,6 +104,6 @@ def cvdd_model_pipeline(data_train, data_test, emb_model, attention_size, n_atte
     dl_train = DataLoader(cvdd_dataset_train, batch_size=batch_size, shuffle=shuffle)
     dl_test = DataLoader(cvdd_dataset_test, batch_size=batch_size, shuffle=False)
     
-    model = cvdd_Net.CVDDNet(pretrained_model, attention_size, n_attention_heads, device)
+    model = cvdd_Net.CVDDNet(pretrained_model, attention_size, n_attention_heads)
 
     return model, dl_train, dl_test
