@@ -140,7 +140,10 @@ class CVDDTrainer:
 
             for inputs, labels, texts, idx in dl_train:
 
-                inputs = inputs.transpose(0, 1).to(self.device)
+                inputs['input_ids'] = inputs['input_ids'].transpose(0, 1).to(self.device)
+                inputs['attention_mask'] = inputs['attention_mask'].transpose(0, 1).to(self.device)
+                print(inputs['input_ids'].shape)
+                # inputs = inputs.transpose(0, 1).to(self.device)
                 
                 self.optimizer.zero_grad() 
 
@@ -213,9 +216,10 @@ class CVDDTrainer:
 
         with torch.no_grad():
             for inputs, labels, texts, idx in dl_test:
-                # print(inputs.shape)
-                # inputs = inputs.to(self.device)
-                inputs = inputs['input_ids'].transpose(0, 1).to(self.device)
+
+                # inputs = inputs['input_ids'].transpose(0, 1).to(self.device)
+                inputs['input_ids'] = inputs['input_ids'].transpose(0, 1).to(self.device)
+                inputs['attention_mask'] = inputs['attention_mask'].transpose(0, 1).to(self.device)
                 
                 cosine_dists, context_weights, A = model(inputs)
                 scores = context_weights * cosine_dists
@@ -357,3 +361,312 @@ class CVDDModel(BaselineModel):
         auc, ap, fpr95, _ = cvdd_trainer.test(model_trained, dl_test, ad_score='context_best')
 
         return auc, fpr95, ap
+
+# class CVDDNet(nn.Module):
+
+#     def __init__(self, pretrained_model, attention_size=100, n_attention_heads=1, device='cuda'):
+#         super().__init__()
+
+#         self.pretrained_model = pretrained_model.to(device)
+#         self.hidden_size = pretrained_model.embedding_size
+
+#         self.attention_size = attention_size
+#         self.n_attention_heads = n_attention_heads
+#         self.self_attention = SelfAttention(
+#             hidden_size=self.hidden_size,
+#             attention_size=attention_size,
+#             n_attention_heads=n_attention_heads
+#         )
+
+#         self.c = nn.Parameter(
+#             (torch.rand(1, n_attention_heads, self.hidden_size) - 0.5) * 2
+#         )
+
+#         self.cosine_sim = nn.CosineSimilarity(dim=2)
+#         self.alpha = 0.0
+
+#     # 🔹 GEL CVDD (attention + c)
+#     def freeze_cvdd(self):
+#         for p in self.self_attention.parameters():
+#             p.requires_grad = False
+#         self.c.requires_grad = False
+
+#     # 🔹 DÉGEL CVDD
+#     def unfreeze_cvdd(self):
+#         for p in self.self_attention.parameters():
+#             p.requires_grad = True
+#         self.c.requires_grad = True
+
+#     # 🔹 GEL BERT
+#     def freeze_bert(self):
+#         for p in self.pretrained_model.parameters():
+#             p.requires_grad = False
+
+#     # 🔹 DÉGEL BERT
+#     def unfreeze_bert(self):
+#         for p in self.pretrained_model.parameters():
+#             p.requires_grad = True
+
+#     def forward(self, x):
+
+#         hidden = self.pretrained_model(x)
+
+#         if isinstance(self.pretrained_model, BERTEmbeddingEncoder):
+#             hidden = hidden.permute(1, 0, 2)
+
+#         M, A = self.self_attention(hidden)
+#         cosine_dists = 0.5 * (1 - self.cosine_sim(M, self.c))
+#         context_weights = F.softmax(-self.alpha * cosine_dists, dim=1)
+
+#         return cosine_dists, context_weights, A
+
+
+# class CVDDTrainer:
+
+#     def __init__(self, optimizer_name='adam', learning_rate=1e-2, lr_milestones=(40,60), n_epochs=100, 
+#                  lambda_p=0.0, alpha_scheduler='logaritmic', weight_decay=1e-6, device='cuda'):
+        
+#         self.optimizer_name = optimizer_name
+#         self.weight_decay = weight_decay
+#         self.learning_rate = learning_rate
+#         self.optimizer = None
+#         self.scheduler = None
+        
+#         self.lr_milestones = lr_milestones
+#         self.n_epochs = n_epochs
+#         self.lambda_p = lambda_p
+#         self.alpha_scheduler = alpha_scheduler
+        
+#         self.train_dists = None
+#         self.train_att_matrix = None
+#         self.train_top_words = None
+#         self.c = None
+#         self.training_time = None
+
+#         self.test_dists = None
+#         self.test_att_matrix = None
+#         self.test_top_words = None
+#         self.test_auc = 0.0
+#         self.test_scores = None
+#         self.test_att_weights = None
+        
+#         self.device = torch.device(device)
+
+   
+
+#     def train(self, model, dl_train, warmup_epochs_bert=5):
+
+#         start_time = time.time()
+
+#         # Initialisation des context vectors
+#         model.c.data = torch.from_numpy(
+#             initialize_context_vectors(model, dl_train, self.device)[np.newaxis, :]
+#         )
+
+#         model = model.to(self.device)
+#         model.train()
+
+#         # ============================
+#         # PHASE 1 — Warm-up BERT seul
+#         # ============================
+#         print("Warm-up BERT only")
+
+#         model.unfreeze_bert()
+#         model.freeze_cvdd()
+
+#         bert_params = filter(lambda p: p.requires_grad, model.parameters())
+#         self.optimizer = optim.Adam(
+#             bert_params,
+#             lr=self.learning_rate,
+#             weight_decay=self.weight_decay
+#         )
+
+#         for epoch in range(warmup_epochs_bert):
+#             epoch_loss = 0.0
+
+#             for inputs, labels, texts, idx in dl_train:
+#                 inputs['input_ids'] = inputs['input_ids'].transpose(0, 1).to(self.device)
+#                 inputs['attention_mask'] = inputs['attention_mask'].transpose(0, 1).to(self.device)
+
+#                 self.optimizer.zero_grad()
+
+#                 cosine_dists, context_weights, _ = model(inputs)
+#                 scores = context_weights * cosine_dists
+#                 loss = torch.mean(torch.sum(scores, dim=1))
+
+#                 loss.backward()
+#                 self.optimizer.step()
+
+#                 epoch_loss += loss.item()
+
+#             print(f"[Warm-up BERT] Epoch {epoch+1}/{warmup_epochs_bert} | Loss: {epoch_loss:.4f}")
+
+#         # ============================
+#         # PHASE 2 — Entraînement conjoint
+#         # ============================
+#         print("Joint training")
+
+#         model.unfreeze_cvdd()
+
+#         parameters = filter(lambda p: p.requires_grad, model.parameters())
+#         self.optimizer = optim.Adam(
+#             parameters,
+#             lr=self.learning_rate,
+#             weight_decay=self.weight_decay
+#         )
+
+#         self.scheduler = optim.lr_scheduler.MultiStepLR(
+#             self.optimizer,
+#             milestones=self.lr_milestones,
+#             gamma=0.1
+#         )
+
+#         alpha_milestones = np.arange(1, 6) * int(self.n_epochs / 5)
+#         alphas = np.logspace(-4, 0, 5)
+#         alpha_i = 0
+
+#         for epoch in range(self.n_epochs):
+
+#             self.scheduler.step()
+
+#             if epoch in alpha_milestones:
+#                 model.alpha = float(alphas[alpha_i])
+#                 alpha_i += 1
+
+#             epoch_loss = 0.0
+#             n_batches = 0
+
+#             for inputs, labels, texts, idx in dl_train:
+#                 inputs['input_ids'] = inputs['input_ids'].transpose(0, 1).to(self.device)
+#                 inputs['attention_mask'] = inputs['attention_mask'].transpose(0, 1).to(self.device)
+
+#                 self.optimizer.zero_grad()
+
+#                 cosine_dists, context_weights, A = model(inputs)
+#                 scores = context_weights * cosine_dists
+
+#                 I = torch.eye(model.n_attention_heads).to(self.device)
+#                 CCT = model.c @ model.c.transpose(1, 2)
+#                 P = torch.mean((CCT.squeeze() - I) ** 2)
+
+#                 loss_emp = torch.mean(torch.sum(scores, dim=1))
+#                 loss = loss_emp + self.lambda_p * P
+
+#                 loss.backward()
+#                 self.optimizer.step()
+
+#                 epoch_loss += loss.item()
+#                 n_batches += 1
+
+#             if epoch % (self.n_epochs // 2) == 0:
+#                 print(
+#                     f"| Epoch {epoch+1}/{self.n_epochs} | "
+#                     f"Loss: {epoch_loss / n_batches:.6f} | alpha={model.alpha:.4f}"
+#                 )
+
+#         self.train_time = time.time() - start_time
+#         return model
+    
+#     def test(self, model, dl_test, ad_score='context_dist_mean'):
+
+#         logger = logging.getLogger()
+#         # logger.info('\nStarting testing...')
+    
+
+#         n_attention_heads = model.n_attention_heads
+#         epoch_loss = 0.0
+#         n_batches = 0
+#         att_matrix = np.zeros((n_attention_heads, n_attention_heads))
+#         dists_per_head = ()
+#         idx_label_score_head = []
+#         att_weights = []
+#         start_time = time.time()
+#         model.eval()
+
+#         with torch.no_grad():
+#             for inputs, labels, texts, idx in dl_test:
+
+#                 # inputs = inputs['input_ids'].transpose(0, 1).to(self.device)
+#                 inputs['input_ids'] = inputs['input_ids'].transpose(0, 1).to(self.device)
+#                 inputs['attention_mask'] = inputs['attention_mask'].transpose(0, 1).to(self.device)
+                
+#                 cosine_dists, context_weights, A = model(inputs)
+#                 scores = context_weights * cosine_dists
+#                 _, best_att_head = torch.min(scores, dim=1)
+
+#                 I = torch.eye(n_attention_heads).to(self.device)
+#                 CCT = model.c @ model.c.transpose(1, 2)
+#                 P = torch.mean((CCT.squeeze() - I) ** 2)
+
+#                 loss_P = self.lambda_p * P
+#                 loss_emp = torch.mean(torch.sum(scores, dim=1))
+#                 loss = loss_emp + loss_P
+
+#                 dists_per_head += (cosine_dists.cpu().data.numpy(),)
+#                 ad_scores = torch.mean(cosine_dists, dim=1)
+
+#                 idx_label_score_head += list(zip(
+#                     idx,
+#                     labels.cpu().data.numpy().tolist(),
+#                     ad_scores.cpu().data.numpy().tolist(),
+#                     best_att_head.cpu().data.numpy().tolist()
+#                 ))
+
+#                 # att_weights += A[range(len(idx)), best_att_head].cpu().data.numpy().tolist()
+                
+#                 batch_idx = torch.arange(A.size(0), device=A.device)
+#                 att_weights += A[batch_idx, best_att_head].cpu().data.numpy().tolist()
+
+
+#                 AAT = A @ A.transpose(1, 2)
+#                 att_matrix += torch.mean(AAT, 0).cpu().data.numpy()
+
+#                 epoch_loss += loss.item()
+#                 n_batches += 1
+
+#         test_dists = np.concatenate(dists_per_head)
+#         test_att_matrix = att_matrix / n_batches
+#         test_att_matrix = test_att_matrix.tolist()
+
+#         self.test_scores = idx_label_score_head
+#         self.test_att_weights = att_weights
+
+#         # Extract labels and scores
+#         _, labels, scores, _ = zip(*idx_label_score_head)
+#         labels = np.array(labels)
+#         scores = np.array(scores)
+        
+
+#         # Compute metrics
+#         if np.sum(labels) > 0:
+#             best_context = None
+#             if ad_score == 'context_dist_mean':
+#                 test_auc = roc_auc_score(labels, scores)
+#                 test_ap = average_precision_score(labels, scores)
+#                 test_fpr95 = fpr95_score(labels, scores)
+#             elif ad_score == 'context_best':
+#                 test_auc = 0.0
+#                 test_ap = 0.0
+#                 test_fpr95 = 0.0
+#                 for context in range(n_attention_heads):
+#                     auc_candidate = roc_auc_score(labels, test_dists[:, context])
+#                     if auc_candidate > test_auc:
+#                         test_auc = auc_candidate
+#                         best_context = context
+#                         test_ap = average_precision_score(labels, test_dists[:, context])
+#                         test_fpr95 = fpr95_score(labels, test_dists[:, context])
+#                     # else:
+#                     #     print(auc_candidate, test_auc)
+#         else:
+#             best_context = None
+#             test_auc = test_ap = test_fpr95 = 0.0
+
+#         # Log results
+#         # logger.info('Test Loss: {:.6f}'.format(epoch_loss / n_batches))
+#         # logger.info('Test AUC: {:.4f}'.format(test_auc))
+#         # logger.info('Test AP: {:.4f}'.format(test_ap))
+#         # logger.info('Test FPR95: {:.4f}'.format(test_fpr95))
+#         # logger.info(f'Test Best Context: {best_context}')
+#         # logger.info('Finished testing.')
+
+#         return test_auc, test_ap, test_fpr95, best_context

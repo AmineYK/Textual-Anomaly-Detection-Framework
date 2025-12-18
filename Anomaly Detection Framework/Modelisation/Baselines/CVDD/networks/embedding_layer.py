@@ -32,6 +32,7 @@ class BERTEmbeddingEncoder(BaseEmbeddingEncoder):
     def forward(self, texts):
 
         device = self.model.device
+        # print(texts)
 
         # print(texts.shape)
         # print()

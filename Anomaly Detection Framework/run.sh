@@ -4,7 +4,7 @@
 
 
 # python3 run_indep_anom.py --dataset_name reuters --inlier_topic interest --fm
-python3 run_indep_anom.py --dataset_name agnews --inlier_topic Sci-Tech --type_emb sentence_bert --cvdd
+python3 run_indep_anom.py --dataset_name reuters --inlier_topic interest --type_emb sentence_bert --cvdd
 # python3 create_data_matrix.py --dataset_name dbpedia14 --type_tac pantin --nu 0.1 \
 #                 --type_encoder sentencebert --model_encoder all-distilroberta-v1 \
 #                 --whichset test --nbruns 10

@@ -15,7 +15,8 @@ from Modelisation.Baselines.RSRAE.model import RSRAE
 from Modelisation.Baselines.AE.autoencoder import AE
 from Modelisation.Baselines.TCCM.model import TCCM
 # from Modelisation.Baselines.CVDD.networks.cvdd_Net import CVDDModel
-from Modelisation.Baselines.CVDD.model_sbert import CVDDModel
+# from Modelisation.Baselines.CVDD.model_sbert import CVDDModel
+from Modelisation.Baselines.CVDD.networks.model_bert import CVDDModel
 from Modelisation.FlowMatching.flow_matching import BasicFlowMatching
 from utils import save_results, create_tables
 import numpy as np
@@ -290,26 +291,55 @@ def main(args):
             #     print(f"CVDD --> AUC: {auc_cvdd:.4f} | FPR@95: {fpr95_cvdd:.4f} | AP: {ap_cvdd:.4f}\n")
 
 
+            # if args.cvdd:
+            #     cvdd_args = {
+            #     "n_attention_heads": 8,
+            #     "latent_dim": 150,
+            #     "lr": 1e-2,
+            #     "n_epochs": 100,
+            #     "lambda_p": 0.1,
+            #     "batch_size": 64,
+            #     "device": device
+            #     }
+
+            #     cvdd_model = CVDDModel(cvdd_args)
+
+            #     taac = time.time()
+            #     cvdd_model_trained = cvdd_model.train(data_train)
+            #     tiic = time.time()
+            #     print(f"\CVDD finishing... after {(tiic-taac)/60:.3f} mn")
+                
+            #     auc_cvdd, fpr95_cvdd, ap_cvdd = cvdd_model.test(data_test)
+            #     print(f"CVDD --> AUC: {auc_cvdd:.4f} | FPR@95: {fpr95_cvdd:.4f} | AP: {ap_cvdd:.4f}\n")
+
+
+
+
             if args.cvdd:
                 cvdd_args = {
-                "n_attention_heads": 8,
-                "lr": 1e-2,
-                "n_epochs": 50,
-                "lambda_p": 0.1,
-                "batch_size": 64,
-                "device": device
-                }
-
+                    "bert_name": "albert-base-v2", #albert-large-v2   
+                    "hidden_size": 768, #1024 
+                    "n_attention_heads": 10,
+                    "attention_size": 150,
+                    "freeze_bert": True,
+                    "lr": 1e-4,
+                    "weight_decay" : 0,
+                    "lambda_p": 0.1,
+                    "n_epochs": 50,
+                    "batch_size": 8,
+                    "device": device
+                    }
+                
                 cvdd_model = CVDDModel(cvdd_args)
 
                 taac = time.time()
-                cvdd_model_trained = cvdd_model.train(data_train)
+                cvdd_model.train(data_train)
                 tiic = time.time()
                 print(f"\CVDD finishing... after {(tiic-taac)/60:.3f} mn")
                 
                 auc_cvdd, fpr95_cvdd, ap_cvdd = cvdd_model.test(data_test)
                 print(f"CVDD --> AUC: {auc_cvdd:.4f} | FPR@95: {fpr95_cvdd:.4f} | AP: {ap_cvdd:.4f}\n")
-                
+            
                 list_auc_cvdd.append(auc_cvdd)
                 list_fpr_cvdd.append(fpr95_cvdd)    
                 list_ap_cvdd.append(ap_cvdd)  
@@ -405,7 +435,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="CVDD",
             auc_mean=np.mean(list_auc_cvdd), ap_mean=np.mean(list_ap_cvdd),fpr_mean=np.mean(list_fpr_cvdd),
             auc_std = np.std(list_auc_cvdd),ap_std =  np.std(list_ap_cvdd),fpr_std = np.std(list_fpr_cvdd),
-            train_time = np.mean(list_time_cvdd), overwrite='naive'
+            train_time = np.mean(list_time_cvdd), overwrite='smart'
             )
 
 

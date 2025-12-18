@@ -23,7 +23,6 @@ def initialize_context_vectors(net, train_loader, device):
     X = ()
     for data in train_loader:
         inputs, _, _, _ = data
-
         X_batch = net.pretrained_model(inputs)
         # X_batch = net.pretrained_model(
         # input_ids=inputs["input_ids"].to(device),
@@ -58,7 +57,7 @@ def cvdd_model_pipeline(data_train, data_test, emb_model, attention_size, n_atte
         if tokenizer is not None:
             cvdd_dataset_train = CVDDDatasetWrapper(data_train, embedding_type='bert', tokenizer=tokenizer, seq_len=seq_len)
             cvdd_dataset_test = CVDDDatasetWrapper(data_test, embedding_type='bert', tokenizer=tokenizer, seq_len=seq_len)
-            pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name=emb_model, trainable=False)
+            pretrained_model = embedding_layer.EmbeddingFactory.create('bert', bert_name=emb_model, trainable=True)
         else:
             raise Exception(f"when 'embedding_type' = '{embedding_type}', the parameters 'bert_name' and 'tokenizer' is required")
 
