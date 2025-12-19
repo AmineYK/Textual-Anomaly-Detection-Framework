@@ -108,7 +108,7 @@ def main(args):
 
         else: raise Exception("type_emb must be completed !")
         
-        print(X_inlier.shape)
+        print(f" Embedding : {args.type_emb} --> {X_inlier.shape}")
 
         # get the hyperparamter for the FM model for this specific inlier category
         hyp = load_hyperparams(args.dataset_name, inlier_topic, args.type_emb, file_path_hyp)
@@ -325,8 +325,8 @@ def main(args):
                     "lr": 1e-4,
                     "weight_decay" : 0,
                     "lambda_p": 0.1,
-                    "n_epochs": 50,
-                    "batch_size": 8,
+                    "n_epochs": 30,
+                    "batch_size": 512,
                     "device": device
                     }
                 

@@ -5,7 +5,9 @@ import os
 import torch
 from datetime import datetime
 import datasets
-
+from Modelisation.Baselines.CVDD.networks import model_bert as md
+from transformers import AutoModel, AutoTokenizer
+from torch.utils.data import DataLoader
 
 BASE_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results"
 OUTPUT_TEX = os.path.join(BASE_DIR, "tables.tex")
@@ -537,6 +539,51 @@ def get_data_fasttext(data, ft_path, device):
     ])
 
     return torch.tensor(X, dtype=torch.float32).to(device)
+
+
+def get_data_bert(bertname, data, device, is_train=False):
+
+    tokenizer = AutoTokenizer.from_pretrained(bertname)
+    bert = AutoModel.from_pretrained(bertname)
+
+    dataset = md.CVDDDataset(
+        data['text'],
+        data['anomaly_class'],
+        tokenizer
+    )
+    loader = DataLoader(dataset, batch_size=64, shuffle=is_train)
+
+    bert = bert.to(device)
+    bert.eval()
+
+    X = []
+    y = []
+
+    with torch.no_grad():
+        for batch in loader:
+            input_ids = batch["input_ids"].to(device)
+            attention_mask = batch["attention_mask"].to(device)
+            if not is_train: labels = batch["label"]
+
+            outputs = bert(
+                input_ids=input_ids,
+                attention_mask=attention_mask
+            )
+
+            embeddings = outputs.last_hidden_state[:, 0, :] 
+
+            X.append(embeddings.cpu())
+            if not is_train:  y.append(labels.cpu())
+
+    X = torch.cat(X, dim=0) 
+    if not is_train: y = torch.cat(y, dim=0)
+
+    if not is_train:
+        return X, y
+    else:
+        return X
+      
+
 
 
 

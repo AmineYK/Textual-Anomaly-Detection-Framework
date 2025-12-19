@@ -244,7 +244,7 @@ class FlowMatchingTrainer():
 
         auc, fpr95, ap = ev.evaluation(y_test, scores, verbose=False)
 
-        print(f"FM --> AUC: {auc:.4f} | FPR@95: {fpr95:.4f} | AP: {ap:.4f}")  
+        # print(f"FM --> AUC: {auc:.4f} | FPR@95: {fpr95:.4f} | AP: {ap:.4f}")  
 
         return auc, fpr95, ap 
 

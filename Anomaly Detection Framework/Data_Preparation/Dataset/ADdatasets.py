@@ -119,6 +119,60 @@ class MergedDatasetWrapper(Dataset):
         return torch.tensor(self.inputs[idx]), torch.tensor(self.labels[idx]), self.texts[idx]
     
 
+# class CVDDDatasetWrapper(Dataset):
+
+#     def __init__(self, dataset, embedding_type, vocab=None, tokenizer=None, seq_len=150):
+
+#         self.dataset = dataset
+#         self.texts = self.dataset['text']
+#         self.labels = self.dataset['anomaly_class']
+#         self.embedding_type = embedding_type.lower()
+#         self.vocab = vocab
+#         self.tokenizer = tokenizer
+#         self.seq_len = seq_len
+
+#     def __len__(self):
+#         return len(self.texts)
+
+#     def __getitem__(self, idx):
+#         text = self.texts[idx]
+#         label = self.labels[idx]
+
+#         if self.embedding_type in ['glove', 'fasttext']:
+
+#             if self.vocab is None:
+#                 raise Exception(f"{self.embedding_type} encodding requires the parameter vocab")
+
+#             else:
+#                 indices = [self.vocab.get(w, self.vocab['<UNK>']) for w in text.split()]
+#                 if len(indices) < self.seq_len:
+#                     indices += [self.vocab['<PAD>']] * (self.seq_len - len(indices))
+#                 else:
+#                     indices = indices[:self.seq_len]
+#                 inputs = torch.tensor(indices, dtype=torch.long)
+
+#         elif self.embedding_type == 'bert':
+#             if self.tokenizer is None:
+#                 raise Exception(f"{self.embedding_type} encodding requires the parameter tokenizer")
+#             else:
+#                 tokens = self.tokenizer(text,
+#                                     truncation=True,
+#                                     padding='max_length',
+#                                     max_length = self.seq_len,
+#                                     return_tensors='pt')
+#                 # shape (seq_len,)
+#                 inputs = tokens['input_ids'].squeeze(0)  
+
+#         elif self.embedding_type == 'tfidf':
+#             # tfidf embeddings must be calculated already
+#             inputs = torch.tensor(self.dataset['tfidf_embedding'][idx], dtype=torch.float32)
+
+#         else:
+#             raise ValueError(f"Unknown embedding_type {self.embedding_type}")
+
+#         return inputs, torch.tensor(label, dtype=torch.long), text, idx
+
+
 class CVDDDatasetWrapper(Dataset):
 
     def __init__(self, dataset, embedding_type, vocab=None, tokenizer=None, seq_len=150):
@@ -141,31 +195,40 @@ class CVDDDatasetWrapper(Dataset):
         if self.embedding_type in ['glove', 'fasttext']:
 
             if self.vocab is None:
-                raise Exception(f"{self.embedding_type} encodding requires the parameter vocab")
+                raise Exception(f"{self.embedding_type} encoding requires the parameter vocab")
 
+            indices = [self.vocab.get(w, self.vocab['<UNK>']) for w in text.split()]
+            if len(indices) < self.seq_len:
+                indices += [self.vocab['<PAD>']] * (self.seq_len - len(indices))
             else:
-                indices = [self.vocab.get(w, self.vocab['<UNK>']) for w in text.split()]
-                if len(indices) < self.seq_len:
-                    indices += [self.vocab['<PAD>']] * (self.seq_len - len(indices))
-                else:
-                    indices = indices[:self.seq_len]
-                inputs = torch.tensor(indices, dtype=torch.long)
+                indices = indices[:self.seq_len]
+
+            inputs = torch.tensor(indices, dtype=torch.long)
 
         elif self.embedding_type == 'bert':
+
             if self.tokenizer is None:
-                raise Exception(f"{self.embedding_type} encodding requires the parameter tokenizer")
-            else:
-                tokens = self.tokenizer(text,
-                                    truncation=True,
-                                    padding='max_length',
-                                    max_length = self.seq_len,
-                                    return_tensors='pt')
-                # shape (seq_len,)
-                inputs = tokens['input_ids'].squeeze(0)  
+                raise Exception(f"{self.embedding_type} encoding requires the parameter tokenizer")
+
+            tokens = self.tokenizer(
+                text,
+                truncation=True,
+                padding='max_length',
+                max_length=self.seq_len,
+                return_tensors='pt'
+            )
+
+            inputs = {
+                "input_ids": tokens["input_ids"].squeeze(0),       # (seq_len,)
+                "attention_mask": tokens["attention_mask"].squeeze(0)  # (seq_len,)
+            }
+            # inputs = tokens["input_ids"]
 
         elif self.embedding_type == 'tfidf':
-            # tfidf embeddings must be calculated already
-            inputs = torch.tensor(self.dataset['tfidf_embedding'][idx], dtype=torch.float32)
+            inputs = torch.tensor(
+                self.dataset['tfidf_embedding'][idx],
+                dtype=torch.float32
+            )
 
         else:
             raise ValueError(f"Unknown embedding_type {self.embedding_type}")

@@ -466,3 +466,195 @@ Avg Precision:  0.5183 ± 0.0476
 FPR@95:         0.4427 ± 0.0596
 ========================================
 
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: bert
+AD model:       AE
+Training time:  nan sec
+----------------------------------------
+AUC:            0.7635 ± 0.0131
+Avg Precision:  0.2548 ± 0.0223
+FPR@95:         0.6382 ± 0.0303
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: bert
+AD model:       RSRAE
+Training time:  nan sec
+----------------------------------------
+AUC:            0.8166 ± 0.0135
+Avg Precision:  0.3304 ± 0.0314
+FPR@95:         0.5696 ± 0.0423
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: bert
+AD model:       ocsvm
+Training time:  nan sec
+----------------------------------------
+AUC:            0.7385 ± 0.0158
+Avg Precision:  0.2373 ± 0.0215
+FPR@95:         0.7554 ± 0.0501
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: bert
+AD model:       TCCM
+Training time:  nan sec
+----------------------------------------
+AUC:            0.7791 ± 0.0155
+Avg Precision:  0.2976 ± 0.0296
+FPR@95:         0.6665 ± 0.0561
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: bert
+AD model:       AE
+Training time:  nan sec
+----------------------------------------
+AUC:            0.7201 ± 0.0103
+Avg Precision:  0.1886 ± 0.0165
+FPR@95:         0.6592 ± 0.0234
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: bert
+AD model:       RSRAE
+Training time:  nan sec
+----------------------------------------
+AUC:            0.7344 ± 0.0107
+Avg Precision:  0.2155 ± 0.0157
+FPR@95:         0.6837 ± 0.0307
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: bert
+AD model:       ocsvm
+Training time:  nan sec
+----------------------------------------
+AUC:            0.6862 ± 0.0137
+Avg Precision:  0.1736 ± 0.0120
+FPR@95:         0.7839 ± 0.0378
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: bert
+AD model:       TCCM
+Training time:  nan sec
+----------------------------------------
+AUC:            0.7292 ± 0.0105
+Avg Precision:  0.2045 ± 0.0175
+FPR@95:         0.6600 ± 0.0275
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: bert
+AD model:       AE
+Training time:  nan sec
+----------------------------------------
+AUC:            0.7138 ± 0.0236
+Avg Precision:  0.2302 ± 0.0243
+FPR@95:         0.7658 ± 0.0401
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: bert
+AD model:       RSRAE
+Training time:  nan sec
+----------------------------------------
+AUC:            0.7599 ± 0.0181
+Avg Precision:  0.2933 ± 0.0295
+FPR@95:         0.7011 ± 0.0378
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: bert
+AD model:       ocsvm
+Training time:  nan sec
+----------------------------------------
+AUC:            0.6460 ± 0.0274
+Avg Precision:  0.1921 ± 0.0227
+FPR@95:         0.9132 ± 0.0272
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: bert
+AD model:       TCCM
+Training time:  nan sec
+----------------------------------------
+AUC:            0.7494 ± 0.0210
+Avg Precision:  0.3007 ± 0.0331
+FPR@95:         0.7184 ± 0.0642
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: bert
+AD model:       AE
+Training time:  nan sec
+----------------------------------------
+AUC:            0.6763 ± 0.0106
+Avg Precision:  0.2068 ± 0.0144
+FPR@95:         0.8341 ± 0.0331
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: bert
+AD model:       RSRAE
+Training time:  nan sec
+----------------------------------------
+AUC:            0.7201 ± 0.0129
+Avg Precision:  0.2556 ± 0.0208
+FPR@95:         0.8047 ± 0.0442
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: bert
+AD model:       ocsvm
+Training time:  nan sec
+----------------------------------------
+AUC:            0.6918 ± 0.0098
+Avg Precision:  0.2333 ± 0.0152
+FPR@95:         0.8382 ± 0.0254
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: bert
+AD model:       TCCM
+Training time:  nan sec
+----------------------------------------
+AUC:            0.7269 ± 0.0107
+Avg Precision:  0.2743 ± 0.0198
+FPR@95:         0.7690 ± 0.0450
+========================================
+
