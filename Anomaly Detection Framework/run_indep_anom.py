@@ -326,7 +326,7 @@ def main(args):
                     "weight_decay" : 0,
                     "lambda_p": 0.1,
                     "n_epochs": 30,
-                    "batch_size": 512,
+                    "batch_size": 16,
                     "device": device
                     }
                 

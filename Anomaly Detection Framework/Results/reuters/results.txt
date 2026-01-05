@@ -851,11 +851,11 @@ Dataset:        reuters
 Inlier class:   earn
 Embedding type: sentence_bert
 AD model:       CVDD
-Training time:  238.11 sec
+Training time:  280.39 sec
 ----------------------------------------
-AUC:            0.7561 ± 0.0156
-Avg Precision:  0.6005 ± 0.0491
-FPR@95:         0.2319 ± 0.0216
+AUC:            0.9134 ± 0.0099
+Avg Precision:  0.2505 ± 0.0444
+FPR@95:         0.4138 ± 0.0308
 ========================================
 
 ========================================
@@ -875,11 +875,11 @@ Dataset:        reuters
 Inlier class:   acq
 Embedding type: sentence_bert
 AD model:       CVDD
-Training time:  135.58 sec
+Training time:  162.51 sec
 ----------------------------------------
-AUC:            0.6894 ± 0.0233
-Avg Precision:  0.7132 ± 0.0803
-FPR@95:         0.1492 ± 0.0112
+AUC:            0.8404 ± 0.0229
+Avg Precision:  0.4293 ± 0.1320
+FPR@95:         0.2594 ± 0.0169
 ========================================
 
 ========================================
@@ -923,11 +923,11 @@ Dataset:        reuters
 Inlier class:   interest
 Embedding type: sentence_bert
 AD model:       CVDD
-Training time:  38.17 sec
+Training time:  21.56 sec
 ----------------------------------------
-AUC:            0.6330 ± 0.0556
-Avg Precision:  0.5507 ± 0.1251
-FPR@95:         0.1358 ± 0.0168
+AUC:            0.6338 ± 0.0667
+Avg Precision:  0.5548 ± 0.1642
+FPR@95:         0.1364 ± 0.0179
 ========================================
 
 ========================================
