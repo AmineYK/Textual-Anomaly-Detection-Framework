@@ -923,11 +923,11 @@ Dataset:        reuters
 Inlier class:   interest
 Embedding type: sentence_bert
 AD model:       CVDD
-Training time:  21.56 sec
+Training time:  21.27 sec
 ----------------------------------------
-AUC:            0.6338 ± 0.0667
-Avg Precision:  0.5548 ± 0.1642
-FPR@95:         0.1364 ± 0.0179
+AUC:            0.6355 ± 0.0474
+Avg Precision:  0.5767 ± 0.1473
+FPR@95:         0.1365 ± 0.0148
 ========================================
 
 ========================================

@@ -114,7 +114,7 @@ def main(args):
         hyp = load_hyperparams(args.dataset_name, inlier_topic, args.type_emb, file_path_hyp)
         print(hyp)
 
-        for n_run in range(1,11):
+        for n_run in range(1,4):
 
             print(f"+++++++++++++++++++++ run : {n_run} +++++++++++++++++\n")
 
