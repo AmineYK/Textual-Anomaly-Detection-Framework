@@ -1119,3 +1119,75 @@ Avg Precision:  0.3013 ± 0.0264
 FPR@95:         0.8416 ± 0.0575
 ========================================
 
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: sentence_bert
+AD model:       DATE
+Training time:  215.81 sec
+----------------------------------------
+AUC:            0.8167 ± 0.0191
+Avg Precision:  0.7280 ± 0.1379
+FPR@95:         0.4026 ± 0.1055
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: sentence_bert
+AD model:       DATE
+Training time:  172.92 sec
+----------------------------------------
+AUC:            0.7413 ± 0.0252
+Avg Precision:  0.8086 ± 0.0820
+FPR@95:         0.2521 ± 0.0531
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: sentence_bert
+AD model:       DATE
+Training time:  174.21 sec
+----------------------------------------
+AUC:            0.6194 ± 0.0189
+Avg Precision:  0.9390 ± 0.0229
+FPR@95:         0.1677 ± 0.0341
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: sentence_bert
+AD model:       DATE
+Training time:  43.39 sec
+----------------------------------------
+AUC:            0.6770 ± 0.0242
+Avg Precision:  0.7953 ± 0.0724
+FPR@95:         0.1657 ± 0.0202
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: sentence_bert
+AD model:       DATE
+Training time:  115.94 sec
+----------------------------------------
+AUC:            0.7580 ± 0.0317
+Avg Precision:  0.7496 ± 0.1094
+FPR@95:         0.2701 ± 0.0357
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: sentence_bert
+AD model:       DATE
+Training time:  107.00 sec
+----------------------------------------
+AUC:            0.8138 ± 0.0363
+Avg Precision:  0.6729 ± 0.1896
+FPR@95:         0.3743 ± 0.0692
+========================================
+

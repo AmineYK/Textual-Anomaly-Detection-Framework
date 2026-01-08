@@ -17,6 +17,7 @@ from Modelisation.Baselines.TCCM.model import TCCM
 # from Modelisation.Baselines.CVDD.networks.cvdd_Net import CVDDModel
 # from Modelisation.Baselines.CVDD.model_sbert import CVDDModel
 from Modelisation.Baselines.CVDD.networks.model_bert import CVDDModel
+from Modelisation.Baselines.DATE.date import DATEModel
 from Modelisation.FlowMatching.flow_matching import BasicFlowMatching
 from utils import save_results, create_tables
 import numpy as np
@@ -90,6 +91,12 @@ def main(args):
             list_ap_cvdd = []
             list_time_cvdd = []
 
+        if args.date:
+            list_auc_date = []
+            list_fpr_date = []
+            list_ap_date = []
+            list_time_date = []
+
         # RSRAE --> X_train is infected with some anomalies
         # if args.rsrae:
         #     X_inlier_anoma = load_data_inlier(args.dataset_name, inlier_topic, save_dir, True)        
@@ -114,7 +121,7 @@ def main(args):
         hyp = load_hyperparams(args.dataset_name, inlier_topic, args.type_emb, file_path_hyp)
         print(hyp)
 
-        for n_run in range(1,4):
+        for n_run in range(1,2):
 
             print(f"+++++++++++++++++++++ run : {n_run} +++++++++++++++++\n")
 
@@ -346,6 +353,41 @@ def main(args):
                 list_time_cvdd.append((tiic-taac))  
 
 
+
+            ########################################
+            ################# DATE #################
+            ########################################  
+
+            if args.date:
+                date_args = {
+                    "which_config": "bert",
+                    "encoder_name": "albert-base-v2", 
+                    "K": 15,
+                    "lr": 1e-4,
+                    "weight_decay" : 1e-5,
+                    "seq_len": 498,
+                    "ratio": 0.25,
+                    "n_epochs": 2,
+                    "batch_size": 64,
+                    "device": device
+                    }
+                            
+                date_model = DATEModel(date_args)
+
+                taac = time.time()
+                date_model.train(data_train)
+                tiic = time.time()
+                print(f"\DATE finishing... after {(tiic-taac)/60:.3f} mn")
+                
+                auc_date, fpr95_date, ap_date = date_model.test(data_test)
+                print(f"DATE --> AUC: {auc_date:.4f} | FPR@95: {fpr95_date:.4f} | AP: {ap_date:.4f}\n")
+            
+                list_auc_date.append(auc_date)
+                list_fpr_date.append(fpr95_date)    
+                list_ap_date.append(ap_date)  
+                list_time_date.append((tiic-taac))  
+
+
             #################################################
 #          ################# Flow Matching #################
 #          ################################################# 
@@ -388,7 +430,7 @@ def main(args):
         # print("AE --> ",inlier_topic ,np.mean(list_auc_ae))
         # print(inlier_topic ,np.mean(list_auc_fm))
         # print("RSRAE --> ", inlier_topic ,np.mean(list_auc_rsrae))
-        print("CVDD --> ", inlier_topic ,np.mean(list_auc_cvdd))
+        # print("CVDD --> ", inlier_topic ,np.mean(list_auc_cvdd))
         if args.fm:
             save_results(
                 dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching",
@@ -436,6 +478,14 @@ def main(args):
             auc_mean=np.mean(list_auc_cvdd), ap_mean=np.mean(list_ap_cvdd),fpr_mean=np.mean(list_fpr_cvdd),
             auc_std = np.std(list_auc_cvdd),ap_std =  np.std(list_ap_cvdd),fpr_std = np.std(list_fpr_cvdd),
             train_time = np.mean(list_time_cvdd), overwrite='smart'
+            )
+
+        if args.date:
+            save_results(
+            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="DATE",
+            auc_mean=np.mean(list_auc_date), ap_mean=np.mean(list_ap_date),fpr_mean=np.mean(list_fpr_date),
+            auc_std = np.std(list_auc_date),ap_std =  np.std(list_ap_date),fpr_std = np.std(list_fpr_date),
+            train_time = np.mean(list_time_date), overwrite='smart'
             )
 
 
@@ -498,6 +548,11 @@ if __name__ == "__main__":
 
     parser.add_argument(
     "--cvdd",
+    action="store_true"
+    )  
+
+    parser.add_argument(
+    "--date",
     action="store_true"
     )  
     

@@ -1,136 +1,236 @@
-# data/mask_generator.py
-import torch
-
-class MaskGenerator:
-    def __init__(self, num_masks: int, seq_len: int, mask_ratio: float = 0.5, seed: int = 42):
-        self.num_masks = num_masks
-        self.seq_len = seq_len
-        self.mask_ratio = mask_ratio
-        torch.manual_seed(seed)
-        self.masks = self._generate_masks()
-
-    def _generate_masks(self):
-        masks = torch.zeros(self.num_masks, self.seq_len, dtype=torch.bool)
-        num_masked = int(self.seq_len * self.mask_ratio)
-
-        for k in range(self.num_masks):
-            idx = torch.randperm(self.seq_len)[:num_masked]
-            masks[k, idx] = True
-
-        return masks
-
-    def sample(self, batch_size: int):
-        mask_ids = torch.randint(0, self.num_masks, (batch_size,))
-        return self.masks[mask_ids], mask_ids
-    
-
-# model/discriminator.py
 import torch
 import torch.nn as nn
-from transformers import ElectraForPreTraining
+from transformers import BertConfig, BertForMaskedLM, BertModel, ElectraConfig, ElectraForMaskedLM, \
+    ElectraForPreTraining, BertTokenizerFast, AlbertTokenizer
 
-class DATEDiscriminator(nn.Module):
-    def __init__(self, electra_name: str, num_masks: int):
+from Modelisation.Baselines.DATE.utils import *
+from Modelisation.Baselines.baseline import BaselineModel
+from torch.utils.data import Dataset, DataLoader
+import Modelisation.evaluation as ev
+
+
+class DateGenerator(nn.Module):
+    def __init__(self, which_config, vocab_size):
         super().__init__()
-        self.electra = ElectraForPreTraining.from_pretrained(electra_name)
-        hidden = self.electra.config.hidden_size
 
-        self.rmd_head = nn.Linear(hidden, num_masks)
+        configObject = BertConfig if which_config == "bert" else ElectraConfig
+
+        config = configObject(
+            vocab_size=vocab_size,
+            hidden_size=256,
+            num_hidden_layers=4,
+            num_attention_heads=4,
+            intermediate_size=1024,
+            hidden_act="gelu",
+            max_position_embeddings=512
+        )
+        configObjectLM = BertForMaskedLM if which_config == "bert" else ElectraForMaskedLM
+        self.model = configObjectLM(config)
 
     def forward(self, input_ids, attention_mask):
-        outputs = self.electra(
+        out = self.model(
             input_ids=input_ids,
-            attention_mask=attention_mask,
-            output_hidden_states=True
+            attention_mask=attention_mask
+        )
+        return out.logits
+    
+
+class DateDiscriminator(nn.Module):
+    def __init__(self, which_config, vocab_size, K):
+        super().__init__()
+
+        configObject = BertConfig if which_config == "bert" else ElectraConfig
+
+        config = configObject(
+            vocab_size=vocab_size,
+            hidden_size=256,
+            num_hidden_layers=4,
+            num_attention_heads=4,
+            intermediate_size=1024,
+            hidden_act="gelu",
+            max_position_embeddings=512
         )
 
-        rtd_logits = outputs.logits
-        cls_embedding = outputs.hidden_states[-1][:, 0]
-        rmd_logits = self.rmd_head(cls_embedding)
+        configObjectM = BertModel if which_config == "bert" else ElectraForPreTraining
+        self.model = configObjectM(config)
+
+        # RTD head: binary classification per token
+        self.rtd_head = nn.Linear(config.hidden_size, 1)
+
+        # RMD head: K-way classification (CLS → K masks)
+        self.rmd_head = nn.Linear(config.hidden_size, K)
+
+    def forward(self, input_ids, attention_mask):
+        out = self.model(
+            input_ids=input_ids,
+            attention_mask=attention_mask
+        )
+
+        hidden = out.last_hidden_state  # [batch, seq_len, hidden_size]
+        cls = hidden[:, 0]  # [batch, hidden_size]
+
+        rtd_logits = self.rtd_head(hidden).squeeze(-1)  # [batch, seq_len]
+
+        rmd_logits = self.rmd_head(cls)  # [batch, K]
 
         return rtd_logits, rmd_logits
     
 
-# model/date_model.py
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from transformers import ElectraForMaskedLM
 
-class DATEModel(nn.Module):
-    def __init__(
-        self,
-        electra_generator: str,
-        electra_discriminator: str,
-        num_masks: int,
-        lambda_rtd: float = 50.0,
-        mu_rmd: float = 1.0
-    ):
-        super().__init__()
-        self.generator = ElectraForMaskedLM.from_pretrained(electra_generator)
-        self.discriminator = DATEDiscriminator(electra_discriminator, num_masks)
+class DATEDataset(Dataset):
 
-        self.lambda_rtd = lambda_rtd
-        self.mu_rmd = mu_rmd
-
-        self.loss_mlm = nn.CrossEntropyLoss(ignore_index=-100)
-        self.loss_rtd = nn.BCEWithLogitsLoss()
-        self.loss_rmd = nn.CrossEntropyLoss()
-
-    def forward(
-        self,
-        input_ids,
-        attention_mask,
-        masked_input_ids,
-        mlm_labels,
-        rtd_labels,
-        rmd_labels
-    ):
-        # Generator
-        gen_outputs = self.generator(
-            input_ids=masked_input_ids,
-            attention_mask=attention_mask,
-            labels=mlm_labels
-        )
-        loss_mlm = gen_outputs.loss
-
-        with torch.no_grad():
-            sampled_tokens = torch.argmax(gen_outputs.logits, dim=-1)
-
-        replaced_input_ids = masked_input_ids.clone()
-        replaced_input_ids[mlm_labels != -100] = sampled_tokens[mlm_labels != -100]
-
-        # Discriminator
-        rtd_logits, rmd_logits = self.discriminator(
-            replaced_input_ids,
-            attention_mask
+    def __init__(self, texts, labels=None, tokenizer=None, max_len=498):
+        self.texts = texts
+        self.labels = labels if labels is not None else [0] * len(texts)
+        self.tokenizer = tokenizer
+        self.max_len = max_len
+        
+        self.encodings = self.tokenizer(
+            texts,
+            padding="max_length",
+            truncation=True,
+            max_length=max_len,
+            return_tensors="pt"
         )
 
-        loss_rtd = self.loss_rtd(
-            rtd_logits.view(-1),
-            rtd_labels.float().view(-1)
+    def __len__(self):
+        return len(self.texts)
+
+    def __getitem__(self, idx):
+        return (
+            self.encodings["input_ids"][idx],
+            self.encodings["attention_mask"][idx],
+            torch.tensor(self.labels[idx], dtype=torch.long)
         )
 
-        loss_rmd = self.loss_rmd(rmd_logits, rmd_labels)
+class DATEModel(BaselineModel):
+    def __init__(self, args):
 
-        loss = loss_mlm + self.lambda_rtd * loss_rtd + self.mu_rmd * loss_rmd
+        self.which_config = args['which_config']
+        self.encoder_name = args['encoder_name']
 
-        return {
-            "loss": loss,
-            "loss_mlm": loss_mlm.detach(),
-            "loss_rtd": loss_rtd.detach(),
-            "loss_rmd": loss_rmd.detach(),
-        }
+        tokenizerObject = AlbertTokenizer if self.encoder_name == 'albert-base-v2' else BertTokenizerFast
+        self.tokenizer =  tokenizerObject.from_pretrained(self.encoder_name)
+        self.mask_token_id = self.tokenizer.mask_token_id
+
+        self.device = args['device']
+        self.K = args['K']
+        self.vocab_size = self.tokenizer.vocab_size
+
+        self.generator = DateGenerator(self.which_config, self.vocab_size).to(self.device)
+        self.discriminator = DateDiscriminator(self.which_config, self.vocab_size, self.K).to(self.device)
+
+        self.lr = args['lr']
+        self.weight_decay = args['weight_decay']
+
+        self.optimizer = torch.optim.AdamW(
+            list(self.generator.parameters()) + list(self.discriminator.parameters()),
+            lr=self.lr,
+            weight_decay=self.weight_decay,
+            amsgrad=True
+        )
+
+        self.seq_len = args['seq_len']
+        self.ratio = args ['ratio']
+
+        self.mask_patterns = generate_mask_patterns(
+            K=self.K,
+            seq_len=self.seq_len,
+            ratio=self.ratio
+        ).to(self.device)
+
+        self.n_epochs = args['n_epochs']
+        self.batch_size = args['batch_size']
+
+    def train(self, data_train):
+
+        train_texts = data_train['text']
+        train_ds = DATEDataset(train_texts, None, self.tokenizer)
+        train_loader = DataLoader(train_ds, batch_size=self.batch_size, shuffle=True)
+
+        self.generator.train()
+        self.discriminator.train()
+
+        for epoch in range(self.n_epochs):
+            total_loss = 0.0
+
+            for step, (input_ids, attention_mask, _) in enumerate(train_loader):
+                input_ids = input_ids.to(self.device)
+                attention_mask = attention_mask.to(self.device)
+
+                # Sample a mask pattern
+                k = torch.randint(0, self.mask_patterns.size(0), (1,)).item()
+                mask = self.mask_patterns[k].to(self.device)
+
+                # Apply masking
+                masked_ids = apply_mask_safe(input_ids, mask, self.tokenizer)
+
+                # MLM labels
+                mlm_labels = input_ids.clone()
+                mlm_labels[masked_ids != self.tokenizer.mask_token_id] = -100
+
+                # Generator forward (MLM)
+                mlm_logits = self.generator(masked_ids, attention_mask)
+
+                # Corrupt input
+                corrupted_ids = corrupt_input(
+                    self.generator, masked_ids, attention_mask, self.tokenizer.mask_token_id
+                )
+
+                # Build RTD labels (CORRECTED)
+                rtd_labels = (corrupted_ids != input_ids).long()
+                rtd_labels[input_ids == self.tokenizer.cls_token_id] = -100
+                rtd_labels[input_ids == self.tokenizer.sep_token_id] = -100
+                rtd_labels[input_ids == self.tokenizer.pad_token_id] = -100
+                rtd_labels[attention_mask == 0] = -100
+
+                # RMD labels
+                rmd_labels = torch.full(
+                    (input_ids.size(0),),
+                    k,
+                    device=self.device
+                )
+
+                # Discriminator forward
+                rtd_logits, rmd_logits = self.discriminator(
+                    corrupted_ids, attention_mask
+                )
+
+                # Compute loss
+                loss = date_loss(
+                    rtd_logits, rmd_logits,
+                    rtd_labels, rmd_labels,
+                    mlm_logits, mlm_labels,
+                    mu=100.0, lambda_rtd=50.0
+                )
+
+                # Backward
+                loss.backward()
+                self.optimizer.step()
+                self.optimizer.zero_grad()
+
+                total_loss += loss.item()
+
+            avg_loss = total_loss / len(train_loader)
+            if epoch % (self.n_epochs // 3 ) == 0 :
+                print(f"Epoch {epoch+1}/{self.n_epochs} - Loss: {avg_loss:.4f}")
+
+    def test(self, data_test):
+
+        test_texts = data_test['text']
+        test_labels = data_test['anomaly_class']        
+        
+        test_ds = DATEDataset(test_texts, test_labels, self.tokenizer)
+        test_loader = DataLoader(test_ds, batch_size=64)
+
+        scores, _ = date_anomaly_score(
+            self.discriminator, test_loader, self.tokenizer, self.device
+        )
     
+        # Higher score = more normal, so we invert for anomaly detection
+        test_scores = 1 - scores
 
-# inference/anomaly_score.py
-import torch
+        auc, ap, fpr95 = ev.evaluation(test_labels, test_scores, verbose=False)
 
-@torch.no_grad()
-def compute_anomaly_score(discriminator, input_ids, attention_mask):
-    rtd_logits, _ = discriminator(input_ids, attention_mask)
-    p_original = torch.sigmoid(rtd_logits)
-    return p_original.mean(dim=1)
-
-
-
+        return auc, fpr95, ap
+    
