@@ -1124,11 +1124,11 @@ Dataset:        20newsgroups
 Inlier class:   computer
 Embedding type: sentence_bert
 AD model:       DATE
-Training time:  215.81 sec
+Training time:  599.13 sec
 ----------------------------------------
-AUC:            0.8167 ± 0.0191
-Avg Precision:  0.7280 ± 0.1379
-FPR@95:         0.4026 ± 0.1055
+AUC:            0.8367 ± 0.0163
+Avg Precision:  0.5404 ± 0.1206
+FPR@95:         0.3290 ± 0.0258
 ========================================
 
 ========================================
@@ -1136,11 +1136,11 @@ Dataset:        20newsgroups
 Inlier class:   recreation
 Embedding type: sentence_bert
 AD model:       DATE
-Training time:  172.92 sec
+Training time:  482.89 sec
 ----------------------------------------
-AUC:            0.7413 ± 0.0252
-Avg Precision:  0.8086 ± 0.0820
-FPR@95:         0.2521 ± 0.0531
+AUC:            0.7276 ± 0.0224
+Avg Precision:  0.7953 ± 0.0724
+FPR@95:         0.2050 ± 0.0217
 ========================================
 
 ========================================

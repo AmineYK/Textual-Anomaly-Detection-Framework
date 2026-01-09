@@ -1,31 +1,61 @@
 import torch
 import torch.nn as nn
-from transformers import BertConfig, BertForMaskedLM, BertModel, ElectraConfig, ElectraForMaskedLM, \
-    ElectraForPreTraining, BertTokenizerFast, AlbertTokenizer
 
 from Modelisation.Baselines.DATE.utils import *
 from Modelisation.Baselines.baseline import BaselineModel
 from torch.utils.data import Dataset, DataLoader
 import Modelisation.evaluation as ev
 
+from transformers import (
+    BertConfig, BertForMaskedLM, BertModel, BertTokenizerFast,
+    ElectraConfig, ElectraForMaskedLM, ElectraModel, ElectraTokenizerFast,
+    AlbertConfig, AlbertForMaskedLM, AlbertModel, AlbertTokenizer
+)
 
 class DateGenerator(nn.Module):
     def __init__(self, which_config, vocab_size):
         super().__init__()
 
-        configObject = BertConfig if which_config == "bert" else ElectraConfig
-
-        config = configObject(
-            vocab_size=vocab_size,
-            hidden_size=256,
-            num_hidden_layers=4,
-            num_attention_heads=4,
-            intermediate_size=1024,
-            hidden_act="gelu",
-            max_position_embeddings=512
-        )
-        configObjectLM = BertForMaskedLM if which_config == "bert" else ElectraForMaskedLM
-        self.model = configObjectLM(config)
+        if which_config == "bert":
+            config = BertConfig(
+                vocab_size=vocab_size,
+                hidden_size=256,
+                num_hidden_layers=4,
+                num_attention_heads=4,
+                intermediate_size=1024,
+                hidden_act="gelu",
+                max_position_embeddings=512
+            )
+            self.model = BertForMaskedLM(config)
+            
+        elif which_config == "electra":
+            config = ElectraConfig(
+                vocab_size=vocab_size,
+                embedding_size=128,
+                hidden_size=256,
+                num_hidden_layers=4,
+                num_attention_heads=4,
+                intermediate_size=1024,
+                hidden_act="gelu",
+                max_position_embeddings=512
+            )
+            self.model = ElectraForMaskedLM(config)
+            
+        elif which_config == "albert":
+            config = AlbertConfig(
+                vocab_size=vocab_size,
+                embedding_size=128,  
+                hidden_size=256,
+                num_hidden_layers=4,
+                num_hidden_groups=1,  
+                num_attention_heads=4,
+                intermediate_size=1024,
+                hidden_act="gelu_new",  
+                max_position_embeddings=512
+            )
+            self.model = AlbertForMaskedLM(config)
+        else:
+            raise ValueError(f"Unknown config: {which_config}")
 
     def forward(self, input_ids, attention_mask):
         out = self.model(
@@ -33,26 +63,52 @@ class DateGenerator(nn.Module):
             attention_mask=attention_mask
         )
         return out.logits
-    
+
 
 class DateDiscriminator(nn.Module):
     def __init__(self, which_config, vocab_size, K):
         super().__init__()
 
-        configObject = BertConfig if which_config == "bert" else ElectraConfig
-
-        config = configObject(
-            vocab_size=vocab_size,
-            hidden_size=256,
-            num_hidden_layers=4,
-            num_attention_heads=4,
-            intermediate_size=1024,
-            hidden_act="gelu",
-            max_position_embeddings=512
-        )
-
-        configObjectM = BertModel if which_config == "bert" else ElectraForPreTraining
-        self.model = configObjectM(config)
+        if which_config == "bert":
+            config = BertConfig(
+                vocab_size=vocab_size,
+                hidden_size=256,
+                num_hidden_layers=4,
+                num_attention_heads=4,
+                intermediate_size=1024,
+                hidden_act="gelu",
+                max_position_embeddings=512
+            )
+            self.encoder = BertModel(config)
+            
+        elif which_config == "electra":
+            config = ElectraConfig(
+                vocab_size=vocab_size,
+                embedding_size=128,
+                hidden_size=256,
+                num_hidden_layers=4,
+                num_attention_heads=4,
+                intermediate_size=1024,
+                hidden_act="gelu",
+                max_position_embeddings=512
+            )
+            self.encoder = ElectraModel(config)
+            
+        elif which_config == "albert":
+            config = AlbertConfig(
+                vocab_size=vocab_size,
+                embedding_size=128,
+                hidden_size=256,
+                num_hidden_layers=4,
+                num_hidden_groups=1,  
+                num_attention_heads=4,
+                intermediate_size=1024,
+                hidden_act="gelu_new",  
+                max_position_embeddings=512
+            )
+            self.encoder = AlbertModel(config)
+        else:
+            raise ValueError(f"Unknown config: {which_config}")
 
         # RTD head: binary classification per token
         self.rtd_head = nn.Linear(config.hidden_size, 1)
@@ -61,7 +117,7 @@ class DateDiscriminator(nn.Module):
         self.rmd_head = nn.Linear(config.hidden_size, K)
 
     def forward(self, input_ids, attention_mask):
-        out = self.model(
+        out = self.encoder(
             input_ids=input_ids,
             attention_mask=attention_mask
         )
@@ -70,7 +126,6 @@ class DateDiscriminator(nn.Module):
         cls = hidden[:, 0]  # [batch, hidden_size]
 
         rtd_logits = self.rtd_head(hidden).squeeze(-1)  # [batch, seq_len]
-
         rmd_logits = self.rmd_head(cls)  # [batch, K]
 
         return rtd_logits, rmd_logits
@@ -109,13 +164,20 @@ class DATEModel(BaselineModel):
         self.which_config = args['which_config']
         self.encoder_name = args['encoder_name']
 
-        tokenizerObject = AlbertTokenizer if self.encoder_name == 'albert-base-v2' else BertTokenizerFast
+        if self.which_config =='albert':
+            tokenizerObject = AlbertTokenizer
+        elif self.which_config =='bert': 
+            tokenizerObject = BertTokenizerFast
+        else: tokenizerObject = ElectraTokenizerFast
+        
+        
         self.tokenizer =  tokenizerObject.from_pretrained(self.encoder_name)
         self.mask_token_id = self.tokenizer.mask_token_id
 
         self.device = args['device']
         self.K = args['K']
-        self.vocab_size = self.tokenizer.vocab_size
+        # self.vocab_size = self.tokenizer.vocab_size
+        self.vocab_size = len(self.tokenizer)
 
         self.generator = DateGenerator(self.which_config, self.vocab_size).to(self.device)
         self.discriminator = DateDiscriminator(self.which_config, self.vocab_size, self.K).to(self.device)

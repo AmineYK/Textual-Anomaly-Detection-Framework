@@ -19,7 +19,7 @@
 #   8 (maximum) for gpu                                                                                                                                                                       
 #   8 (maximum) for hpda                                                                                                                                                                      
 # SBATCH --gpus-per-node=1                                                                                                                                                                    
-#SBATCH --gpus=1                                                                                                                                                                              
+#SBATCH --gpus=2                                                                                                                                                                              
 
 # ----------------------------                                                                                                                                                                
 # processes / tasks                                                                                                                                                                           
@@ -55,5 +55,4 @@ echo "Working directory: $(pwd)"
 echo "Job ID: ${SLURM_JOB_ID}"
 echo "Timestamp: ${TIMESTAMP}"
 
-# srun bash run.sh 2>&1 | tee ${JOB_DIR}/run.log
-python3 run_indep_anom.py --dataset_name reuters --runall --type_emb sentence_bert --date
+srun bash run.sh 2>&1 | tee ${JOB_DIR}/run.log

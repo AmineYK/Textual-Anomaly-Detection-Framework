@@ -1362,3 +1362,75 @@ Avg Precision:  0.0147 ± 0.0000
 FPR@95:         0.7546 ± 0.0000
 ========================================
 
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: sentence_bert
+AD model:       DATE
+Training time:  187.56 sec
+----------------------------------------
+AUC:            0.9485 ± 0.0074
+Avg Precision:  0.1194 ± 0.0355
+FPR@95:         0.5099 ± 0.0230
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: sentence_bert
+AD model:       DATE
+Training time:  105.32 sec
+----------------------------------------
+AUC:            0.7649 ± 0.0313
+Avg Precision:  0.6297 ± 0.1347
+FPR@95:         0.1978 ± 0.0212
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: sentence_bert
+AD model:       DATE
+Training time:  13.71 sec
+----------------------------------------
+AUC:            0.7541 ± 0.0557
+Avg Precision:  0.4203 ± 0.2063
+FPR@95:         0.1793 ± 0.0225
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: sentence_bert
+AD model:       DATE
+Training time:  16.94 sec
+----------------------------------------
+AUC:            0.7000 ± 0.0384
+Avg Precision:  0.7413 ± 0.1528
+FPR@95:         0.1621 ± 0.0186
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: sentence_bert
+AD model:       DATE
+Training time:  7.36 sec
+----------------------------------------
+AUC:            0.8096 ± 0.1307
+Avg Precision:  0.3939 ± 0.2823
+FPR@95:         0.4029 ± 0.1086
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: sentence_bert
+AD model:       DATE
+Training time:  12.64 sec
+----------------------------------------
+AUC:            0.6515 ± 0.0641
+Avg Precision:  0.5932 ± 0.2454
+FPR@95:         0.1451 ± 0.0195
+========================================
+

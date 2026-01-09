@@ -81,6 +81,8 @@ MODEL_ORDER = [
     "CVDD",
     "FATE",
     "TCCM",
+    "DATE",
+    "FATE",
     "flow-matching"
 ]
 
@@ -91,6 +93,8 @@ MODEL_LATEX = {
     "CVDD": "CVDD",
     "FATE": "FATE",
     "TCCM": "TCCM",
+    "DATE": "DATE",
+    "FATE": "FATE",
     "flow-matching": "\\textbf{BasicFM}"
 }
 

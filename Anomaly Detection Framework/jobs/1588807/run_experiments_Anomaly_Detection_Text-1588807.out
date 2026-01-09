@@ -1,8 +1,0 @@
-Working directory: /home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework
-Job ID: 1588807
-Timestamp: 20260108_181822
------------------------- earn(1/7) -----------------------------
- Embedding : sentence_bert --> torch.Size([2556, 768])
-{'batch_size': 64, 'latent_dim': 256, 'sinu': False, 'batchnorm': False, 'dropout': 0.1, 'lr': 1e-05, 'weight_decay': 1e-05, 'n_epochs': 100, 'source': 'sphere-noised', 'target': 'torch.Size([2556, 384])'}
-+++++++++++++++++++++ run : 1 +++++++++++++++++
-

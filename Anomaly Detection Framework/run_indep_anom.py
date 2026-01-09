@@ -97,6 +97,12 @@ def main(args):
             list_ap_date = []
             list_time_date = []
 
+        if args.fate:
+            list_auc_fate = []
+            list_fpr_fate = []
+            list_ap_fate = []
+            list_time_fate = []
+
         # RSRAE --> X_train is infected with some anomalies
         # if args.rsrae:
         #     X_inlier_anoma = load_data_inlier(args.dataset_name, inlier_topic, save_dir, True)        
@@ -121,7 +127,7 @@ def main(args):
         hyp = load_hyperparams(args.dataset_name, inlier_topic, args.type_emb, file_path_hyp)
         print(hyp)
 
-        for n_run in range(1,2):
+        for n_run in range(1,11):
 
             print(f"+++++++++++++++++++++ run : {n_run} +++++++++++++++++\n")
 
@@ -360,15 +366,17 @@ def main(args):
 
             if args.date:
                 date_args = {
-                    "which_config": "bert",
-                    "encoder_name": "albert-base-v2", 
-                    "K": 15,
-                    "lr": 1e-4,
-                    "weight_decay" : 1e-5,
+                    # "which_config": "bert",
+                    # "encoder_name": "albert-base-v2", 
+                    "which_config": "electra",
+                    "encoder_name": "google/electra-small-discriminator",
+                    "K": 25,
+                    "lr": 1e-5,
+                    "weight_decay" : 0,
                     "seq_len": 498,
                     "ratio": 0.25,
-                    "n_epochs": 2,
-                    "batch_size": 64,
+                    "n_epochs": 70,
+                    "batch_size": 128,
                     "device": device
                     }
                             
@@ -485,7 +493,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="DATE",
             auc_mean=np.mean(list_auc_date), ap_mean=np.mean(list_ap_date),fpr_mean=np.mean(list_fpr_date),
             auc_std = np.std(list_auc_date),ap_std =  np.std(list_ap_date),fpr_std = np.std(list_fpr_date),
-            train_time = np.mean(list_time_date), overwrite='smart'
+            train_time = np.mean(list_time_date), overwrite='naive'
             )
 
 
@@ -553,6 +561,10 @@ if __name__ == "__main__":
 
     parser.add_argument(
     "--date",
+    action="store_true"
+    )  
+    parser.add_argument(
+    "--fate",
     action="store_true"
     )  
     
