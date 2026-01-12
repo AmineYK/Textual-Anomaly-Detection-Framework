@@ -176,7 +176,7 @@ class FATETrainer:
 
         for epoch in range(self.num_epochs):
             self.model.train()
-            for input_ids, attention_mask, labels in tqdm(self.train_loader):
+            for input_ids, attention_mask, labels in self.train_loader:
                 optimizer.zero_grad()
                 input_ids = input_ids.to(self.device)
                 attention_mask = attention_mask.to(self.device)
@@ -198,8 +198,9 @@ class FATETrainer:
                 optimizer.step()
                 global_step += 1
 
-            print(f"Epoch {epoch+1}/{self.num_epochs}, Loss: {loss.item():.4f}")
-            self.evaluate()
+            if epoch % (self.num_epochs // 3) == 0:
+                print(f"Epoch {epoch+1}/{self.num_epochs}, Loss: {loss.item():.4f}")
+                self.evaluate()
 
     @torch.no_grad()
     def evaluate(self):
@@ -261,7 +262,7 @@ class FATEModel(BaselineModel):
 
     def train(self):
 
-        self.trainer(self.lr)
+        self.trainer.train(self.lr)
         
 
     def test(self):

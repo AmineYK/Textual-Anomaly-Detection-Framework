@@ -1,0 +1,11 @@
+Working directory: /home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework
+Job ID: 1591721
+Timestamp: 20260111_133827
+/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/run_indep_anom.py:351: SyntaxWarning: invalid escape sequence '\C'
+  print(f"\CVDD finishing... after {(tiic-taac)/60:.3f} mn")
+/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/run_indep_anom.py:388: SyntaxWarning: invalid escape sequence '\D'
+  print(f"\DATE finishing... after {(tiic-taac)/60:.3f} mn")
+2026-01-11 13:38:41.293948: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** STEP 1591721.0 ON c23gpu2 CANCELLED AT 2026-01-12T01:38:48 DUE TO TIME LIMIT ***

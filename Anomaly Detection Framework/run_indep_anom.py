@@ -6,7 +6,7 @@ from torch import Tensor
 import time
 import tensorflow as tf
 import torch.nn.functional as F
-
+import datasets
 from Data_Preparation import utils
 from Data_Preparation.Embedding import embedding_encoder
 from Modelisation.Baselines.OCSVM.ocsvm import OCSVM
@@ -17,10 +17,12 @@ from Modelisation.Baselines.TCCM.model import TCCM
 # from Modelisation.Baselines.CVDD.networks.cvdd_Net import CVDDModel
 # from Modelisation.Baselines.CVDD.model_sbert import CVDDModel
 from Modelisation.Baselines.CVDD.networks.model_bert import CVDDModel
+from Modelisation.Baselines.FATE.fate import FATEModel
 from Modelisation.Baselines.DATE.date import DATEModel
 from Modelisation.FlowMatching.flow_matching import BasicFlowMatching
 from utils import save_results, create_tables
 import numpy as np
+import os
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -112,6 +114,9 @@ def main(args):
         # X_inlier = load_data_inlier(args.dataset_name, inlier_topic, save_dir)
 
         data_train = load_data_inlier(args.dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
+        if args.fate:
+            path = os.path.join(save_dir, f"{args.dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_anomaly.pt")
+            data_train_anomaly = datasets.load_from_disk(path)
 
         if args.type_emb == "fasttext":
             X_inlier = get_data_fasttext(data_train, ft_path, device)
@@ -121,13 +126,13 @@ def main(args):
 
         else: raise Exception("type_emb must be completed !")
         
-        print(f" Embedding : {args.type_emb} --> {X_inlier.shape}")
+        # print(f" Embedding : {args.type_emb} --> {X_inlier.shape}")
 
         # get the hyperparamter for the FM model for this specific inlier category
         hyp = load_hyperparams(args.dataset_name, inlier_topic, args.type_emb, file_path_hyp)
-        print(hyp)
-
-        for n_run in range(1,11):
+        # print(hyp)
+        nb_runs = 11
+        for n_run in range(1, nb_runs):
 
             print(f"+++++++++++++++++++++ run : {n_run} +++++++++++++++++\n")
 
@@ -371,12 +376,12 @@ def main(args):
                     "which_config": "electra",
                     "encoder_name": "google/electra-small-discriminator",
                     "K": 25,
-                    "lr": 1e-5,
+                    "lr": 1e-4,
                     "weight_decay" : 0,
                     "seq_len": 498,
                     "ratio": 0.25,
-                    "n_epochs": 70,
-                    "batch_size": 128,
+                    "n_epochs": 10,
+                    "batch_size": 32,
                     "device": device
                     }
                             
@@ -394,6 +399,42 @@ def main(args):
                 list_fpr_date.append(fpr95_date)    
                 list_ap_date.append(ap_date)  
                 list_time_date.append((tiic-taac))  
+
+            ########################################
+            ################# FATE #################
+            ########################################  
+
+            if args.fate:
+                data_test_inlier = data_test.filter(lambda x: x["anomaly_class"] == 0)
+                data_test_anomaly = data_test.filter(lambda x: x["anomaly_class"] == 1)
+                fate_args = {
+                    "device": device,
+                    "batch_size": 64,
+                    "n_epochs": 3,
+                    "lr": 1e-5,
+                    "include_regularization": True,
+                    "top_k": 0.1,
+                    "nb_shot": 30,
+                    "train_inlier_text": data_train['text'],     
+                    "train_anomaly_text": data_train_anomaly['text'],
+                    "test_inlier_text": data_test_inlier['text'],
+                    "test_anomaly_text": data_test_anomaly['text']
+                }
+                            
+                fate_model = FATEModel(fate_args)
+
+                taac = time.time()
+                fate_model.train()
+                tiic = time.time()
+                print(f"\FATE finishing... after {(tiic-taac)/60:.3f} mn")
+                
+                auc_fate, fpr95_fate, ap_fate = fate_model.test()
+                print(f"FATE --> AUC: {auc_fate:.4f} | FPR@95: {fpr95_fate:.4f} | AP: {ap_fate:.4f}\n")
+            
+                list_auc_fate.append(auc_fate)
+                list_fpr_fate.append(fpr95_fate)    
+                list_ap_fate.append(ap_fate)  
+                list_time_fate.append((tiic-taac))  
 
 
             #################################################
@@ -434,11 +475,6 @@ def main(args):
                 list_ap_fm.append(ap_fm)
                 list_time_fm.append((tiic-taac))
 
-
-        # print("AE --> ",inlier_topic ,np.mean(list_auc_ae))
-        # print(inlier_topic ,np.mean(list_auc_fm))
-        # print("RSRAE --> ", inlier_topic ,np.mean(list_auc_rsrae))
-        # print("CVDD --> ", inlier_topic ,np.mean(list_auc_cvdd))
         if args.fm:
             save_results(
                 dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching",
@@ -488,12 +524,20 @@ def main(args):
             train_time = np.mean(list_time_cvdd), overwrite='smart'
             )
 
-        if args.date:
+        if args.date and nb_runs == 11:
             save_results(
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="DATE",
             auc_mean=np.mean(list_auc_date), ap_mean=np.mean(list_ap_date),fpr_mean=np.mean(list_fpr_date),
             auc_std = np.std(list_auc_date),ap_std =  np.std(list_ap_date),fpr_std = np.std(list_fpr_date),
-            train_time = np.mean(list_time_date), overwrite='naive'
+            train_time = np.mean(list_time_date), overwrite='smart'
+            )
+
+        if args.fate:
+            save_results(
+            dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="FATE",
+            auc_mean=np.mean(list_auc_fate), ap_mean=np.mean(list_ap_fate),fpr_mean=np.mean(list_fpr_fate),
+            auc_std = np.std(list_auc_fate),ap_std =  np.std(list_ap_fate),fpr_std = np.std(list_fpr_fate),
+            train_time = np.mean(list_time_fate), overwrite='smart'
             )
 
 

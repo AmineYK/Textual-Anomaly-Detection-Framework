@@ -14,13 +14,41 @@ def generate_mask_patterns(K, seq_len, ratio):
     return torch.stack(masks)
 
 
+@torch.no_grad()
+def corrupt_input_random(masked_ids, mask_token_id, vocab_size):
+    """
+    Random generator (MEILLEUR selon Table 1 du papier)
+    Sample uniformément depuis le vocabulaire
+    """
+    corrupted = masked_ids.clone()
+    mask_positions = (masked_ids == mask_token_id)
+    
+    # Sample aléatoire depuis vocab (excluant les tokens spéciaux)
+    n_to_replace = mask_positions.sum().item()
+    if n_to_replace > 0:
+        # Sample depuis [5, vocab_size) pour éviter [PAD], [UNK], [CLS], [SEP], [MASK]
+        random_tokens = torch.randint(
+            5, vocab_size, 
+            (n_to_replace,), 
+            device=masked_ids.device
+        )
+        corrupted[mask_positions] = random_tokens
+    
+    return corrupted
+
 
 @torch.no_grad()
 def corrupt_input(generator, masked_ids, attention_mask, mask_token_id):
-    """Use generator to sample plausible replacements"""
+    """
+    Use generator to sample plausible replacements
+    (Moins performant que random selon le papier, mais gardé pour compatibilité)
+    """
     logits = generator(masked_ids, attention_mask)
+    
+    # Clamp pour éviter les NaN/Inf
+    logits = torch.clamp(logits, min=-1e9, max=1e9)
     probs = torch.softmax(logits, dim=-1)
-
+    
     # Sample from generator distribution
     sampled = torch.multinomial(
         probs.view(-1, probs.size(-1)), 1
@@ -28,7 +56,9 @@ def corrupt_input(generator, masked_ids, attention_mask, mask_token_id):
 
     # Replace only [MASK] tokens
     corrupted = masked_ids.clone()
-    corrupted[masked_ids == mask_token_id] = sampled[masked_ids == mask_token_id]
+    mask_positions = (masked_ids == mask_token_id)
+    corrupted[mask_positions] = sampled[mask_positions]
+    
     return corrupted
 
 
@@ -50,10 +80,13 @@ def date_loss(
 
     # RTD loss (discriminator, token-level)
     valid = rtd_labels != -100
-    loss_rtd = bce(
-        rtd_logits[valid].float(),
-        rtd_labels[valid].float()
-    ).mean()
+    if valid.sum() > 0:
+        loss_rtd = bce(
+            rtd_logits[valid].float(),
+            rtd_labels[valid].float()
+        ).mean()
+    else:
+        loss_rtd = torch.tensor(0.0, device=rtd_logits.device)
 
     # RMD loss (discriminator, sequence-level)
     loss_rmd = ce(rmd_logits, rmd_labels)
@@ -62,21 +95,29 @@ def date_loss(
 
 
 def apply_mask_safe(input_ids, mask, tokenizer):
-    """Apply mask pattern while preserving special tokens"""
+    """
+    Apply mask pattern while preserving special tokens
+    
+    IMPORTANT: Ne jamais modifier le mask original !
+    On applique le mask mais on skip les tokens spéciaux
+    """
+    batch_size, seq_len = input_ids.shape
     masked = input_ids.clone()
-
-    # Don't mask special tokens
-    forbidden = {
-        tokenizer.cls_token_id,
-        tokenizer.sep_token_id,
-        tokenizer.pad_token_id
-    }
-
-    for tok in forbidden:
-        mask = mask & (input_ids != tok)
-
-    masked[mask == 1] = tokenizer.mask_token_id
-    return masked
+    
+    # Expand mask to batch size (sans modifier l'original)
+    mask_expanded = mask.unsqueeze(0).expand(batch_size, -1).clone()
+    
+    # Create forbidden mask (tokens à ne PAS masquer)
+    forbidden = torch.zeros_like(input_ids, dtype=torch.bool)
+    forbidden |= (input_ids == tokenizer.cls_token_id)
+    forbidden |= (input_ids == tokenizer.sep_token_id)
+    forbidden |= (input_ids == tokenizer.pad_token_id)
+    
+    # Apply mask only where allowed
+    final_mask = (mask_expanded == 1) & (~forbidden)
+    masked[final_mask] = tokenizer.mask_token_id
+    
+    return masked, final_mask  # Retourner aussi le masque appliqué
 
 
 @torch.no_grad()
@@ -87,10 +128,12 @@ def date_anomaly_score(
     device="cuda"
 ):
     """
-    Compute anomaly scores for test data
+    Compute anomaly scores for test data using PL_RTD score
+    
+    PL_RTD = moyenne de P(token is original) sur tous les tokens valides
     
     Returns:
-        scores: np.array, shape (N,)
+        scores: np.array, shape (N,) - HIGHER = more normal
         labels: np.array, shape (N,)
     """
     discriminator.eval()
@@ -102,30 +145,32 @@ def date_anomaly_score(
         input_ids = input_ids.to(device)
         attention_mask = attention_mask.to(device)
 
-        # Forward discriminator
+        # Forward discriminator sur input ORIGINAL (non corrompu)
         rtd_logits, _ = discriminator(input_ids, attention_mask)
 
-        # Sigmoid → P(token is replaced)
+        # P(token is replaced) via sigmoid
         p_replaced = torch.sigmoid(rtd_logits)
 
-        # P(token is original)
+        # P(token is original) = 1 - P(replaced)
         p_original = 1.0 - p_replaced
 
-        # Ignore special tokens (CLS, SEP, PAD)
+        # Masque des tokens valides (selon équation 7 du papier)
+        # On EXCLUT : PAD et CLS
+        # On GARDE : SEP et tous les autres tokens
         valid = (attention_mask == 1) & \
                 (input_ids != tokenizer.cls_token_id) & \
-                (input_ids != tokenizer.sep_token_id) & \
                 (input_ids != tokenizer.pad_token_id)
         
-        # Score = average P(original) over valid tokens
+        # PL_RTD score = average P(original) over valid tokens
+        # Équation (7) du papier
         seq_scores = (
-            (p_original * valid).sum(dim=1)
-            / valid.sum(dim=1).clamp(min=1)
+            (p_original * valid).sum(dim=1) / valid.sum(dim=1).clamp(min=1)
         )
 
         all_scores.extend(seq_scores.cpu().numpy())
         all_labels.extend(labels.numpy())
 
-    return np.array(all_scores), np.array(all_labels)
-
+    scores = np.array(all_scores)
+    labels = np.array(all_labels)
     
+    return scores, labels

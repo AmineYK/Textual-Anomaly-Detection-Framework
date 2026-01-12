@@ -205,80 +205,122 @@ class DATEModel(BaselineModel):
         self.batch_size = args['batch_size']
 
     def train(self, data_train):
-
+        """
+        VERSION FINALE CORRIGÉE avec :
+        1. Random generator (meilleur que paramétré)
+        2. Masking dynamique par séquence
+        3. Logging détaillé pour debug
+        """
         train_texts = data_train['text']
-        train_ds = DATEDataset(train_texts, None, self.tokenizer)
+        train_ds = DATEDataset(train_texts, None, self.tokenizer, max_len=self.seq_len)
         train_loader = DataLoader(train_ds, batch_size=self.batch_size, shuffle=True)
 
-        self.generator.train()
         self.discriminator.train()
+        
+        print(f"Training sur {len(train_texts)} samples, {len(train_loader)} batches")
+        print(f"K={self.K} masks, ratio={self.ratio}, seq_len={self.seq_len}")
 
         for epoch in range(self.n_epochs):
             total_loss = 0.0
+            total_rmd = 0.0
+            total_rtd = 0.0
+            n_masked_tokens = 0
 
             for step, (input_ids, attention_mask, _) in enumerate(train_loader):
                 input_ids = input_ids.to(self.device)
                 attention_mask = attention_mask.to(self.device)
 
-                # Sample a mask pattern
-                k = torch.randint(0, self.mask_patterns.size(0), (1,)).item()
-                mask = self.mask_patterns[k].to(self.device)
+                # Sample UN mask pattern pour tout le batch
+                k = torch.randint(0, self.K, (1,)).item()
+                mask = self.mask_patterns[k]  # [seq_len]
 
-                # Apply masking
-                masked_ids = apply_mask_safe(input_ids, mask, self.tokenizer)
+                # Apply masking avec correction pour tokens spéciaux
+                masked_ids, actual_mask = apply_mask_safe(input_ids, mask, self.tokenizer)
+                
+                # Compter combien de tokens réellement masqués
+                n_masked_tokens += actual_mask.sum().item()
 
-                # MLM labels
-                mlm_labels = input_ids.clone()
-                mlm_labels[masked_ids != self.tokenizer.mask_token_id] = -100
-
-                # Generator forward (MLM)
-                mlm_logits = self.generator(masked_ids, attention_mask)
-
-                # Corrupt input
-                corrupted_ids = corrupt_input(
-                    self.generator, masked_ids, attention_mask, self.tokenizer.mask_token_id
+                # Random generator : remplacer [MASK] par tokens aléatoires
+                corrupted_ids = corrupt_input_random(
+                    masked_ids, 
+                    self.tokenizer.mask_token_id,
+                    self.vocab_size
                 )
 
-                # Build RTD labels (CORRECTED)
+                # RTD labels : 1 si token remplacé, 0 sinon
                 rtd_labels = (corrupted_ids != input_ids).long()
+                
+                # Exclure les tokens spéciaux de la loss RTD
                 rtd_labels[input_ids == self.tokenizer.cls_token_id] = -100
-                rtd_labels[input_ids == self.tokenizer.sep_token_id] = -100
                 rtd_labels[input_ids == self.tokenizer.pad_token_id] = -100
                 rtd_labels[attention_mask == 0] = -100
 
-                # RMD labels
+                # RMD labels : quel mask pattern a été utilisé
                 rmd_labels = torch.full(
                     (input_ids.size(0),),
                     k,
-                    device=self.device
+                    device=self.device,
+                    dtype=torch.long
                 )
 
-                # Discriminator forward
+                # Forward discriminator
                 rtd_logits, rmd_logits = self.discriminator(
                     corrupted_ids, attention_mask
                 )
 
-                # Compute loss
-                loss = date_loss(
-                    rtd_logits, rmd_logits,
-                    rtd_labels, rmd_labels,
-                    mlm_logits, mlm_labels,
-                    mu=100.0, lambda_rtd=50.0
-                )
+                # Loss computation
+                ce = torch.nn.CrossEntropyLoss(ignore_index=-100)
+                bce = torch.nn.BCEWithLogitsLoss(reduction="none")
+                
+                # RTD loss (token-level)
+                valid = rtd_labels != -100
+                if valid.sum() > 0:
+                    loss_rtd = bce(
+                        rtd_logits[valid].float(),
+                        rtd_labels[valid].float()
+                    ).mean()
+                else:
+                    loss_rtd = torch.tensor(0.0, device=self.device)
+                
+                # RMD loss (sequence-level)
+                loss_rmd = ce(rmd_logits, rmd_labels)
+                
+                # Combined loss
+                mu = 100.0
+                lambda_rtd = 50.0
+                loss = mu * loss_rmd + lambda_rtd * loss_rtd
 
                 # Backward
-                loss.backward()
-                self.optimizer.step()
                 self.optimizer.zero_grad()
+                loss.backward()
+                
+                # Gradient clipping
+                torch.nn.utils.clip_grad_norm_(
+                    self.discriminator.parameters(), max_norm=1.0
+                )
+                
+                self.optimizer.step()
 
                 total_loss += loss.item()
+                total_rmd += loss_rmd.item()
+                total_rtd += loss_rtd.item()
 
+            # Epoch stats
             avg_loss = total_loss / len(train_loader)
-            if epoch % (self.n_epochs // 3 ) == 0 :
-                print(f"Epoch {epoch+1}/{self.n_epochs} - Loss: {avg_loss:.4f}")
+            avg_rmd = total_rmd / len(train_loader)
+            avg_rtd = total_rtd / len(train_loader)
+            avg_masked = n_masked_tokens / (len(train_loader) * self.batch_size * self.seq_len)
+            
+            if epoch % max(1, self.n_epochs // 5) == 0:
+                print(f"Epoch {epoch+1}/{self.n_epochs} - Loss: {avg_loss:.2f} "
+                      f"(RMD: {avg_rmd:.4f}, RTD: {avg_rtd:.4f}) "
+                      f"| Masked: {avg_masked:.2%}")
 
     def test(self, data_test):
-
+        """
+        CORRECTION : Ne pas inverser le score !
+        date_anomaly_score retourne déjà un score où HIGHER = more normal
+        """
         test_texts = data_test['text']
         test_labels = data_test['anomaly_class']        
         
@@ -289,10 +331,105 @@ class DATEModel(BaselineModel):
             self.discriminator, test_loader, self.tokenizer, self.device
         )
     
-        # Higher score = more normal, so we invert for anomaly detection
-        test_scores = 1 - scores
+        # CORRECTION : Ne PAS inverser !
+        # scores élevés = normal, scores faibles = anomalie
+        # Pour AUROC, on veut un score où anomalie = valeur élevée
+        # Donc on INVERSE le score
+        test_scores = -scores  # ou 1 - scores
 
         auc, ap, fpr95 = ev.evaluation(test_labels, test_scores, verbose=False)
 
         return auc, fpr95, ap
+
+    # def train(self, data_train):
+
+    #     train_texts = data_train['text']
+    #     train_ds = DATEDataset(train_texts, None, self.tokenizer)
+    #     train_loader = DataLoader(train_ds, batch_size=self.batch_size, shuffle=True)
+
+    #     self.generator.train()
+    #     self.discriminator.train()
+
+    #     for epoch in range(self.n_epochs):
+    #         total_loss = 0.0
+
+    #         for step, (input_ids, attention_mask, _) in enumerate(train_loader):
+    #             input_ids = input_ids.to(self.device)
+    #             attention_mask = attention_mask.to(self.device)
+
+    #             # Sample a mask pattern
+    #             k = torch.randint(0, self.mask_patterns.size(0), (1,)).item()
+    #             mask = self.mask_patterns[k].to(self.device)
+
+    #             # Apply masking
+    #             masked_ids = apply_mask_safe(input_ids, mask, self.tokenizer)
+
+    #             # MLM labels
+    #             mlm_labels = input_ids.clone()
+    #             mlm_labels[masked_ids != self.tokenizer.mask_token_id] = -100
+
+    #             # Generator forward (MLM)
+    #             mlm_logits = self.generator(masked_ids, attention_mask)
+
+    #             # Corrupt input
+    #             corrupted_ids = corrupt_input(
+    #                 self.generator, masked_ids, attention_mask, self.tokenizer.mask_token_id
+    #             )
+
+    #             # Build RTD labels (CORRECTED)
+    #             rtd_labels = (corrupted_ids != input_ids).long()
+    #             rtd_labels[input_ids == self.tokenizer.cls_token_id] = -100
+    #             rtd_labels[input_ids == self.tokenizer.sep_token_id] = -100
+    #             rtd_labels[input_ids == self.tokenizer.pad_token_id] = -100
+    #             rtd_labels[attention_mask == 0] = -100
+
+    #             # RMD labels
+    #             rmd_labels = torch.full(
+    #                 (input_ids.size(0),),
+    #                 k,
+    #                 device=self.device
+    #             )
+
+    #             # Discriminator forward
+    #             rtd_logits, rmd_logits = self.discriminator(
+    #                 corrupted_ids, attention_mask
+    #             )
+
+    #             # Compute loss
+    #             loss = date_loss(
+    #                 rtd_logits, rmd_logits,
+    #                 rtd_labels, rmd_labels,
+    #                 mlm_logits, mlm_labels,
+    #                 mu=100.0, lambda_rtd=50.0
+    #             )
+
+    #             # Backward
+    #             loss.backward()
+    #             self.optimizer.step()
+    #             self.optimizer.zero_grad()
+
+    #             total_loss += loss.item()
+
+    #         avg_loss = total_loss / len(train_loader)
+    #         if epoch % (self.n_epochs // 3 ) == 0 :
+    #             print(f"Epoch {epoch+1}/{self.n_epochs} - Loss: {avg_loss:.4f}")
+
+    # def test(self, data_test):
+
+    #     test_texts = data_test['text']
+    #     test_labels = data_test['anomaly_class']        
+        
+    #     test_ds = DATEDataset(test_texts, test_labels, self.tokenizer)
+    #     test_loader = DataLoader(test_ds, batch_size=64)
+
+    #     scores, _ = date_anomaly_score(
+    #         self.discriminator, test_loader, self.tokenizer, self.device
+    #     )
+    
+    #     # Higher score = more normal, so we invert for anomaly detection
+    #     test_scores = 1 - scores
+
+    #     auc, ap, fpr95 = ev.evaluation(test_labels, test_scores, verbose=False)
+
+    #     return auc, fpr95, ap
     

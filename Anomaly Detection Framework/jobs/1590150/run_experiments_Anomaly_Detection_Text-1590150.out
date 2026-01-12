@@ -272,3 +272,305 @@ DATE --> AUC: 0.6069 | FPR@95: 0.1558 | AP: 0.9167
 
 +++++++++++++++++++++ run : 9 +++++++++++++++++
 
+Epoch 1/50 - Loss: 387.7773
+Epoch 17/50 - Loss: 362.0757
+Epoch 33/50 - Loss: 360.5465
+Epoch 49/50 - Loss: 355.6460
+\DATE finishing... after 8.070 mn
+DATE --> AUC: 0.6216 | FPR@95: 0.1496 | AP: 0.8400
+
++++++++++++++++++++++ run : 10 +++++++++++++++++
+
+Epoch 1/50 - Loss: 377.9243
+Epoch 17/50 - Loss: 367.8632
+Epoch 33/50 - Loss: 354.3662
+Epoch 49/50 - Loss: 354.1641
+\DATE finishing... after 8.067 mn
+DATE --> AUC: 0.6317 | FPR@95: 0.1709 | AP: 0.8875
+
+Résultats mis à jour pour (20newsgroups, science, sentence_bert, DATE).
+------------------------ miscellaneous(4/6) -----------------------------
+ Embedding : sentence_bert --> torch.Size([520, 768])
+{'batch_size': 32, 'latent_dim': 256, 'sinu': False, 'batchnorm': False, 'dropout': 0.1, 'lr': 0.0001, 'weight_decay': 1e-06, 'n_epochs': 25, 'source': 'sphere', 'target': 'torch.Size([520, 384])'}
++++++++++++++++++++++ run : 1 +++++++++++++++++
+
+Epoch 1/50 - Loss: 368.6002
+Epoch 17/50 - Loss: 374.7473
+Epoch 33/50 - Loss: 368.8457
+Epoch 49/50 - Loss: 355.1759
+\DATE finishing... after 2.016 mn
+DATE --> AUC: 0.5911 | FPR@95: 0.1418 | AP: 0.7674
+
++++++++++++++++++++++ run : 2 +++++++++++++++++
+
+Epoch 1/50 - Loss: 372.9138
+Epoch 17/50 - Loss: 372.6294
+Epoch 33/50 - Loss: 348.9430
+Epoch 49/50 - Loss: 366.2441
+\DATE finishing... after 2.020 mn
+DATE --> AUC: 0.5638 | FPR@95: 0.1176 | AP: 0.8285
+
++++++++++++++++++++++ run : 3 +++++++++++++++++
+
+Epoch 1/50 - Loss: 385.6397
+Epoch 17/50 - Loss: 363.9163
+Epoch 33/50 - Loss: 358.2986
+Epoch 49/50 - Loss: 361.8695
+\DATE finishing... after 2.013 mn
+DATE --> AUC: 0.6587 | FPR@95: 0.1990 | AP: 0.8198
+
++++++++++++++++++++++ run : 4 +++++++++++++++++
+
+Epoch 1/50 - Loss: 419.1937
+Epoch 17/50 - Loss: 368.1584
+Epoch 33/50 - Loss: 355.6334
+Epoch 49/50 - Loss: 374.0456
+\DATE finishing... after 2.018 mn
+DATE --> AUC: 0.5999 | FPR@95: 0.1281 | AP: 0.8517
+
++++++++++++++++++++++ run : 5 +++++++++++++++++
+
+Epoch 1/50 - Loss: 352.0032
+Epoch 17/50 - Loss: 376.7140
+Epoch 33/50 - Loss: 349.5931
+Epoch 49/50 - Loss: 367.8872
+\DATE finishing... after 2.022 mn
+DATE --> AUC: 0.6160 | FPR@95: 0.1289 | AP: 0.7791
+
++++++++++++++++++++++ run : 6 +++++++++++++++++
+
+Epoch 1/50 - Loss: 338.6384
+Epoch 17/50 - Loss: 365.1452
+Epoch 33/50 - Loss: 371.4715
+Epoch 49/50 - Loss: 370.3336
+\DATE finishing... after 2.025 mn
+DATE --> AUC: 0.6198 | FPR@95: 0.1402 | AP: 0.9302
+
++++++++++++++++++++++ run : 7 +++++++++++++++++
+
+Epoch 1/50 - Loss: 390.8291
+Epoch 17/50 - Loss: 363.6038
+Epoch 33/50 - Loss: 366.8816
+Epoch 49/50 - Loss: 372.7628
+\DATE finishing... after 2.017 mn
+DATE --> AUC: 0.6462 | FPR@95: 0.1442 | AP: 0.8285
+
++++++++++++++++++++++ run : 8 +++++++++++++++++
+
+Epoch 1/50 - Loss: 391.6348
+Epoch 17/50 - Loss: 372.6119
+Epoch 33/50 - Loss: 362.6694
+Epoch 49/50 - Loss: 355.8641
+\DATE finishing... after 2.025 mn
+DATE --> AUC: 0.4417 | FPR@95: 0.0891 | AP: 0.8779
+
++++++++++++++++++++++ run : 9 +++++++++++++++++
+
+Epoch 1/50 - Loss: 383.8195
+Epoch 17/50 - Loss: 367.1424
+Epoch 33/50 - Loss: 370.8284
+Epoch 49/50 - Loss: 375.6122
+\DATE finishing... after 2.022 mn
+DATE --> AUC: 0.6023 | FPR@95: 0.1567 | AP: 0.9331
+
++++++++++++++++++++++ run : 10 +++++++++++++++++
+
+Epoch 1/50 - Loss: 363.5974
+Epoch 17/50 - Loss: 390.5185
+Epoch 33/50 - Loss: 377.8337
+Epoch 49/50 - Loss: 354.8122
+\DATE finishing... after 2.013 mn
+DATE --> AUC: 0.5066 | FPR@95: 0.0963 | AP: 0.9738
+
+Résultats mis à jour pour (20newsgroups, miscellaneous, sentence_bert, DATE).
+------------------------ politics(5/6) -----------------------------
+ Embedding : sentence_bert --> torch.Size([1378, 768])
+{'batch_size': 32, 'latent_dim': 256, 'sinu': False, 'batchnorm': False, 'dropout': 0.1, 'lr': 0.0001, 'weight_decay': 1e-06, 'n_epochs': 25, 'source': 'sphere', 'target': 'torch.Size([1378, 384])'}
++++++++++++++++++++++ run : 1 +++++++++++++++++
+
+Epoch 1/50 - Loss: 383.0997
+Epoch 17/50 - Loss: 366.8303
+Epoch 33/50 - Loss: 364.6519
+Epoch 49/50 - Loss: 349.6712
+\DATE finishing... after 5.359 mn
+DATE --> AUC: 0.7345 | FPR@95: 0.2390 | AP: 0.7922
+
++++++++++++++++++++++ run : 2 +++++++++++++++++
+
+Epoch 1/50 - Loss: 381.3009
+Epoch 17/50 - Loss: 362.0351
+Epoch 33/50 - Loss: 357.5653
+Epoch 49/50 - Loss: 358.0778
+\DATE finishing... after 5.339 mn
+DATE --> AUC: 0.7242 | FPR@95: 0.2266 | AP: 0.7922
+
++++++++++++++++++++++ run : 3 +++++++++++++++++
+
+Epoch 1/50 - Loss: 379.3852
+Epoch 17/50 - Loss: 367.1822
+Epoch 33/50 - Loss: 356.1838
+Epoch 49/50 - Loss: 355.2152
+\DATE finishing... after 5.354 mn
+DATE --> AUC: 0.7439 | FPR@95: 0.2194 | AP: 0.7273
+
++++++++++++++++++++++ run : 4 +++++++++++++++++
+
+Epoch 1/50 - Loss: 387.4866
+Epoch 17/50 - Loss: 354.1030
+Epoch 33/50 - Loss: 358.2142
+Epoch 49/50 - Loss: 358.3242
+\DATE finishing... after 5.324 mn
+DATE --> AUC: 0.7259 | FPR@95: 0.2451 | AP: 0.9091
+
++++++++++++++++++++++ run : 5 +++++++++++++++++
+
+Epoch 1/50 - Loss: 393.5873
+Epoch 17/50 - Loss: 356.2596
+Epoch 33/50 - Loss: 377.8703
+Epoch 49/50 - Loss: 360.6161
+\DATE finishing... after 5.343 mn
+DATE --> AUC: 0.7177 | FPR@95: 0.2507 | AP: 0.8452
+
++++++++++++++++++++++ run : 6 +++++++++++++++++
+
+Epoch 1/50 - Loss: 385.5963
+Epoch 17/50 - Loss: 352.0124
+Epoch 33/50 - Loss: 361.3479
+Epoch 49/50 - Loss: 352.6446
+\DATE finishing... after 5.336 mn
+DATE --> AUC: 0.6659 | FPR@95: 0.1868 | AP: 0.8712
+
++++++++++++++++++++++ run : 7 +++++++++++++++++
+
+Epoch 1/50 - Loss: 390.0853
+Epoch 17/50 - Loss: 359.6466
+Epoch 33/50 - Loss: 367.6612
+Epoch 49/50 - Loss: 357.5489
+\DATE finishing... after 5.339 mn
+DATE --> AUC: 0.6653 | FPR@95: 0.2147 | AP: 0.9416
+
++++++++++++++++++++++ run : 8 +++++++++++++++++
+
+Epoch 1/50 - Loss: 375.7203
+Epoch 17/50 - Loss: 362.3504
+Epoch 33/50 - Loss: 352.7733
+Epoch 49/50 - Loss: 364.1252
+\DATE finishing... after 5.338 mn
+DATE --> AUC: 0.7608 | FPR@95: 0.3044 | AP: 0.8907
+
++++++++++++++++++++++ run : 9 +++++++++++++++++
+
+Epoch 1/50 - Loss: 357.3499
+Epoch 17/50 - Loss: 360.2775
+Epoch 33/50 - Loss: 364.7635
+Epoch 49/50 - Loss: 364.0756
+\DATE finishing... after 5.349 mn
+DATE --> AUC: 0.7062 | FPR@95: 0.2868 | AP: 0.8203
+
++++++++++++++++++++++ run : 10 +++++++++++++++++
+
+Epoch 1/50 - Loss: 374.4140
+Epoch 17/50 - Loss: 370.8824
+Epoch 33/50 - Loss: 361.9667
+Epoch 49/50 - Loss: 364.2280
+\DATE finishing... after 5.354 mn
+DATE --> AUC: 0.7320 | FPR@95: 0.2414 | AP: 0.7348
+
+Résultats mis à jour pour (20newsgroups, politics, sentence_bert, DATE).
+------------------------ religion(6/6) -----------------------------
+ Embedding : sentence_bert --> torch.Size([1278, 768])
+{'batch_size': 32, 'latent_dim': 256, 'sinu': False, 'batchnorm': False, 'dropout': 0.1, 'lr': 0.0001, 'weight_decay': 1e-06, 'n_epochs': 25, 'source': 'sphere', 'target': 'torch.Size([1278, 384])'}
++++++++++++++++++++++ run : 1 +++++++++++++++++
+
+Epoch 1/50 - Loss: 367.2674
+Epoch 17/50 - Loss: 352.4735
+Epoch 33/50 - Loss: 352.2778
+Epoch 49/50 - Loss: 354.5934
+\DATE finishing... after 4.946 mn
+DATE --> AUC: 0.8010 | FPR@95: 0.3159 | AP: 0.6194
+
++++++++++++++++++++++ run : 2 +++++++++++++++++
+
+Epoch 1/50 - Loss: 384.6127
+Epoch 17/50 - Loss: 369.1650
+Epoch 33/50 - Loss: 377.2823
+Epoch 49/50 - Loss: 365.5484
+\DATE finishing... after 4.953 mn
+DATE --> AUC: 0.7748 | FPR@95: 0.2716 | AP: 0.8061
+
++++++++++++++++++++++ run : 3 +++++++++++++++++
+
+Epoch 1/50 - Loss: 366.2999
+Epoch 17/50 - Loss: 355.3935
+Epoch 33/50 - Loss: 360.3482
+Epoch 49/50 - Loss: 354.1029
+\DATE finishing... after 4.950 mn
+DATE --> AUC: 0.8228 | FPR@95: 0.3521 | AP: 0.7624
+
++++++++++++++++++++++ run : 4 +++++++++++++++++
+
+Epoch 1/50 - Loss: 381.7091
+Epoch 17/50 - Loss: 368.1785
+Epoch 33/50 - Loss: 351.6407
+Epoch 49/50 - Loss: 363.9756
+\DATE finishing... after 4.948 mn
+DATE --> AUC: 0.8081 | FPR@95: 0.3164 | AP: 0.6017
+
++++++++++++++++++++++ run : 5 +++++++++++++++++
+
+Epoch 1/50 - Loss: 368.5108
+Epoch 17/50 - Loss: 357.6848
+Epoch 33/50 - Loss: 362.6885
+Epoch 49/50 - Loss: 356.8898
+\DATE finishing... after 4.952 mn
+DATE --> AUC: 0.8095 | FPR@95: 0.2772 | AP: 0.5366
+
++++++++++++++++++++++ run : 6 +++++++++++++++++
+
+Epoch 1/50 - Loss: 395.4387
+Epoch 17/50 - Loss: 361.8635
+Epoch 33/50 - Loss: 351.0118
+Epoch 49/50 - Loss: 357.7170
+\DATE finishing... after 4.957 mn
+DATE --> AUC: 0.7901 | FPR@95: 0.3185 | AP: 0.6501
+
++++++++++++++++++++++ run : 7 +++++++++++++++++
+
+Epoch 1/50 - Loss: 394.3842
+Epoch 17/50 - Loss: 379.2854
+Epoch 33/50 - Loss: 357.7082
+Epoch 49/50 - Loss: 353.9287
+\DATE finishing... after 4.949 mn
+DATE --> AUC: 0.8251 | FPR@95: 0.3281 | AP: 0.6206
+
++++++++++++++++++++++ run : 8 +++++++++++++++++
+
+Epoch 1/50 - Loss: 389.1499
+Epoch 17/50 - Loss: 362.3048
+Epoch 33/50 - Loss: 357.6945
+Epoch 49/50 - Loss: 350.8938
+\DATE finishing... after 4.943 mn
+DATE --> AUC: 0.7916 | FPR@95: 0.3313 | AP: 0.6407
+
++++++++++++++++++++++ run : 9 +++++++++++++++++
+
+Epoch 1/50 - Loss: 374.7760
+Epoch 17/50 - Loss: 355.5967
+Epoch 33/50 - Loss: 354.1714
+Epoch 49/50 - Loss: 367.5161
+\DATE finishing... after 4.945 mn
+DATE --> AUC: 0.7540 | FPR@95: 0.3218 | AP: 0.9693
+
++++++++++++++++++++++ run : 10 +++++++++++++++++
+
+Epoch 1/50 - Loss: 398.3538
+Epoch 17/50 - Loss: 365.0410
+Epoch 33/50 - Loss: 361.3166
+Epoch 49/50 - Loss: 352.3358
+\DATE finishing... after 4.954 mn
+DATE --> AUC: 0.7592 | FPR@95: 0.2392 | AP: 0.6809
+
+Résultats mis à jour pour (20newsgroups, religion, sentence_bert, DATE).
+run.sh: line 8: on3: command not found
+srun: error: c23gpu3: task 0: Exited with exit code 127
+srun: Terminating StepId=1590150.0
