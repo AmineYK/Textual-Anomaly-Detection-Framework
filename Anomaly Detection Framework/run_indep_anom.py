@@ -375,13 +375,13 @@ def main(args):
                     # "encoder_name": "albert-base-v2", 
                     "which_config": "electra",
                     "encoder_name": "google/electra-small-discriminator",
-                    "K": 25,
-                    "lr": 1e-4,
+                    "K": 50,
+                    "lr": 1e-5,
                     "weight_decay" : 0,
                     "seq_len": 498,
-                    "ratio": 0.25,
-                    "n_epochs": 10,
-                    "batch_size": 32,
+                    "ratio": 0.5,
+                    "n_epochs": 15,
+                    "batch_size": 64,
                     "device": device
                     }
                             

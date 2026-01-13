@@ -1379,11 +1379,11 @@ Dataset:        reuters
 Inlier class:   acq
 Embedding type: sentence_bert
 AD model:       DATE
-Training time:  22.52 sec
+Training time:  28.37 sec
 ----------------------------------------
-AUC:            0.7675 ± 0.0371
-Avg Precision:  0.9703 ± 0.0858
-FPR@95:         0.3063 ± 0.0254
+AUC:            0.7769 ± 0.0266
+Avg Precision:  0.8695 ± 0.1440
+FPR@95:         0.3035 ± 0.0473
 ========================================
 
 ========================================
@@ -1403,11 +1403,11 @@ Dataset:        reuters
 Inlier class:   crude
 Embedding type: sentence_bert
 AD model:       DATE
-Training time:  3.65 sec
+Training time:  7.37 sec
 ----------------------------------------
-AUC:            0.7013 ± 0.0610
-Avg Precision:  0.7890 ± 0.1327
-FPR@95:         0.1945 ± 0.0606
+AUC:            0.7281 ± 0.0683
+Avg Precision:  0.6560 ± 0.1077
+FPR@95:         0.2113 ± 0.1017
 ========================================
 
 ========================================
