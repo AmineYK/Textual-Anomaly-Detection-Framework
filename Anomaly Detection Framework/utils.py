@@ -10,79 +10,290 @@ from transformers import AutoModel, AutoTokenizer
 from torch.utils.data import DataLoader
 
 BASE_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results"
-OUTPUT_TEX = os.path.join(BASE_DIR, "tables.tex")
+# OUTPUT_TEX = os.path.join(BASE_DIR, "tables.tex")
+
+# DATASETS = ["reuters", "agnews", "20newsgroups", "dbpedia14"]
+
+# pattern = {
+#     "dataset": re.compile(r"Dataset:\s*(.*)"),
+#     "inlier": re.compile(r"Inlier class:\s*(.*)"),
+#     "model": re.compile(r"AD model:\s*(.*)"),
+#     "auc": re.compile(r"AUC:\s*([\d.]+)\s*±\s*([\d.]+)"),
+#     "type_emb" : re.compile(r"Embedding type:\s*(.*)")
+# }
+
+# # results[dataset][inlier_class][model] = (mean, std)
+# # results = defaultdict(lambda: defaultdict(dict))
+# results = defaultdict(lambda: defaultdict(lambda: defaultdict(dict)))
+
+# def load_all_results():
+#     for ds in DATASETS:
+#         folder = os.path.join(BASE_DIR, ds)
+#         filepath = os.path.join(folder, "results.txt")
+
+#         if not os.path.exists(filepath):
+#             print(f"Aucun fichier trouvé pour {ds}: {filepath}")
+#             continue
+
+#         with open(filepath, "r") as f:
+#             block = {
+#                 "type_emb": None,
+#                 "dataset": None,
+#                 "inlier": None,
+#                 "model": None,
+#                 "auc": None
+#             }
+
+#             for line in f:
+#                 line = line.strip()
+
+#                 if m := pattern["type_emb"].search(line):
+#                     block["type_emb"] = m.group(1).strip()
+
+#                 if m := pattern["dataset"].search(line):
+#                     block["dataset"] = m.group(1).strip()
+
+#                 if m := pattern["inlier"].search(line):
+#                     block["inlier"] = m.group(1).strip()
+
+#                 if m := pattern["model"].search(line):
+#                     block["model"] = m.group(1).strip()
+
+#                 if m := pattern["auc"].search(line):
+#                     block["auc"] = (float(m.group(1)), float(m.group(2)))
+
+#                 if line.startswith("========================================"):
+
+#                     if all(block.values()):
+#                         te = block["type_emb"]
+#                         ds_name = block["dataset"]
+#                         ic = block["inlier"]
+#                         model = block["model"]
+
+#                         results[te][ds_name][ic][model] = block["auc"]
+
+#                     block = {k: None for k in block}
+
+# MODEL_ORDER = [
+#     "ocsvm",
+#     "AE",
+#     "RSRAE",
+#     "CVDD",
+#     "TCCM",
+#     "DATE",
+#     "FATE",
+#     "flow-matching"
+# ]
+
+# MODEL_LATEX = {
+#     "ocsvm": "OCSVM",
+#     "AE": "AE",
+#     "RSRAE": "RSRAE",
+#     "CVDD": "CVDD",
+#     "TCCM": "TCCM",
+#     "DATE": "DATE",
+#     "FATE": "FATE",
+#     "flow-matching": "\\textbf{BasicFM}"
+# }
+
+# def fmt(mean, std):
+#     return f"{mean:.4f} $\\pm$ {std:.4f}"
+
+# def get_best_two(values):
+#     """values est une liste de floats, certains peuvent être None."""
+#     valid = [(i, v) for i, v in enumerate(values) if v is not None]
+#     if len(valid) < 2:
+#         return None, None
+
+#     valid_sorted = sorted(valid, key=lambda x: x[1], reverse=True)
+
+#     best = valid_sorted[0][0]
+#     second = valid_sorted[1][0]
+#     return best, second
+
+# def generate_global_table(results):
+#     datasets = list(results.keys())
+
+#     global_means = []
+#     for model in MODEL_ORDER:
+#         row = []
+#         for ds in datasets:
+#             vals = [results[ds][ic][model] for ic in results[ds] if model in results[ds][ic]]
+#             if vals:
+#                 means = [v[0] for v in vals]
+#                 row.append(float(np.mean(means)))
+#             else:
+#                 row.append(None)
+#         global_means.append(row)
+        
+#     best_idx = {}
+#     sec_idx = {}
+#     for col in range(len(datasets)):
+#         column_vals = [global_means[row][col] for row in range(len(MODEL_ORDER))]
+#         best, second = get_best_two(column_vals)
+#         best_idx[col] = best
+#         sec_idx[col] = second
+
+
+#     latex = []
+#     latex.append("\\begin{table}[H]")
+#     latex.append("\\centering")
+#     latex.append("\\caption{AUC on All datasets}")
+#     latex.append("\\begin{tabular}{l" + "c"*len(datasets) + "}")
+#     latex.append("\\toprule")
+#     latex.append("Model & " + " & ".join([ds.capitalize() for ds in datasets]) + " \\\\")
+#     latex.append("\\midrule")
+
+#     for r, model in enumerate(MODEL_ORDER):
+#         row = [MODEL_LATEX[model]]
+#         for c, ds in enumerate(datasets):
+#             mean_val = global_means[r][c]
+#             if mean_val is not None:
+#                 vals = [results[ds][ic][model] for ic in results[ds] if model in results[ds][ic]]
+#                 if vals:
+#                     stds = [v[1] for v in vals]
+#                     mean_std = float(np.mean(stds))
+#                 else:
+#                     mean_std = 0.0
+
+#                 base = fmt(mean_val, mean_std)
+
+#                 if r == best_idx[c]:
+#                     base = f"\\textbf{{{base}}}"
+#                 elif r == sec_idx[c]:
+#                     base = f"\\underline{{{base}}}"
+#                 row.append(base)
+#             else:
+#                 row.append("0.0000 $\\pm$ 0.0000")
+#         latex.append(" & ".join(row) + " \\\\")
+
+#     latex.append("\\bottomrule")
+#     latex.append("\\end{tabular}")
+#     latex.append("\\label{tab:ad_results}")
+#     latex.append("\\end{table}\n")
+
+#     return "\n".join(latex)
+
+# def generate_dataset_tables(results):
+
+#     latex_all = []
+
+#     for ds in results:
+#         inlier_classes = list(results[ds].keys())
+#         auc_matrix = []
+#         for model in MODEL_ORDER:
+#             row_vals = []
+#             for ic in inlier_classes:
+#                 if model in results[ds][ic]:
+#                     row_vals.append(results[ds][ic][model][0])
+#                 else:
+#                     row_vals.append(None)
+#             auc_matrix.append(row_vals)
+
+
+#         best_idx = {}
+#         sec_idx = {}
+#         for col in range(len(inlier_classes)):
+#             column_vals = [auc_matrix[row][col] for row in range(len(MODEL_ORDER))]
+#             best, second = get_best_two(column_vals)
+#             best_idx[col] = best
+#             sec_idx[col] = second
+
+#         latex = []
+#         latex.append("\\begin{table}[H]")
+#         latex.append("\\centering")
+#         latex.append(f"\\caption{{AUC on {ds.capitalize()}}}")
+#         latex.append("\\resizebox{1.1\\textwidth}{!}{")
+#         latex.append("\\begin{tabular}{l" + "c"*len(inlier_classes) + "}")
+#         latex.append("\\toprule")
+#         latex.append("Model & " + " & ".join(inlier_classes) + " \\\\")
+#         latex.append("\\midrule")
+
+#         for r, model in enumerate(MODEL_ORDER):
+
+#             row = [MODEL_LATEX[model]]
+            
+
+#             for c, ic in enumerate(inlier_classes):
+
+#                 if model in results[ds][ic]:
+#                     mean, std = results[ds][ic][model]
+#                     base = fmt(mean, std)
+
+#                     if r == best_idx[c]:
+#                         base = f"\\textbf{{{base}}}"
+#                     elif r == sec_idx[c]:
+#                         base = f"\\underline{{{base}}}"
+
+#                     row.append(base)
+#                 else:
+#                     row.append("0.0000 $\\pm$ 0.0000")
+
+#             latex.append(" & ".join(row) + " \\\\")
+
+#         latex.append("\\bottomrule")
+#         latex.append("\\end{tabular}")
+#         latex.append("}")
+#         latex.append(f"\\label{{tab:{ds}}}")
+#         latex.append("\\end{table}\n")
+
+
+#         latex_all.append("\n".join(latex))
+
+#     return "\n\n".join(latex_all)
+
+# def create_tables():
+
+#     print("Lecture des fichiers...")
+#     load_all_results()
+
+#     if os.path.exists(OUTPUT_TEX):
+#         os.remove(OUTPUT_TEX)
+
+#     with open(OUTPUT_TEX, "w") as f:
+
+#         for type_emb in results:
+
+#             title = type_emb.replace("_", " ").title()
+
+#             f.write(f"\\section{{Results with {title}}}\n\n")
+
+#             global_table = generate_global_table(results[type_emb])
+#             dataset_tables = generate_dataset_tables(results[type_emb])
+
+#             f.write(global_table)
+#             f.write("\n\n")
+#             f.write(dataset_tables)
+#             f.write("\n\n")
+
+#     print(f"Fichier LaTeX généré : {OUTPUT_TEX}")
+
+import os
+import re
+import numpy as np
+from collections import defaultdict
+
+# =========================
+# CONFIGURATION
+# =========================
+
+BASE_RESULTS_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results"
+OUTPUT_LATEX_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/latex_tables"
 
 DATASETS = ["reuters", "agnews", "20newsgroups", "dbpedia14"]
+ENCODING_TYPES = ["sentence-bert", "bert", "fasttext"]
+NU_VALUES = [0.0, 0.1]
 
-pattern = {
-    "dataset": re.compile(r"Dataset:\s*(.*)"),
-    "inlier": re.compile(r"Inlier class:\s*(.*)"),
-    "model": re.compile(r"AD model:\s*(.*)"),
-    "auc": re.compile(r"AUC:\s*([\d.]+)\s*±\s*([\d.]+)"),
-    "type_emb" : re.compile(r"Embedding type:\s*(.*)")
-}
+os.makedirs(OUTPUT_LATEX_DIR, exist_ok=True)
 
-# results[dataset][inlier_class][model] = (mean, std)
-# results = defaultdict(lambda: defaultdict(dict))
-results = defaultdict(lambda: defaultdict(lambda: defaultdict(dict)))
+# =========================
+# MODELS & GROUPS
+# =========================
 
-def load_all_results():
-    for ds in DATASETS:
-        folder = os.path.join(BASE_DIR, ds)
-        filepath = os.path.join(folder, "results.txt")
-
-        if not os.path.exists(filepath):
-            print(f"Aucun fichier trouvé pour {ds}: {filepath}")
-            continue
-
-        with open(filepath, "r") as f:
-            block = {
-                "type_emb": None,
-                "dataset": None,
-                "inlier": None,
-                "model": None,
-                "auc": None
-            }
-
-            for line in f:
-                line = line.strip()
-
-                if m := pattern["type_emb"].search(line):
-                    block["type_emb"] = m.group(1).strip()
-
-                if m := pattern["dataset"].search(line):
-                    block["dataset"] = m.group(1).strip()
-
-                if m := pattern["inlier"].search(line):
-                    block["inlier"] = m.group(1).strip()
-
-                if m := pattern["model"].search(line):
-                    block["model"] = m.group(1).strip()
-
-                if m := pattern["auc"].search(line):
-                    block["auc"] = (float(m.group(1)), float(m.group(2)))
-
-                if line.startswith("========================================"):
-
-                    if all(block.values()):
-                        te = block["type_emb"]
-                        ds_name = block["dataset"]
-                        ic = block["inlier"]
-                        model = block["model"]
-
-                        results[te][ds_name][ic][model] = block["auc"]
-
-                    block = {k: None for k in block}
-
-MODEL_ORDER = [
-    "ocsvm",
-    "AE",
-    "RSRAE",
-    "CVDD",
-    "TCCM",
-    "DATE",
-    "FATE",
-    "flow-matching"
+MODEL_GROUPS = [
+    ("Classical baselines", ["ocsvm", "AE"]),
+    ("Deep baselines", ["RSRAE", "CVDD", "DATE", "FATE"]),
+    ("Flow-based models", ["TCCM", "flow-matching"]),
 ]
 
 MODEL_LATEX = {
@@ -90,183 +301,267 @@ MODEL_LATEX = {
     "AE": "AE",
     "RSRAE": "RSRAE",
     "CVDD": "CVDD",
-    "TCCM": "TCCM",
     "DATE": "DATE",
     "FATE": "FATE",
-    "flow-matching": "\\textbf{BasicFM}"
+    "TCCM": "TCCM",
+    "flow-matching": "\\textbf{BasicFM}",
 }
+
+MODEL_ORDER = [m for _, g in MODEL_GROUPS for m in g]
+
+# =========================
+# REGEX PATTERNS
+# =========================
+
+pattern = {
+    "dataset": re.compile(r"Dataset:\s*(.*)"),
+    "inlier": re.compile(r"Inlier class:\s*(.*)"),
+    "model": re.compile(r"AD model:\s*(.*)"),
+    "auc": re.compile(r"AUC:\s*([\d.]+)\s*±\s*([\d.]+)"),
+    "type_emb": re.compile(r"Embedding type:\s*(.*)"),
+}
+
+# =========================
+# UTILS
+# =========================
 
 def fmt(mean, std):
     return f"{mean:.4f} $\\pm$ {std:.4f}"
 
 def get_best_two(values):
-    """values est une liste de floats, certains peuvent être None."""
     valid = [(i, v) for i, v in enumerate(values) if v is not None]
     if len(valid) < 2:
         return None, None
+    valid = sorted(valid, key=lambda x: x[1], reverse=True)
+    return valid[0][0], valid[1][0]
 
-    valid_sorted = sorted(valid, key=lambda x: x[1], reverse=True)
+def iter_models_with_separators():
+    for i, (_, group) in enumerate(MODEL_GROUPS):
+        for model in group:
+            yield model
+        if i < len(MODEL_GROUPS) - 1:
+            yield "__SEP__"
 
-    best = valid_sorted[0][0]
-    second = valid_sorted[1][0]
-    return best, second
+# =========================
+# LOAD RESULTS
+# =========================
+
+def load_results_for_config(encoding, nu):
+    """
+    results[type_emb][dataset][inlier][model] = (mean, std)
+    """
+    results = defaultdict(lambda: defaultdict(lambda: defaultdict(dict)))
+    base_dir = os.path.join(BASE_RESULTS_DIR, encoding, f"nu_{nu}")
+
+    for ds in DATASETS:
+        path = os.path.join(base_dir, f"{ds}.txt")
+        if not os.path.exists(path):
+            continue
+
+        with open(path) as f:
+            block = dict.fromkeys(["type_emb", "dataset", "inlier", "model", "auc"])
+
+            for line in f:
+                line = line.strip()
+
+                if m := pattern["type_emb"].search(line):
+                    block["type_emb"] = m.group(1)
+
+                if m := pattern["dataset"].search(line):
+                    block["dataset"] = m.group(1)
+
+                if m := pattern["inlier"].search(line):
+                    block["inlier"] = m.group(1)
+
+                if m := pattern["model"].search(line):
+                    block["model"] = m.group(1)
+
+                if m := pattern["auc"].search(line):
+                    block["auc"] = (float(m.group(1)), float(m.group(2)))
+
+                if line.startswith("===="):
+                    if all(block.values()):
+                        results[
+                            block["type_emb"]
+                        ][
+                            block["dataset"]
+                        ][
+                            block["inlier"]
+                        ][
+                            block["model"]
+                        ] = block["auc"]
+                    block = dict.fromkeys(block)
+
+    return results
+
+# =========================
+# TABLE GENERATION
+# =========================
 
 def generate_global_table(results):
     datasets = list(results.keys())
 
-    global_means = []
+    global_means = {m: [] for m in MODEL_ORDER}
+    global_stds = {m: [] for m in MODEL_ORDER}
+
     for model in MODEL_ORDER:
-        row = []
         for ds in datasets:
-            vals = [results[ds][ic][model] for ic in results[ds] if model in results[ds][ic]]
+            vals = [
+                results[ds][ic][model]
+                for ic in results[ds]
+                if model in results[ds][ic]
+            ]
             if vals:
-                means = [v[0] for v in vals]
-                row.append(float(np.mean(means)))
+                global_means[model].append(np.mean([v[0] for v in vals]))
+                global_stds[model].append(np.mean([v[1] for v in vals]))
             else:
-                row.append(None)
-        global_means.append(row)
-        
-    best_idx = {}
-    sec_idx = {}
-    for col in range(len(datasets)):
-        column_vals = [global_means[row][col] for row in range(len(MODEL_ORDER))]
-        best, second = get_best_two(column_vals)
-        best_idx[col] = best
-        sec_idx[col] = second
+                global_means[model].append(None)
+                global_stds[model].append(None)
 
+    best_idx, sec_idx = {}, {}
+    for c in range(len(datasets)):
+        col_vals = [global_means[m][c] for m in MODEL_ORDER]
+        b, s = get_best_two(col_vals)
+        best_idx[c], sec_idx[c] = b, s
 
-    latex = []
-    latex.append("\\begin{table}[H]")
-    latex.append("\\centering")
-    latex.append("\\caption{AUC on All datasets}")
-    latex.append("\\begin{tabular}{l" + "c"*len(datasets) + "}")
-    latex.append("\\toprule")
-    latex.append("Model & " + " & ".join([ds.capitalize() for ds in datasets]) + " \\\\")
-    latex.append("\\midrule")
+    latex = [
+        "\\begin{table}[H]",
+        "\\centering",
+        "\\caption{AUC on all datasets}",
+        "\\begin{tabular}{l" + "c" * len(datasets) + "}",
+        "\\toprule",
+        "Model & " + " & ".join(ds.capitalize() for ds in datasets) + " \\\\",
+        "\\midrule",
+    ]
 
-    for r, model in enumerate(MODEL_ORDER):
-        row = [MODEL_LATEX[model]]
-        for c, ds in enumerate(datasets):
-            mean_val = global_means[r][c]
-            if mean_val is not None:
-                vals = [results[ds][ic][model] for ic in results[ds] if model in results[ds][ic]]
-                if vals:
-                    stds = [v[1] for v in vals]
-                    mean_std = float(np.mean(stds))
-                else:
-                    mean_std = 0.0
+    row_id = 0
+    for item in iter_models_with_separators():
+        if item == "__SEP__":
+            latex.append("\\midrule")
+            continue
 
-                base = fmt(mean_val, mean_std)
+        row = [MODEL_LATEX[item]]
+        for c in range(len(datasets)):
+            mean = global_means[item][c]
+            std = global_stds[item][c]
 
-                if r == best_idx[c]:
-                    base = f"\\textbf{{{base}}}"
-                elif r == sec_idx[c]:
-                    base = f"\\underline{{{base}}}"
-                row.append(base)
+            if mean is None:
+                cell = "—"
             else:
-                row.append("0.0000 $\\pm$ 0.0000")
+                cell = fmt(mean, std)
+
+                if MODEL_ORDER.index(item) == best_idx[c]:
+                    cell = f"\\textbf{{{cell}}}"
+                elif MODEL_ORDER.index(item) == sec_idx[c]:
+                    cell = f"\\underline{{{cell}}}"
+
+                if item == "flow-matching":
+                    cell = f"\\textbf{{{cell}}}"
+
+            row.append(cell)
+
         latex.append(" & ".join(row) + " \\\\")
+        row_id += 1
 
-    latex.append("\\bottomrule")
-    latex.append("\\end{tabular}")
-    latex.append("\\label{tab:ad_results}")
-    latex.append("\\end{table}\n")
+    latex.extend([
+        "\\bottomrule",
+        "\\end{tabular}",
+        "\\label{tab:global}",
+        "\\end{table}",
+    ])
 
     return "\n".join(latex)
 
 def generate_dataset_tables(results):
-
-    latex_all = []
+    all_tables = []
 
     for ds in results:
-        inlier_classes = list(results[ds].keys())
-        auc_matrix = []
-        for model in MODEL_ORDER:
-            row_vals = []
-            for ic in inlier_classes:
-                if model in results[ds][ic]:
-                    row_vals.append(results[ds][ic][model][0])
+        inliers = list(results[ds].keys())
+
+        auc_matrix = {
+            m: [
+                results[ds][ic].get(m, (None, None))[0]
+                for ic in inliers
+            ]
+            for m in MODEL_ORDER
+        }
+
+        best_idx, sec_idx = {}, {}
+        for c in range(len(inliers)):
+            col_vals = [auc_matrix[m][c] for m in MODEL_ORDER]
+            b, s = get_best_two(col_vals)
+            best_idx[c], sec_idx[c] = b, s
+
+        latex = [
+            "\\begin{table}[H]",
+            "\\centering",
+            f"\\caption{{AUC on {ds.capitalize()}}}",
+            "\\resizebox{1.1\\textwidth}{!}{",
+            "\\begin{tabular}{l" + "c" * len(inliers) + "}",
+            "\\toprule",
+            "Model & " + " & ".join(inliers) + " \\\\",
+            "\\midrule",
+        ]
+
+        for item in iter_models_with_separators():
+            if item == "__SEP__":
+                latex.append("\\midrule")
+                continue
+
+            row = [MODEL_LATEX[item]]
+            for c, ic in enumerate(inliers):
+                if item in results[ds][ic]:
+                    mean, std = results[ds][ic][item]
+                    cell = fmt(mean, std)
+
+                    if MODEL_ORDER.index(item) == best_idx[c]:
+                        cell = f"\\textbf{{{cell}}}"
+                    elif MODEL_ORDER.index(item) == sec_idx[c]:
+                        cell = f"\\underline{{{cell}}}"
+
+                    if item == "flow-matching":
+                        cell = f"\\textbf{{{cell}}}"
                 else:
-                    row_vals.append(None)
-            auc_matrix.append(row_vals)
+                    cell = "—"
 
-
-        best_idx = {}
-        sec_idx = {}
-        for col in range(len(inlier_classes)):
-            column_vals = [auc_matrix[row][col] for row in range(len(MODEL_ORDER))]
-            best, second = get_best_two(column_vals)
-            best_idx[col] = best
-            sec_idx[col] = second
-
-        latex = []
-        latex.append("\\begin{table}[H]")
-        latex.append("\\centering")
-        latex.append(f"\\caption{{AUC on {ds.capitalize()}}}")
-        latex.append("\\resizebox{1.1\\textwidth}{!}{")
-        latex.append("\\begin{tabular}{l" + "c"*len(inlier_classes) + "}")
-        latex.append("\\toprule")
-        latex.append("Model & " + " & ".join(inlier_classes) + " \\\\")
-        latex.append("\\midrule")
-
-        for r, model in enumerate(MODEL_ORDER):
-
-            row = [MODEL_LATEX[model]]
-            
-
-            for c, ic in enumerate(inlier_classes):
-
-                if model in results[ds][ic]:
-                    mean, std = results[ds][ic][model]
-                    base = fmt(mean, std)
-
-                    if r == best_idx[c]:
-                        base = f"\\textbf{{{base}}}"
-                    elif r == sec_idx[c]:
-                        base = f"\\underline{{{base}}}"
-
-                    row.append(base)
-                else:
-                    row.append("0.0000 $\\pm$ 0.0000")
+                row.append(cell)
 
             latex.append(" & ".join(row) + " \\\\")
 
-        latex.append("\\bottomrule")
-        latex.append("\\end{tabular}")
-        latex.append("}")
-        latex.append(f"\\label{{tab:{ds}}}")
-        latex.append("\\end{table}\n")
+        latex.extend([
+            "\\bottomrule",
+            "\\end{tabular}",
+            "}",
+            f"\\label{{tab:{ds}}}",
+            "\\end{table}",
+        ])
 
+        all_tables.append("\n".join(latex))
 
-        latex_all.append("\n".join(latex))
+    return "\n\n".join(all_tables)
 
-    return "\n\n".join(latex_all)
+# =========================
+# MAIN ENTRY
+# =========================
 
-def create_tables():
+def generate_tables_for_config(encoding, nu):
+    results = load_results_for_config(encoding, nu)
+    out_tex = os.path.join(
+        OUTPUT_LATEX_DIR,
+        f"tables_{encoding.replace('-', '')}_nu_{nu}.tex"
+    )
 
-    print("Lecture des fichiers...")
-    load_all_results()
-
-    if os.path.exists(OUTPUT_TEX):
-        os.remove(OUTPUT_TEX)
-
-    with open(OUTPUT_TEX, "w") as f:
-
+    with open(out_tex, "w") as f:
         for type_emb in results:
-
             title = type_emb.replace("_", " ").title()
-
-            f.write(f"\\section{{Results with {title}}}\n\n")
-
-            global_table = generate_global_table(results[type_emb])
-            dataset_tables = generate_dataset_tables(results[type_emb])
-
-            f.write(global_table)
+            f.write(f"\\subsection {{{title}}}\n\n")
+            f.write(generate_global_table(results[type_emb]))
             f.write("\n\n")
-            f.write(dataset_tables)
+            f.write(generate_dataset_tables(results[type_emb]))
             f.write("\n\n")
 
-    print(f"Fichier LaTeX généré : {OUTPUT_TEX}")
+    print(f"[OK] Generated {out_tex}")
+
 
 
 def save_results(

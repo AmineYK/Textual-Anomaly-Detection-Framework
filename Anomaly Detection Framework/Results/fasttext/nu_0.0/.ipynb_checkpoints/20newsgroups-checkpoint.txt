@@ -1,0 +1,10 @@
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: fasttext
+AD model:       TCCM
+Training time:  1.20 sec
+----------------------------------------
+AUC:            0.7050 ± 0.0324
+Avg Precision:  0.1701 ± 0.0223
+FPR@95:         0.6950 ± 0.0830
+========================================

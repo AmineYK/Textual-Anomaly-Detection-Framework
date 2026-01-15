@@ -1,0 +1,110 @@
+Dataset:        dbpedia14
+Inlier class:   construction
+Embedding type: sentence_bert
+AD model:       AE
+Training time:  5.57 sec
+----------------------------------------
+AUC:            0.9859 ± 0.0014
+Avg Precision:  0.9191 ± 0.0055
+FPR@95:         0.0759 ± 0.0093
+========================================
+Dataset:        dbpedia14
+Inlier class:   construction
+Embedding type: sentence_bert
+AD model:       RSRAE
+Training time:  32.82 sec
+----------------------------------------
+AUC:            0.9918 ± 0.0011
+Avg Precision:  0.9491 ± 0.0031
+FPR@95:         0.0298 ± 0.0035
+========================================
+Dataset:        dbpedia14
+Inlier class:   construction
+Embedding type: sentence_bert
+AD model:       ocsvm
+Training time:  150.38 sec
+----------------------------------------
+AUC:            0.9917 ± 0.0013
+Avg Precision:  0.9517 ± 0.0042
+FPR@95:         0.0297 ± 0.0066
+========================================
+Dataset:        dbpedia14
+Inlier class:   construction
+Embedding type: sentence_bert
+AD model:       TCCM
+Training time:  34.31 sec
+----------------------------------------
+AUC:            0.9494 ± 0.0056
+Avg Precision:  0.8206 ± 0.0106
+FPR@95:         0.3062 ± 0.0398
+========================================
+Dataset:        dbpedia14
+Inlier class:   transport
+Embedding type: sentence_bert
+AD model:       AE
+Training time:  5.70 sec
+----------------------------------------
+AUC:            0.9987 ± 0.0006
+Avg Precision:  0.9930 ± 0.0017
+FPR@95:         0.0016 ± 0.0003
+========================================
+Dataset:        dbpedia14
+Inlier class:   transport
+Embedding type: sentence_bert
+AD model:       RSRAE
+Training time:  34.43 sec
+----------------------------------------
+AUC:            0.9989 ± 0.0006
+Avg Precision:  0.9891 ± 0.0016
+FPR@95:         0.0014 ± 0.0004
+========================================
+Dataset:        dbpedia14
+Inlier class:   transport
+Embedding type: sentence_bert
+AD model:       ocsvm
+Training time:  161.68 sec
+----------------------------------------
+AUC:            0.9990 ± 0.0007
+Avg Precision:  0.9949 ± 0.0017
+FPR@95:         0.0008 ± 0.0004
+========================================
+Dataset:        dbpedia14
+Inlier class:   transport
+Embedding type: sentence_bert
+AD model:       TCCM
+Training time:  34.81 sec
+----------------------------------------
+AUC:            0.9961 ± 0.0016
+Avg Precision:  0.9793 ± 0.0032
+FPR@95:         0.0125 ± 0.0029
+========================================
+Dataset:        dbpedia14
+Inlier class:   organization
+Embedding type: sentence_bert
+AD model:       AE
+Training time:  11.09 sec
+----------------------------------------
+AUC:            0.9614 ± 0.0015
+Avg Precision:  0.7764 ± 0.0054
+FPR@95:         0.1839 ± 0.0178
+========================================
+Dataset:        dbpedia14
+Inlier class:   organization
+Embedding type: sentence_bert
+AD model:       RSRAE
+Training time:  67.71 sec
+----------------------------------------
+AUC:            0.9686 ± 0.0012
+Avg Precision:  0.8263 ± 0.0050
+FPR@95:         0.1524 ± 0.0086
+========================================
+Dataset:        dbpedia14
+Inlier class:   organization
+Embedding type: sentence_bert
+AD model:       TCCM
+Training time:  70.06 sec
+----------------------------------------
+AUC:            0.9305 ± 0.0022
+Avg Precision:  0.6193 ± 0.0078
+FPR@95:         0.2950 ± 0.0179
+========================================

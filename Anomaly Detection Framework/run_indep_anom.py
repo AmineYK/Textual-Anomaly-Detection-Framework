@@ -574,6 +574,12 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--nu",
+        type=float,
+        default=0.0
+    )
+
+    parser.add_argument(
     "--fm",
     action="store_true"
     )
