@@ -562,8 +562,6 @@ def generate_tables_for_config(encoding, nu):
 
     print(f"[OK] Generated {out_tex}")
 
-
-
 def save_results(
     dataset_name,
     inlier_topic,
@@ -571,21 +569,25 @@ def save_results(
     ad_model,
     auc_mean, ap_mean, fpr_mean,
     auc_std=None, ap_std=None, fpr_std=None,
-    train_time=None,             
-    output_dir=BASE_DIR,            
-    filename="results.txt",
+    train_time=None,
+    nu=0.0,
+    output_dir=BASE_DIR,
     overwrite='smart'
 ):  
-    dataset_folder = os.path.join(output_dir, dataset_name)
+    # --- Création du dossier spécifique : <output_dir>/<embedding>/nu_<value>/ ---
+    dataset_folder = os.path.join(output_dir, type_emb, f"nu_{nu}")
     os.makedirs(dataset_folder, exist_ok=True)
 
-    filepath = os.path.join(dataset_folder, filename)
+    # --- Nom du fichier : <dataset>.txt ---
+    filepath = os.path.join(dataset_folder, f"{dataset_name}.txt")
 
+    # --- Lire le contenu existant ---
     existing_content = ""
     if os.path.exists(filepath):
-        with open(filepath, "r") as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             existing_content = f.read()
 
+    # --- Pattern pour identifier un bloc existant ---
     pattern = (
         rf"Dataset:\s*{re.escape(dataset_name)}\s*"
         rf"Inlier class:\s*{re.escape(inlier_topic)}\s*"
@@ -593,19 +595,20 @@ def save_results(
         rf"AD model:\s*{re.escape(ad_model)}"
     )
 
+    # --- Formatage "mean ± std" ---
     def fmt(mean, std):
-        """Formate 'mean ± std' si std est fourni, sinon seulement mean."""
         return f"{mean:.4f} ± {std:.4f}" if std is not None else f"{mean:.4f}"
 
     time_str = f"{train_time:.2f} sec" if train_time is not None else "N/A"
 
+    # --- Nouveau bloc à écrire ---
     new_block = (
         "========================================\n"
         f"Dataset:        {dataset_name}\n"
         f"Inlier class:   {inlier_topic}\n"
         f"Embedding type: {type_emb}\n"
         f"AD model:       {ad_model}\n"
-        f"Training time:  {time_str}\n"    
+        f"Training time:  {time_str}\n"
         "----------------------------------------\n"
         f"AUC:            {fmt(auc_mean, auc_std)}\n"
         f"Avg Precision:  {fmt(ap_mean, ap_std)}\n"
@@ -613,8 +616,8 @@ def save_results(
         "========================================\n\n"
     )
 
+    # --- Vérification si le bloc existe déjà ---
     match = re.search(pattern, existing_content)
-
     if match:
         old_block_pattern = (
             r"========================================\n"
@@ -623,12 +626,11 @@ def save_results(
         )
         old_block = re.search(old_block_pattern, existing_content, flags=re.DOTALL)
 
+        old_auc = -1
         if old_block:
-            old_block = old_block.group(0)
-            old_auc_match = re.search(r"AUC:\s*([\d.]+)", old_block)
+            old_block_text = old_block.group(0)
+            old_auc_match = re.search(r"AUC:\s*([\d.]+)", old_block_text)
             old_auc = float(old_auc_match.group(1)) if old_auc_match else -1
-        else:
-            old_auc = -1
 
         do_replace = False
         if overwrite == "naive":
@@ -642,18 +644,17 @@ def save_results(
             existing_content = re.sub(
                 old_block_pattern, new_block, existing_content, flags=re.DOTALL
             )
-            print(f"Résultats mis à jour pour ({dataset_name}, {inlier_topic}, {type_emb}, {ad_model}).")
+            print(f"Résultats mis à jour pour ({dataset_name}, {inlier_topic}, {type_emb}, {ad_model}, nu={nu}).")
         else:
-            print(f"Résultats existants non modifiés pour ({dataset_name}, {inlier_topic}, {type_emb}, {ad_model}).")
+            print(f"Résultats existants non modifiés pour ({dataset_name}, {inlier_topic}, {type_emb}, {ad_model}, nu={nu}).")
             return
-
     else:
         existing_content += new_block
-        print(f"Nouveaux résultats ajoutés pour ({dataset_name}, {inlier_topic}, {type_emb}, {ad_model}).")
+        print(f"Nouveaux résultats ajoutés pour ({dataset_name}, {inlier_topic}, {type_emb}, {ad_model}, nu={nu}).")
 
-    with open(filepath, "w") as f:
+    # --- Écriture finale ---
+    with open(filepath, "w", encoding="utf-8") as f:
         f.write(existing_content)
-
 
 
 

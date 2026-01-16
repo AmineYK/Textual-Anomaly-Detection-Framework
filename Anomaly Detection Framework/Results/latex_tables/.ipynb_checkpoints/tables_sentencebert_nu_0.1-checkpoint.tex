@@ -1,0 +1,48 @@
+\subsection {Sentence-Bert}
+
+\begin{table}[H]
+\centering
+\caption{AUC on all datasets}
+\begin{tabular}{lc}
+\toprule
+Model & Reuters \\
+\midrule
+OCSVM & 0.7454 $\pm$ 0.0675 \\
+AE & — \\
+\midrule
+RSRAE & — \\
+CVDD & — \\
+DATE & — \\
+FATE & — \\
+\midrule
+TCCM & — \\
+\textbf{BasicFM} & — \\
+\bottomrule
+\end{tabular}
+\label{tab:global}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AUC on Reuters}
+\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lccccccc}
+\toprule
+Model & earn & trade & acq & money-fx & crude & ship & interest \\
+\midrule
+OCSVM & 0.8463 $\pm$ 0.0227 & 0.8168 $\pm$ 0.0952 & 0.7911 $\pm$ 0.0212 & 0.6323 $\pm$ 0.0898 & 0.7511 $\pm$ 0.0432 & 0.6763 $\pm$ 0.1129 & 0.7040 $\pm$ 0.0872 \\
+AE & — & — & — & — & — & — & — \\
+\midrule
+RSRAE & — & — & — & — & — & — & — \\
+CVDD & — & — & — & — & — & — & — \\
+DATE & — & — & — & — & — & — & — \\
+FATE & — & — & — & — & — & — & — \\
+\midrule
+TCCM & — & — & — & — & — & — & — \\
+\textbf{BasicFM} & — & — & — & — & — & — & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:reuters}
+\end{table}
+

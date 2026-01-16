@@ -25,7 +25,7 @@ def main(args):
         encoding_list = [args.type_embedding]
 
     if args.all_nus:
-        nu_list = [0.0, 0.1, 0.2, 0.3]
+        nu_list = [0.0, 0.05, 0.1, 0.15, 0.2]
     else:
         nu_list = [args.nu]
 

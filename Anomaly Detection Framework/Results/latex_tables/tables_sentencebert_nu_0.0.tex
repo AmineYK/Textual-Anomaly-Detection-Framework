@@ -118,3 +118,51 @@ TCCM & 0.9494 $\pm$ 0.0056 & 0.9961 $\pm$ 0.0016 & 0.9305 $\pm$ 0.0022 \\
 \label{tab:dbpedia14}
 \end{table}
 
+\subsection {Sentence-Bert}
+
+\begin{table}[H]
+\centering
+\caption{AUC on all datasets}
+\begin{tabular}{lc}
+\toprule
+Model & Reuters \\
+\midrule
+OCSVM & — \\
+AE & 0.8429 $\pm$ 0.0370 \\
+\midrule
+RSRAE & — \\
+CVDD & — \\
+DATE & — \\
+FATE & — \\
+\midrule
+TCCM & — \\
+\textbf{BasicFM} & — \\
+\bottomrule
+\end{tabular}
+\label{tab:global}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AUC on Reuters}
+\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lc}
+\toprule
+Model & earn \\
+\midrule
+OCSVM & — \\
+AE & 0.8429 $\pm$ 0.0370 \\
+\midrule
+RSRAE & — \\
+CVDD & — \\
+DATE & — \\
+FATE & — \\
+\midrule
+TCCM & — \\
+\textbf{BasicFM} & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:reuters}
+\end{table}
+

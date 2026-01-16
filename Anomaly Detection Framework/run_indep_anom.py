@@ -20,7 +20,7 @@ from Modelisation.Baselines.CVDD.networks.model_bert import CVDDModel
 from Modelisation.Baselines.FATE.fate import FATEModel
 from Modelisation.Baselines.DATE.date import DATEModel
 from Modelisation.FlowMatching.flow_matching import BasicFlowMatching
-from utils import save_results, create_tables
+from utils import save_results
 import numpy as np
 import os
 
@@ -113,6 +113,12 @@ def main(args):
         # load the X_inlier matrix
         # X_inlier = load_data_inlier(args.dataset_name, inlier_topic, save_dir)
 
+        if args.nu > 0:
+            path = os.path.join(save_dir, f"{args.dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_anomaly_{int(args.nu*100)}.pt")
+            data_train_anomaly = datasets.load_from_disk(path)
+            X_anom_for_train = Tensor(data_train_anomaly['sbert_embeddings']).to(device) 
+            print(X_anom_for_train.shape)
+
         data_train = load_data_inlier(args.dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
         if args.fate:
             path = os.path.join(save_dir, f"{args.dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_anomaly.pt")
@@ -121,11 +127,13 @@ def main(args):
         if args.type_emb == "fasttext":
             X_inlier = get_data_fasttext(data_train, ft_path, device)
         
-        elif args.type_emb == 'sentence_bert':
+        elif args.type_emb == 'sentence-bert':
             X_inlier = Tensor(data_train['sbert_embeddings']).to(device)
 
         else: raise Exception("type_emb must be completed !")
-        
+
+        print(X_inlier.shape)
+
         # print(f" Embedding : {args.type_emb} --> {X_inlier.shape}")
 
         # get the hyperparamter for the FM model for this specific inlier category
@@ -146,7 +154,7 @@ def main(args):
             if args.type_emb == "fasttext":
                 X_test = get_data_fasttext(data_test, ft_path, device)
         
-            elif args.type_emb == 'sentence_bert':
+            elif args.type_emb == 'sentence-bert':
                 X_test = Tensor(data_test['sbert_embeddings']).to(device)
 
             else: raise Exception("type_emb must be completed !")
@@ -166,7 +174,10 @@ def main(args):
                 ocsvm_model = OCSVM(ocsvm_args)
                 
                 taac = time.time()
-                _ = ocsvm_model.train(X_inlier.cpu())
+                if args.nu > 0:   
+                    _ = ocsvm_model.train(torch.concatenate([X_inlier, X_anom_for_train]).cpu())
+                else:
+                    _ = ocsvm_model.train(X_inlier.cpu())
                 tiic = time.time()
                 print(f"\nOCSVM finishing... after {(tiic-taac)/60:.3f} mn")
 
@@ -197,7 +208,10 @@ def main(args):
                 rsrae_model = RSRAE(rsrae_args)
 
                 taac = time.time()
-                _ = rsrae_model.train(X_inlier, device)
+                if args.nu > 0.0:
+                    _ = rsrae_model.train(torch.concatenate([X_inlier, X_anom_for_train]), device)
+                else:
+                    _ = rsrae_model.train(X_inlier, device)
                 tiic = time.time()
                 
                 print(f"\nRSRAE finishing... after {(tiic-taac)/60:.3f} mn")
@@ -231,7 +245,10 @@ def main(args):
                 ae_model = AE(ae_args)
 
                 taac = time.time()
-                _ = ae_model.train(X_inlier)
+                if args.nu > 0:   
+                    _ = ae_model.train(torch.concatenate([X_inlier, X_anom_for_train]).cpu())
+                else:
+                    _ = ae_model.train(X_inlier)
                 tiic = time.time()
                 print(f"\nAE finishing... after {(tiic-taac)/60:.3f} mn")
                 
@@ -252,16 +269,19 @@ def main(args):
 
                 tccm_args={
                     "n_features": X_inlier.shape[1],
-                    "epochs" : 50,
-                    "learning_rate" : 1e-3,
-                    "batch_size": 64,
+                    "epochs" : 30,
+                    "learning_rate" : 1e-4,
+                    "batch_size": 128,
                     "device": device
                 }
 
                 tccm_model = TCCM(tccm_args)
 
                 taac = time.time()
-                _ = tccm_model.train(X_inlier)
+                if args.nu > 0:   
+                    _ = tccm_model.train(torch.concatenate([X_inlier, X_anom_for_train]))
+                else:
+                    _ = tccm_model.train(X_inlier)
                 tiic = time.time()
                 print(f"\nTCCM finishing... after {(tiic-taac)/60:.3f} mn")
                 
@@ -489,7 +509,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="AE",
             auc_mean=np.mean(list_auc_ae), ap_mean=np.mean(list_ap_ae),fpr_mean=np.mean(list_fpr_ae),
             auc_std = np.std(list_auc_ae),ap_std =  np.std(list_ap_ae),fpr_std = np.std(list_fpr_ae),
-            train_time = np.mean(list_time_ae),overwrite='naive'
+            train_time = np.mean(list_time_ae), nu=args.nu, overwrite='naive'
             )
 
         if args.rsrae:  
@@ -497,7 +517,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="RSRAE",
             auc_mean=np.mean(list_auc_rsrae), ap_mean=np.mean(list_ap_rsrae),fpr_mean=np.mean(list_fpr_rsrae),
             auc_std = np.std(list_auc_rsrae),ap_std =  np.std(list_ap_rsrae),fpr_std = np.std(list_fpr_rsrae),
-            train_time = np.mean(list_time_rsrae), overwrite='naive'
+            train_time = np.mean(list_time_rsrae), nu=args.nu, overwrite='naive'
             )
 
         if args.ocsvm:
@@ -505,7 +525,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="ocsvm",
             auc_mean=np.mean(list_auc_ocsvm), ap_mean=np.mean(list_ap_ocsvm),fpr_mean=np.mean(list_fpr_ocsvm),
             auc_std = np.std(list_auc_ocsvm),ap_std =  np.std(list_ap_ocsvm),fpr_std = np.std(list_fpr_ocsvm),
-            train_time = np.mean(list_time_ocsvm), overwrite='naive'
+            train_time = np.mean(list_time_ocsvm), nu=args.nu, overwrite='naive'
             )
 
         if args.tccm:
@@ -513,7 +533,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="TCCM",
             auc_mean=np.mean(list_auc_tccm), ap_mean=np.mean(list_ap_tccm),fpr_mean=np.mean(list_fpr_tccm),
             auc_std = np.std(list_auc_tccm),ap_std =  np.std(list_ap_tccm),fpr_std = np.std(list_fpr_tccm),
-            train_time = np.mean(list_time_tccm), overwrite='naive'
+            train_time = np.mean(list_time_tccm), nu=args.nu, overwrite='naive'
             )
 
         if args.cvdd:
@@ -570,7 +590,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--type_emb",
         type=str,
-        default="sentencebert"
+        default="sentence-bert"
     )
 
     parser.add_argument(
