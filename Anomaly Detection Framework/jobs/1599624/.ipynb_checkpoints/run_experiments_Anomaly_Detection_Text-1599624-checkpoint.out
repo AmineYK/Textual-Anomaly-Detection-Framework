@@ -1,0 +1,11 @@
+Working directory: /home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework
+Job ID: 1599624
+Timestamp: 20260119_163931
+------------------------ World(1/4) -----------------------------
+torch.Size([3333, 768])
+torch.Size([27000, 768])
++++++++++++++++++++++ run : 1 +++++++++++++++++
+
+Training sur 30333 samples, 948 batches
+K=25 masks, ratio=0.25, seq_len=498
+Epoch 1/20 - Loss: 355.12 (RMD: 3.2892, RTD: 0.5238) | Masked: 2.57%

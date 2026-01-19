@@ -13,13 +13,15 @@
 # GPUs architecture and number                                                                                                                                                                
 # ----------------------------                                                                                                                                                                
 # Partition (submission class)                                                                                                                                                                
-#SBATCH --partition gpu                                                                                                                                                                       
+#SBATCH --partition hpda_mig                                                                                                                                                                       
 
 # GPUs per compute node                                                                                                                                                                       
 #   8 (maximum) for gpu                                                                                                                                                                       
 #   8 (maximum) for hpda                                                                                                                                                                      
-# SBATCH --gpus-per-node=1                                                                                                                                                                    
-#SBATCH --gpus=2                                                                                                                                                                              
+# SBATCH --gpus-per-node=1   
+#SBATCH --nodes=1  
+#SBATCH --gres=gpu:a100_1g.10gb                                                                                                                                                                 
+# SBATCH --gpus=1                                                                                                                                                                              
 
 # ----------------------------                                                                                                                                                                
 # processes / tasks                                                                                                                                                                           
@@ -30,7 +32,7 @@
 # Set the number of cpu in proportion to the number of GPU's devices :                                                                                                                        
 #   gpu: until 8 cores / device                                                                                                                                                               
 #   hpda: until 8 cores / device                                                                                                                                                              
-#SBATCH --cpus-per-task 8                                                                                                                                                                     
+#SBATCH --cpus-per-task 16                                                                                                                                                                     
 
 # ------------------------                                                                                                                                                                    
 # Job time (hh:mm:ss)                                                                                                                                                                         
@@ -55,4 +57,7 @@ echo "Working directory: $(pwd)"
 echo "Job ID: ${SLURM_JOB_ID}"
 echo "Timestamp: ${TIMESTAMP}"
 
-srun bash run.sh 2>&1 | tee ${JOB_DIR}/run.log
+export PYTHONUNBUFFERED=1
+
+# srun bash run.sh 2>&1 | tee ${JOB_DIR}/run.log
+srun python3 run_indep_anom.py --dataset_name agnews --runall --type_emb sentence-bert --nu 0.1 --cvdd

@@ -1,0 +1,8 @@
+Working directory: /home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework
+Job ID: 1599656
+Timestamp: 20260119_171055
+------------------------ World(1/4) -----------------------------
+torch.Size([3333, 768])
+torch.Size([27000, 768])
++++++++++++++++++++++ run : 1 +++++++++++++++++
+

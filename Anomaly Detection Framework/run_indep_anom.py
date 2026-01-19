@@ -23,6 +23,8 @@ from Modelisation.FlowMatching.flow_matching import BasicFlowMatching
 from utils import save_results
 import numpy as np
 import os
+import datasets
+from datasets import concatenate_datasets
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -120,9 +122,10 @@ def main(args):
             print(X_anom_for_train.shape)
 
         data_train = load_data_inlier(args.dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
+
         if args.fate:
             path = os.path.join(save_dir, f"{args.dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_anomaly.pt")
-            data_train_anomaly = datasets.load_from_disk(path)
+            data_train_anomaly_fate = datasets.load_from_disk(path)
 
         if args.type_emb == "fasttext":
             X_inlier = get_data_fasttext(data_train, ft_path, device)
@@ -139,7 +142,7 @@ def main(args):
         # get the hyperparamter for the FM model for this specific inlier category
         hyp = load_hyperparams(args.dataset_name, inlier_topic, args.type_emb, file_path_hyp)
         # print(hyp)
-        nb_runs = 11
+        nb_runs = 3
         for n_run in range(1, nb_runs):
 
             print(f"+++++++++++++++++++++ run : {n_run} +++++++++++++++++\n")
@@ -351,8 +354,6 @@ def main(args):
             #     print(f"CVDD --> AUC: {auc_cvdd:.4f} | FPR@95: {fpr95_cvdd:.4f} | AP: {ap_cvdd:.4f}\n")
 
 
-
-
             if args.cvdd:
                 cvdd_args = {
                     "bert_name": "albert-base-v2", #albert-large-v2   
@@ -371,7 +372,10 @@ def main(args):
                 cvdd_model = CVDDModel(cvdd_args)
 
                 taac = time.time()
-                cvdd_model.train(data_train)
+                if args.nu > 0:
+                    cvdd_model.train(concatenate_datasets([data_train, data_train_anomaly]))
+                else:
+                    cvdd_model.train(data_train)
                 tiic = time.time()
                 print(f"\CVDD finishing... after {(tiic-taac)/60:.3f} mn")
                 
@@ -395,20 +399,23 @@ def main(args):
                     # "encoder_name": "albert-base-v2", 
                     "which_config": "electra",
                     "encoder_name": "google/electra-small-discriminator",
-                    "K": 50,
+                    "K": 25,
                     "lr": 1e-5,
                     "weight_decay" : 0,
                     "seq_len": 498,
-                    "ratio": 0.5,
-                    "n_epochs": 15,
-                    "batch_size": 64,
+                    "ratio": 0.25,
+                    "n_epochs": 20,
+                    "batch_size": 32,
                     "device": device
                     }
                             
                 date_model = DATEModel(date_args)
 
                 taac = time.time()
-                date_model.train(data_train)
+                if args.nu > 0:
+                    date_model.train(concatenate_datasets([data_train, data_train_anomaly]))
+                else:
+                    date_model.train(data_train)
                 tiic = time.time()
                 print(f"\DATE finishing... after {(tiic-taac)/60:.3f} mn")
                 
@@ -427,6 +434,11 @@ def main(args):
             if args.fate:
                 data_test_inlier = data_test.filter(lambda x: x["anomaly_class"] == 0)
                 data_test_anomaly = data_test.filter(lambda x: x["anomaly_class"] == 1)
+
+                if args.nu > 0:
+                    data_train_ = concatenate_datasets([data_train, data_train_anomaly])
+                else:
+                    data_train_ = data_train
                 fate_args = {
                     "device": device,
                     "batch_size": 64,
@@ -434,9 +446,9 @@ def main(args):
                     "lr": 1e-5,
                     "include_regularization": True,
                     "top_k": 0.1,
-                    "nb_shot": 30,
-                    "train_inlier_text": data_train['text'],     
-                    "train_anomaly_text": data_train_anomaly['text'],
+                    "nb_shot": 10,
+                    "train_inlier_text": data_train_['text'],     
+                    "train_anomaly_text": data_train_anomaly_fate['text'],
                     "test_inlier_text": data_test_inlier['text'],
                     "test_anomaly_text": data_test_anomaly['text']
                 }
@@ -541,7 +553,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="CVDD",
             auc_mean=np.mean(list_auc_cvdd), ap_mean=np.mean(list_ap_cvdd),fpr_mean=np.mean(list_fpr_cvdd),
             auc_std = np.std(list_auc_cvdd),ap_std =  np.std(list_ap_cvdd),fpr_std = np.std(list_fpr_cvdd),
-            train_time = np.mean(list_time_cvdd), overwrite='smart'
+            train_time = np.mean(list_time_cvdd), nu=args.nu, overwrite='smart'
             )
 
         if args.date and nb_runs == 11:
@@ -549,7 +561,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="DATE",
             auc_mean=np.mean(list_auc_date), ap_mean=np.mean(list_ap_date),fpr_mean=np.mean(list_fpr_date),
             auc_std = np.std(list_auc_date),ap_std =  np.std(list_ap_date),fpr_std = np.std(list_fpr_date),
-            train_time = np.mean(list_time_date), overwrite='smart'
+            train_time = np.mean(list_time_date), nu=args.nu, overwrite='smart'
             )
 
         if args.fate:
@@ -557,7 +569,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="FATE",
             auc_mean=np.mean(list_auc_fate), ap_mean=np.mean(list_ap_fate),fpr_mean=np.mean(list_fpr_fate),
             auc_std = np.std(list_auc_fate),ap_std =  np.std(list_ap_fate),fpr_std = np.std(list_fpr_fate),
-            train_time = np.mean(list_time_fate), overwrite='smart'
+            train_time = np.mean(list_time_fate), nu=args.nu, overwrite='smart'
             )
 
 
