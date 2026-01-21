@@ -13,14 +13,14 @@
 # GPUs architecture and number                                                                                                                                                                
 # ----------------------------                                                                                                                                                                
 # Partition (submission class)                                                                                                                                                                
-#SBATCH --partition hpda_mig                                                                                                                                                                       
+#SBATCH --partition hpda                                                                                                                                                                       
 
 # GPUs per compute node                                                                                                                                                                       
 #   8 (maximum) for gpu                                                                                                                                                                       
 #   8 (maximum) for hpda                                                                                                                                                                      
 # SBATCH --gpus-per-node=1   
 #SBATCH --nodes=1  
-#SBATCH --gres=gpu:a100_1g.10gb                                                                                                                                                                 
+# SBATCH --gres=gpu:a100_1g.10gb                                                                                                                                                                 
 # SBATCH --gpus=1                                                                                                                                                                              
 
 # ----------------------------                                                                                                                                                                
@@ -49,9 +49,9 @@ module purge
 module load aidl/pytorch/2.5.1-cuda12.4
 # ---------------------------------          
 
-TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-JOB_DIR="jobs/job_${SLURM_JOB_ID}_${TIMESTAMP}"
-mkdir -p ${JOB_DIR}
+# TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+# JOB_DIR="jobs/job_${SLURM_JOB_ID}_${TIMESTAMP}"
+# mkdir -p ${JOB_DIR}
 
 echo "Working directory: $(pwd)"
 echo "Job ID: ${SLURM_JOB_ID}"
@@ -60,4 +60,4 @@ echo "Timestamp: ${TIMESTAMP}"
 export PYTHONUNBUFFERED=1
 
 # srun bash run.sh 2>&1 | tee ${JOB_DIR}/run.log
-srun python3 run_indep_anom.py --dataset_name agnews --runall --type_emb sentence-bert --nu 0.1 --cvdd
+srun python3 run_indep_anom.py --dataset_name 20newsgroups --runall --type_emb sentence-bert --nu 0.1 --cvdd

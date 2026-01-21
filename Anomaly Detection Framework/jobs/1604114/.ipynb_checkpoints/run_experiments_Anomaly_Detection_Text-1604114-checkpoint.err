@@ -10,5 +10,8 @@ load more details: pip list
   print(f"\DATE finishing... after {(tiic-taac)/60:.3f} mn")
 /home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/run_indep_anom.py:461: SyntaxWarning: invalid escape sequence '\F'
   print(f"\FATE finishing... after {(tiic-taac)/60:.3f} mn")
-2026-01-19 17:10:42.543357: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-01-21 16:21:35.106865: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
 To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** STEP 1604114.0 ON c23hpda1 CANCELLED AT 2026-01-21T17:07:12 ***
+slurmstepd: error: *** JOB 1604114 ON c23hpda1 CANCELLED AT 2026-01-21T17:07:12 ***

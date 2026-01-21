@@ -202,3 +202,51 @@ Avg Precision:  0.7237 ± 0.1391
 FPR@95:         0.4245 ± 0.0693
 ========================================
 
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  1452.72 sec
+----------------------------------------
+AUC:            0.8753 ± 0.0537
+Avg Precision:  0.5473 ± 0.2256
+FPR@95:         0.5998 ± 0.1152
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  21110.31 sec
+----------------------------------------
+AUC:            0.7968 ± 0.0143
+Avg Precision:  0.8342 ± 0.0026
+FPR@95:         0.3528 ± 0.0021
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  214.38 sec
+----------------------------------------
+AUC:            0.7662 ± 0.0487
+Avg Precision:  0.7870 ± 0.0998
+FPR@95:         0.3549 ± 0.0831
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  213.35 sec
+----------------------------------------
+AUC:            0.7240 ± 0.0573
+Avg Precision:  0.8623 ± 0.0479
+FPR@95:         0.3273 ± 0.0694
+========================================
+

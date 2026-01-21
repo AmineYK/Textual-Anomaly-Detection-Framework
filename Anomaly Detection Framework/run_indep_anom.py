@@ -142,7 +142,7 @@ def main(args):
         # get the hyperparamter for the FM model for this specific inlier category
         hyp = load_hyperparams(args.dataset_name, inlier_topic, args.type_emb, file_path_hyp)
         # print(hyp)
-        nb_runs = 3
+        nb_runs = 11
         for n_run in range(1, nb_runs):
 
             print(f"+++++++++++++++++++++ run : {n_run} +++++++++++++++++\n")
@@ -399,13 +399,13 @@ def main(args):
                     # "encoder_name": "albert-base-v2", 
                     "which_config": "electra",
                     "encoder_name": "google/electra-small-discriminator",
-                    "K": 25,
+                    "K": 50,
                     "lr": 1e-5,
                     "weight_decay" : 0,
                     "seq_len": 498,
-                    "ratio": 0.25,
-                    "n_epochs": 20,
-                    "batch_size": 32,
+                    "ratio": 0.50,
+                    "n_epochs": 15,
+                    "batch_size": 64,
                     "device": device
                     }
                             

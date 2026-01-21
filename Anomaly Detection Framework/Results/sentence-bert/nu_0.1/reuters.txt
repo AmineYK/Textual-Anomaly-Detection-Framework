@@ -447,11 +447,11 @@ Dataset:        reuters
 Inlier class:   acq
 Embedding type: sentence-bert
 AD model:       DATE
-Training time:  52.40 sec
+Training time:  43.92 sec
 ----------------------------------------
-AUC:            0.6070 ± 0.0453
-Avg Precision:  0.8751 ± 0.0799
-FPR@95:         0.1611 ± 0.0386
+AUC:            0.6383 ± 0.0834
+Avg Precision:  0.8804 ± 0.1456
+FPR@95:         0.1665 ± 0.0550
 ========================================
 
 ========================================
@@ -459,11 +459,11 @@ Dataset:        reuters
 Inlier class:   money-fx
 Embedding type: sentence-bert
 AD model:       DATE
-Training time:  6.57 sec
+Training time:  4.74 sec
 ----------------------------------------
-AUC:            0.6250 ± 0.1366
-Avg Precision:  0.7316 ± 0.2749
-FPR@95:         0.1733 ± 0.1084
+AUC:            0.6332 ± 0.1406
+Avg Precision:  0.7266 ± 0.2040
+FPR@95:         0.2219 ± 0.1596
 ========================================
 
 ========================================
@@ -471,11 +471,11 @@ Dataset:        reuters
 Inlier class:   crude
 Embedding type: sentence-bert
 AD model:       DATE
-Training time:  7.90 sec
+Training time:  5.27 sec
 ----------------------------------------
-AUC:            0.5581 ± 0.0974
-Avg Precision:  0.9817 ± 0.0360
-FPR@95:         0.1885 ± 0.1300
+AUC:            0.6042 ± 0.1152
+Avg Precision:  0.9367 ± 0.0716
+FPR@95:         0.2403 ± 0.1309
 ========================================
 
 ========================================
@@ -483,11 +483,11 @@ Dataset:        reuters
 Inlier class:   ship
 Embedding type: sentence-bert
 AD model:       DATE
-Training time:  3.56 sec
+Training time:  3.58 sec
 ----------------------------------------
-AUC:            0.5106 ± 0.2323
-Avg Precision:  0.7424 ± 0.2863
-FPR@95:         0.2602 ± 0.1530
+AUC:            0.5924 ± 0.1467
+Avg Precision:  0.7939 ± 0.1887
+FPR@95:         0.2911 ± 0.1623
 ========================================
 
 ========================================
@@ -500,5 +500,89 @@ Training time:  5.97 sec
 AUC:            0.6456 ± 0.1106
 Avg Precision:  0.8726 ± 0.1482
 FPR@95:         0.2707 ± 0.1422
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  2015.47 sec
+----------------------------------------
+AUC:            0.7626 ± 0.0287
+Avg Precision:  0.6373 ± 0.0618
+FPR@95:         0.2383 ± 0.0313
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  179.26 sec
+----------------------------------------
+AUC:            0.8861 ± 0.0708
+Avg Precision:  0.4471 ± 0.2763
+FPR@95:         0.5210 ± 0.1055
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  1131.63 sec
+----------------------------------------
+AUC:            0.6896 ± 0.0316
+Avg Precision:  0.7226 ± 0.0799
+FPR@95:         0.1522 ± 0.0165
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  146.48 sec
+----------------------------------------
+AUC:            0.6857 ± 0.0937
+Avg Precision:  0.6063 ± 0.2415
+FPR@95:         0.1583 ± 0.0360
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  180.82 sec
+----------------------------------------
+AUC:            0.6964 ± 0.0694
+Avg Precision:  0.7541 ± 0.1760
+FPR@95:         0.1725 ± 0.0331
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  77.27 sec
+----------------------------------------
+AUC:            0.8237 ± 0.1061
+Avg Precision:  0.4636 ± 0.2932
+FPR@95:         0.4712 ± 0.1417
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  134.56 sec
+----------------------------------------
+AUC:            0.6124 ± 0.0605
+Avg Precision:  0.6233 ± 0.1925
+FPR@95:         0.1306 ± 0.0194
 ========================================
 
