@@ -478,3 +478,111 @@ AUC:            0.8956 ± 0.0208
 Avg Precision:  0.5613 ± 0.1156
 FPR@95:         0.6772 ± 0.0450
 ========================================
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: sentence-bert
+AD model:       flow-matching-AE
+Training time:  47.95 sec
+----------------------------------------
+AUC:            0.9169 ± 0.0152
+Avg Precision:  0.6367 ± 0.0357
+FPR@95:         0.4163 ± 0.1077
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: sentence-bert
+AD model:       flow-matching-AE
+Training time:  38.88 sec
+----------------------------------------
+AUC:            0.8886 ± 0.0140
+Avg Precision:  0.4952 ± 0.0429
+FPR@95:         0.3872 ± 0.0389
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: sentence-bert
+AD model:       flow-matching-AE
+Training time:  38.70 sec
+----------------------------------------
+AUC:            0.7371 ± 0.0155
+Avg Precision:  0.2434 ± 0.0237
+FPR@95:         0.7056 ± 0.0559
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: sentence-bert
+AD model:       flow-matching-AE
+Training time:  11.23 sec
+----------------------------------------
+AUC:            0.9002 ± 0.0148
+Avg Precision:  0.5413 ± 0.0432
+FPR@95:         0.4276 ± 0.1015
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: sentence-bert
+AD model:       flow-matching-AE
+Training time:  25.11 sec
+----------------------------------------
+AUC:            0.9187 ± 0.0130
+Avg Precision:  0.5844 ± 0.0477
+FPR@95:         0.3127 ± 0.0647
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: sentence-bert
+AD model:       flow-matching-AE
+Training time:  22.87 sec
+----------------------------------------
+AUC:            0.8872 ± 0.0193
+Avg Precision:  0.5251 ± 0.0369
+FPR@95:         0.4788 ± 0.0906
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: sentence-bert
+AD model:       flow-matching-CN
+Training time:  94.56 sec
+----------------------------------------
+AUC:            0.9254 ± 0.0161
+Avg Precision:  0.6589 ± 0.0319
+FPR@95:         0.4198 ± 0.1016
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: sentence-bert
+AD model:       flow-matching-CN
+Training time:  76.47 sec
+----------------------------------------
+AUC:            0.9167 ± 0.0130
+Avg Precision:  0.5419 ± 0.0461
+FPR@95:         0.3032 ± 0.0663
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: sentence-bert
+AD model:       flow-matching-CN
+Training time:  76.11 sec
+----------------------------------------
+AUC:            0.7064 ± 0.0172
+Avg Precision:  0.1896 ± 0.0149
+FPR@95:         0.7231 ± 0.0423
+========================================
+
