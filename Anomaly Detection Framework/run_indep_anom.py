@@ -20,6 +20,7 @@ from Modelisation.Baselines.CVDD.networks.model_bert import CVDDModel
 from Modelisation.Baselines.FATE.fate import FATEModel
 from Modelisation.Baselines.DATE.date import DATEModel
 from Modelisation.FlowMatching.flow_matching import BasicFlowMatching
+from Modelisation.FlowMatching.flow_matching_transformers import FlowDiT, FlowMatchingTransformers
 from utils import save_results
 import numpy as np
 import os
@@ -64,6 +65,12 @@ def main(args):
             list_fpr_fm = []
             list_ap_fm = []
             list_time_fm = []
+        
+        if args.fm_trans:
+            list_auc_fm_trans = []
+            list_fpr_fm_trans = []
+            list_ap_fm_trans = []
+            list_time_fm_trans = []
 
         if args.ocsvm:
             list_auc_ocsvm = []
@@ -507,12 +514,70 @@ def main(args):
                 list_ap_fm.append(ap_fm)
                 list_time_fm.append((tiic-taac))
 
+
+            ######################################################
+#          ################ Flow Matching Transformers ###########
+#          ####################################################### 
+
+
+            if args.fm_trans:
+                config = {
+                        'latent_dim': 768,
+                        'hidden_dim': 64,
+                        'depth': 2,
+                        'n_heads': 2,
+                        'lr': 1e-3,
+                        'weight_decay': 1e-5,
+                        'epochs': 10,
+                        'warmup_epochs': 5,
+                        'grad_clip': 1.0,
+                        'ema_decay': 0.9999,  
+                        'flow_type': 'linear',  
+                        'sigma': 0.1, 
+                        'batch_size' : 128,
+                        'target' : 'gaussian',
+                        'source' : X_inlier.to(device)
+                }
+
+                model = FlowDiT(
+                    latent_dim=config['latent_dim'],
+                    hidden_dim=config['hidden_dim'],
+                    depth=config['depth'],
+                    n_heads=config['n_heads']
+                ).to(device)
+
+                fm_transformer = FlowMatchingTransformers(model, config['source'], config['target'], config, noise_is_target=True)
+
+                taac = time.time()
+                fm_transformer.train(X_inlier)
+                tiic = time.time()
+                print(f"\nFM Transformer finishing... after {(tiic-taac)/60:.3f} mn")
+
+
+                auc_fm_trans, fpr95_fm_trans, ap_fm_trans = fm_transformer.test(X_test, y_test, X_inlier, 'mahalanobis')
+                print(f"FM --> AUC: {auc_fm_trans:.4f} | FPR@95: {fpr95_fm_trans:.4f} | AP: {ap_fm_trans:.4f}\n")
+
+                list_auc_fm_trans.append(auc_fm_trans)
+                list_fpr_fm_trans.append(fpr95_fm_trans)    
+                list_ap_fm_trans.append(ap_fm_trans)
+                list_time_fm_trans.append((tiic-taac))
+
+
         if args.fm:
             save_results(
                 dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching",
                 auc_mean=np.mean(list_auc_fm), ap_mean=np.mean(list_ap_fm),fpr_mean=np.mean(list_fpr_fm),
                 auc_std = np.std(list_auc_fm),ap_std =  np.std(list_ap_fm),fpr_std = np.std(list_fpr_fm),
                 train_time = np.mean(list_time_fm),overwrite='smart'
+                )
+            
+        if args.fm_trans:
+            print(np.mean(list_auc_fm_trans))
+            save_results(
+                dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers",
+                auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
+                auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
+                train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='smart'
                 )
 
         
@@ -613,6 +678,11 @@ if __name__ == "__main__":
 
     parser.add_argument(
     "--fm",
+    action="store_true"
+    )
+
+    parser.add_argument(
+    "--fm_trans",
     action="store_true"
     )
 

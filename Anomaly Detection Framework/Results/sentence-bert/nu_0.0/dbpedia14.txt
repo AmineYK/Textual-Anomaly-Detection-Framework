@@ -1,6 +1,6 @@
 Dataset:        dbpedia14
 Inlier class:   construction
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       AE
 Training time:  5.57 sec
 ----------------------------------------
@@ -10,7 +10,7 @@ FPR@95:         0.0759 ± 0.0093
 ========================================
 Dataset:        dbpedia14
 Inlier class:   construction
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       RSRAE
 Training time:  32.82 sec
 ----------------------------------------
@@ -20,7 +20,7 @@ FPR@95:         0.0298 ± 0.0035
 ========================================
 Dataset:        dbpedia14
 Inlier class:   construction
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       ocsvm
 Training time:  150.38 sec
 ----------------------------------------
@@ -30,7 +30,7 @@ FPR@95:         0.0297 ± 0.0066
 ========================================
 Dataset:        dbpedia14
 Inlier class:   construction
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       TCCM
 Training time:  34.31 sec
 ----------------------------------------
@@ -40,7 +40,7 @@ FPR@95:         0.3062 ± 0.0398
 ========================================
 Dataset:        dbpedia14
 Inlier class:   transport
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       AE
 Training time:  5.70 sec
 ----------------------------------------
@@ -50,7 +50,7 @@ FPR@95:         0.0016 ± 0.0003
 ========================================
 Dataset:        dbpedia14
 Inlier class:   transport
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       RSRAE
 Training time:  34.43 sec
 ----------------------------------------
@@ -60,7 +60,7 @@ FPR@95:         0.0014 ± 0.0004
 ========================================
 Dataset:        dbpedia14
 Inlier class:   transport
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       ocsvm
 Training time:  161.68 sec
 ----------------------------------------
@@ -70,7 +70,7 @@ FPR@95:         0.0008 ± 0.0004
 ========================================
 Dataset:        dbpedia14
 Inlier class:   transport
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       TCCM
 Training time:  34.81 sec
 ----------------------------------------
@@ -80,7 +80,7 @@ FPR@95:         0.0125 ± 0.0029
 ========================================
 Dataset:        dbpedia14
 Inlier class:   organization
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       AE
 Training time:  11.09 sec
 ----------------------------------------
@@ -90,7 +90,7 @@ FPR@95:         0.1839 ± 0.0178
 ========================================
 Dataset:        dbpedia14
 Inlier class:   organization
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       RSRAE
 Training time:  67.71 sec
 ----------------------------------------
@@ -100,7 +100,7 @@ FPR@95:         0.1524 ± 0.0086
 ========================================
 Dataset:        dbpedia14
 Inlier class:   organization
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       TCCM
 Training time:  70.06 sec
 ----------------------------------------

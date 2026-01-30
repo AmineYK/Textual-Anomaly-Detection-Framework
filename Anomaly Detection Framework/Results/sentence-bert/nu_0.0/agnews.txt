@@ -1,6 +1,6 @@
 Dataset:        agnews
 Inlier class:   World
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       flow-matching
 Training time:  11.15 sec
 ----------------------------------------
@@ -10,7 +10,7 @@ FPR@95:         0.2262 ± 0.0373
 ========================================
 Dataset:        agnews
 Inlier class:   World
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       ocsvm
 Training time:  135.01 sec
 ----------------------------------------
@@ -20,7 +20,7 @@ FPR@95:         0.5534 ± 0.0541
 ========================================
 Dataset:        agnews
 Inlier class:   Sports
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       flow-matching
 Training time:  19.31 sec
 ----------------------------------------
@@ -30,7 +30,7 @@ FPR@95:         0.0313 ± 0.0060
 ========================================
 Dataset:        agnews
 Inlier class:   Sports
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       ocsvm
 Training time:  146.64 sec
 ----------------------------------------
@@ -40,7 +40,7 @@ FPR@95:         0.0199 ± 0.0065
 ========================================
 Dataset:        agnews
 Inlier class:   Business
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       flow-matching
 Training time:  7.16 sec
 ----------------------------------------
@@ -50,7 +50,7 @@ FPR@95:         0.3509 ± 0.0692
 ========================================
 Dataset:        agnews
 Inlier class:   Business
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       ocsvm
 Training time:  85.39 sec
 ----------------------------------------
@@ -60,7 +60,7 @@ FPR@95:         0.5954 ± 0.0910
 ========================================
 Dataset:        agnews
 Inlier class:   World
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       RSRAE
 Training time:  7.13 sec
 ----------------------------------------
@@ -70,7 +70,7 @@ FPR@95:         0.2512 ± 0.0337
 ========================================
 Dataset:        agnews
 Inlier class:   Sports
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       RSRAE
 Training time:  0.83 sec
 ----------------------------------------
@@ -80,7 +80,7 @@ FPR@95:         0.0281 ± 0.0052
 ========================================
 Dataset:        agnews
 Inlier class:   Business
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       RSRAE
 Training time:  7.15 sec
 ----------------------------------------
@@ -90,7 +90,7 @@ FPR@95:         0.3799 ± 0.0615
 ========================================
 Dataset:        agnews
 Inlier class:   Sports
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       AE
 Training time:  4.53 sec
 ----------------------------------------
@@ -100,7 +100,7 @@ FPR@95:         0.0192 ± 0.0051
 ========================================
 Dataset:        agnews
 Inlier class:   Business
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       AE
 Training time:  4.32 sec
 ----------------------------------------
@@ -110,7 +110,7 @@ FPR@95:         0.3460 ± 0.0616
 ========================================
 Dataset:        agnews
 Inlier class:   World
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       TCCM
 Training time:  86.51 sec
 ----------------------------------------
@@ -120,7 +120,7 @@ FPR@95:         0.2583 ± 0.0393
 ========================================
 Dataset:        agnews
 Inlier class:   Sports
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       TCCM
 Training time:  87.14 sec
 ----------------------------------------
@@ -130,7 +130,7 @@ FPR@95:         0.0337 ± 0.0125
 ========================================
 Dataset:        agnews
 Inlier class:   Business
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       TCCM
 Training time:  26.83 sec
 ----------------------------------------
@@ -140,7 +140,7 @@ FPR@95:         0.3246 ± 0.0312
 ========================================
 Dataset:        agnews
 Inlier class:   World
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       AE
 Training time:  4.56 sec
 ----------------------------------------
@@ -150,7 +150,7 @@ FPR@95:         0.2381 ± 0.0356
 ========================================
 Dataset:        agnews
 Inlier class:   Sci-Tech
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       AE
 Training time:  4.20 sec
 ----------------------------------------
@@ -160,7 +160,7 @@ FPR@95:         0.4213 ± 0.1113
 ========================================
 Dataset:        agnews
 Inlier class:   Sci-Tech
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       RSRAE
 Training time:  7.13 sec
 ----------------------------------------
@@ -170,7 +170,7 @@ FPR@95:         0.3946 ± 0.0897
 ========================================
 Dataset:        agnews
 Inlier class:   Sci-Tech
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       ocsvm
 Training time:  84.03 sec
 ----------------------------------------
@@ -180,7 +180,7 @@ FPR@95:         0.5962 ± 0.0699
 ========================================
 Dataset:        agnews
 Inlier class:   Sci-Tech
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       TCCM
 Training time:  25.99 sec
 ----------------------------------------
@@ -190,7 +190,7 @@ FPR@95:         0.4621 ± 0.1154
 ========================================
 Dataset:        agnews
 Inlier class:   Sci-Tech
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       flow-matching
 Training time:  13.85 sec
 ----------------------------------------
@@ -200,7 +200,7 @@ FPR@95:         0.4125 ± 0.0671
 ========================================
 Dataset:        agnews
 Inlier class:   World
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       CVDD
 Training time:  54.34 sec
 ----------------------------------------
@@ -210,7 +210,7 @@ FPR@95:         0.7347 ± 0.0275
 ========================================
 Dataset:        agnews
 Inlier class:   Sports
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       CVDD
 Training time:  29.71 sec
 ----------------------------------------
@@ -220,7 +220,7 @@ FPR@95:         0.7323 ± 0.0143
 ========================================
 Dataset:        agnews
 Inlier class:   Business
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       CVDD
 Training time:  30.69 sec
 ----------------------------------------
@@ -230,7 +230,7 @@ FPR@95:         0.7953 ± 0.0234
 ========================================
 Dataset:        agnews
 Inlier class:   Sci-Tech
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       CVDD
 Training time:  30.81 sec
 ----------------------------------------
@@ -240,7 +240,7 @@ FPR@95:         0.7364 ± 0.0596
 ========================================
 Dataset:        agnews
 Inlier class:   World
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       FATE
 Training time:  376.95 sec
 ----------------------------------------
@@ -250,7 +250,7 @@ FPR@95:         0.6267 ± 0.0498
 ========================================
 Dataset:        agnews
 Inlier class:   Sports
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       FATE
 Training time:  225.83 sec
 ----------------------------------------
@@ -260,7 +260,7 @@ FPR@95:         0.9046 ± 0.0322
 ========================================
 Dataset:        agnews
 Inlier class:   Business
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       FATE
 Training time:  191.33 sec
 ----------------------------------------
@@ -270,7 +270,7 @@ FPR@95:         0.7493 ± 0.0254
 ========================================
 Dataset:        agnews
 Inlier class:   Sci-Tech
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       FATE
 Training time:  191.09 sec
 ----------------------------------------
@@ -280,7 +280,7 @@ FPR@95:         0.7735 ± 0.0246
 ========================================
 Dataset:        agnews
 Inlier class:   World
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       DATE
 Training time:  546.16 sec
 ----------------------------------------
@@ -290,7 +290,7 @@ FPR@95:         0.4756 ± 0.0147
 ========================================
 Dataset:        agnews
 Inlier class:   Business
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       DATE
 Training time:  548.53 sec
 ----------------------------------------
@@ -300,7 +300,7 @@ FPR@95:         0.5510 ± 0.0269
 ========================================
 Dataset:        agnews
 Inlier class:   Sports
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       DATE
 Training time:  547.40 sec
 ----------------------------------------
@@ -310,7 +310,7 @@ FPR@95:         0.7847 ± 0.0177
 ========================================
 Dataset:        agnews
 Inlier class:   Sci-Tech
-Embedding type: sentence_bert
+Embedding type: sentence-bert
 AD model:       DATE
 Training time:  548.96 sec
 ----------------------------------------
@@ -364,5 +364,53 @@ Training time:  94.91 sec
 AUC:            0.7888 ± 0.0173
 Avg Precision:  0.3206 ± 0.0435
 FPR@95:         0.7005 ± 0.0568
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  42.48 sec
+----------------------------------------
+AUC:            0.9357 ± 0.0039
+Avg Precision:  0.6043 ± 0.0279
+FPR@95:         0.2302 ± 0.0270
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  42.99 sec
+----------------------------------------
+AUC:            0.9900 ± 0.0026
+Avg Precision:  0.9569 ± 0.0069
+FPR@95:         0.0239 ± 0.0059
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  41.86 sec
+----------------------------------------
+AUC:            0.9359 ± 0.0075
+Avg Precision:  0.7015 ± 0.0121
+FPR@95:         0.3004 ± 0.0630
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  14.04 sec
+----------------------------------------
+AUC:            0.8894 ± 0.0078
+Avg Precision:  0.5474 ± 0.0243
+FPR@95:         0.5456 ± 0.0851
 ========================================
 
