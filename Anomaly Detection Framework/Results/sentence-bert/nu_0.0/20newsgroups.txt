@@ -591,11 +591,11 @@ Dataset:        20newsgroups
 Inlier class:   computer
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  2.67 sec
+Training time:  2.87 sec
 ----------------------------------------
-AUC:            0.9509 ± 0.0116
-Avg Precision:  0.7695 ± 0.0279
-FPR@95:         0.2565 ± 0.0967
+AUC:            0.9512 ± 0.0115
+Avg Precision:  0.7708 ± 0.0296
+FPR@95:         0.2531 ± 0.0946
 ========================================
 
 ========================================
@@ -627,11 +627,11 @@ Dataset:        20newsgroups
 Inlier class:   politics
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  1.39 sec
+Training time:  1.51 sec
 ----------------------------------------
-AUC:            0.9461 ± 0.0081
-Avg Precision:  0.6456 ± 0.0302
-FPR@95:         0.2369 ± 0.0555
+AUC:            0.9474 ± 0.0083
+Avg Precision:  0.6482 ± 0.0332
+FPR@95:         0.2325 ± 0.0619
 ========================================
 
 ========================================

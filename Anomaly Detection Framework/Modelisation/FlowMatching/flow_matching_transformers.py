@@ -105,6 +105,20 @@ class DiTBlock(nn.Module):
 def modulate(x, shift, scale):
     return x * (1 + scale) + shift
 
+def angle(vec1, vec2):
+    cos_theta = torch.dot(vec1, vec2) / (torch.norm(vec1) * torch.norm(vec2))
+    cos_theta = torch.clamp(cos_theta, -1.0, 1.0)
+    # return torch.acos(cos_theta)
+    return cos_theta
+
+def angle_batch(vec1, vec2, eps=1e-8):
+    dot = torch.sum(vec1 * vec2, dim=1)
+    norm1 = torch.norm(vec1, dim=1)
+    norm2 = torch.norm(vec2, dim=1)
+    cos_theta = dot / (norm1 * norm2 + eps)
+    cos_theta = torch.clamp(cos_theta, -1.0, 1.0)
+    return cos_theta
+
 class FlowMatchingTransformers(nn.Module):
 
     def __init__(self, model, source, target, config, noise_is_target):
@@ -128,7 +142,9 @@ class FlowMatchingTransformers(nn.Module):
         else:
             progress = (epoch - warmup_epochs) / (total_epochs - warmup_epochs)
             return lr * 0.5 * (1 + torch.cos(torch.tensor(progress * 3.14159)))
-        
+
+
+
     def compute_flow_loss(self, x_0, flow_type='linear', sigma=0.1):
             
         batch_size = x_0.shape[0]
@@ -148,7 +164,14 @@ class FlowMatchingTransformers(nn.Module):
             z = torch.randn(x_0.shape[0], x_0.shape[1])
             x_1 = Tensor(z / z.norm(dim=1, keepdim=True)).to(self.device)
 
+        if self.target == 'sphere-noised' or self.source == 'sphere-noised':
+            z = torch.randn(batch_size, x_0.shape[1])       
+            z = z / z.norm(dim=1, keepdim=True)
+            noise = torch.randn_like(z) * 0.25
+            x_1 = Tensor(z + noise).to(self.device)
+
         t = torch.rand(batch_size, device=self.device)
+        # t = torch.arange(0, 1, (1/batch_size), device=self.device)
 
         # j'inverse juste la source et la target
         if not self.noise_is_target:
@@ -176,9 +199,25 @@ class FlowMatchingTransformers(nn.Module):
             raise ValueError(f"Unknown flow_type: {flow_type}")
         
         v_pred = self.model(x_t, t)
+
+        print(angle_batch(v_pred, v_target))
+
+        # indices = t.sort()[1]
+        # angles = []
+        # angles_tar = []
+        # for i_velo in range(indices.shape[0] - 1):
+        #     angles.append(angle(v_pred[indices][i_velo], v_pred[indices][i_velo+1]).item() ) 
+        #     angles_tar.append(angle(v_pred[indices][i_velo], v_target[indices][i_velo]).item() ) 
+
+        # print(np.mean(angles), np.std(angles))
+        # print(np.mean(angles_tar), np.std(angles_tar))
+        # print("##################################################")
         loss = F.mse_loss(v_pred, v_target)
+
+        lambda_reg = 10.
+        loss_regul_angle = (angle_batch(v_pred, v_target) - 1).pow(1).abs().mean()
         
-        return loss, v_pred, v_target
+        return loss+lambda_reg*loss_regul_angle, v_pred, v_target
     
 
     def train_epoch(self, dataloader, optimizer):
@@ -247,12 +286,14 @@ class FlowMatchingTransformers(nn.Module):
         ##################################
         ############ Testing Data ########
         ##################################
+        velo_s = []
         x_0_test = X_test.to(self.device)
         x_t = x_0_test.clone()
         delta_t = 1.0 / n_steps
         for i in range(n_steps):
             t = torch.full((x_0_test.shape[0],), i * delta_t, device=self.device)
             v = self.model(x_t, t)
+            velo_s.append(v)
             x_t = x_t + v * delta_t
         
         x_1_test = x_t.cpu().numpy()
@@ -302,11 +343,11 @@ class FlowMatchingTransformers(nn.Module):
 
             scores = ((torch.norm(x_0_test_back - X_test, dim=1)** 2)).cpu().detach()
 
-        return scores
+        return scores, velo_s
         
     
     def test(self, X_test, y_test, X_inlier, type='mahalanobis'):
 
-        scores = self.compute_anomaly_scores(X_test, X_inlier, type)
+        scores, velo_s = self.compute_anomaly_scores(X_test, X_inlier, type)
         
-        return ev.evaluation(y_test, scores, verbose=False)
+        return ev.evaluation(y_test, scores, verbose=False), velo_s

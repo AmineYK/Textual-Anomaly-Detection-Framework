@@ -523,7 +523,7 @@ def main(args):
             if args.fm_trans:
                 config = {
                         'latent_dim': 768,
-                        'hidden_dim': 64,
+                        'hidden_dim': 256,
                         'depth': 2,
                         'n_heads': 2,
                         'lr': 1e-3,
@@ -534,8 +534,8 @@ def main(args):
                         'ema_decay': 0.9999,  
                         'flow_type': 'linear',  
                         'sigma': 0.1, 
-                        'batch_size' : 128,
-                        'target' : 'gaussian',
+                        'batch_size' : 64,
+                        'target' : 'sphere-noised',
                         'source' : X_inlier.to(device)
                 }
 
