@@ -531,7 +531,6 @@ def main(args):
                         'epochs': 10,
                         'warmup_epochs': 5,
                         'grad_clip': 1.0,
-                        'ema_decay': 0.9999,  
                         'flow_type': 'linear',  
                         'sigma': 0.1, 
                         'batch_size' : 64,

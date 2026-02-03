@@ -33,7 +33,7 @@ class SinusoidalPosEmb(nn.Module):
     
 
 class FlowDiT(nn.Module):
-    def __init__(self, latent_dim=768, hidden_dim=1024, depth=12, n_heads=16):
+    def __init__(self, latent_dim=768, hidden_dim=64, depth=2, n_heads=2):
         super().__init__()
 
         # Projection initiale
@@ -135,20 +135,22 @@ class FlowMatchingTransformers(nn.Module):
 
     def get_lr_schedule(self,epoch, warmup_epochs, total_epochs, lr):
 
-        # linear increase
-        if epoch < warmup_epochs:
-            return lr * (epoch + 1) / warmup_epochs
-        # cosinus decrease
-        else:
-            progress = (epoch - warmup_epochs) / (total_epochs - warmup_epochs)
-            return lr * 0.5 * (1 + torch.cos(torch.tensor(progress * 3.14159)))
+        return lr
+
+        # # linear increase
+        # if epoch < warmup_epochs:
+        #     return lr * (epoch + 1) / warmup_epochs
+        # # cosinus decrease
+        # else:
+        #     progress = (epoch - warmup_epochs) / (total_epochs - warmup_epochs)
+        #     return lr * 0.5 * (1 + torch.cos(torch.tensor(progress * 3.14159)))
 
 
 
-    def compute_flow_loss(self, x_0, flow_type='linear', sigma=0.1):
+    def compute_flow_loss(self, x_0, flow_type='linear', sigma=0.1, lambda_reg_angle=2.):
             
         batch_size = x_0.shape[0]
-        
+
         if self.target == 'gaussian' or self.source == 'gaussian':
             x_1 = torch.randn_like(x_0)
 
@@ -200,8 +202,6 @@ class FlowMatchingTransformers(nn.Module):
         
         v_pred = self.model(x_t, t)
 
-        print(angle_batch(v_pred, v_target))
-
         # indices = t.sort()[1]
         # angles = []
         # angles_tar = []
@@ -214,31 +214,44 @@ class FlowMatchingTransformers(nn.Module):
         # print("##################################################")
         loss = F.mse_loss(v_pred, v_target)
 
-        lambda_reg = 10.
-        loss_regul_angle = (angle_batch(v_pred, v_target) - 1).pow(1).abs().mean()
+        # print(loss.item())
+
+        if lambda_reg_angle is not None:
+            loss_regul_angle = (angle_batch(v_pred, v_target) - 1).pow(2).abs().mean()
+            # print(loss_regul_angle.item())
+            # print(angle_batch(v_pred, v_target))
+            # print("---------------------------")
         
-        return loss+lambda_reg*loss_regul_angle, v_pred, v_target
+            return loss+lambda_reg_angle*loss_regul_angle, loss_regul_angle, v_pred, v_target
+        
+        else:
+            return loss, v_pred, v_target
     
 
     def train_epoch(self, dataloader, optimizer):
 
         self.model.train()
         total_loss = 0
+        total_loss_regul = 0
         
         for x_0, in dataloader:
             
             x_0 = x_0.to(self.device)
             
-            loss, _, _ = self.compute_flow_loss( 
+            loss, *anythingelse = self.compute_flow_loss( 
                 x_0, 
                 flow_type=self.config['flow_type'],
-                sigma=self.config['sigma']
+                sigma=self.config['sigma'],
+                lambda_reg_angle = self.config['lambda_reg_angle']
             )
-            
+
+            if self.config['lambda_reg_angle'] is not None:
+                loss_regul = anythingelse[0]
+                total_loss_regul += loss_regul.item()
+
             optimizer.zero_grad()
             loss.backward()
     
-            # gradient clipping
             torch.nn.utils.clip_grad_norm_(
                 self.model.parameters(), 
                 self.config['grad_clip']
@@ -249,10 +262,11 @@ class FlowMatchingTransformers(nn.Module):
             total_loss += loss.item()
 
         avg_loss = total_loss / len(dataloader)
+        avg_loss_regul = total_loss_regul / len(dataloader)
         
-        return avg_loss
+        return avg_loss, avg_loss_regul
     
-    def train(self, X_inlier):
+    def train(self, X_inlier, verbose=True):
 
         optimizer = AdamW(
             self.model.parameters(),
@@ -263,20 +277,30 @@ class FlowMatchingTransformers(nn.Module):
 
         X_inlier_dl = DataLoader(TensorDataset(X_inlier), batch_size=self.config['batch_size'], shuffle=True)
 
+        liste_loss = []
+        liste_loss_regul = []
+
         for epoch in range(self.config['epochs']):
             
             lr = self.get_lr_schedule(epoch, self.config['warmup_epochs'], self.config['epochs'], self.config['lr'])
             for param_group in optimizer.param_groups:
                 param_group['lr'] = lr
 
-            train_loss = self.train_epoch(
+            train_loss, *anythingelse = self.train_epoch(
                 X_inlier_dl, 
                 optimizer, 
             )
+
+            if self.config['lambda_reg_angle'] is not None:
+                liste_loss_regul.append(anythingelse[0])
             
-            if epoch % (self.config['epochs'] // 3) == 0:
+            liste_loss.append(train_loss)
+
+            if epoch % (self.config['epochs'] // 3) == 0 and verbose:
                 print(f"\nEpoch {epoch+1}/{self.config['epochs']}")
                 print(f"Train Loss: {train_loss:.4f}, LR: {lr:.6f}")
+
+        return liste_loss, liste_loss_regul
                 
     @torch.no_grad()
     def compute_anomaly_scores(self, X_test, X_inlier, type='mahalanobis' , n_steps=50):
@@ -349,5 +373,4 @@ class FlowMatchingTransformers(nn.Module):
     def test(self, X_test, y_test, X_inlier, type='mahalanobis'):
 
         scores, velo_s = self.compute_anomaly_scores(X_test, X_inlier, type)
-        
         return ev.evaluation(y_test, scores, verbose=False), velo_s
