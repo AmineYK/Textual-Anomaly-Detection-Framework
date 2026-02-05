@@ -36,10 +36,8 @@ class FlowDiT(nn.Module):
     def __init__(self, latent_dim=768, hidden_dim=64, depth=2, n_heads=2):
         super().__init__()
 
-        # Projection initiale
         self.input_proj = nn.Linear(latent_dim, hidden_dim)
         
-        # Encoding du timestep
         self.time_mlp = nn.Sequential(
             SinusoidalPosEmb(hidden_dim),
             nn.Linear(hidden_dim, hidden_dim * 4),
@@ -61,7 +59,8 @@ class FlowDiT(nn.Module):
         t_emb = self.time_mlp(t)
         
         for block in self.blocks:
-            h = block(h, t_emb)  # adaLN conditioning
+            # adaLN conditioning
+            h = block(h, t_emb)  
         
         v = self.output_proj(h)
         return v
@@ -135,15 +134,14 @@ class FlowMatchingTransformers(nn.Module):
 
     def get_lr_schedule(self,epoch, warmup_epochs, total_epochs, lr):
 
-        return lr
-
-        # # linear increase
-        # if epoch < warmup_epochs:
-        #     return lr * (epoch + 1) / warmup_epochs
-        # # cosinus decrease
-        # else:
-        #     progress = (epoch - warmup_epochs) / (total_epochs - warmup_epochs)
-        #     return lr * 0.5 * (1 + torch.cos(torch.tensor(progress * 3.14159)))
+        # return lr
+        # linear increase
+        if epoch < warmup_epochs:
+            return lr * (epoch + 1) / warmup_epochs
+        # cosinus decrease
+        else:
+            progress = (epoch - warmup_epochs) / (total_epochs - warmup_epochs)
+            return lr * 0.5 * (1 + torch.cos(torch.tensor(progress * 3.14159)))
 
 
 
@@ -217,7 +215,9 @@ class FlowMatchingTransformers(nn.Module):
         # print(loss.item())
 
         if lambda_reg_angle is not None:
-            loss_regul_angle = (angle_batch(v_pred, v_target) - 1).pow(2).abs().mean()
+            # loss_regul_angle_ = (angle_batch(v_pred, v_target) - 1).pow(1).abs().mean()
+            # print(loss_regul_angle_)
+            loss_regul_angle = (1 - F.cosine_similarity(v_pred, v_target, dim=-1)).pow(2).mean()
             # print(loss_regul_angle.item())
             # print(angle_batch(v_pred, v_target))
             # print("---------------------------")
