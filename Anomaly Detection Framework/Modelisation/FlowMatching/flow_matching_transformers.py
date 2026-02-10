@@ -120,7 +120,7 @@ def angle_batch(vec1, vec2, eps=1e-8):
 
 class FlowMatchingTransformers(nn.Module):
 
-    def __init__(self, model, source, target, config, noise_is_target):
+    def __init__(self, model, source, target, config, noise_is_target, rectified):
         super().__init__()
         self.model = model
         self.source = source
@@ -130,6 +130,7 @@ class FlowMatchingTransformers(nn.Module):
             self.device = self.source.device
         else:
             self.device = self.target.device
+        self.rectified = rectified
         self.config = config
 
     def get_lr_schedule(self,epoch, warmup_epochs, total_epochs, lr):
@@ -142,8 +143,6 @@ class FlowMatchingTransformers(nn.Module):
         else:
             progress = (epoch - warmup_epochs) / (total_epochs - warmup_epochs)
             return lr * 0.5 * (1 + torch.cos(torch.tensor(progress * 3.14159)))
-
-
 
     def compute_flow_loss(self, x_0, flow_type='linear', sigma=0.1, lambda_reg_angle=2.):
             
@@ -199,29 +198,10 @@ class FlowMatchingTransformers(nn.Module):
             raise ValueError(f"Unknown flow_type: {flow_type}")
         
         v_pred = self.model(x_t, t)
-
-        # indices = t.sort()[1]
-        # angles = []
-        # angles_tar = []
-        # for i_velo in range(indices.shape[0] - 1):
-        #     angles.append(angle(v_pred[indices][i_velo], v_pred[indices][i_velo+1]).item() ) 
-        #     angles_tar.append(angle(v_pred[indices][i_velo], v_target[indices][i_velo]).item() ) 
-
-        # print(np.mean(angles), np.std(angles))
-        # print(np.mean(angles_tar), np.std(angles_tar))
-        # print("##################################################")
         loss = F.mse_loss(v_pred, v_target)
 
-        # print(loss.item())
-
         if lambda_reg_angle is not None:
-            # loss_regul_angle_ = (angle_batch(v_pred, v_target) - 1).pow(1).abs().mean()
-            # print(loss_regul_angle_)
             loss_regul_angle = (1 - F.cosine_similarity(v_pred, v_target, dim=-1)).pow(2).mean()
-            # print(loss_regul_angle.item())
-            # print(angle_batch(v_pred, v_target))
-            # print("---------------------------")
-        
             return loss+lambda_reg_angle*loss_regul_angle, loss_regul_angle, v_pred, v_target
         
         else:
@@ -233,6 +213,7 @@ class FlowMatchingTransformers(nn.Module):
         self.model.train()
         total_loss = 0
         total_loss_regul = 0
+        self.optimizer = optimizer
         
         for x_0, in dataloader:
             
@@ -249,7 +230,7 @@ class FlowMatchingTransformers(nn.Module):
                 loss_regul = anythingelse[0]
                 total_loss_regul += loss_regul.item()
 
-            optimizer.zero_grad()
+            self.optimizer.zero_grad()
             loss.backward()
     
             torch.nn.utils.clip_grad_norm_(
@@ -257,7 +238,7 @@ class FlowMatchingTransformers(nn.Module):
                 self.config['grad_clip']
             )
             
-            optimizer.step()
+            self.optimizer.step()
             
             total_loss += loss.item()
 
@@ -300,10 +281,59 @@ class FlowMatchingTransformers(nn.Module):
                 print(f"\nEpoch {epoch+1}/{self.config['epochs']}")
                 print(f"Train Loss: {train_loss:.4f}, LR: {lr:.6f}")
 
-        return liste_loss, liste_loss_regul
+        if self.rectified is None:
+            return liste_loss, liste_loss_regul
+        else:
+            print(f"\nRectification Pass starting.... for {self.rectified} iterations")
+
+            for iteration in range(self.rectified):
+                l = []
+                for x_0, in X_inlier_dl:
+                    
+                    traj, v_rectified = self.generate_rectified_targets(self.model, x_0)
+                    loss = self.rectified_flow_iterative_loss(self.model, traj, v_rectified)
+
+                    self.optimizer.zero_grad()
+                    loss.backward()
+                    self.optimizer.step()
+                    
+                    l.append(loss.item())
                 
+                print(f"Rectification iteration {iteration}, loss = {np.mean(l):.6f}")
+
+            return liste_loss, liste_loss_regul
+
     @torch.no_grad()
-    def compute_anomaly_scores(self, X_test, X_inlier, type='mahalanobis' , n_steps=50):
+    def generate_rectified_targets(self, model, x0, steps=50):
+        B = x0.shape[0]
+        x = x0.clone()
+        dt = 1.0 / steps
+
+        traj = []
+        for i in range(steps):
+            t = torch.full((B,), i * dt, device=x.device)
+            x = x + model(x, t) * dt
+            traj.append(x.clone())
+
+        xT = x
+        v_rectified = (xT - x0)
+
+        return traj, v_rectified
+
+    def rectified_flow_iterative_loss(self, model, traj, v_rectified):
+        losses = []
+        steps = len(traj)
+
+        for i, xt in enumerate(traj):
+            B = xt.shape[0]
+            t = torch.full((B,), i / steps, device=xt.device)
+            v_pred = model(xt, t)
+            losses.append(((v_pred - v_rectified) ** 2).mean())
+
+        return sum(losses) / len(losses)
+              
+    @torch.no_grad()
+    def compute_anomaly_scores(self, X_test, X_inlier, type='mahalanobis' , n_steps=100):
 
         self.model.eval()
 
