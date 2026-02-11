@@ -95,22 +95,13 @@ class FlowMatching(nn.Module):
             t = self.time_embedding(t).to(self.device)
             
         xt = torch.cat([x, t], dim=1)
-
         return self.net(xt)
     
     def sampling_source(self, n_samples):
-
-        # torch.manual_seed(self.seed) 
-        # torch.cuda.manual_seed_all(self.seed)
-        
+   
         if self.source == 'gaussian':
             return torch.randn(n_samples, self.input_dim).to(self.device)
-#             eps = 1e-2
-#             cov_reg = self.target_cov_mat + eps * torch.eye(self.target_cov_mat.size(0))
 
-#             distri = torch.distributions.MultivariateNormal(self.target_centroid, covariance_matrix=cov_reg)
-#             return distri.sample((n_samples,)).to(self.device)
-        
         if self.source == 'circle': return Tensor(make_circles(n_samples=n_samples, noise=0.1, factor=0.5)[0]).to(self.device)
     
         if self.source == 'MoG': return Tensor(self.gmm.sample(n_samples)[0]).to(self.device)
@@ -120,20 +111,11 @@ class FlowMatching(nn.Module):
         if self.source == 'uniform': return Tensor(np.random.uniform(low=self.target.min(), high=self.target.max(), size=(n_samples, self.input_dim))).to(self.device)
     
         if self.source == 'sphere':
-            
             z = torch.randn(n_samples, self.input_dim)
             return Tensor(z / z.norm(dim=1, keepdim=True)).to(self.device)
         
         if self.source == 'sphere-noised':
             z = torch.randn(n_samples, self.input_dim)
-            
-            
-#             eps = 1e-2
-#             cov_reg = self.target_cov_mat + eps * torch.eye(self.target_cov_mat.size(0))
-
-#             distri = torch.distributions.MultivariateNormal(self.target_centroid, covariance_matrix=cov_reg)
-#             z = distri.sample((n_samples,)).to(self.device)
-            
             z = z / z.norm(dim=1, keepdim=True)
             noise = torch.randn_like(z) * 0.25
             return Tensor(z + noise).to(self.device)
@@ -142,10 +124,13 @@ class FlowMatching(nn.Module):
             return self.point_mean.repeat(n_samples).reshape(-1,self.input_dim)
             
         
-    def interpolation(self, n_samples, x1=None):
-
+    def interpolation(self, n_samples, x1=None, noise_is_target=False):
         # source sampling
-        x0 = self.sampling_source(n_samples)
+        if noise_is_target:
+            x0 = x1
+            x1 = self.sampling_source(n_samples)
+        else:
+            x0 = self.sampling_source(n_samples)
         
         # target sampling ( get n_samples examples from the all target dataset )
         # replace --> avec ou sans remise
@@ -158,13 +143,12 @@ class FlowMatching(nn.Module):
 
         # sampling the time between 0 ad 1
         t = torch.rand(n_samples, 1).to(self.device)
+
         # t = torch.rand(n_samples).to(self.device)
         xt = (1 - t) * x0 + t * x1
         ut = x1 - x0
         
         return xt, t, ut
-
-
 
 class FlowMatchingTrainer():
     def __init__(self, flow_model,  verbose=True):
@@ -172,16 +156,18 @@ class FlowMatchingTrainer():
         self.flow_model = flow_model
         self.verbose = verbose
 
-    def train(self, dataloader, lr, weight_decay, loss_fn, n_epochs, optimizer_type='adam'):
+    def train(self, dataloader, lr, weight_decay, loss_fn, n_epochs, optimizer_type='adam', noise_is_target=False):
         
         if optimizer_type == 'adam':
             optimizer = torch.optim.Adam(self.flow_model.parameters(), lr=lr, weight_decay=weight_decay)
+
+        self.noise_is_target = noise_is_target
 
         for s in range(n_epochs):
 
             for data, in dataloader:
 
-                xt, t, ut = self.flow_model.interpolation(data.shape[0], data)
+                xt, t, ut = self.flow_model.interpolation(data.shape[0], data, noise_is_target)
                 vt =  self.flow_model(xt, t)
 
                 optimizer.zero_grad()
@@ -228,7 +214,11 @@ class FlowMatchingTrainer():
     def test(self, X_test, y_test, score_type='norm', solver_type='midpoint', n_steps=10):
 
         if score_type == 'norm':
-            x_source_after_backward = self.backward_flow(X_test, solver_type, n_steps)[-1].cpu().detach()
+            if not self.noise_is_target:
+                 x_source_after_backward = self.backward_flow(X_test, solver_type, n_steps)[-1].cpu().detach()
+            else:
+                 x_source_after_backward = self.forward_flow(X_test, solver_type, n_steps)[-1].cpu().detach()
+
             # scores = ((x_source_after_backward - self.flow_model.target_centroid) ** 2).sum(dim=1)
             scores = (x_source_after_backward ** 2).sum(dim=1)
 
@@ -261,6 +251,7 @@ class BasicFlowMatching(BaselineModel):
         self.score_type = args['score_type']
         self.solver_type = args['solver_type']
         self.n_steps = args['n_steps']
+        self.noise_is_target = args['noise_is_target']
 
 
         self.flow_model = FlowMatching(
@@ -288,7 +279,7 @@ class BasicFlowMatching(BaselineModel):
 
         X_inlier_dl = DataLoader(TensorDataset(X_train), batch_size=self.batch_size, shuffle=True)
 
-        flow_model_trained = self.fm_trainer.train(X_inlier_dl, self.lr, self.weight_decay, self.loss_fn, self.n_epochs, optimizer_type='adam')
+        flow_model_trained = self.fm_trainer.train(X_inlier_dl, self.lr, self.weight_decay, self.loss_fn, self.n_epochs, optimizer_type='adam', noise_is_target=self.noise_is_target)
 
         return flow_model_trained
 

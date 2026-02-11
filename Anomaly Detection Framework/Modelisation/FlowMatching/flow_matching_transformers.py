@@ -3,8 +3,8 @@ import torch
 from torch import nn,  Tensor
 import torch.nn.functional as F
 from torch.optim import AdamW
-from torch.optim.lr_scheduler import CosineAnnealingLR
 import numpy as np
+from flow_matching.solver import ODESolver
 import time 
 from torch.utils.data import TensorDataset, DataLoader
 import Modelisation.evaluation as ev
@@ -53,9 +53,9 @@ class FlowDiT(nn.Module):
         # Tête de prédiction du champ de vecteurs
         self.output_proj = nn.Linear(hidden_dim, latent_dim)
     
-    def forward(self, x_t, t):
-        # x_t: [batch, latent_dim], t: [batch]
-        h = self.input_proj(x_t)
+    def forward(self, x, t):
+        # x: [batch, latent_dim], t: [batch]
+        h = self.input_proj(x)
         t_emb = self.time_mlp(t)
         
         for block in self.blocks:
@@ -104,20 +104,6 @@ class DiTBlock(nn.Module):
 def modulate(x, shift, scale):
     return x * (1 + scale) + shift
 
-def angle(vec1, vec2):
-    cos_theta = torch.dot(vec1, vec2) / (torch.norm(vec1) * torch.norm(vec2))
-    cos_theta = torch.clamp(cos_theta, -1.0, 1.0)
-    # return torch.acos(cos_theta)
-    return cos_theta
-
-def angle_batch(vec1, vec2, eps=1e-8):
-    dot = torch.sum(vec1 * vec2, dim=1)
-    norm1 = torch.norm(vec1, dim=1)
-    norm2 = torch.norm(vec2, dim=1)
-    cos_theta = dot / (norm1 * norm2 + eps)
-    cos_theta = torch.clamp(cos_theta, -1.0, 1.0)
-    return cos_theta
-
 class FlowMatchingTransformers(nn.Module):
 
     def __init__(self, model, source, target, config, noise_is_target, rectified):
@@ -143,42 +129,59 @@ class FlowMatchingTransformers(nn.Module):
         else:
             progress = (epoch - warmup_epochs) / (total_epochs - warmup_epochs)
             return lr * 0.5 * (1 + torch.cos(torch.tensor(progress * 3.14159)))
+        
+    def sample(self, x_0, type):
+
+        if type == 'gaussian':
+            return torch.randn_like(x_0)
+        
+        if type == 'gaussian-neigh':
+            # N(centroid, 0.01 I)
+            centroid = x_0.mean(dim=0, keepdim=True) 
+
+            std = (0.01 ** 0.5)
+            return centroid + std * torch.randn_like(x_0)
+        
+        if type == 'centroid':
+            return x_0.mean(dim=0).repeat(x_0.shape[0],1)
+        
+        if type =='sphere-noised':
+            z = torch.randn(x_0.shape[0], x_0.shape[1])       
+            z = z / z.norm(dim=1, keepdim=True)
+            noise = torch.randn_like(z) * 0.25
+            return Tensor(z + noise).to(self.device)
+        
+        if type == 'sphere':
+            z = torch.randn(x_0.shape[0], x_0.shape[1])
+            return Tensor(z / z.norm(dim=1, keepdim=True)).to(self.device)
+
 
     def compute_flow_loss(self, x_0, flow_type='linear', sigma=0.1, lambda_reg_angle=2.):
             
         batch_size = x_0.shape[0]
 
         if self.target == 'gaussian' or self.source == 'gaussian':
-            x_1 = torch.randn_like(x_0)
+            x_1 = self.sample(x_0, 'gaussian')
 
         if self.target == 'gaussian-neigh' or self.source == 'gaussian-neigh':
-            centroid = x_0.mean(dim=0).cpu().numpy()
-            cov = 0.01 * np.eye(x_0.shape[1])
-            x_1 = Tensor(np.random.multivariate_normal(centroid, cov, x_0.shape[0])).to(self.device)
+            x_1 = self.sample(x_0, 'gaussian-neigh')
 
         if self.target == 'centroid' or self.source == 'centroid':
-            x_1 = x_0.mean(dim=0).repeat(x_0.shape[0],1)
+            x_1 = self.sample(x_0, 'centroid')
 
         if self.target == 'sphere' or self.source == 'sphere':
-            z = torch.randn(x_0.shape[0], x_0.shape[1])
-            x_1 = Tensor(z / z.norm(dim=1, keepdim=True)).to(self.device)
+            x_1 = self.sample(x_0, 'sphere-noised')
 
         if self.target == 'sphere-noised' or self.source == 'sphere-noised':
-            z = torch.randn(batch_size, x_0.shape[1])       
-            z = z / z.norm(dim=1, keepdim=True)
-            noise = torch.randn_like(z) * 0.25
-            x_1 = Tensor(z + noise).to(self.device)
+            x_1 = self.sample(x_0, 'sphere-noised')
 
         t = torch.rand(batch_size, device=self.device)
         # t = torch.arange(0, 1, (1/batch_size), device=self.device)
 
         # j'inverse juste la source et la target
         if not self.noise_is_target:
-            temp = x_0
-            x_0 = x_1
-            x_1 = temp
+            x_0, x_1 = x_1, x_0
 
-        
         if flow_type == 'linear':
             t_expanded = t.view(-1, 1)
             x_t = t_expanded * x_1 + (1 - t_expanded) * x_0
@@ -331,76 +334,216 @@ class FlowMatchingTransformers(nn.Module):
             losses.append(((v_pred - v_rectified) ** 2).mean())
 
         return sum(losses) / len(losses)
-              
-    @torch.no_grad()
-    def compute_anomaly_scores(self, X_test, X_inlier, type='mahalanobis' , n_steps=100):
+    
+    def forward_flow(self, x_0, solver_type='midpoint', n_steps=10):
+            
+        self.model.eval()
+        wrapped_model = BatchedVelocityWrapper(self.model)
+        solver = ODESolver(velocity_model=wrapped_model)
+
+        time_steps = torch.linspace(0.0, 1.0, n_steps)
+        x_inter_source_to_target = solver.sample(x_init=x_0, method=solver_type, step_size=1.0 / n_steps, time_grid=time_steps, return_intermediates=True)
+
+        return x_inter_source_to_target
+
+    def backward_flow(self,x_1, solver_type='midpoint', n_steps=10):
 
         self.model.eval()
+        wrapped_model = BatchedVelocityWrapper(self.model)
+        solver = ODESolver(velocity_model=wrapped_model)
 
-        ##################################
-        ############ Testing Data ########
-        ##################################
-        velo_s = []
-        x_0_test = X_test.to(self.device)
-        x_t = x_0_test.clone()
-        delta_t = 1.0 / n_steps
-        for i in range(n_steps):
-            t = torch.full((x_0_test.shape[0],), i * delta_t, device=self.device)
-            v = self.model(x_t, t)
-            velo_s.append(v)
-            x_t = x_t + v * delta_t
+        time_steps = torch.linspace(1.0, 0.0, n_steps)
+        x_inter_target_to_source = solver.sample(x_init=x_1, method=solver_type, step_size=1.0 / n_steps, time_grid=time_steps, return_intermediates=True)
+
+        return x_inter_target_to_source
         
-        x_1_test = x_t.cpu().numpy()
+    @torch.no_grad()
+    def compute_anomaly_scores(self, X_test, X_inlier,
+                            type='mahalanobis',
+                            n_steps=20,
+                            solver_type="midpoint"):
+        
+        ##################################
+        ########### TEST DATA ############
+        ##################################
+
+        if self.noise_is_target:
+            # forward ODE : test -> noise
+            out = self.forward_flow(X_test.to(self.device), solver_type=solver_type, n_steps=n_steps)
+        else:
+            # backward ODE : noise -> test
+            out = self.backward_flow(X_test.to(self.device), solver_type=solver_type, n_steps=n_steps)
+
+        x_1_test = out[-1].cpu().numpy()
+
+        ##########################################
+        ########### INLIERS (TRAIN) ##############
+        ##########################################
 
         if type == 'mahalanobis':
 
-            ##########################################
-            ############ Training Inlier Data ########
-            ##########################################
-            
-            x_0_inliers = X_inlier.to(self.device)
-            x_t = x_0_inliers.clone()
-            for i in range(n_steps):
-                t = torch.full((x_0_inliers.shape[0],), i * delta_t, device=self.device)
-                v = self.model(x_t, t)
-                x_t = x_t + v * delta_t
-            
-            x_1_inliers = x_t.cpu().numpy()
-            
+            if self.noise_is_target:
+                # forward ODE : inlier -> noise
+                out_in = self.forward_flow(X_inlier.to(self.device), solver_type=solver_type, n_steps=n_steps)
+            else:
+                # backward ODE : noise -> inlier
+                out_in = self.backward_flow(X_inlier.to(self.device), solver_type=solver_type, n_steps=n_steps)
+
+            x_1_inliers = out_in[-1].cpu().numpy()
+
             mean_inlier = np.mean(x_1_inliers, axis=0)
             cov_inlier = np.cov(x_1_inliers.T)
-            
             cov_inlier += 1e-6 * np.eye(cov_inlier.shape[0])
 
-            # mahalanobis score ---> sqrt((x - μ)^T Σ^(-1) (x - μ))
             diff = x_1_test - mean_inlier
             inv_cov = np.linalg.inv(cov_inlier)
-            
+
             scores = np.sqrt(np.sum(diff @ inv_cov * diff, axis=1))
 
-        if type == 'norm':
-            scores = np.sum((x_1_test ** 2), axis=1)
+        ##################################
+        ########### NORMS ################
+        ##################################
+        elif type == 'norm':
+            scores = np.sum(x_1_test ** 2, axis=1)
 
-        if type == 'norm-centroid':
+        elif type == 'norm-centroid':
             centroid = X_inlier.mean(dim=0).cpu().numpy()
-            scores = np.sum(((x_1_test - centroid) ** 2), axis=1)
+            scores = np.sum((x_1_test - centroid) ** 2, axis=1)
 
-        if type == 'recons':
-            x_1_test = Tensor(x_1_test).to(self.device)
-            x_t = x_1_test.clone()
-            for i in range(n_steps):
-                t = torch.full((x_1_test.shape[0],), i * delta_t, device=self.device)
-                v = self.model(x_t, t)
-                x_t = x_t + v * delta_t
-            
-            x_0_test_back = x_t
+        ##################################
+        ######## RECONSTRUCTION ##########
+        ##################################
+        elif type == 'recons':
 
-            scores = ((torch.norm(x_0_test_back - X_test, dim=1)** 2)).cpu().detach()
+            if self.noise_is_target:
+                out_back = self.backward_flow(torch.tensor(x_1_test, device=self.device), solver_type=solver_type, n_steps=n_steps)
+            else:
+                out_back = self.forward_flow(torch.tensor(x_1_test, device=self.device), solver_type=solver_type, n_steps=n_steps)
 
-        return scores, velo_s
-        
-    
+            x_0_back = out_back[-1]
+            scores = (
+                torch.norm(x_0_back - X_test, dim=1) ** 2
+            ).cpu().numpy()
+
+        return scores
+
     def test(self, X_test, y_test, X_inlier, type='mahalanobis'):
 
-        scores, velo_s = self.compute_anomaly_scores(X_test, X_inlier, type)
-        return ev.evaluation(y_test, scores, verbose=False), velo_s
+        scores = self.compute_anomaly_scores(X_test, X_inlier, type)
+        return ev.evaluation(y_test, scores, verbose=False)
+
+
+class BatchedVelocityWrapper(torch.nn.Module):
+    def __init__(self, model):
+        super().__init__()
+        self.model = model
+
+    def forward(self, x, t):
+        # t est scalaire → on l'étend au batch
+        if t.dim() == 0:
+            t = t.expand(x.shape[0])
+        return self.model(x, t)
+
+              
+
+
+
+    # @torch.no_grad()
+    # def compute_anomaly_scores(self, X_test, X_inlier, type='mahalanobis' , n_steps=100):
+
+    #     self.model.eval()
+    #     ##################################
+    #     ############ Testing Data ########
+    #     ##################################
+
+    #     if self.noise_is_target:
+    #         # forward ODE : test -> noise
+    #         x_t = X_test.to(self.device)
+    #         t_schedule = torch.linspace(0.0, 1.0, n_steps, device=self.device)
+    #         sign = +1.0
+    #     else:
+    #         # backward ODE : noise -> test
+    #         x_t = self.sample(X_test, self.source)
+    #         t_schedule = torch.linspace(1.0, 0.0, n_steps, device=self.device)
+    #         sign = -1.0
+
+    #     delta_t = 1.0 / n_steps
+    #     velo_s = []
+
+    #     for t_scalar in t_schedule:
+    #         t = torch.full((x_t.shape[0],), t_scalar, device=self.device)
+    #         v = self.model(x_t, t)
+    #         velo_s.append(v)
+    #         x_t = x_t + sign * v * delta_t
+
+    #     x_1_test = x_t.cpu().numpy()
+
+    #     if type == 'mahalanobis':
+
+    #         ##########################################
+    #         ############ Training Inlier Data ########
+    #         ##########################################
+            
+            
+    #         if self.noise_is_target:
+    #             # forward ODE : inliers -> noise
+    #             x_t = X_inlier.to(self.device)
+    #             t_schedule = torch.linspace(0.0, 1.0, n_steps, device=self.device)
+    #             sign = +1.0
+    #         else:
+    #             # backward ODE : noise -> inliers
+    #             x_t = self.sample(X_inlier, self.source)
+    #             t_schedule = torch.linspace(1.0, 0.0, n_steps, device=self.device)
+    #             sign = -1.0
+
+    #         delta_t = 1.0 / n_steps
+
+    #         for t_scalar in t_schedule:
+    #             t = torch.full((x_t.shape[0],), t_scalar, device=self.device)
+    #             v = self.model(x_t, t)
+    #             x_t = x_t + sign * v * delta_t
+
+    #         x_1_inliers = x_t.cpu().numpy()
+
+            
+    #         mean_inlier = np.mean(x_1_inliers, axis=0)
+    #         cov_inlier = np.cov(x_1_inliers.T)
+            
+    #         cov_inlier += 1e-6 * np.eye(cov_inlier.shape[0])
+
+    #         # mahalanobis score ---> sqrt((x - μ)^T Σ^(-1) (x - μ))
+    #         diff = x_1_test - mean_inlier
+    #         inv_cov = np.linalg.inv(cov_inlier)
+            
+    #         scores = np.sqrt(np.sum(diff @ inv_cov * diff, axis=1))
+
+    #     if type == 'norm':
+    #         scores = np.sum((x_1_test ** 2), axis=1)
+
+    #     if type == 'norm-centroid':
+    #         centroid = X_inlier.mean(dim=0).cpu().numpy()
+    #         scores = np.sum(((x_1_test - centroid) ** 2), axis=1)
+
+    #     if type == 'recons':
+
+    #         x_t = Tensor(x_1_test).to(self.device)
+
+    #         if self.noise_is_target:
+    #             t_schedule = torch.linspace(1.0, 0.0, n_steps, device=self.device)
+    #             sign = -1.0
+    #         else:
+    #             t_schedule = torch.linspace(0.0, 1.0, n_steps, device=self.device)
+    #             sign = +1.0
+
+    #         delta_t = 1.0 / n_steps
+
+    #         for t_scalar in t_schedule:
+    #             t = torch.full((x_t.shape[0],), t_scalar, device=self.device)
+    #             v = self.model(x_t, t)
+    #             x_t = x_t + sign * v * delta_t
+
+    #         x_0_test_back = x_t
+
+    #         scores = ((torch.norm(x_0_test_back - X_test, dim=1)** 2)).cpu().detach()
+
+    #     return scores, velo_s
