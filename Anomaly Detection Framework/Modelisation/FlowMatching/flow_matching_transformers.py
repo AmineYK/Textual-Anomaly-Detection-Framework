@@ -114,8 +114,12 @@ class FlowMatchingTransformers(nn.Module):
         self.noise_is_target = noise_is_target
         if self.noise_is_target:
             self.device = self.source.device
+            # self.centroid = self.source.mean(dim=0)
+            self.centroid = torch.zeros((self.source.shape[1]), device=self.device)
         else:
             self.device = self.target.device
+            # self.centroid = self.target.mean(dim=0)
+            self.centroid = torch.zeros((self.target.shape[1]), device=self.device)
         self.rectified = rectified
         self.config = config
 
@@ -143,7 +147,7 @@ class FlowMatchingTransformers(nn.Module):
             return centroid + std * torch.randn_like(x_0)
         
         if type == 'centroid':
-            return x_0.mean(dim=0).repeat(x_0.shape[0],1)
+            return self.centroid.repeat(x_0.shape[0],1)
         
         if type =='sphere-noised':
             z = torch.randn(x_0.shape[0], x_0.shape[1])       
@@ -302,7 +306,7 @@ class FlowMatchingTransformers(nn.Module):
                     
                     l.append(loss.item())
                 
-                print(f"Rectification iteration {iteration}, loss = {np.mean(l):.6f}")
+                print(f"Rectification iteration {iteration+1}, loss = {np.mean(l):.6f}")
 
             return liste_loss, liste_loss_regul
 

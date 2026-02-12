@@ -225,12 +225,6 @@ class FlowMatchingTrainer():
         if score_type == 'recons':
             x_target_after_forward_backward = self.forward_backward_flow(X_test, solver_type, n_steps)[-1]
             scores = ((torch.norm(x_target_after_forward_backward - X_test, dim=1)** 2)).cpu().detach()
- 
-        # auc = roc_auc_score(y_test, scores)
-        # ap = average_precision_score(y_test, scores)
-        # fpr, tpr, thresholds = roc_curve(y_test, scores)
-        # idx = np.where(tpr >= 0.95)[0][0]
-        # fpr95 = fpr[idx]
 
         auc, fpr95, ap = ev.evaluation(y_test, scores, verbose=False)
 

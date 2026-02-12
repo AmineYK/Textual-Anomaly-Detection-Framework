@@ -659,11 +659,11 @@ Dataset:        reuters
 Inlier class:   earn
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  10.50 sec
+Training time:  23.35 sec
 ----------------------------------------
-AUC:            0.9506 ± 0.0157
-Avg Precision:  0.6797 ± 0.0736
-FPR@95:         0.1707 ± 0.0870
+AUC:            0.9663 ± 0.0067
+Avg Precision:  0.7250 ± 0.0648
+FPR@95:         0.0977 ± 0.0153
 ========================================
 
 ========================================
@@ -671,11 +671,11 @@ Dataset:        reuters
 Inlier class:   trade
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  0.96 sec
+Training time:  2.02 sec
 ----------------------------------------
-AUC:            0.8899 ± 0.0699
-Avg Precision:  0.6011 ± 0.1651
-FPR@95:         0.3265 ± 0.1966
+AUC:            0.7578 ± 0.1158
+Avg Precision:  0.4412 ± 0.1849
+FPR@95:         0.7529 ± 0.3078
 ========================================
 
 ========================================
@@ -683,11 +683,11 @@ Dataset:        reuters
 Inlier class:   acq
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  2.84 sec
+Training time:  12.16 sec
 ----------------------------------------
-AUC:            0.8643 ± 0.0340
-Avg Precision:  0.7269 ± 0.0337
-FPR@95:         1.0000 ± 0.0000
+AUC:            0.8434 ± 0.0280
+Avg Precision:  0.4528 ± 0.0996
+FPR@95:         0.5665 ± 0.1719
 ========================================
 
 ========================================
@@ -695,11 +695,11 @@ Dataset:        reuters
 Inlier class:   money-fx
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  1.53 sec
+Training time:  1.63 sec
 ----------------------------------------
-AUC:            0.8472 ± 0.0626
-Avg Precision:  0.5634 ± 0.0797
-FPR@95:         0.5924 ± 0.3253
+AUC:            0.8174 ± 0.0979
+Avg Precision:  0.4674 ± 0.0978
+FPR@95:         0.6304 ± 0.3660
 ========================================
 
 ========================================
@@ -707,11 +707,11 @@ Dataset:        reuters
 Inlier class:   crude
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  0.97 sec
+Training time:  2.03 sec
 ----------------------------------------
-AUC:            0.8266 ± 0.0725
-Avg Precision:  0.4310 ± 0.1284
-FPR@95:         0.7624 ± 0.1756
+AUC:            0.8053 ± 0.0564
+Avg Precision:  0.4078 ± 0.1262
+FPR@95:         0.9046 ± 0.1919
 ========================================
 
 ========================================
@@ -719,11 +719,11 @@ Dataset:        reuters
 Inlier class:   ship
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  0.45 sec
+Training time:  0.95 sec
 ----------------------------------------
-AUC:            0.8288 ± 0.0950
-Avg Precision:  0.3682 ± 0.1332
-FPR@95:         0.3364 ± 0.1769
+AUC:            0.8379 ± 0.1030
+Avg Precision:  0.3867 ± 0.1753
+FPR@95:         0.3242 ± 0.2091
 ========================================
 
 ========================================
@@ -731,10 +731,10 @@ Dataset:        reuters
 Inlier class:   interest
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  1.40 sec
+Training time:  1.50 sec
 ----------------------------------------
-AUC:            0.9122 ± 0.0586
-Avg Precision:  0.7223 ± 0.0857
-FPR@95:         0.5219 ± 0.4215
+AUC:            0.8884 ± 0.0636
+Avg Precision:  0.6254 ± 0.1640
+FPR@95:         0.5836 ± 0.3747
 ========================================
 

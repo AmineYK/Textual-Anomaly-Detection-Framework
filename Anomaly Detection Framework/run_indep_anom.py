@@ -528,12 +528,13 @@ def main(args):
                         'n_heads': 2,
                         'lr': 1e-3,
                         'weight_decay': 1e-5,
-                        'epochs': 10,
+                        'epochs': 20,
                         'warmup_epochs': 5,
                         'grad_clip': 1.0,
                         'flow_type': 'linear',  
                         'sigma': 0.1, 
-                        'batch_size' : 64,
+                        'batch_size' : 128,
+                        'lambda_reg_angle': None,
                         'target' : 'sphere-noised',
                         'source' : X_inlier.to(device)
                 }
@@ -545,7 +546,7 @@ def main(args):
                     n_heads=config['n_heads']
                 ).to(device)
 
-                fm_transformer = FlowMatchingTransformers(model, config['source'], config['target'], config, noise_is_target=True)
+                fm_transformer = FlowMatchingTransformers(model, config['source'], config['target'], config, noise_is_target=True, rectified=None)
 
                 taac = time.time()
                 fm_transformer.train(X_inlier)
@@ -553,7 +554,7 @@ def main(args):
                 print(f"\nFM Transformer finishing... after {(tiic-taac)/60:.3f} mn")
 
 
-                auc_fm_trans, fpr95_fm_trans, ap_fm_trans = fm_transformer.test(X_test, y_test, X_inlier, 'mahalanobis')
+                auc_fm_trans, fpr95_fm_trans, ap_fm_trans = fm_transformer.test(X_test, y_test, X_inlier, 'norm')
                 print(f"FM --> AUC: {auc_fm_trans:.4f} | FPR@95: {fpr95_fm_trans:.4f} | AP: {ap_fm_trans:.4f}\n")
 
                 list_auc_fm_trans.append(auc_fm_trans)
@@ -571,12 +572,12 @@ def main(args):
                 )
             
         if args.fm_trans:
-            print(np.mean(list_auc_fm_trans))
+            print(inlier_topic, np.mean(list_auc_fm_trans))
             save_results(
                 dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers",
                 auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
                 auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
-                train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='smart'
+                train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='naive'
                 )
 
         
