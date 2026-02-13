@@ -60,4 +60,4 @@ echo "Timestamp: ${TIMESTAMP}"
 export PYTHONUNBUFFERED=1
 
 # srun bash run.sh 2>&1 | tee ${JOB_DIR}/run.log
-srun python3 run_indep_anom.py --dataset_name 20newsgroups --runall --type_emb sentence-bert --nu 0.1 --cvdd
+srun python3 run_indep_anom.py --dataset_name agnews --runall --type_emb sentence-bert --nu 0.0 --fm_trans

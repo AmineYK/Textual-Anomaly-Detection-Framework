@@ -102,7 +102,7 @@ def import_dataset(name="20newsgroups", full_dataset_=False, batch_size=64):
   # *****************************
     if name == "reuters":
 
-        dataset = load_dataset('ucirvine/reuters21578', 'ModApte')  #ModHayes  ModLewis
+        dataset = load_dataset('ucirvine/reuters21578', 'ModApte', trust_remote_code=True)  #ModHayes  ModLewis
 
         train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
         test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)

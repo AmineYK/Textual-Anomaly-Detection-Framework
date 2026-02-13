@@ -523,19 +523,19 @@ def main(args):
             if args.fm_trans:
                 config = {
                         'latent_dim': 768,
-                        'hidden_dim': 256,
+                        'hidden_dim': 64,
                         'depth': 2,
                         'n_heads': 2,
                         'lr': 1e-3,
                         'weight_decay': 1e-5,
-                        'epochs': 20,
-                        'warmup_epochs': 5,
+                        'epochs': 500,
+                        'warmup_epochs': 20,
                         'grad_clip': 1.0,
                         'flow_type': 'linear',  
                         'sigma': 0.1, 
                         'batch_size' : 128,
                         'lambda_reg_angle': None,
-                        'target' : 'sphere-noised',
+                        'target' : 'gaussian-neigh',
                         'source' : X_inlier.to(device)
                 }
 

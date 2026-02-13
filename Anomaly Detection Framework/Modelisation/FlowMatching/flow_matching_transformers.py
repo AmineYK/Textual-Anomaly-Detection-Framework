@@ -114,12 +114,12 @@ class FlowMatchingTransformers(nn.Module):
         self.noise_is_target = noise_is_target
         if self.noise_is_target:
             self.device = self.source.device
-            # self.centroid = self.source.mean(dim=0)
-            self.centroid = torch.zeros((self.source.shape[1]), device=self.device)
+            self.centroid = Tensor(self.source.mean(dim=0)).to(self.device)
+            # self.centroid = torch.ones((self.source.shape[1]), device=self.device)*2
         else:
             self.device = self.target.device
-            # self.centroid = self.target.mean(dim=0)
-            self.centroid = torch.zeros((self.target.shape[1]), device=self.device)
+            self.centroid = Tensor(self.target.mean(dim=0)).to(self.device)
+            # self.centroid = torch.ones((self.target.shape[1]), device=self.device)*2
         self.rectified = rectified
         self.config = config
 
@@ -141,10 +141,10 @@ class FlowMatchingTransformers(nn.Module):
         
         if type == 'gaussian-neigh':
             # N(centroid, 0.01 I)
-            centroid = x_0.mean(dim=0, keepdim=True) 
+            # centroid = x_0.mean(dim=0, keepdim=True) 
 
             std = (0.01 ** 0.5)
-            return centroid + std * torch.randn_like(x_0)
+            return self.centroid + std * torch.randn_like(x_0)
         
         if type == 'centroid':
             return self.centroid.repeat(x_0.shape[0],1)
@@ -411,8 +411,7 @@ class FlowMatchingTransformers(nn.Module):
             scores = np.sum(x_1_test ** 2, axis=1)
 
         elif type == 'norm-centroid':
-            centroid = X_inlier.mean(dim=0).cpu().numpy()
-            scores = np.sum((x_1_test - centroid) ** 2, axis=1)
+            scores = np.sum((x_1_test - self.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
 
         ##################################
         ######## RECONSTRUCTION ##########
