@@ -147,7 +147,7 @@ def main(args):
         # print(f" Embedding : {args.type_emb} --> {X_inlier.shape}")
 
         # get the hyperparamter for the FM model for this specific inlier category
-        hyp = load_hyperparams(args.dataset_name, inlier_topic, args.type_emb, file_path_hyp)
+        hyp = load_hyperparams(args.dataset_name, inlier_topic, 'sentence_bert', file_path_hyp)
         # print(hyp)
         nb_runs = 11
         for n_run in range(1, nb_runs):
@@ -448,12 +448,12 @@ def main(args):
                     data_train_ = data_train
                 fate_args = {
                     "device": device,
-                    "batch_size": 64,
+                    "batch_size": 32,
                     "n_epochs": 3,
                     "lr": 1e-5,
                     "include_regularization": True,
                     "top_k": 0.1,
-                    "nb_shot": 10,
+                    "nb_shot": 30,
                     "train_inlier_text": data_train_['text'],     
                     "train_anomaly_text": data_train_anomaly_fate['text'],
                     "test_inlier_text": data_test_inlier['text'],
@@ -496,7 +496,8 @@ def main(args):
                     "device": device,
                     "score_type" : "norm",
                     "solver_type" : "midpoint",
-                    "n_steps": 10
+                    "n_steps": 10, 
+                    "noise_is_target": False
                 }
 
                 fm_model = BasicFlowMatching(fm_args)
@@ -518,8 +519,6 @@ def main(args):
             ######################################################
 #          ################ Flow Matching Transformers ###########
 #          ####################################################### 
-
-
             if args.fm_trans:
                 config = {
                         'latent_dim': 768,
@@ -528,15 +527,16 @@ def main(args):
                         'n_heads': 2,
                         'lr': 1e-3,
                         'weight_decay': 1e-5,
-                        'epochs': 500,
-                        'warmup_epochs': 20,
+                        'epochs': 100,
+                        'warmup_epochs': 30,
                         'grad_clip': 1.0,
                         'flow_type': 'linear',  
                         'sigma': 0.1, 
-                        'batch_size' : 128,
+                        'batch_size' : 32,
                         'lambda_reg_angle': None,
                         'target' : 'gaussian-neigh',
-                        'source' : X_inlier.to(device)
+                        # 'source' : X_inlier.to(device)
+                        'source' : torch.concatenate((X_inlier.to(device), torch.randn(100, X_inlier.shape[1]).to(device)))
                 }
 
                 model = FlowDiT(
@@ -554,7 +554,7 @@ def main(args):
                 print(f"\nFM Transformer finishing... after {(tiic-taac)/60:.3f} mn")
 
 
-                auc_fm_trans, fpr95_fm_trans, ap_fm_trans = fm_transformer.test(X_test, y_test, X_inlier, 'norm')
+                auc_fm_trans, fpr95_fm_trans, ap_fm_trans = fm_transformer.test(X_test, y_test, X_inlier, 'norm-centroid')
                 print(f"FM --> AUC: {auc_fm_trans:.4f} | FPR@95: {fpr95_fm_trans:.4f} | AP: {ap_fm_trans:.4f}\n")
 
                 list_auc_fm_trans.append(auc_fm_trans)
@@ -562,23 +562,23 @@ def main(args):
                 list_ap_fm_trans.append(ap_fm_trans)
                 list_time_fm_trans.append((tiic-taac))
 
-
         if args.fm:
+            print(inlier_topic, np.mean(list_auc_fm))
             save_results(
                 dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching",
                 auc_mean=np.mean(list_auc_fm), ap_mean=np.mean(list_ap_fm),fpr_mean=np.mean(list_fpr_fm),
                 auc_std = np.std(list_auc_fm),ap_std =  np.std(list_ap_fm),fpr_std = np.std(list_fpr_fm),
-                train_time = np.mean(list_time_fm),overwrite='smart'
+                train_time = np.mean(list_time_fm),overwrite='naive'
                 )
             
         if args.fm_trans:
             print(inlier_topic, np.mean(list_auc_fm_trans))
-            save_results(
-                dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers",
-                auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
-                auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
-                train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='naive'
-                )
+            # save_results(
+            #     dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers",
+            #     auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
+            #     auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
+            #     train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='naive'
+            #     )
 
         
         if args.ae : 

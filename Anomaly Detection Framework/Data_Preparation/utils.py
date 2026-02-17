@@ -37,43 +37,29 @@ from Data_Preparation.Tac import tac
 # from nltk.corpus import stopwords
 
 def preprocess(dataset):
-    # stop_words = set(stopwords.words("english"))
 
-    def clean_text(text):
-        # Lowercase
+    def clean_text(example):
+        text = example["text"]
+
+        if text is None:
+            text = ""
+
         text = text.lower()
-
-        # Remove punctuation
         text = text.translate(str.maketrans("", "", string.punctuation))
+        text = re.sub(r"\d+", " ", text)
+        text = re.sub(r"\W+", " ", text)
+        text = re.sub(r"\s+", " ", text).strip()
 
-        # Remove digits
-        text = re.sub(r'\d+', ' ', text)
+        example["text"] = text
+        return example
 
-        # Remove non-word characters & extra spaces
-        text = re.sub(r'\W+', ' ', text)
-        text = re.sub(r'\s+', ' ', text).strip()
+    # Appliquer le nettoyage
+    dataset = dataset.map(clean_text)
 
-        # Tokenize
-        tokens = text.split()
-
-        # Remove stopwords & keep words with len >= 3
-        # tokens = [w for w in tokens if w not in stop_words and len(w) >= 3]
-
-        return " ".join(tokens)
-
-    for split in ["train", "test"]:
-        if split in dataset and "text" in dataset[split]:
-            dataset[split]["text"] = dataset[split]["text"].apply(clean_text)
-
-            # Remove empty texts
-            dataset[split] = dataset[split][dataset[split]["text"] != ""]
-
-            dataset[split] = dataset[split].reset_index(drop=True)
+    # Supprimer les textes vides
+    dataset = dataset.filter(lambda x: x["text"] != "")
 
     return dataset
-
-
-
 
 # Dataset Importing
 #--------------------

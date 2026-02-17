@@ -219,8 +219,15 @@ class FlowMatchingTrainer():
             else:
                  x_source_after_backward = self.forward_flow(X_test, solver_type, n_steps)[-1].cpu().detach()
 
-            # scores = ((x_source_after_backward - self.flow_model.target_centroid) ** 2).sum(dim=1)
             scores = (x_source_after_backward ** 2).sum(dim=1)
+
+        if score_type == 'norm-centroid':
+            if not self.noise_is_target:
+                 x_source_after_backward = self.backward_flow(X_test, solver_type, n_steps)[-1].cpu().detach()
+            else:
+                 x_source_after_backward = self.forward_flow(X_test, solver_type, n_steps)[-1].cpu().detach()
+
+            scores = ((x_source_after_backward - self.flow_model.target_centroid) ** 2).sum(dim=1)
 
         if score_type == 'recons':
             x_target_after_forward_backward = self.forward_backward_flow(X_test, solver_type, n_steps)[-1]

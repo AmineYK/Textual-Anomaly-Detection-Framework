@@ -371,11 +371,11 @@ Dataset:        agnews
 Inlier class:   World
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  33.34 sec
+Training time:  266.43 sec
 ----------------------------------------
-AUC:            0.8519 ± 0.0171
-Avg Precision:  0.4245 ± 0.0520
-FPR@95:         0.5101 ± 0.0463
+AUC:            0.9111 ± 0.0064
+Avg Precision:  0.5385 ± 0.0263
+FPR@95:         0.3109 ± 0.0340
 ========================================
 
 ========================================
@@ -383,11 +383,11 @@ Dataset:        agnews
 Inlier class:   Sports
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  32.78 sec
+Training time:  269.81 sec
 ----------------------------------------
-AUC:            0.9656 ± 0.0081
-Avg Precision:  0.8247 ± 0.0443
-FPR@95:         0.1609 ± 0.0581
+AUC:            0.9850 ± 0.0044
+Avg Precision:  0.9213 ± 0.0147
+FPR@95:         0.0563 ± 0.0146
 ========================================
 
 ========================================
@@ -395,11 +395,11 @@ Dataset:        agnews
 Inlier class:   Business
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  32.59 sec
+Training time:  259.37 sec
 ----------------------------------------
-AUC:            0.8828 ± 0.0234
-Avg Precision:  0.5585 ± 0.0715
-FPR@95:         0.4894 ± 0.0835
+AUC:            0.9179 ± 0.0080
+Avg Precision:  0.6317 ± 0.0273
+FPR@95:         0.3746 ± 0.0662
 ========================================
 
 ========================================
@@ -407,10 +407,10 @@ Dataset:        agnews
 Inlier class:   Sci-Tech
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  32.74 sec
+Training time:  270.64 sec
 ----------------------------------------
-AUC:            0.8187 ± 0.0214
-Avg Precision:  0.4176 ± 0.0398
-FPR@95:         0.6475 ± 0.0776
+AUC:            0.8695 ± 0.0159
+Avg Precision:  0.4833 ± 0.0453
+FPR@95:         0.5309 ± 0.0729
 ========================================
 
