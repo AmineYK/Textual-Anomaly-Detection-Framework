@@ -532,7 +532,7 @@ def main(args):
                         'grad_clip': 1.0,
                         'flow_type': 'linear',  
                         'sigma': 0.1, 
-                        'batch_size' : 32,
+                        'batch_size' : 64,
                         'lambda_reg_angle': None,
                         'target' : 'gaussian-neigh',
                         # 'source' : X_inlier.to(device)

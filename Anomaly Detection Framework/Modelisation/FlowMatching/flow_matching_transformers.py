@@ -123,6 +123,9 @@ class FlowMatchingTransformers(nn.Module):
         self.rectified = rectified
         self.config = config
 
+        # because the source and target distirbution are inlier and inlier_masked
+        self.is_masking_task = type(self.config['source']) != str and type(self.config['target']) != str
+
     def get_lr_schedule(self,epoch, warmup_epochs, total_epochs, lr):
 
         # return lr
@@ -160,9 +163,11 @@ class FlowMatchingTransformers(nn.Module):
             return Tensor(z / z.norm(dim=1, keepdim=True)).to(self.device)
 
 
-    def compute_flow_loss(self, x_0, flow_type='linear', sigma=0.1, lambda_reg_angle=2.):
+    def compute_flow_loss(self, x_0, indices, flow_type='linear', sigma=0.1, lambda_reg_angle=2.):
             
         batch_size = x_0.shape[0]
+        if self.is_masking_task:
+            x_1 = self.target[indices]
 
         if self.target == 'gaussian' or self.source == 'gaussian':
             x_1 = self.sample(x_0, 'gaussian')
@@ -222,12 +227,13 @@ class FlowMatchingTransformers(nn.Module):
         total_loss_regul = 0
         self.optimizer = optimizer
         
-        for x_0, in dataloader:
+        for x_0, indices in dataloader:
             
             x_0 = x_0.to(self.device)
             
             loss, *anythingelse = self.compute_flow_loss( 
                 x_0, 
+                indices,
                 flow_type=self.config['flow_type'],
                 sigma=self.config['sigma'],
                 lambda_reg_angle = self.config['lambda_reg_angle']
@@ -263,7 +269,7 @@ class FlowMatchingTransformers(nn.Module):
             foreach=False
         )
 
-        X_inlier_dl = DataLoader(TensorDataset(X_inlier), batch_size=self.config['batch_size'], shuffle=True)
+        X_inlier_dl = DataLoader(TensorDataset(X_inlier, torch.arange(len(X_inlier))), batch_size=self.config['batch_size'], shuffle=True)
 
         liste_loss = []
         liste_loss_regul = []
@@ -278,6 +284,25 @@ class FlowMatchingTransformers(nn.Module):
                 X_inlier_dl, 
                 optimizer, 
             )
+
+            ###################################################
+            ############### REGUL #############################
+
+            target_reference = self.sample(X_inlier, 'gaussian-neigh').cpu().numpy()
+
+            mean_inlier = np.mean(target_reference, axis=0)
+            cov_inlier = np.cov(target_reference.T)
+            cov_inlier += 1e-6 * np.eye(cov_inlier.shape[0])
+
+            target_constructed_epoch = self.forward_flow(X_inlier, 'midpoint', 10)
+
+            diff = target_constructed_epoch[-1].cpu().numpy() - mean_inlier
+            inv_cov = np.linalg.inv(cov_inlier)
+
+            penality_term = np.sqrt(np.sum(diff @ inv_cov * diff, axis=1))
+            print(penality_term.mean())
+
+            ###################################################
 
             if self.config['lambda_reg_angle'] is not None:
                 liste_loss_regul.append(anythingelse[0])
