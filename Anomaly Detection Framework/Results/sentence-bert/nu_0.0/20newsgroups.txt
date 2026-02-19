@@ -591,11 +591,11 @@ Dataset:        20newsgroups
 Inlier class:   computer
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  52.72 sec
+Training time:  139.03 sec
 ----------------------------------------
-AUC:            0.9449 ± 0.0129
-Avg Precision:  0.7462 ± 0.0255
-FPR@95:         0.2920 ± 0.0847
+AUC:            0.9571 ± 0.0110
+Avg Precision:  0.8335 ± 0.0258
+FPR@95:         0.2377 ± 0.0790
 ========================================
 
 ========================================
@@ -603,11 +603,11 @@ Dataset:        20newsgroups
 Inlier class:   recreation
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  41.79 sec
+Training time:  111.37 sec
 ----------------------------------------
-AUC:            0.9338 ± 0.0078
-Avg Precision:  0.5493 ± 0.0269
-FPR@95:         0.2486 ± 0.0380
+AUC:            0.9482 ± 0.0099
+Avg Precision:  0.7235 ± 0.0255
+FPR@95:         0.2141 ± 0.0426
 ========================================
 
 ========================================
@@ -627,11 +627,11 @@ Dataset:        20newsgroups
 Inlier class:   politics
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  44.45 sec
+Training time:  74.42 sec
 ----------------------------------------
-AUC:            0.9436 ± 0.0092
-Avg Precision:  0.6500 ± 0.0407
-FPR@95:         0.2576 ± 0.0559
+AUC:            0.9533 ± 0.0082
+Avg Precision:  0.7654 ± 0.0287
+FPR@95:         0.2338 ± 0.0767
 ========================================
 
 ========================================
@@ -651,10 +651,10 @@ Dataset:        20newsgroups
 Inlier class:   miscellaneous
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  18.47 sec
+Training time:  30.36 sec
 ----------------------------------------
-AUC:            0.9334 ± 0.0186
-Avg Precision:  0.6766 ± 0.0557
-FPR@95:         0.3195 ± 0.1248
+AUC:            0.9543 ± 0.0132
+Avg Precision:  0.7616 ± 0.0307
+FPR@95:         0.2544 ± 0.1336
 ========================================
 

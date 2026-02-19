@@ -768,11 +768,11 @@ Dataset:        reuters
 Inlier class:   earn
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  49.48 sec
+Training time:  250.83 sec
 ----------------------------------------
-AUC:            0.9489 ± 0.0075
-Avg Precision:  0.7308 ± 0.0211
-FPR@95:         0.2330 ± 0.0496
+AUC:            0.9827 ± 0.0025
+Avg Precision:  0.8789 ± 0.0160
+FPR@95:         0.0736 ± 0.0110
 ========================================
 
 ========================================

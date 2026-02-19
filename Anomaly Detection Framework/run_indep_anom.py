@@ -521,22 +521,23 @@ def main(args):
 #          ####################################################### 
             if args.fm_trans:
                 config = {
-                        'latent_dim': 768,
-                        'hidden_dim': 64,
-                        'depth': 2,
-                        'n_heads': 2,
-                        'lr': 1e-3,
-                        'weight_decay': 1e-5,
-                        'epochs': 100,
-                        'warmup_epochs': 30,
-                        'grad_clip': 1.0,
-                        'flow_type': 'linear',  
-                        'sigma': 0.1, 
-                        'batch_size' : 64,
-                        'lambda_reg_angle': None,
-                        'target' : 'gaussian-neigh',
-                        # 'source' : X_inlier.to(device)
-                        'source' : torch.concatenate((X_inlier.to(device), torch.randn(100, X_inlier.shape[1]).to(device)))
+                    'latent_dim': 768,
+                    'hidden_dim': 64,
+                    'depth': 2,
+                    'n_heads': 2,
+                    'lr': 1e-3,
+                    'weight_decay': 1e-5,
+                    'epochs': 500,
+                    'warmup_epochs': 10,
+                    'grad_clip': 1.0,
+                    'flow_type': 'linear',  
+                    'sigma': 0.1, 
+                    'batch_size' : 32,
+                    'lambda_reg_angle': None,
+                    'lambda_reg_kl': None,
+                    'coef_var': 1,
+                    'target' : 'gaussian-neigh',
+                    'source' : X_inlier.to(device)
                 }
 
                 model = FlowDiT(
@@ -573,12 +574,12 @@ def main(args):
             
         if args.fm_trans:
             print(inlier_topic, np.mean(list_auc_fm_trans))
-            # save_results(
-            #     dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers",
-            #     auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
-            #     auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
-            #     train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='naive'
-            #     )
+            save_results(
+                dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers",
+                auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
+                auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
+                train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='smart'
+                )
 
         
         if args.ae : 

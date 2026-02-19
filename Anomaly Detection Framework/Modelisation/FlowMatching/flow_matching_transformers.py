@@ -115,10 +115,12 @@ class FlowMatchingTransformers(nn.Module):
         if self.noise_is_target:
             self.device = self.source.device
             self.centroid = Tensor(self.source.mean(dim=0)).to(self.device)
+            self.var = Tensor(self.source.var(dim=0)).mean().to(self.device)
             # self.centroid = torch.ones((self.source.shape[1]), device=self.device)*2
         else:
             self.device = self.target.device
             self.centroid = Tensor(self.target.mean(dim=0)).to(self.device)
+            self.var = Tensor(self.target.var(dim=0)).mean().to(self.device)
             # self.centroid = torch.ones((self.target.shape[1]), device=self.device)*2
         self.rectified = rectified
         self.config = config
@@ -137,6 +139,10 @@ class FlowMatchingTransformers(nn.Module):
             progress = (epoch - warmup_epochs) / (total_epochs - warmup_epochs)
             return lr * 0.5 * (1 + torch.cos(torch.tensor(progress * 3.14159)))
         
+
+    def get_lambda_kl(self, epoch, lambda_max, kl_warmup_epochs):
+        return lambda_max * min(1.0, epoch / kl_warmup_epochs)
+        
     def sample(self, x_0, type):
 
         if type == 'gaussian':
@@ -146,7 +152,7 @@ class FlowMatchingTransformers(nn.Module):
             # N(centroid, 0.01 I)
             # centroid = x_0.mean(dim=0, keepdim=True) 
 
-            std = (0.01 ** 0.5)
+            std = ((self.var * self.config['coef_var']) ** 0.5)
             return self.centroid + std * torch.randn_like(x_0)
         
         if type == 'centroid':
@@ -220,45 +226,109 @@ class FlowMatchingTransformers(nn.Module):
             return loss, v_pred, v_target
     
 
-    def train_epoch(self, dataloader, optimizer):
+    # def train_epoch(self, dataloader, optimizer):
+
+    #     self.model.train()
+    #     total_loss = 0
+    #     total_loss_regul = 0
+    #     self.optimizer = optimizer
+        
+    #     for x_0, indices in dataloader:
+            
+    #         x_0 = x_0.to(self.device)
+            
+    #         loss, *anythingelse = self.compute_flow_loss( 
+    #             x_0, 
+    #             indices,
+    #             flow_type=self.config['flow_type'],
+    #             sigma=self.config['sigma'],
+    #             lambda_reg_angle = self.config['lambda_reg_angle']
+    #         )
+
+    #         if self.config['lambda_reg_angle'] is not None:
+    #             loss_regul = anythingelse[0]
+    #             total_loss_regul += loss_regul.item()
+
+    #         self.optimizer.zero_grad()
+    #         loss.backward()
+    
+    #         torch.nn.utils.clip_grad_norm_(
+    #             self.model.parameters(), 
+    #             self.config['grad_clip']
+    #         )
+            
+    #         self.optimizer.step()
+            
+    #         total_loss += loss.item()
+
+    #     avg_loss = total_loss / len(dataloader)
+    #     avg_loss_regul = total_loss_regul / len(dataloader)
+        
+    #     return avg_loss, avg_loss_regul
+
+
+    def train_epoch(self, dataloader, optimizer, epoch):
 
         self.model.train()
         total_loss = 0
         total_loss_regul = 0
         self.optimizer = optimizer
-        
+
         for x_0, indices in dataloader:
-            
+
             x_0 = x_0.to(self.device)
-            
-            loss, *anythingelse = self.compute_flow_loss( 
-                x_0, 
+
+            loss, *anythingelse = self.compute_flow_loss(
+                x_0,
                 indices,
                 flow_type=self.config['flow_type'],
                 sigma=self.config['sigma'],
-                lambda_reg_angle = self.config['lambda_reg_angle']
+                lambda_reg_angle=self.config['lambda_reg_angle']
             )
 
             if self.config['lambda_reg_angle'] is not None:
                 loss_regul = anythingelse[0]
                 total_loss_regul += loss_regul.item()
 
+            ###########################################
+            ############### REGUL #####################
+            if self.config['lambda_reg_kl'] is not None:
+                target_constructed_epoch = self.forward_flow(
+                    x_0, 'midpoint', 10
+                )[-1]  
+
+                mu_constructed = target_constructed_epoch.mean(dim=0)
+                var_constructed = target_constructed_epoch.var(dim=0, unbiased=False)
+
+                mu_target = self.centroid
+                var_target = self.var / self.config['coef_var']
+
+                # KL diagonale analytique
+                kl_loss = 0.5 * torch.sum(
+                    torch.log(var_target / var_constructed)
+                    + (var_constructed + (mu_constructed - mu_target)**2) / var_target
+                    - 1
+                )
+                loss = loss + self.config['lambda_reg_kl']* kl_loss
+            ###########################################
+
             self.optimizer.zero_grad()
             loss.backward()
-    
+
             torch.nn.utils.clip_grad_norm_(
-                self.model.parameters(), 
+                self.model.parameters(),
                 self.config['grad_clip']
             )
-            
+
             self.optimizer.step()
-            
+
             total_loss += loss.item()
 
         avg_loss = total_loss / len(dataloader)
         avg_loss_regul = total_loss_regul / len(dataloader)
-        
+
         return avg_loss, avg_loss_regul
+
     
     def train(self, X_inlier, verbose=True):
 
@@ -283,26 +353,8 @@ class FlowMatchingTransformers(nn.Module):
             train_loss, *anythingelse = self.train_epoch(
                 X_inlier_dl, 
                 optimizer, 
+                epoch
             )
-
-            ###################################################
-            ############### REGUL #############################
-
-            target_reference = self.sample(X_inlier, 'gaussian-neigh').cpu().numpy()
-
-            mean_inlier = np.mean(target_reference, axis=0)
-            cov_inlier = np.cov(target_reference.T)
-            cov_inlier += 1e-6 * np.eye(cov_inlier.shape[0])
-
-            target_constructed_epoch = self.forward_flow(X_inlier, 'midpoint', 10)
-
-            diff = target_constructed_epoch[-1].cpu().numpy() - mean_inlier
-            inv_cov = np.linalg.inv(cov_inlier)
-
-            penality_term = np.sqrt(np.sum(diff @ inv_cov * diff, axis=1))
-            print(penality_term.mean())
-
-            ###################################################
 
             if self.config['lambda_reg_angle'] is not None:
                 liste_loss_regul.append(anythingelse[0])
@@ -472,7 +524,39 @@ class BatchedVelocityWrapper(torch.nn.Module):
             t = t.expand(x.shape[0])
         return self.model(x, t)
 
-              
+def kl_gaussian(mu1, cov1, mu2, cov2, eps=1e-6):
+    """
+    KL( N1 || N2 )
+    mu1, mu2 : (d,)
+    cov1, cov2 : (d, d)
+    """
+
+    d = mu1.shape[0]
+
+    # Stabilisation
+    cov1 = cov1 + eps * torch.eye(d, device=mu1.device)
+    cov2 = cov2 + eps * torch.eye(d, device=mu1.device)
+
+    inv_cov2 = torch.linalg.inv(cov2)
+
+    logdet_cov1 = torch.logdet(cov1)
+    logdet_cov2 = torch.logdet(cov2)
+
+    trace_term = torch.trace(inv_cov2 @ cov1)
+
+    mean_diff = (mu2 - mu1).unsqueeze(0)  # (1, d)
+    mahalanobis = mean_diff @ inv_cov2 @ mean_diff.T
+
+    kl = 0.5 * (
+        logdet_cov2
+        - logdet_cov1
+        - d
+        + trace_term
+        + mahalanobis.squeeze()
+    )
+
+    return kl
+
 
 
 
