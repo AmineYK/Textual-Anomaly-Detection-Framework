@@ -639,11 +639,11 @@ Dataset:        20newsgroups
 Inlier class:   religion
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  13.36 sec
+Training time:  67.56 sec
 ----------------------------------------
-AUC:            0.9067 ± 0.0190
-Avg Precision:  0.5985 ± 0.0529
-FPR@95:         0.4603 ± 0.0968
+AUC:            0.9225 ± 0.0149
+Avg Precision:  0.7408 ± 0.0420
+FPR@95:         0.4391 ± 0.0667
 ========================================
 
 ========================================

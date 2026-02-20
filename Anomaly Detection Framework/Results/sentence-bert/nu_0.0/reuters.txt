@@ -240,11 +240,11 @@ Dataset:        reuters
 Inlier class:   crude
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  4.45 sec
+Training time:  23.46 sec
 ----------------------------------------
-AUC:            0.9653 ± 0.0254
-Avg Precision:  0.8714 ± 0.0755
-FPR@95:         0.2444 ± 0.1910
+AUC:            0.9712 ± 0.0208
+Avg Precision:  0.8881 ± 0.0674
+FPR@95:         0.2056 ± 0.1549
 ========================================
 
 ========================================
@@ -252,11 +252,11 @@ Dataset:        reuters
 Inlier class:   ship
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  2.52 sec
+Training time:  12.73 sec
 ----------------------------------------
-AUC:            0.9021 ± 0.1080
-Avg Precision:  0.7269 ± 0.1828
-FPR@95:         0.2469 ± 0.2701
+AUC:            0.9448 ± 0.0662
+Avg Precision:  0.7755 ± 0.2004
+FPR@95:         0.1344 ± 0.1723
 ========================================
 
 ========================================
@@ -264,11 +264,11 @@ Dataset:        reuters
 Inlier class:   interest
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  2.53 sec
+Training time:  12.96 sec
 ----------------------------------------
-AUC:            0.9835 ± 0.0221
-Avg Precision:  0.9374 ± 0.0698
-FPR@95:         0.0788 ± 0.1079
+AUC:            0.9900 ± 0.0154
+Avg Precision:  0.9621 ± 0.0580
+FPR@95:         0.0500 ± 0.0770
 ========================================
 
 ========================================

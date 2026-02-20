@@ -32,7 +32,8 @@ logger = logging.getLogger(__name__)
 
 dataset_topics_dict= {
     '20newsgroups' : ['computer', 'recreation', 'science', 'miscellaneous', 'politics', 'religion'],
-    'reuters' : ['earn', 'trade', 'acq', 'money-fx', 'crude', 'ship', 'interest'],
+    # 'reuters' : ['earn', 'trade', 'acq', 'money-fx', 'crude', 'ship', 'interest'],
+    'reuters' : ['trade', 'acq', 'money-fx', 'crude', 'ship', 'interest'],
     'agnews' : ['World', 'Sports', 'Business', 'Sci-Tech'] ,
     'dbpedia14' : ["Company", "Educational Institution", "Artist", "Athlete", "Office Holder", 
                   "Mean Of Transportation", "Building", "Natural Place", "Village", "Animal", "Plant", "Album", "Film", "Written Work"]
@@ -532,7 +533,7 @@ def main(args):
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
                     'sigma': 0.1, 
-                    'batch_size' : 32,
+                    'batch_size' : 128,
                     'lambda_reg_angle': None,
                     'lambda_reg_kl': None,
                     'coef_var': 1,
