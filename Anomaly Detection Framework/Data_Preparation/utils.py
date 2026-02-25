@@ -36,6 +36,17 @@ from Data_Preparation.Tac import tac
 
 # from nltk.corpus import stopwords
 
+
+def unify_text_column(dataset, dataset_name):
+
+    if dataset_name == "sst2":
+        return dataset.rename_column("sentence", "text")
+
+    if dataset_name == "sms":
+        return dataset.rename_column("sms", "text")
+
+    return dataset
+
 def preprocess(dataset):
 
     def clean_text(example):
@@ -135,8 +146,86 @@ def import_dataset(name="20newsgroups", full_dataset_=False, batch_size=64):
             return DataLoader(full_dataset, batch_size=batch_size, shuffle=True)
 
         return train_dataloader, test_dataloader
-   
 
+
+    # ***************************
+    if name == "sms": 
+        
+        dataset = load_dataset("ucirvine/sms_spam")
+
+        dataset_split = dataset['train'].train_test_split(
+            test_size=0.2,              
+            stratify_by_column="label", 
+            seed=42                     
+        )
+
+        train_dataloader = DataLoader(dataset_split["train"], batch_size=batch_size, shuffle=True)
+        test_dataloader = DataLoader(dataset_split["test"], batch_size=batch_size, shuffle=True)
+        
+        if full_dataset_:
+            full_dataset = concatenate_datasets([dataset['train'], dataset['test']])
+            return DataLoader(full_dataset, batch_size=batch_size, shuffle=True)
+
+        return train_dataloader, test_dataloader
+
+    # ***************************
+    if name == "enron": 
+        
+        dataset = load_dataset("SetFit/enron_spam")
+
+        train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
+        test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)
+        
+        if full_dataset_:
+            full_dataset = concatenate_datasets([dataset['train'], dataset['test']])
+            return DataLoader(full_dataset, batch_size=batch_size, shuffle=True)
+
+        return train_dataloader, test_dataloader
+    
+    # ***************************
+    if name == "imdb": 
+        
+        dataset = load_dataset("stanfordnlp/imdb")
+
+        train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
+        test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)
+        
+        if full_dataset_:
+            full_dataset = concatenate_datasets([dataset['train'], dataset['test']])
+            return DataLoader(full_dataset, batch_size=batch_size, shuffle=True)
+
+        return train_dataloader, test_dataloader
+    
+
+    # ***************************
+    if name == "sst2": 
+        
+        dataset = load_dataset("stanfordnlp/sst2")
+
+        train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
+        # because the testset is not labeled, the validation one is
+        test_dataloader = DataLoader(dataset['validation'], batch_size=batch_size, shuffle=True)
+        
+        if full_dataset_:
+            full_dataset = concatenate_datasets([dataset['train'], dataset['validation']])
+            return DataLoader(full_dataset, batch_size=batch_size, shuffle=True)
+
+        return train_dataloader, test_dataloader
+    
+    # ***************************
+    if name == "mage": 
+        
+        dataset = load_dataset("yaful/MAGE")
+
+        train_dataloader = DataLoader(dataset['train'], batch_size=batch_size, shuffle=True)
+        test_dataloader = DataLoader(dataset['test'], batch_size=batch_size, shuffle=True)
+        
+        if full_dataset_:
+            full_dataset = concatenate_datasets([dataset['train'], dataset['test']])
+            return DataLoader(full_dataset, batch_size=batch_size, shuffle=True)
+
+        return train_dataloader, test_dataloader
+   
 
     raise Exception("The dataset naming doesn't correspond !")
     

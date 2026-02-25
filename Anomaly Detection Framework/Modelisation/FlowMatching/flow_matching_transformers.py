@@ -330,7 +330,7 @@ class FlowMatchingTransformers(nn.Module):
         return avg_loss, avg_loss_regul
 
     
-    def train(self, X_inlier, verbose=True):
+    def train(self, verbose=True):
 
         optimizer = AdamW(
             self.model.parameters(),
@@ -339,6 +339,10 @@ class FlowMatchingTransformers(nn.Module):
             foreach=False
         )
 
+        if self.noise_is_target:
+            X_inlier = self.source
+        else:
+            X_inlier = self.target
         X_inlier_dl = DataLoader(TensorDataset(X_inlier, torch.arange(len(X_inlier))), batch_size=self.config['batch_size'], shuffle=True)
 
         liste_loss = []

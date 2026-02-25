@@ -36,7 +36,10 @@ dataset_topics_dict= {
     'reuters' : ['trade', 'acq', 'money-fx', 'crude', 'ship', 'interest'],
     'agnews' : ['World', 'Sports', 'Business', 'Sci-Tech'] ,
     'dbpedia14' : ["Company", "Educational Institution", "Artist", "Athlete", "Office Holder", 
-                  "Mean Of Transportation", "Building", "Natural Place", "Village", "Animal", "Plant", "Album", "Film", "Written Work"]
+                  "Mean Of Transportation", "Building", "Natural Place", "Village", "Animal", "Plant", "Album", "Film", "Written Work"],
+    'sms' : ['normal'],
+    'imdb' : ['positive', 'negative'],
+    'sst2': ['positive', 'negative']
 }
 
 def main(args):
@@ -167,6 +170,7 @@ def main(args):
         
             elif args.type_emb == 'sentence-bert':
                 X_test = Tensor(data_test['sbert_embeddings']).to(device)
+                print(X_test.shape)
 
             else: raise Exception("type_emb must be completed !")
             
