@@ -38,8 +38,10 @@ dataset_topics_dict= {
     'dbpedia14' : ["Company", "Educational Institution", "Artist", "Athlete", "Office Holder", 
                   "Mean Of Transportation", "Building", "Natural Place", "Village", "Animal", "Plant", "Album", "Film", "Written Work"],
     'sms' : ['normal'],
+    'enron': ['normal'],
     'imdb' : ['positive', 'negative'],
-    'sst2': ['positive', 'negative']
+    'sst2': ['positive', 'negative'],
+    'mage': ['normal']
 }
 
 def main(args):
@@ -376,8 +378,8 @@ def main(args):
                     "lr": 1e-4,
                     "weight_decay" : 0,
                     "lambda_p": 0.1,
-                    "n_epochs": 30,
-                    "batch_size": 16,
+                    "n_epochs": 15,
+                    "batch_size": 64,
                     "device": device
                     }
                 
@@ -411,12 +413,12 @@ def main(args):
                     # "encoder_name": "albert-base-v2", 
                     "which_config": "electra",
                     "encoder_name": "google/electra-small-discriminator",
-                    "K": 50,
+                    "K": 20,
                     "lr": 1e-5,
                     "weight_decay" : 0,
                     "seq_len": 498,
-                    "ratio": 0.50,
-                    "n_epochs": 15,
+                    "ratio": 0.20,
+                    "n_epochs": 10,
                     "batch_size": 64,
                     "device": device
                     }

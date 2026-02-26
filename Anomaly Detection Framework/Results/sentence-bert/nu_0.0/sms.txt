@@ -1,0 +1,72 @@
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       ocsvm
+Training time:  1.15 sec
+----------------------------------------
+AUC:            0.5398 ± 0.0161
+Avg Precision:  0.1096 ± 0.0061
+FPR@95:         0.9397 ± 0.0072
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       AE
+Training time:  0.63 sec
+----------------------------------------
+AUC:            0.5835 ± 0.0159
+Avg Precision:  0.1204 ± 0.0075
+FPR@95:         0.8570 ± 0.0196
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       RSRAE
+Training time:  1.08 sec
+----------------------------------------
+AUC:            0.5741 ± 0.0132
+Avg Precision:  0.1142 ± 0.0059
+FPR@95:         0.8460 ± 0.0132
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       TCCM
+Training time:  1.32 sec
+----------------------------------------
+AUC:            0.5862 ± 0.0158
+Avg Precision:  0.1145 ± 0.0059
+FPR@95:         0.8214 ± 0.0173
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  444.73 sec
+----------------------------------------
+AUC:            0.8379 ± 0.0123
+Avg Precision:  0.6230 ± 0.0602
+FPR@95:         0.2865 ± 0.0111
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       DATE
+Training time:  77.95 sec
+----------------------------------------
+AUC:            0.8785 ± 0.0105
+Avg Precision:  0.3943 ± 0.0092
+FPR@95:         0.4208 ± 0.0266
+========================================
+

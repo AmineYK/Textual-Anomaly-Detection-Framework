@@ -1,0 +1,96 @@
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       AE
+Training time:  3.39 sec
+----------------------------------------
+AUC:            0.6351 ± 0.0417
+Avg Precision:  0.1604 ± 0.0308
+FPR@95:         0.8012 ± 0.0349
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       RSRAE
+Training time:  0.51 sec
+----------------------------------------
+AUC:            0.6701 ± 0.0394
+Avg Precision:  0.1710 ± 0.0290
+FPR@95:         0.7110 ± 0.0609
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       ocsvm
+Training time:  168.72 sec
+----------------------------------------
+AUC:            0.6492 ± 0.0397
+Avg Precision:  0.1637 ± 0.0296
+FPR@95:         0.7702 ± 0.0541
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       TCCM
+Training time:  12.82 sec
+----------------------------------------
+AUC:            0.6322 ± 0.0375
+Avg Precision:  0.1758 ± 0.0309
+FPR@95:         0.7905 ± 0.0447
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       AE
+Training time:  2.56 sec
+----------------------------------------
+AUC:            0.5259 ± 0.0379
+Avg Precision:  0.1218 ± 0.0309
+FPR@95:         0.9109 ± 0.0384
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       RSRAE
+Training time:  0.44 sec
+----------------------------------------
+AUC:            0.5557 ± 0.0435
+Avg Precision:  0.1191 ± 0.0205
+FPR@95:         0.9023 ± 0.0519
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       ocsvm
+Training time:  103.11 sec
+----------------------------------------
+AUC:            0.6237 ± 0.0357
+Avg Precision:  0.1523 ± 0.0271
+FPR@95:         0.8567 ± 0.0573
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       TCCM
+Training time:  10.16 sec
+----------------------------------------
+AUC:            0.5058 ± 0.0503
+Avg Precision:  0.1039 ± 0.0195
+FPR@95:         0.9096 ± 0.0391
+========================================
+

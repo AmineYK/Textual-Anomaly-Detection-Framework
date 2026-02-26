@@ -18,26 +18,26 @@ def main(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     save_dir = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Data"
-    names = ['sst2', 'imdb']
-    inlier_topics = ['positive', 'negative']
+    names = ['enron', 'mage']
+    inlier_topics = ['normal']
 
 
     for name in names:
         print(name)
-    for inlier_topic in inlier_topics:
-        print(inlier_topic)
-        data_train = load_data_inlier(name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
-        X_inlier = Tensor(data_train['sbert_embeddings']).to(device)
-        print(X_inlier.shape)
+        for inlier_topic in inlier_topics:
+            print(inlier_topic)
+            data_train = load_data_inlier(name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
+            X_inlier = Tensor(data_train['sbert_embeddings']).to(device)
+            print(X_inlier.shape)
 
-        for n_run in range(1, 11):
-            data_test = load_data_test(name, inlier_topic, n_run, save_dir, is_cvdd=True)
-            y_test = Tensor(data_test['anomaly_class'])
-            X_test = Tensor(data_test['sbert_embeddings']).to(device)
-            if n_run == 4:
-                print(y_test.shape, X_test.shape)
-                print(np.unique(y_test, return_counts=True))
-                print("-------------------------")
+            for n_run in range(1, 11):
+                data_test = load_data_test(name, inlier_topic, n_run, save_dir, is_cvdd=True)
+                y_test = Tensor(data_test['anomaly_class'])
+                X_test = Tensor(data_test['sbert_embeddings']).to(device)
+                if n_run == 4:
+                    print(y_test.shape, X_test.shape)
+                    print(np.unique(y_test, return_counts=True))
+                    print("-------------------------")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Experiments script")
