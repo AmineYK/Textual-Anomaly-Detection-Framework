@@ -8,6 +8,7 @@ from flow_matching.solver import ODESolver
 import time 
 from torch.utils.data import TensorDataset, DataLoader
 import Modelisation.evaluation as ev
+from scipy.stats import chi2
 
 class SinusoidalPosEmb(nn.Module):
     def __init__(self, hidden_dim):
@@ -143,17 +144,49 @@ class FlowMatchingTransformers(nn.Module):
     def get_lambda_kl(self, epoch, lambda_max, kl_warmup_epochs):
         return lambda_max * min(1.0, epoch / kl_warmup_epochs)
         
-    def sample(self, x_0, type):
+    def sample_like(self, x_0, type, tail=None):
 
         if type == 'gaussian':
             return torch.randn_like(x_0)
         
         if type == 'gaussian-neigh':
-            # N(centroid, 0.01 I)
-            # centroid = x_0.mean(dim=0, keepdim=True) 
 
-            std = ((self.var * self.config['coef_var']) ** 0.5)
-            return self.centroid + std * torch.randn_like(x_0)
+            # std = ((self.var * self.config['coef_var']) ** 0.5)
+            # return self.centroid + std * torch.randn_like(x_0)
+
+            sigma = torch.sqrt(self.var * self.config['coef_var'])
+            d = self.centroid.shape[0]
+            x_shape = x_0.shape
+
+            if not tail:
+                # standard Gaussian sampling
+                return self.centroid + sigma * torch.randn_like(x_0)
+
+            else:
+                sigma = torch.sqrt(self.var * self.config['coef_var'])
+                d = self.centroid.shape[0]
+
+                # Chi² threshold
+                from scipy.stats import chi2
+                alpha = 0.99
+                chi2_threshold = chi2.ppf(alpha, df=d)
+                R = torch.sqrt(torch.tensor(chi2_threshold, device=self.device)) * sigma
+
+                batch_size = x_0.shape[0]
+                # 1) Sample direction uniformly on sphere
+                u = torch.randn(batch_size, d, device=self.device)
+                u = u / torch.norm(u, dim=1, keepdim=True)  # normalize
+
+                # 2) Sample r from chi distribution > R/sigma
+                # Chi distribution ~ sqrt(chi2(df))
+                # approx: sample standard normal for all, then scale
+                z = torch.randn(batch_size, d, device=self.device)
+                r = torch.norm(z, dim=1)  # sqrt(sum_i z_i^2) ~ chi(df)
+                r = r * (R / r.min())  # scale so all > R (simple approx)
+
+                # 3) Construct samples
+                samples = self.centroid + sigma * (u * r.unsqueeze(1))
+                return samples
         
         if type == 'centroid':
             return self.centroid.repeat(x_0.shape[0],1)
@@ -176,19 +209,19 @@ class FlowMatchingTransformers(nn.Module):
             x_1 = self.target[indices]
 
         if self.target == 'gaussian' or self.source == 'gaussian':
-            x_1 = self.sample(x_0, 'gaussian')
+            x_1 = self.sample_like(x_0, 'gaussian')
 
         if self.target == 'gaussian-neigh' or self.source == 'gaussian-neigh':
-            x_1 = self.sample(x_0, 'gaussian-neigh')
+            x_1 = self.sample_like(x_0, 'gaussian-neigh')
 
         if self.target == 'centroid' or self.source == 'centroid':
-            x_1 = self.sample(x_0, 'centroid')
+            x_1 = self.sample_like(x_0, 'centroid')
 
         if self.target == 'sphere' or self.source == 'sphere':
-            x_1 = self.sample(x_0, 'sphere-noised')
+            x_1 = self.sample_like(x_0, 'sphere-noised')
 
         if self.target == 'sphere-noised' or self.source == 'sphere-noised':
-            x_1 = self.sample(x_0, 'sphere-noised')
+            x_1 = self.sample_like(x_0, 'sphere-noised')
 
         t = torch.rand(batch_size, device=self.device)
         # t = torch.arange(0, 1, (1/batch_size), device=self.device)
@@ -579,7 +612,7 @@ def kl_gaussian(mu1, cov1, mu2, cov2, eps=1e-6):
     #         sign = +1.0
     #     else:
     #         # backward ODE : noise -> test
-    #         x_t = self.sample(X_test, self.source)
+    #         x_t = self.sample_like(X_test, self.source)
     #         t_schedule = torch.linspace(1.0, 0.0, n_steps, device=self.device)
     #         sign = -1.0
 
@@ -608,7 +641,7 @@ def kl_gaussian(mu1, cov1, mu2, cov2, eps=1e-6):
     #             sign = +1.0
     #         else:
     #             # backward ODE : noise -> inliers
-    #             x_t = self.sample(X_inlier, self.source)
+    #             x_t = self.sample_like(X_inlier, self.source)
     #             t_schedule = torch.linspace(1.0, 0.0, n_steps, device=self.device)
     #             sign = -1.0
 
