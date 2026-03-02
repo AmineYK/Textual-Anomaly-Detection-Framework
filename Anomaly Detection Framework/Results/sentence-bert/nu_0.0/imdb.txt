@@ -118,3 +118,27 @@ Avg Precision:  0.9050 ± 0.0088
 FPR@95:         0.1472 ± 0.0039
 ========================================
 
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  771.54 sec
+----------------------------------------
+AUC:            0.4670 ± 0.0062
+Avg Precision:  0.9504 ± 0.0027
+FPR@95:         0.0911 ± 0.0013
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  765.96 sec
+----------------------------------------
+AUC:            0.6640 ± 0.0047
+Avg Precision:  0.8540 ± 0.0234
+FPR@95:         0.1722 ± 0.0037
+========================================
+

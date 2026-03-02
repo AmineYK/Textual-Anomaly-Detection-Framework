@@ -375,11 +375,11 @@ def main(args):
                     "n_attention_heads": 10,
                     "attention_size": 150,
                     "freeze_bert": True,
-                    "lr": 1e-4,
+                    "lr": 1e-3,
                     "weight_decay" : 0,
                     "lambda_p": 0.1,
                     "n_epochs": 15,
-                    "batch_size": 64,
+                    "batch_size": 128,
                     "device": device
                     }
                 
@@ -414,12 +414,12 @@ def main(args):
                     "which_config": "electra",
                     "encoder_name": "google/electra-small-discriminator",
                     "K": 20,
-                    "lr": 1e-5,
+                    "lr": 1e-3,
                     "weight_decay" : 0,
                     "seq_len": 498,
                     "ratio": 0.20,
                     "n_epochs": 10,
-                    "batch_size": 64,
+                    "batch_size": 128,
                     "device": device
                     }
                             
@@ -535,11 +535,11 @@ def main(args):
                     'lr': 1e-3,
                     'weight_decay': 1e-5,
                     'epochs': 500,
-                    'warmup_epochs': 10,
+                    'warmup_epochs': 50,
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
                     'sigma': 0.1, 
-                    'batch_size' : 128,
+                    'batch_size' : 64,
                     'lambda_reg_angle': None,
                     'lambda_reg_kl': None,
                     'coef_var': 1,
@@ -557,7 +557,7 @@ def main(args):
                 fm_transformer = FlowMatchingTransformers(model, config['source'], config['target'], config, noise_is_target=True, rectified=None)
 
                 taac = time.time()
-                fm_transformer.train(X_inlier)
+                fm_transformer.train(True)
                 tiic = time.time()
                 print(f"\nFM Transformer finishing... after {(tiic-taac)/60:.3f} mn")
 
@@ -629,7 +629,7 @@ def main(args):
             train_time = np.mean(list_time_cvdd), nu=args.nu, overwrite='smart'
             )
 
-        if args.date and nb_runs == 11:
+        if args.date:
             save_results(
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="DATE",
             auc_mean=np.mean(list_auc_date), ap_mean=np.mean(list_ap_date),fpr_mean=np.mean(list_fpr_date),

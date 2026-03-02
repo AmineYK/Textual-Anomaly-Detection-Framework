@@ -249,14 +249,23 @@ class FlowMatchingTransformers(nn.Module):
             raise ValueError(f"Unknown flow_type: {flow_type}")
         
         v_pred = self.model(x_t, t)
-        loss = F.mse_loss(v_pred, v_target)
+        loss_fm = F.mse_loss(v_pred, v_target)
+        # print(f"Loss FM : {loss_fm}")
+        # loss_iso = isotropy_regularization_weighted(x_t, t, lambda_iso=1)
+        # print(f"Loss Iso : {loss_iso}")
+        # loss_total = loss_fm + loss_iso
+        loss_total = loss_fm
+        # print(f"Loss Totale : {loss_total}")
+        # check_isotropy(x_t)
+        # print("--------------------------\n")
+
 
         if lambda_reg_angle is not None:
             loss_regul_angle = (1 - F.cosine_similarity(v_pred, v_target, dim=-1)).pow(2).mean()
-            return loss+lambda_reg_angle*loss_regul_angle, loss_regul_angle, v_pred, v_target
+            return loss_total+lambda_reg_angle*loss_regul_angle, loss_regul_angle, v_pred, v_target
         
         else:
-            return loss, v_pred, v_target
+            return loss_total, v_pred, v_target
     
 
     # def train_epoch(self, dataloader, optimizer):
@@ -311,7 +320,7 @@ class FlowMatchingTransformers(nn.Module):
 
             x_0 = x_0.to(self.device)
 
-            loss, *anythingelse = self.compute_flow_loss(
+            loss_fm, *anythingelse = self.compute_flow_loss(
                 x_0,
                 indices,
                 flow_type=self.config['flow_type'],
@@ -342,11 +351,18 @@ class FlowMatchingTransformers(nn.Module):
                     + (var_constructed + (mu_constructed - mu_target)**2) / var_target
                     - 1
                 )
-                loss = loss + self.config['lambda_reg_kl']* kl_loss
+                loss_fm = loss_fm + self.config['lambda_reg_kl']* kl_loss
             ###########################################
+            
+            # _, _, loss_iso = check_isotropy(self.forward_flow(
+            #         x_0, 'midpoint', 10
+            #     )[-1])
+
+
+            # loss_tot = loss_fm + 1e-1 * torch.tensor(loss_iso, requires_grad=True)
 
             self.optimizer.zero_grad()
-            loss.backward()
+            loss_fm.backward()
 
             torch.nn.utils.clip_grad_norm_(
                 self.model.parameters(),
@@ -355,7 +371,7 @@ class FlowMatchingTransformers(nn.Module):
 
             self.optimizer.step()
 
-            total_loss += loss.item()
+            total_loss += loss_fm.item()
 
         avg_loss = total_loss / len(dataloader)
         avg_loss_regul = total_loss_regul / len(dataloader)
@@ -397,7 +413,6 @@ class FlowMatchingTransformers(nn.Module):
                 liste_loss_regul.append(anythingelse[0])
             
             liste_loss.append(train_loss)
-
             if epoch % (self.config['epochs'] // 3) == 0 and verbose:
                 print(f"\nEpoch {epoch+1}/{self.config['epochs']}")
                 print(f"Train Loss: {train_loss:.4f}, LR: {lr:.6f}")
@@ -594,8 +609,85 @@ def kl_gaussian(mu1, cov1, mu2, cov2, eps=1e-6):
 
     return kl
 
+def isotropy_regularization_weighted(X_t, t_vec, lambda_iso=1e-3, use_fro=True, epsilon=1e-6):
+    """
+    X_t : (N, D) - batch d'exemples
+    t_vec : (N,) - temps de chaque exemple t_i ∈ [0,1]
+    lambda_iso : float
+    use_fro : bool
+    epsilon : float, stabilisation numérique
+    """
+    N, D = X_t.shape
 
+    # 1️⃣ Centrer
+    mu = X_t.mean(dim=0, keepdim=True)
+    X_centered = X_t - mu  # (N, D)
 
+    # 2️⃣ Pondération par t_i^2
+    # weights = (t_vec ** 2).unsqueeze(1)  # (N,1)
+    weights = t_vec.unsqueeze(1)  # linear weighting
+    X_weighted = X_centered * torch.sqrt(weights)  # broadcasting
+
+    # 3️⃣ Covariance pondérée
+    cov = (X_weighted.T @ X_weighted) / weights.sum()
+
+    # 3️⃣a️⃣ Stabilisation numérique
+    cov = cov + epsilon * torch.eye(D, device=X_t.device)
+
+    # 4️⃣ Variance moyenne
+    sigma2 = torch.trace(cov) / D
+    identity = sigma2 * torch.eye(D, device=X_t.device)
+
+    # 5️⃣ Loss
+    if use_fro:
+        loss = torch.norm(cov - identity, p='fro')**2
+    else:
+        off_diag = cov - torch.diag(torch.diag(cov))
+        loss = torch.sum(off_diag**2)
+
+    # 6️⃣ Scaling lambda_iso
+    loss_weighted = lambda_iso * loss
+    return loss_weighted
+
+def check_isotropy(X, verbose=True):
+    """
+    X: torch.Tensor of shape (N, D)
+    """
+
+    # 1️⃣ Center
+    X_centered = X - X.mean(dim=0, keepdim=True)
+
+    # 2️⃣ Covariance
+    N = X.shape[0]
+    cov = (X_centered.T @ X_centered) / (N - 1)
+
+    # 3️⃣ Eigenvalues
+    eigvals = torch.linalg.eigvalsh(cov)
+
+    eigvals = torch.sort(eigvals).values
+    eigvals_np = eigvals.cpu().numpy()
+
+    # 4️⃣ Metrics
+
+    # Condition number
+    cond_number = eigvals_np.max() / eigvals_np.min()
+
+    # Variance spread ratio
+    var_ratio = eigvals_np.std() / eigvals_np.mean()
+
+    # Energy in top 10%
+    k = max(1, int(0.1 * len(eigvals_np)))
+    top_energy_ratio = eigvals_np[-k:].sum() / eigvals_np.sum()
+
+    if verbose:
+        # print("----- ISOTROPY CHECK -----")
+        # print(f"Dimensionality: {X.shape[1]}")
+        print(f"Condition number: {cond_number:.4f}")
+        print(f"Eigenvalue std/mean ratio: {var_ratio:.4f}")
+        print(f"Top 10% variance ratio: {top_energy_ratio:.4f}")
+        print("--------------------------")
+
+    return cond_number,var_ratio,top_energy_ratio,
 
     # @torch.no_grad()
     # def compute_anomaly_scores(self, X_test, X_inlier, type='mahalanobis' , n_steps=100):
