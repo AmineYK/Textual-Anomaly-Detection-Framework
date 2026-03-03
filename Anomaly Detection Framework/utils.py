@@ -17,7 +17,7 @@ BASE_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly D
 BASE_RESULTS_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results"
 OUTPUT_LATEX_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/latex_tables"
 
-DATASETS = ["reuters", "agnews", "20newsgroups", "sms", "enron", "sst2", "imdb", "mage"]
+DATASETS = ["reuters", "agnews", "20newsgroups", "sms", "enron", "sst2", "imdb","mage"]
 ENCODING_TYPES = ["sentence-bert", "bert", "fasttext"]
 NU_VALUES = [0.0, 0.1]
 
@@ -30,7 +30,7 @@ os.makedirs(OUTPUT_LATEX_DIR, exist_ok=True)
 MODEL_GROUPS = [
     ("Classical baselines", ["ocsvm", "AE"]),
     ("Deep baselines", ["RSRAE", "CVDD", "DATE", "FATE"]),
-    ("Flow-based models", ["TCCM", "flow-matching"]),
+    ("Flow-based models", ["TCCM", "flow-matching", "flow-matching-Transformers"]),
 ]
 
 MODEL_LATEX = {
@@ -42,6 +42,7 @@ MODEL_LATEX = {
     "FATE": "FATE",
     "TCCM": "TCCM",
     "flow-matching": "\\textbf{BasicFM}",
+    "flow-matching-Transformers": "\\textbf{TranFM}",
 }
 
 MODEL_ORDER = [m for _, g in MODEL_GROUPS for m in g]
@@ -165,6 +166,7 @@ def generate_global_table(results):
         "\\begin{table}[H]",
         "\\centering",
         "\\caption{AUC on all datasets}",
+        "\\resizebox{1.1\\textwidth}{!}{",
         "\\begin{tabular}{l" + "c" * len(datasets) + "}",
         "\\toprule",
         "Model & " + " & ".join(ds.capitalize() for ds in datasets) + " \\\\",
@@ -192,8 +194,8 @@ def generate_global_table(results):
                 elif MODEL_ORDER.index(item) == sec_idx[c]:
                     cell = f"\\underline{{{cell}}}"
 
-                if item == "flow-matching":
-                    cell = f"\\textbf{{{cell}}}"
+                # if item == "flow-matching":
+                #     cell = f"\\textbf{{{cell}}}"
 
             row.append(cell)
 
@@ -203,6 +205,7 @@ def generate_global_table(results):
     latex.extend([
         "\\bottomrule",
         "\\end{tabular}",
+        "}",
         "\\label{tab:global}",
         "\\end{table}",
     ])
@@ -256,8 +259,8 @@ def generate_dataset_tables(results):
                     elif MODEL_ORDER.index(item) == sec_idx[c]:
                         cell = f"\\underline{{{cell}}}"
 
-                    if item == "flow-matching":
-                        cell = f"\\textbf{{{cell}}}"
+                    # if item == "flow-matching":
+                    #     cell = f"\\textbf{{{cell}}}"
                 else:
                     cell = "—"
 

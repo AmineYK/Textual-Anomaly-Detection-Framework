@@ -436,3 +436,117 @@ source : sphere
 target : torch.Size([2556, 300])
 ========================================
 
+========================================
+Run date : 2025-12-03 11:35:48
+dataset_name : sms
+inlier_topic : normal
+type_emb : sentence_bert
+
+Hyperparameters :
+batch_size : 64
+latent_dim : 256
+sinu : False
+batchnorm : False
+dropout : 0.1
+lr : 1e-03
+weight_decay : 1e-07
+n_epochs : 30
+source : sphere
+target : torch.Size([2556, 300])
+========================================
+
+========================================
+Run date : 2025-12-03 11:35:48
+dataset_name : sst2
+inlier_topic : positive
+type_emb : sentence_bert
+
+Hyperparameters :
+batch_size : 128
+latent_dim : 256
+sinu : False
+batchnorm : False
+dropout : 0.1
+lr : 1e-03
+weight_decay : 1e-07
+n_epochs : 30
+source : sphere
+target : torch.Size([2556, 300])
+========================================
+
+========================================
+Run date : 2025-12-03 11:35:48
+dataset_name : sst2
+inlier_topic : negative
+type_emb : sentence_bert
+
+Hyperparameters :
+batch_size : 128
+latent_dim : 256
+sinu : False
+batchnorm : False
+dropout : 0.1
+lr : 1e-03
+weight_decay : 1e-07
+n_epochs : 30
+source : sphere
+target : torch.Size([2556, 300])
+========================================
+
+========================================
+Run date : 2025-12-03 11:35:48
+dataset_name : imdb
+inlier_topic : positive
+type_emb : sentence_bert
+
+Hyperparameters :
+batch_size : 128
+latent_dim : 256
+sinu : False
+batchnorm : False
+dropout : 0.1
+lr : 1e-03
+weight_decay : 1e-07
+n_epochs : 30
+source : sphere
+target : torch.Size([2556, 300])
+========================================
+
+========================================
+Run date : 2025-12-03 11:35:48
+dataset_name : imdb
+inlier_topic : negative
+type_emb : sentence_bert
+
+Hyperparameters :
+batch_size : 128
+latent_dim : 256
+sinu : False
+batchnorm : False
+dropout : 0.1
+lr : 1e-03
+weight_decay : 1e-07
+n_epochs : 30
+source : sphere
+target : torch.Size([2556, 300])
+========================================
+
+========================================
+Run date : 2025-12-03 11:35:48
+dataset_name : enron
+inlier_topic : normal
+type_emb : sentence_bert
+
+Hyperparameters :
+batch_size : 128
+latent_dim : 256
+sinu : False
+batchnorm : False
+dropout : 0.1
+lr : 1e-03
+weight_decay : 1e-07
+n_epochs : 30
+source : sphere
+target : torch.Size([2556, 300])
+========================================
+

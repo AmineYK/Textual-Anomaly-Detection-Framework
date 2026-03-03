@@ -75,10 +75,35 @@ Dataset:        sms
 Inlier class:   normal
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  200.59 sec
+Training time:  3.24 sec
 ----------------------------------------
-AUC:            0.6321 ± 0.0139
-Avg Precision:  0.1279 ± 0.0060
-FPR@95:         0.7317 ± 0.0145
+AUC:            0.6321 ± 0.0133
+Avg Precision:  0.1152 ± 0.0064
+FPR@95:         0.7879 ± 0.0227
+========================================
+
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       flow-matching
+Training time:  3.24 sec
+----------------------------------------
+AUC:            0.5922 ± 0.0139
+Avg Precision:  0.1186 ± 0.0062
+FPR@95:         0.8049 ± 0.0127
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  16.82 sec
+----------------------------------------
+AUC:            0.5574 ± 0.3050
+Avg Precision:  0.7845 ± 0.2802
+FPR@95:         0.2973 ± 0.2516
 ========================================
 

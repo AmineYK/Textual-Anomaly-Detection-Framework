@@ -1,0 +1,108 @@
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       flow-matching
+Training time:  6.56 sec
+----------------------------------------
+AUC:            0.9098 ± 0.0087
+Avg Precision:  0.5993 ± 0.0316
+FPR@95:         0.4788 ± 0.0807
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  67.50 sec
+----------------------------------------
+AUC:            0.6028 ± 0.1193
+Avg Precision:  0.8869 ± 0.1603
+FPR@95:         0.1692 ± 0.0743
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       AE
+Training time:  1.63 sec
+----------------------------------------
+AUC:            0.9225 ± 0.0102
+Avg Precision:  0.6570 ± 0.0335
+FPR@95:         0.4580 ± 0.0850
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       RSRAE
+Training time:  0.54 sec
+----------------------------------------
+AUC:            0.9126 ± 0.0116
+Avg Precision:  0.5981 ± 0.0310
+FPR@95:         0.4484 ± 0.0769
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       ocsvm
+Training time:  20.35 sec
+----------------------------------------
+AUC:            0.9157 ± 0.0126
+Avg Precision:  0.6080 ± 0.0335
+FPR@95:         0.4638 ± 0.0479
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       TCCM
+Training time:  5.42 sec
+----------------------------------------
+AUC:            0.9047 ± 0.0094
+Avg Precision:  0.6094 ± 0.0370
+FPR@95:         0.5139 ± 0.0823
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  951.83 sec
+----------------------------------------
+AUC:            0.7337 ± 0.0180
+Avg Precision:  0.6899 ± 0.0304
+FPR@95:         0.2601 ± 0.0277
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       DATE
+Training time:  192.94 sec
+----------------------------------------
+AUC:            0.9288 ± 0.0126
+Avg Precision:  0.3978 ± 0.0974
+FPR@95:         0.7355 ± 0.0260
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  795.35 sec
+----------------------------------------
+AUC:            0.9101 ± 0.0098
+Avg Precision:  0.6174 ± 0.0387
+FPR@95:         0.4835 ± 0.0834
+========================================
+

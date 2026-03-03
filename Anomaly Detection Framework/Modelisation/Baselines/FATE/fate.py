@@ -198,9 +198,9 @@ class FATETrainer:
                 optimizer.step()
                 global_step += 1
 
-            if epoch % (self.num_epochs // 3) == 0:
-                print(f"Epoch {epoch+1}/{self.num_epochs}, Loss: {loss.item():.4f}")
-                self.evaluate()
+            # if epoch % (self.num_epochs // 3) == 0:
+            #     print(f"Epoch {epoch+1}/{self.num_epochs}, Loss: {loss.item():.4f}")
+            #     self.evaluate()
 
     @torch.no_grad()
     def evaluate(self):

@@ -142,3 +142,63 @@ Avg Precision:  0.8791 ± 0.0171
 FPR@95:         0.1373 ± 0.0141
 ========================================
 
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       flow-matching
+Training time:  15.16 sec
+----------------------------------------
+AUC:            0.6498 ± 0.0422
+Avg Precision:  0.1886 ± 0.0356
+FPR@95:         0.7725 ± 0.0518
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       flow-matching
+Training time:  11.82 sec
+----------------------------------------
+AUC:            0.5001 ± 0.0453
+Avg Precision:  0.1008 ± 0.0154
+FPR@95:         0.9228 ± 0.0283
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  246.92 sec
+----------------------------------------
+AUC:            0.6318 ± 0.0637
+Avg Precision:  0.8935 ± 0.0633
+FPR@95:         0.2044 ± 0.0934
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  195.71 sec
+----------------------------------------
+AUC:            0.5279 ± 0.0549
+Avg Precision:  0.9241 ± 0.0518
+FPR@95:         0.1438 ± 0.0464
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  1942.48 sec
+----------------------------------------
+AUC:            0.6467 ± 0.0370
+Avg Precision:  0.1819 ± 0.0325
+FPR@95:         0.7820 ± 0.0428
+========================================
+

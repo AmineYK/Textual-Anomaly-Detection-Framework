@@ -142,3 +142,75 @@ Avg Precision:  0.8540 ± 0.0234
 FPR@95:         0.1722 ± 0.0037
 ========================================
 
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       flow-matching
+Training time:  5.32 sec
+----------------------------------------
+AUC:            0.5015 ± 0.0076
+Avg Precision:  0.0979 ± 0.0020
+FPR@95:         0.9448 ± 0.0089
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       flow-matching
+Training time:  5.17 sec
+----------------------------------------
+AUC:            0.6605 ± 0.0072
+Avg Precision:  0.1699 ± 0.0043
+FPR@95:         0.8437 ± 0.0129
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  107.75 sec
+----------------------------------------
+AUC:            0.5388 ± 0.0294
+Avg Precision:  0.9545 ± 0.0138
+FPR@95:         0.1268 ± 0.0255
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  107.78 sec
+----------------------------------------
+AUC:            0.6448 ± 0.0324
+Avg Precision:  0.8763 ± 0.0244
+FPR@95:         0.1674 ± 0.0308
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  653.43 sec
+----------------------------------------
+AUC:            0.5049 ± 0.0059
+Avg Precision:  0.0984 ± 0.0018
+FPR@95:         0.9375 ± 0.0056
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  637.30 sec
+----------------------------------------
+AUC:            0.6394 ± 0.0068
+Avg Precision:  0.1590 ± 0.0038
+FPR@95:         0.8645 ± 0.0086
+========================================
+

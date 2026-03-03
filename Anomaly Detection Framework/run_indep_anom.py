@@ -455,12 +455,12 @@ def main(args):
                     data_train_ = data_train
                 fate_args = {
                     "device": device,
-                    "batch_size": 32,
-                    "n_epochs": 3,
-                    "lr": 1e-5,
+                    "batch_size": 128,
+                    "n_epochs": 2,
+                    "lr": 1e-3,
                     "include_regularization": True,
                     "top_k": 0.1,
-                    "nb_shot": 30,
+                    "nb_shot": 3,
                     "train_inlier_text": data_train_['text'],     
                     "train_anomaly_text": data_train_anomaly_fate['text'],
                     "test_inlier_text": data_test_inlier['text'],
@@ -576,7 +576,7 @@ def main(args):
                 dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching",
                 auc_mean=np.mean(list_auc_fm), ap_mean=np.mean(list_ap_fm),fpr_mean=np.mean(list_fpr_fm),
                 auc_std = np.std(list_auc_fm),ap_std =  np.std(list_ap_fm),fpr_std = np.std(list_fpr_fm),
-                train_time = np.mean(list_time_fm),overwrite='naive'
+                train_time = np.mean(list_time_fm),nu=args.nu,overwrite='smart'
                 )
             
         if args.fm_trans:
@@ -642,7 +642,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="FATE",
             auc_mean=np.mean(list_auc_fate), ap_mean=np.mean(list_ap_fate),fpr_mean=np.mean(list_fpr_fate),
             auc_std = np.std(list_auc_fate),ap_std =  np.std(list_ap_fate),fpr_std = np.std(list_fpr_fate),
-            train_time = np.mean(list_time_fate), nu=args.nu, overwrite='smart'
+            train_time = np.mean(list_time_fate), nu=args.nu, overwrite='naive'
             )
 
 
