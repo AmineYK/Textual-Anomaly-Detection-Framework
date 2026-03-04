@@ -55,8 +55,10 @@ pattern = {
     "dataset": re.compile(r"Dataset:\s*(.*)"),
     "inlier": re.compile(r"Inlier class:\s*(.*)"),
     "model": re.compile(r"AD model:\s*(.*)"),
-    "auc": re.compile(r"AUC:\s*([\d.]+)\s*±\s*([\d.]+)"),
     "type_emb": re.compile(r"Embedding type:\s*(.*)"),
+    "auc": re.compile(r"AUC:\s*([\d.]+)\s*±\s*([\d.]+)"),
+    "ap": re.compile(r"Avg Precision:\s*([\d.]+)\s*±\s*([\d.]+)"),
+    "fpr95": re.compile(r"FPR@95:\s*([\d.]+)\s*±\s*([\d.]+)"),
 }
 
 # =========================
@@ -66,11 +68,12 @@ pattern = {
 def fmt(mean, std):
     return f"{mean:.4f} $\\pm$ {std:.4f}"
 
-def get_best_two(values):
+def get_best_two(values, maximize=True):
     valid = [(i, v) for i, v in enumerate(values) if v is not None]
     if len(valid) < 2:
         return None, None
-    valid = sorted(valid, key=lambda x: x[1], reverse=True)
+
+    valid = sorted(valid, key=lambda x: x[1], reverse=maximize)
     return valid[0][0], valid[1][0]
 
 def iter_models_with_separators():
@@ -83,8 +86,7 @@ def iter_models_with_separators():
 # =========================
 # LOAD RESULTS
 # =========================
-
-def load_results_for_config(encoding, nu):
+def load_results_for_config(encoding, nu, metric="auc"):
     """
     results[type_emb][dataset][inlier][model] = (mean, std)
     """
@@ -97,7 +99,7 @@ def load_results_for_config(encoding, nu):
             continue
 
         with open(path) as f:
-            block = dict.fromkeys(["type_emb", "dataset", "inlier", "model", "auc"])
+            block = dict.fromkeys(["type_emb", "dataset", "inlier", "model", "metric"])
 
             for line in f:
                 line = line.strip()
@@ -114,8 +116,8 @@ def load_results_for_config(encoding, nu):
                 if m := pattern["model"].search(line):
                     block["model"] = m.group(1)
 
-                if m := pattern["auc"].search(line):
-                    block["auc"] = (float(m.group(1)), float(m.group(2)))
+                if m := pattern[metric].search(line):
+                    block["metric"] = (float(m.group(1)), float(m.group(2)))
 
                 if line.startswith("===="):
                     if all(block.values()):
@@ -127,16 +129,16 @@ def load_results_for_config(encoding, nu):
                             block["inlier"]
                         ][
                             block["model"]
-                        ] = block["auc"]
+                        ] = block["metric"]
+
                     block = dict.fromkeys(block)
 
     return results
-
 # =========================
 # TABLE GENERATION
 # =========================
 
-def generate_global_table(results):
+def generate_global_table(results, metric_name="AUC"):
     datasets = list(results.keys())
 
     global_means = {m: [] for m in MODEL_ORDER}
@@ -159,13 +161,14 @@ def generate_global_table(results):
     best_idx, sec_idx = {}, {}
     for c in range(len(datasets)):
         col_vals = [global_means[m][c] for m in MODEL_ORDER]
-        b, s = get_best_two(col_vals)
+        maximize = metric_name.lower() != "fpr95"
+        b, s = get_best_two(col_vals, maximize=maximize)
         best_idx[c], sec_idx[c] = b, s
 
     latex = [
         "\\begin{table}[H]",
         "\\centering",
-        "\\caption{AUC on all datasets}",
+        f"\\caption{{{metric_name} on all datasets}}"
         "\\resizebox{1.1\\textwidth}{!}{",
         "\\begin{tabular}{l" + "c" * len(datasets) + "}",
         "\\toprule",
@@ -212,7 +215,7 @@ def generate_global_table(results):
 
     return "\n".join(latex)
 
-def generate_dataset_tables(results):
+def generate_dataset_tables(results, metric_name="AUC"):
     all_tables = []
 
     for ds in results:
@@ -229,13 +232,14 @@ def generate_dataset_tables(results):
         best_idx, sec_idx = {}, {}
         for c in range(len(inliers)):
             col_vals = [auc_matrix[m][c] for m in MODEL_ORDER]
-            b, s = get_best_two(col_vals)
+            maximize = metric_name.lower() != "fpr95"
+            b, s = get_best_two(col_vals, maximize=maximize)
             best_idx[c], sec_idx[c] = b, s
 
         latex = [
             "\\begin{table}[H]",
             "\\centering",
-            f"\\caption{{AUC on {ds.capitalize()}}}",
+            f"\\caption{{{metric_name} on {ds.capitalize()}}}"
             "\\resizebox{1.1\\textwidth}{!}{",
             "\\begin{tabular}{l" + "c" * len(inliers) + "}",
             "\\toprule",
@@ -284,20 +288,20 @@ def generate_dataset_tables(results):
 # MAIN ENTRY
 # =========================
 
-def generate_tables_for_config(encoding, nu):
-    results = load_results_for_config(encoding, nu)
+def generate_tables_for_config(encoding, nu, metric="auc"):
+    results = load_results_for_config(encoding, nu, metric=metric)
     out_tex = os.path.join(
         OUTPUT_LATEX_DIR,
-        f"tables_{encoding.replace('-', '')}_nu_{nu}.tex"
+        f"tables_{metric}_{encoding.replace('-', '')}_nu_{nu}.tex"
     )
 
     with open(out_tex, "w") as f:
         for type_emb in results:
             title = type_emb.replace("_", " ").title()
             f.write(f"\\subsection {{{title}}}\n\n")
-            f.write(generate_global_table(results[type_emb]))
+            f.write(generate_global_table(results[type_emb], metric_name=metric.upper()))
             f.write("\n\n")
-            f.write(generate_dataset_tables(results[type_emb]))
+            f.write(generate_dataset_tables(results[type_emb], metric_name=metric.upper()))
             f.write("\n\n")
 
     print(f"[OK] Generated {out_tex}")

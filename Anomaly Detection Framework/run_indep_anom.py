@@ -372,13 +372,13 @@ def main(args):
                 cvdd_args = {
                     "bert_name": "albert-base-v2", #albert-large-v2   
                     "hidden_size": 768, #1024 
-                    "n_attention_heads": 10,
-                    "attention_size": 150,
+                    "n_attention_heads": 4,
+                    "attention_size": 64,
                     "freeze_bert": True,
-                    "lr": 1e-3,
+                    "lr": 1e-1,
                     "weight_decay" : 0,
                     "lambda_p": 0.1,
-                    "n_epochs": 15,
+                    "n_epochs": 5,
                     "batch_size": 128,
                     "device": device
                     }
@@ -413,10 +413,10 @@ def main(args):
                     # "encoder_name": "albert-base-v2", 
                     "which_config": "electra",
                     "encoder_name": "google/electra-small-discriminator",
-                    "K": 20,
-                    "lr": 1e-3,
+                    "K": 10,
+                    "lr": 1e-2,
                     "weight_decay" : 0,
-                    "seq_len": 498,
+                    "seq_len": 200,
                     "ratio": 0.20,
                     "n_epochs": 10,
                     "batch_size": 128,
@@ -456,11 +456,11 @@ def main(args):
                 fate_args = {
                     "device": device,
                     "batch_size": 128,
-                    "n_epochs": 2,
+                    "n_epochs": 15,
                     "lr": 1e-3,
                     "include_regularization": True,
                     "top_k": 0.1,
-                    "nb_shot": 3,
+                    "nb_shot": 10,
                     "train_inlier_text": data_train_['text'],     
                     "train_anomaly_text": data_train_anomaly_fate['text'],
                     "test_inlier_text": data_test_inlier['text'],
@@ -529,17 +529,17 @@ def main(args):
             if args.fm_trans:
                 config = {
                     'latent_dim': 768,
-                    'hidden_dim': 64,
-                    'depth': 2,
-                    'n_heads': 2,
+                    'hidden_dim': 256,
+                    'depth': 8,
+                    'n_heads': 8,
                     'lr': 1e-3,
                     'weight_decay': 1e-5,
-                    'epochs': 500,
-                    'warmup_epochs': 50,
+                    'epochs': 200,
+                    'warmup_epochs': 40,
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
                     'sigma': 0.1, 
-                    'batch_size' : 64,
+                    'batch_size' : 512,
                     'lambda_reg_angle': None,
                     'lambda_reg_kl': None,
                     'coef_var': 1,
@@ -626,7 +626,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="CVDD",
             auc_mean=np.mean(list_auc_cvdd), ap_mean=np.mean(list_ap_cvdd),fpr_mean=np.mean(list_fpr_cvdd),
             auc_std = np.std(list_auc_cvdd),ap_std =  np.std(list_ap_cvdd),fpr_std = np.std(list_fpr_cvdd),
-            train_time = np.mean(list_time_cvdd), nu=args.nu, overwrite='smart'
+            train_time = np.mean(list_time_cvdd), nu=args.nu, overwrite='naive'
             )
 
         if args.date:
@@ -634,7 +634,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="DATE",
             auc_mean=np.mean(list_auc_date), ap_mean=np.mean(list_ap_date),fpr_mean=np.mean(list_fpr_date),
             auc_std = np.std(list_auc_date),ap_std =  np.std(list_ap_date),fpr_std = np.std(list_fpr_date),
-            train_time = np.mean(list_time_date), nu=args.nu, overwrite='smart'
+            train_time = np.mean(list_time_date), nu=args.nu, overwrite='naive'
             )
 
         if args.fate:

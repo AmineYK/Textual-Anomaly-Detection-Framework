@@ -266,6 +266,6 @@ class FATEModel(BaselineModel):
         
 
     def test(self):
-        auc, ap, fpr95  = self.trainer.evaluate()
+        auc, fpr95, ap  = self.trainer.evaluate()
 
         return auc, fpr95, ap

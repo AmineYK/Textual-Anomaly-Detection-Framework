@@ -337,7 +337,7 @@ class DATEModel(BaselineModel):
         # Donc on INVERSE le score
         test_scores = -scores  # ou 1 - scores
 
-        auc, ap, fpr95 = ev.evaluation(test_labels, test_scores, verbose=False)
+        auc, fpr95, ap = ev.evaluation(test_labels, test_scores, verbose=False)
 
         return auc, fpr95, ap
 

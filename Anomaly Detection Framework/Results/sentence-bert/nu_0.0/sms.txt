@@ -51,11 +51,11 @@ Dataset:        sms
 Inlier class:   normal
 Embedding type: sentence-bert
 AD model:       CVDD
-Training time:  444.73 sec
+Training time:  65.81 sec
 ----------------------------------------
-AUC:            0.8379 ± 0.0123
-Avg Precision:  0.6230 ± 0.0602
-FPR@95:         0.2865 ± 0.0111
+AUC:            0.6717 ± 0.0962
+Avg Precision:  0.1645 ± 0.0448
+FPR@95:         0.8111 ± 0.0961
 ========================================
 
 ========================================
@@ -63,11 +63,11 @@ Dataset:        sms
 Inlier class:   normal
 Embedding type: sentence-bert
 AD model:       DATE
-Training time:  77.95 sec
+Training time:  18.54 sec
 ----------------------------------------
-AUC:            0.8785 ± 0.0105
-Avg Precision:  0.3943 ± 0.0092
-FPR@95:         0.4208 ± 0.0266
+AUC:            0.5172 ± 0.0763
+Avg Precision:  0.1081 ± 0.0202
+FPR@95:         0.9894 ± 0.0167
 ========================================
 
 ========================================
@@ -75,11 +75,11 @@ Dataset:        sms
 Inlier class:   normal
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers
-Training time:  3.24 sec
+Training time:  63.23 sec
 ----------------------------------------
-AUC:            0.6321 ± 0.0133
-Avg Precision:  0.1152 ± 0.0064
-FPR@95:         0.7879 ± 0.0227
+AUC:            0.6504 ± 0.0106
+Avg Precision:  0.1294 ± 0.0042
+FPR@95:         0.6718 ± 0.0302
 ========================================
 
 
@@ -103,7 +103,7 @@ AD model:       FATE
 Training time:  16.82 sec
 ----------------------------------------
 AUC:            0.5574 ± 0.3050
-Avg Precision:  0.7845 ± 0.2802
-FPR@95:         0.2973 ± 0.2516
+Avg Precision:  0.2973 ± 0.2516
+FPR@95:         0.7845 ± 0.2802
 ========================================
 

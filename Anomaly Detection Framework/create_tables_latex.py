@@ -29,10 +29,17 @@ def main(args):
     else:
         nu_list = [args.nu]
 
+    if args.all_metrics:
+        metrics = ['auc', 'fpr95', 'ap']
+    else:
+        metrics = [args.metric]
+
     for encoding in encoding_list:
         for nu in nu_list:
-            generate_tables_for_config(encoding, nu)
-
+            # generate_tables_for_config(encoding, nu)
+            for me in metrics:
+                print(f"<<<< {encoding}, {nu}, {me} >>>> \n")
+                generate_tables_for_config("sentence-bert", 0.0, metric=me)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Create Tables Latex script")
@@ -63,6 +70,21 @@ if __name__ == "__main__":
         "--nu",
         type=float,
         default=0.0
+        )
+
+    
+    parser.add_argument(
+        "--all_metrics",
+        action="store_true"
+    )
+
+    args, remaining_argv = parser.parse_known_args()
+
+    if not args.all_metrics:
+        parser.add_argument(
+        "--metric",
+        type=str,
+        default="auc"
         )
 
     args = parser.parse_args()

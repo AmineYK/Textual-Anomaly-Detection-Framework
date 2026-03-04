@@ -296,6 +296,6 @@ class CVDDModel(BaselineModel):
         scores = anomaly_score(self.model, test_loader, self.device).numpy()
         y_test = np.array([x["label"] for x in test_dataset])
 
-        auc, ap, fpr95 = ev.evaluation(y_test, scores, verbose=True)
+        auc, fpr95, ap = ev.evaluation(y_test, scores, verbose=True)
 
         return auc, fpr95, ap
