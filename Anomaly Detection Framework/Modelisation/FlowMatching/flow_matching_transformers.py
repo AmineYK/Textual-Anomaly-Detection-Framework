@@ -202,7 +202,7 @@ class FlowMatchingTransformers(nn.Module):
             return Tensor(z / z.norm(dim=1, keepdim=True)).to(self.device)
 
 
-    def compute_flow_loss(self, x_0, indices, flow_type='linear', sigma=0.1, lambda_reg_angle=2.):
+    def compute_flow_loss(self, x_0, y, indices, flow_type='linear', sigma=0.1, lambda_reg_angle=2., warmup=False, tau=None):
             
         batch_size = x_0.shape[0]
         if self.is_masking_task:
@@ -250,22 +250,92 @@ class FlowMatchingTransformers(nn.Module):
         
         v_pred = self.model(x_t, t)
         loss_fm = F.mse_loss(v_pred, v_target)
-        # print(f"Loss FM : {loss_fm}")
-        # loss_iso = isotropy_regularization_weighted(x_t, t, lambda_iso=1)
-        # print(f"Loss Iso : {loss_iso}")
-        # loss_total = loss_fm + loss_iso
         loss_total = loss_fm
-        # print(f"Loss Totale : {loss_total}")
-        # check_isotropy(x_t)
-        # print("--------------------------\n")
 
-
-        if lambda_reg_angle is not None:
-            loss_regul_angle = (1 - F.cosine_similarity(v_pred, v_target, dim=-1)).pow(2).mean()
-            return loss_total+lambda_reg_angle*loss_regul_angle, loss_regul_angle, v_pred, v_target
+        # if lambda_reg_angle is not None:
+        #     loss_regul_angle = (1 - F.cosine_similarity(v_pred, v_target, dim=-1)).pow(2).mean()
+        #     return loss_total+lambda_reg_angle*loss_regul_angle, loss_regul_angle, v_pred, v_target
         
+        # else:
+        #     return loss_total, v_pred, v_target, [torch.mean(res_inlier).item(), torch.mean(wei_inlier).item(),
+        #                                            torch.mean(res_anom).item(), torch.mean(wei_anom).item()]
+
+        #####################################################
+        #####################################################
+        #################### TRANSPORT ###################### 
+        #####################################################
+        #####################################################
+
+
+        #     # --- Résidus par point ---
+        # # shape [B] — on somme sur la dim feature, pas de mean encore
+        # residuals = ((v_pred - v_target) ** 2).sum(dim=-1)   # [B]
+        
+        # if warmup:
+        #     # Pas de pondération — loss CFM standard
+        #     loss_total = residuals.mean()
+        #     weights = torch.ones_like(residuals)
+        # else:
+        #     # --- Calcul de τ adaptatif si non fourni ---
+        #     with torch.no_grad():
+        #         if tau is None:
+        #             med = residuals.median()
+        #             mad = (residuals - med).abs().median()
+        #             tau_val = (med + 2.0 * mad).clamp(min=1e-6)
+        #         else:
+        #             tau_val = torch.tensor(tau, device=x_0.device)
+                
+        #         # Poids Cauchy — robuste, dérivable, pas de seuil dur
+        #         weights = 1.0 / (1.0 + residuals / tau_val)
+        #         # alpha = 10
+        #         # weights = (1.0 / (1.0 + residuals / tau_val)) ** alpha   # alpha > 1, ex: 2, 3, 5
+        #         # weights = torch.nn.functional.softmax(-residuals / tau_val)
+                
+        #         # Normalisation : redistribue l'importance sur les inliers
+        #         weights = weights / (weights.mean() + 1e-8)   # [B]
+            
+        #     # Loss pondérée — stop_gradient sur weights via le with torch.no_grad() ci-dessus
+        #     loss_total = (weights * residuals).mean()
+        #     print(f"Loss FM : {residuals.mean().item()}")
+        #     print(f"New Loss: {loss_total.item()}")
+
+
+
+        #####################################################
+        #####################################################
+        #################### TRAJECTOIRE #################### 
+        #####################################################
+        #####################################################
+
+        residuals_fm = ((v_pred - v_target) ** 2).sum(dim=-1)
+
+        if warmup:
+            # loss_total = residuals_fm.mean()
+            weights = torch.ones(batch_size, device=x_0.device)
+            R = torch.zeros(batch_size, device=x_0.device)
         else:
-            return loss_total, v_pred, v_target
+            # Résidu de trajectoire — pas de gradient
+            R = self.compute_trajectory_residual(x_0, K=4)   # [B]
+
+            with torch.no_grad():
+                # Normalisation robuste
+                med = R.median()
+                mad = (R - med).abs().median()
+                R_norm = (R - med) / (mad + 1e-8)   # [B] centré, outliers > 0
+
+                # Poids : déviation positive → downweighté
+                weights = 1.0 / (1.0 + torch.clamp(R_norm, min=0))   # [B]
+                weights = weights / (weights.mean() + 1e-8)
+
+            # loss_total = (weights * residuals_fm).mean()
+
+        res_inlier = R[y == 0]
+        res_anom = R[y == 1]
+        wei_inlier = weights[y == 0]
+        wei_anom = weights[y == 1]
+        
+        return loss_total, v_pred, v_target, [torch.mean(res_inlier).item(), torch.mean(wei_inlier).item(),
+                                                   torch.mean(res_anom).item(), torch.mean(wei_anom).item()]
     
 
     # def train_epoch(self, dataloader, optimizer):
@@ -309,23 +379,26 @@ class FlowMatchingTransformers(nn.Module):
     #     return avg_loss, avg_loss_regul
 
 
-    def train_epoch(self, dataloader, optimizer, epoch):
+    def train_epoch(self, dataloader, optimizer, epoch, warmup=False):
 
         self.model.train()
         total_loss = 0
         total_loss_regul = 0
         self.optimizer = optimizer
 
-        for x_0, indices in dataloader:
+        ll = []
+
+        for x_0, y, indices in dataloader:
 
             x_0 = x_0.to(self.device)
-
             loss_fm, *anythingelse = self.compute_flow_loss(
                 x_0,
+                y,
                 indices,
                 flow_type=self.config['flow_type'],
                 sigma=self.config['sigma'],
-                lambda_reg_angle=self.config['lambda_reg_angle']
+                lambda_reg_angle=self.config['lambda_reg_angle'],
+                warmup=warmup
             )
 
             if self.config['lambda_reg_angle'] is not None:
@@ -361,6 +434,9 @@ class FlowMatchingTransformers(nn.Module):
 
             # loss_tot = loss_fm + 1e-1 * torch.tensor(loss_iso, requires_grad=True)
 
+
+            ll.append(anythingelse[2])
+
             self.optimizer.zero_grad()
             loss_fm.backward()
 
@@ -376,7 +452,7 @@ class FlowMatchingTransformers(nn.Module):
         avg_loss = total_loss / len(dataloader)
         avg_loss_regul = total_loss_regul / len(dataloader)
 
-        return avg_loss, avg_loss_regul
+        return avg_loss, avg_loss_regul, torch.tensor(ll).mean(dim=0)
 
     
     def train(self, verbose=True):
@@ -392,10 +468,18 @@ class FlowMatchingTransformers(nn.Module):
             X_inlier = self.source
         else:
             X_inlier = self.target
-        X_inlier_dl = DataLoader(TensorDataset(X_inlier, torch.arange(len(X_inlier))), batch_size=self.config['batch_size'], shuffle=True)
+
+        
+        X_inlier_dl = DataLoader(TensorDataset(X_inlier, self.config['y_train'], torch.arange(len(X_inlier))), batch_size=self.config['batch_size'], shuffle=True)
+
+        # Nombre d'epochs de warm-up pour la pondération robuste
+        # On réutilise warmup_epochs s'il existe, sinon 10% des epochs
+        n_warmup = self.config.get('warmup_epochs', max(1, self.config['epochs'] // 10))
+
 
         liste_loss = []
         liste_loss_regul = []
+        liste_energies = []
 
         for epoch in range(self.config['epochs']):
             
@@ -403,11 +487,17 @@ class FlowMatchingTransformers(nn.Module):
             for param_group in optimizer.param_groups:
                 param_group['lr'] = lr
 
+            # Warm-up : pas de pondération robuste pendant les premières epochs
+            is_warmup = (epoch < n_warmup)
+            # is_warmup = False
             train_loss, *anythingelse = self.train_epoch(
                 X_inlier_dl, 
                 optimizer, 
-                epoch
+                epoch,
+                warmup=is_warmup   
             )
+
+            liste_energies.append(anythingelse[1])
 
             if self.config['lambda_reg_angle'] is not None:
                 liste_loss_regul.append(anythingelse[0])
@@ -418,7 +508,7 @@ class FlowMatchingTransformers(nn.Module):
                 print(f"Train Loss: {train_loss:.4f}, LR: {lr:.6f}")
 
         if self.rectified is None:
-            return liste_loss, liste_loss_regul
+            return liste_loss, liste_loss_regul, liste_energies
         else:
             print(f"\nRectification Pass starting.... for {self.rectified} iterations")
 
@@ -563,6 +653,33 @@ class FlowMatchingTransformers(nn.Module):
 
         scores = self.compute_anomaly_scores(X_test, X_inlier, type)
         return ev.evaluation(y_test, scores, verbose=False)
+    
+
+    @torch.no_grad()
+    def compute_trajectory_residual(self, x_0, K=4):
+        """
+        Approxime R_i = ∫‖x_t_predicted - x_t_ideal‖² dt par K pas d'Euler.
+        x_t_ideal = (1-t)*x_0 + t*mu_c  (trajectoire linéaire vers le centroïde)
+        """
+        x_t = x_0.clone()
+        R = torch.zeros(x_0.shape[0], device=x_0.device)
+        dt = 1.0 / K
+
+        for k in range(K):
+            t_k = k * dt
+            t_tensor = torch.full((x_0.shape[0],), t_k, device=x_0.device)
+
+            # Trajectoire idéale à t_k
+            x_ideal = (1 - t_k) * x_0 + t_k * self.centroid   # [B, D]
+
+            # Accumulation du résidu
+            R += ((x_t - x_ideal) ** 2).sum(dim=-1) * dt   # [B]
+
+            # Pas d'Euler
+            v = self.model(x_t, t_tensor)
+            x_t = x_t + v * dt
+
+        return R   # [B]
 
 
 class BatchedVelocityWrapper(torch.nn.Module):
