@@ -658,3 +658,63 @@ Avg Precision:  0.7616 ± 0.0307
 FPR@95:         0.2544 ± 0.1336
 ========================================
 
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  66.97 sec
+----------------------------------------
+AUC:            0.9580 ± 0.0107
+Avg Precision:  0.8420 ± 0.0259
+FPR@95:         0.2265 ± 0.0814
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  53.30 sec
+----------------------------------------
+AUC:            0.9460 ± 0.0087
+Avg Precision:  0.6978 ± 0.0236
+FPR@95:         0.2256 ± 0.0379
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  53.73 sec
+----------------------------------------
+AUC:            0.8366 ± 0.0135
+Avg Precision:  0.4227 ± 0.0274
+FPR@95:         0.5752 ± 0.0585
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  15.84 sec
+----------------------------------------
+AUC:            0.9581 ± 0.0112
+Avg Precision:  0.7803 ± 0.0357
+FPR@95:         0.2352 ± 0.1124
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  34.89 sec
+----------------------------------------
+AUC:            0.9540 ± 0.0080
+Avg Precision:  0.7733 ± 0.0250
+FPR@95:         0.2354 ± 0.0615
+========================================
+

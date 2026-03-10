@@ -107,3 +107,15 @@ Avg Precision:  0.2973 ± 0.2516
 FPR@95:         0.7845 ± 0.2802
 ========================================
 
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  97.60 sec
+----------------------------------------
+AUC:            0.6664 ± 0.0174
+Avg Precision:  0.1383 ± 0.0102
+FPR@95:         0.6543 ± 0.0240
+========================================
+

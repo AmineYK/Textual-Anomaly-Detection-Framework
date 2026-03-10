@@ -859,3 +859,75 @@ Avg Precision:  0.6250 ± 0.2007
 FPR@95:         0.3750 ± 0.2497
 ========================================
 
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  13.19 sec
+----------------------------------------
+AUC:            0.9868 ± 0.0157
+Avg Precision:  0.9425 ± 0.0487
+FPR@95:         0.0818 ± 0.1037
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  67.38 sec
+----------------------------------------
+AUC:            0.9591 ± 0.0101
+Avg Precision:  0.8350 ± 0.0313
+FPR@95:         0.2497 ± 0.0769
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  9.61 sec
+----------------------------------------
+AUC:            0.9624 ± 0.0644
+Avg Precision:  0.9193 ± 0.1043
+FPR@95:         0.1556 ± 0.2494
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  13.00 sec
+----------------------------------------
+AUC:            0.9690 ± 0.0215
+Avg Precision:  0.8868 ± 0.0662
+FPR@95:         0.2189 ± 0.1601
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  6.33 sec
+----------------------------------------
+AUC:            0.9594 ± 0.0556
+Avg Precision:  0.8202 ± 0.1483
+FPR@95:         0.1031 ± 0.1594
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  6.44 sec
+----------------------------------------
+AUC:            0.9846 ± 0.0244
+Avg Precision:  0.9519 ± 0.0622
+FPR@95:         0.0769 ± 0.1219
+========================================
+
