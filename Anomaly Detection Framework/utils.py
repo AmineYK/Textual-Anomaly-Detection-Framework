@@ -43,6 +43,7 @@ MODEL_LATEX = {
     "TCCM": "TCCM",
     "flow-matching": "\\textbf{BasicFM}",
     "flow-matching-Transformers": "\\textbf{TranFM}",
+    "flow-matching-Transformers-EneRepu": "\\textbf{TranFM-EneRepu}"
 }
 
 MODEL_ORDER = [m for _, g in MODEL_GROUPS for m in g]

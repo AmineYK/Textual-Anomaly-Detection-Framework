@@ -32,8 +32,8 @@ logger = logging.getLogger(__name__)
 
 dataset_topics_dict= {
     '20newsgroups' : ['computer', 'recreation', 'science', 'miscellaneous', 'politics', 'religion'],
-    # 'reuters' : ['earn', 'trade', 'acq', 'money-fx', 'crude', 'ship', 'interest'],
-    'reuters' : ['trade', 'acq', 'money-fx', 'crude', 'ship', 'interest'],
+    'reuters' : ['earn', 'trade', 'acq', 'money-fx', 'crude', 'ship', 'interest'],
+    # 'reuters' : ['trade', 'acq', 'money-fx', 'crude', 'ship', 'interest'],
     'agnews' : ['World', 'Sports', 'Business', 'Sci-Tech'] ,
     'dbpedia14' : ["Company", "Educational Institution", "Artist", "Athlete", "Office Holder", 
                   "Mean Of Transportation", "Building", "Natural Place", "Village", "Animal", "Plant", "Album", "Film", "Written Work"],
@@ -534,8 +534,8 @@ def main(args):
                     'n_heads': 8,
                     'lr': 1e-3,
                     'weight_decay': 1e-5,
-                    'epochs': 100,
-                    'warmup_epochs': 20,
+                    'epochs': 500,
+                    'warmup_epochs': 50,
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
                     'sigma': 0.1, 
@@ -582,7 +582,7 @@ def main(args):
         if args.fm_trans:
             print(inlier_topic, np.mean(list_auc_fm_trans), np.mean(list_fpr_fm_trans), np.mean(list_ap_fm_trans))
             save_results(
-                dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers-EneRepu",
+                dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers-Margin",
                 auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
                 auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
                 train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='naive'

@@ -718,3 +718,15 @@ Avg Precision:  0.7733 ± 0.0250
 FPR@95:         0.2354 ± 0.0615
 ========================================
 
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-Margin
+Training time:  333.39 sec
+----------------------------------------
+AUC:            0.9520 ± 0.0133
+Avg Precision:  0.7948 ± 0.0330
+FPR@95:         0.2710 ± 0.1168
+========================================
+
