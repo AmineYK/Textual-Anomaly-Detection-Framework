@@ -534,12 +534,12 @@ def main(args):
                     'n_heads': 8,
                     'lr': 1e-3,
                     'weight_decay': 1e-5,
-                    'epochs': 500,
-                    'warmup_epochs': 50,
+                    'epochs': 350,
+                    'warmup_epochs': 80,
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
                     'sigma': 0.1, 
-                    'batch_size' : 128,
+                    'batch_size' : 32,
                     'lambda_reg_angle': None,
                     'lambda_reg_kl': None,
                     'coef_var': 1,
@@ -582,7 +582,7 @@ def main(args):
         if args.fm_trans:
             print(inlier_topic, np.mean(list_auc_fm_trans), np.mean(list_fpr_fm_trans), np.mean(list_ap_fm_trans))
             save_results(
-                dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers-Margin",
+                dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers-PP",
                 auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
                 auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
                 train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='naive'

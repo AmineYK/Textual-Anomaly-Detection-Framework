@@ -207,6 +207,7 @@ class FlowMatchingTransformers(nn.Module):
             
 
         negative_sampling = True
+        rate_neg_batch = 0.3
 
 
         ##########################################
@@ -215,12 +216,17 @@ class FlowMatchingTransformers(nn.Module):
 
         if negative_sampling:
 
+            nb_samples_neg = int((rate_neg_batch * x_0.shape[0]) / 3)
             nb_samples_neg = 10
-
             sigma_levels = [
-                0.9 * torch.sqrt(self.var),
-                # 1.2 * torch.sqrt(self.var),
-                1.3 * torch.sqrt(self.var)
+                # 0.9 * torch.sqrt(self.var),
+                # 1.3 * torch.sqrt(self.var)
+
+                0.5 * torch.sqrt(self.var),
+                0.7 * torch.sqrt(self.var)
+
+                # 0.3 * torch.sqrt(self.var),
+                # 0.5 * torch.sqrt(self.var)
             ]
             x_0_negative = []
             
@@ -232,13 +238,11 @@ class FlowMatchingTransformers(nn.Module):
             x_0_negative = torch.stack(x_0_negative).to(self.device)
             x_0_augmented = torch.concatenate([x_0, x_0_negative]).to(self.device)
 
-
-            # alpha = 2.
-
+            # alpha = 1.2
             # direction = x_0 - self.centroid       
-            # x_0_negative = self.centroid + alpha * direction 
-            # x_0_negative = self.config['anomalies']
-            # x_0_augmented = torch.concatenate([x_0, x_0_negative]).to(self.device)
+            # all_x_0_negative = self.centroid + alpha * direction
+            # x_0_negative = all_x_0_negative[torch.randint(0,x_0.shape[0],(nb_samples_neg,))]
+            
 
         ##########################################
         ##########################################
@@ -312,29 +316,27 @@ class FlowMatchingTransformers(nn.Module):
 
         loss_fm = F.mse_loss(v_pred, v_target)
 
-        lambda_svdd = 1e-3
-        # ✅ AJOUT : SVDD sur phi_1 via Euler step
-        t_zeros = torch.zeros(x_0.shape[0], device=self.device)  # (B,)
-        v_svdd = self.model(x_0, t_zeros)                         # (B, D)
-        phi_1 = x_0 + v_svdd                                      # (B, D)
+        # lambda_svdd = 1e-3
+        # t_zeros = torch.zeros(x_0.shape[0], device=self.device)  
+        # v_svdd = self.model(x_0, t_zeros)                        
+        # x_svdd = x_0 + v_svdd                                    
 
-        dist_sq = torch.sum((phi_1 - self.centroid)**2, dim=1)    # (B,)
-        r_sq = self.r_in ** 2                                         # scalar
+        # dist_sq = torch.sum((x_svdd - self.centroid)**2, dim=1)    
+        # r_sq = self.r_in ** 2                                         
+        # loss_svdd = r_sq + F.relu(dist_sq - r_sq).mean()          
 
-        loss_svdd = r_sq + F.relu(dist_sq - r_sq).mean()          # scalar
-
-        # Push : outliers hors de r_out
-        t_neg = torch.zeros(x_0_negative.shape[0]).to(self.device)
-        v_neg = self.model(x_0_negative, t_neg)
-        x_neg = x_0_negative + v_neg 
-        dist_out = torch.norm(x_neg - self.centroid, dim=1)         # (B,)
-        loss_push = F.relu(self.r_out - dist_out).mean()
-        lambda_push = 1e-2
+        # # Push : outliers hors de r_out
+        # t_neg = torch.zeros(x_0_negative.shape[0]).to(self.device)
+        # v_neg = self.model(x_0_negative, t_neg)
+        # x_neg = x_0_negative + v_neg 
+        # dist_out = torch.norm(x_neg - self.centroid, dim=1)         
+        # loss_push = F.relu(self.r_out - dist_out).mean()
+        # lambda_push = 1e-1
                 
-        lambda_margin = 1e-2
+        # lambda_margin = 1e-2
         
-        loss_total = loss_fm + lambda_svdd * loss_svdd + lambda_push * loss_push + lambda_margin * self.margin
-        # loss_total = loss_fm
+        # loss_total = loss_fm + lambda_svdd * loss_svdd + lambda_push * loss_push + lambda_margin * self.margin
+        loss_total = loss_fm
 
         # print(f"Loss FM : {loss_fm}")
         # print(f"Loss SVDD : {loss_svdd}")
@@ -342,7 +344,8 @@ class FlowMatchingTransformers(nn.Module):
         # print(f"Loss Tot : {loss_total}")
         # print("----------------------------------------")
 
-        return loss_total, loss_fm.item(), loss_svdd.item(), r_sq.item()
+        # return loss_total, loss_fm.item(), loss_svdd.item(), loss_push.item(), self.margin.item(), self.r_in.item()
+        return loss_total, 0, 0, 0, 0, 0
         # return loss_total, loss_fm.item(), 0.0, 0.0
 
         
@@ -390,16 +393,14 @@ class FlowMatchingTransformers(nn.Module):
     def train_epoch(self, dataloader, optimizer, epoch):
 
         self.model.train()
-        total_loss = 0
-        fm_loss = 0
-        svdd_loss = 0
-        r_sq_liste = 0
         self.optimizer = optimizer
 
-        liste_dist_neg = []
-        liste_dist_pos = []
-        liste_loss_neg = []
-        liste_loss_pos = []
+        total_loss_liste = []
+        loss_fm_liste = []
+        loss_svdd_liste = []
+        loss_push_liste = []
+        margin_value_liste = []
+        r_in_value_liste = []
 
         # print(epoch)
 
@@ -408,7 +409,7 @@ class FlowMatchingTransformers(nn.Module):
 
             x_0 = x_0.to(self.device)
             # loss_fm, *anythingelse = self.compute_flow_loss(
-            loss_total, loss_fm, loss_svdd, r_sq = self.compute_flow_loss(
+            loss_total, loss_fm, loss_svdd, loss_push, margin_value, r_in_value = self.compute_flow_loss(
                 x_0,
                 indices,
                 flow_type=self.config['flow_type'],
@@ -425,19 +426,15 @@ class FlowMatchingTransformers(nn.Module):
 
             self.optimizer.step()
 
-            total_loss += loss_total.item()
-            fm_loss += loss_fm
-            svdd_loss += loss_svdd
-            r_sq_liste += r_sq
-            # liste_dist_neg.append(anythingelse[2])
-            # liste_dist_pos.append(anythingelse[2])
-            # liste_loss_neg.append(anythingelse[4])
-            # liste_loss_pos.append(anythingelse[3])
+            total_loss_liste.append(loss_total.item())
+            loss_fm_liste.append(loss_fm)
+            loss_svdd_liste.append(loss_svdd)
+            loss_push_liste.append(loss_push)
+            margin_value_liste.append(margin_value)
+            r_in_value_liste.append(r_in_value)
 
-        avg_loss = total_loss / len(dataloader)
-        # return avg_loss, np.mean(liste_dist_neg), np.mean(liste_dist_pos), np.mean(liste_loss_neg), np.mean(liste_loss_pos)
-        # return avg_loss, np.mean(liste_dist_pos), np.mean(liste_loss_pos)
-        return total_loss / len(dataloader), fm_loss / len(dataloader), svdd_loss / len(dataloader), r_sq_liste / len(dataloader)
+        return np.mean(total_loss_liste), np.mean(loss_fm_liste), np.mean(loss_svdd_liste),\
+              np.mean(loss_push_liste),  np.mean(margin_value_liste), np.mean(r_in_value_liste)
 
     
     def train(self, verbose=True):
@@ -458,14 +455,13 @@ class FlowMatchingTransformers(nn.Module):
         # X_inlier_dl = DataLoader(TensorDataset(X_inlier, self.config['y_train'], torch.arange(len(X_inlier))), batch_size=self.config['batch_size'], shuffle=True)
         X_inlier_dl = DataLoader(TensorDataset(X_inlier, torch.arange(len(X_inlier))), batch_size=self.config['batch_size'], shuffle=True)
 
-        liste_loss = []
-        fm_loss = []
-        svdd_loss = []
-        r_sq_liste = []
-        liste_dist_neg = []
-        liste_dist_pos = []
-        liste_loss_neg = []
-        liste_loss_pos = []
+
+        total_loss_liste = []
+        loss_fm_liste = []
+        loss_svdd_liste = []
+        loss_push_liste = []
+        margin_value_liste = []
+        r_in_value_liste = []
 
         for epoch in range(self.config['epochs']):
             
@@ -474,29 +470,28 @@ class FlowMatchingTransformers(nn.Module):
                 param_group['lr'] = lr
 
             # train_loss, *anythingelse = self.train_epoch(
-            train_loss, loss_fm, loss_svdd, r_sq = self.train_epoch(
+            loss_total, loss_fm, loss_svdd, loss_push, margin_value, r_in_value = self.train_epoch(
                 X_inlier_dl, 
                 optimizer, 
                 epoch,
             )
+
+            total_loss_liste.append(loss_total.item())
+            loss_fm_liste.append(loss_fm)
+            loss_svdd_liste.append(loss_svdd)
+            loss_push_liste.append(loss_push)
+            margin_value_liste.append(margin_value)
+            r_in_value_liste.append(r_in_value)
             
-            liste_loss.append(train_loss)
-            fm_loss.append(loss_fm)
-            svdd_loss.append(loss_svdd)
-            r_sq_liste.append(r_sq)
-            # liste_dist_neg.append(anythingelse[0])
-            # liste_dist_pos.append(anythingelse[0])
-            # liste_loss_neg.append(anythingelse[2])
-            # liste_loss_pos.append(anythingelse[1])
 
             if epoch % (self.config['epochs'] // 3) == 0 and verbose:
                 print(f"\nEpoch {epoch+1}/{self.config['epochs']}")
-                print(f"Train Loss: {train_loss:.4f}, LR: {lr:.6f}")
+                print(f"Train Loss: {loss_total:.4f}, LR: {lr:.6f}")
 
         if self.rectified is None:
-            # return liste_loss, liste_dist_neg, liste_dist_pos, liste_loss_neg, liste_loss_pos
-            # return liste_loss, liste_dist_pos, liste_loss_pos
-            return liste_loss, fm_loss, svdd_loss, r_sq_liste
+            return total_loss_liste, loss_fm_liste, loss_svdd_liste, \
+                    loss_push_liste, margin_value_liste, r_in_value_liste
+
         else:
             print(f"\nRectification Pass starting.... for {self.rectified} iterations")
 

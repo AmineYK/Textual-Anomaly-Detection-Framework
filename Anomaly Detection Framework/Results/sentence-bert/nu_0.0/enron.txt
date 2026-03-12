@@ -106,3 +106,15 @@ Avg Precision:  0.6327 ± 0.0243
 FPR@95:         0.3567 ± 0.0605
 ========================================
 
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-PP
+Training time:  916.08 sec
+----------------------------------------
+AUC:            0.9358 ± 0.0081
+Avg Precision:  0.6495 ± 0.0223
+FPR@95:         0.3085 ± 0.0741
+========================================
+
