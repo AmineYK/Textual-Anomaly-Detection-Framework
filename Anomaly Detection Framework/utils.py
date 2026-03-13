@@ -30,7 +30,7 @@ os.makedirs(OUTPUT_LATEX_DIR, exist_ok=True)
 MODEL_GROUPS = [
     ("Classical baselines", ["ocsvm", "AE"]),
     ("Deep baselines", ["RSRAE", "CVDD", "DATE", "FATE"]),
-    ("Flow-based models", ["TCCM", "flow-matching", "flow-matching-Transformers"]),
+    ("Flow-based models", ["TCCM", "flow-matching", "flow-matching-Transformers", "flow-matching-Transformers-PP"]),
 ]
 
 MODEL_LATEX = {
@@ -43,7 +43,7 @@ MODEL_LATEX = {
     "TCCM": "TCCM",
     "flow-matching": "\\textbf{BasicFM}",
     "flow-matching-Transformers": "\\textbf{TranFM}",
-    "flow-matching-Transformers-EneRepu": "\\textbf{TranFM-EneRepu}"
+    "flow-matching-Transformers-PP": "\\textbf{TranFM-PP}"
 }
 
 MODEL_ORDER = [m for _, g in MODEL_GROUPS for m in g]

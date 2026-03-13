@@ -137,12 +137,12 @@ class FlowMatchingTransformers(nn.Module):
         self.rectified = rectified
         self.config = config
 
-        # self.log_r = nn.Parameter(torch.tensor(0.0).to(self.device))
+        self.log_r = nn.Parameter(torch.tensor(0.0).to(self.device))
 
-        dist_train = torch.norm(self.source - self.centroid, dim=1)
-        r_init = torch.quantile(dist_train, 0.95)
-        self.log_r = nn.Parameter(torch.log(r_init))
-        print(self.log_r)
+        # dist_train = torch.norm(self.source - self.centroid, dim=1)
+        # r_init = torch.quantile(dist_train, 0.95)
+        # self.log_r = nn.Parameter(torch.log(r_init))
+        # print(self.log_r)
 
 
         self.log_margin = nn.Parameter(torch.tensor(0.0).to(self.device))
@@ -162,7 +162,7 @@ class FlowMatchingTransformers(nn.Module):
 
     @property  
     def r_out(self):
-        return self.r_in + self.margin  # toujours r_out > r_in
+        return self.r_in + self.margin
     
     def get_lr_schedule(self,epoch, warmup_epochs, total_epochs, lr):
 
@@ -203,40 +203,41 @@ class FlowMatchingTransformers(nn.Module):
             return Tensor(z / z.norm(dim=1, keepdim=True)).to(self.device)
 
 
-    def compute_flow_loss(self, x_0, indices, flow_type='linear', sigma=0.1):
+    def compute_flow_loss(self, x_0, indices, flow_type='linear', sigma=0.1, warmup_activated=False):
             
-
-        negative_sampling = True
-        rate_neg_batch = 0.3
-
 
         ##########################################
         ############ NEGATIVE SAMPLING ###########
         ##########################################
 
-        if negative_sampling:
-
-            nb_samples_neg = int((rate_neg_batch * x_0.shape[0]) / 3)
-            nb_samples_neg = 10
-            sigma_levels = [
-                # 0.9 * torch.sqrt(self.var),
-                # 1.3 * torch.sqrt(self.var)
-
-                0.5 * torch.sqrt(self.var),
-                0.7 * torch.sqrt(self.var)
-
-                # 0.3 * torch.sqrt(self.var),
-                # 0.5 * torch.sqrt(self.var)
-            ]
-            x_0_negative = []
+        if not warmup_activated:
             
+            # garde fou
+            nb_samples_neg = int((self.config['rate_neg_batch'] * x_0.shape[0]) / 3)
+            if nb_samples_neg < 1:
+                nb_samples_neg = 5
+
+            x_0_negative = []
+            sigma_levels = torch.tensor(self.config['sig_levels_neg']).to(self.device) * torch.sqrt(self.var)
             for i,sig in enumerate(sigma_levels):
 
                 eps = sig * torch.randn((i+1)*nb_samples_neg, x_0.shape[1]).to(self.device)
                 x_0_negative.extend(self.centroid + eps)
 
             x_0_negative = torch.stack(x_0_negative).to(self.device)
-            x_0_augmented = torch.concatenate([x_0, x_0_negative]).to(self.device)
+
+            # sigma_levels = [
+            #     # 0.9 * torch.sqrt(self.var),
+            #     # 1.3 * torch.sqrt(self.var)
+
+            #     0.5 * torch.sqrt(self.var),
+            #     0.7 * torch.sqrt(self.var)
+            #     # 0.7 * torch.sqrt(self.var),
+            #     # 0.9 * torch.sqrt(self.var)
+
+            #     # 0.3 * torch.sqrt(self.var),
+            #     # 0.5 * torch.sqrt(self.var)
+            # ]
 
             # alpha = 1.2
             # direction = x_0 - self.centroid       
@@ -251,12 +252,7 @@ class FlowMatchingTransformers(nn.Module):
             x_1 = self.sample_like(x_0, 'gaussian')
 
         if self.target == 'gaussian-neigh' or self.source == 'gaussian-neigh':
-            if negative_sampling:
-                # x_1 = self.sample_like(x_0_augmented, 'gaussian-neigh')
-                x_1 = self.sample_like(x_0, 'gaussian-neigh')
-            else:
-                x_1 = self.sample_like(x_0, 'gaussian-neigh')
-
+            x_1 = self.sample_like(x_0, 'gaussian-neigh')
 
         if self.target == 'centroid' or self.source == 'centroid':
             x_1 = self.sample_like(x_0, 'centroid')
@@ -275,18 +271,10 @@ class FlowMatchingTransformers(nn.Module):
             x_0, x_1 = x_1, x_0
 
         if flow_type == 'linear':
+            
             t_expanded = t.view(-1, 1)
-            if negative_sampling:
-                # x_t = t_expanded * x_1 + (1 - t_expanded) * x_0_augmented
-                x_t = t_expanded * x_1 + (1 - t_expanded) * x_0
-            else:
-                x_t = t_expanded * x_1 + (1 - t_expanded) * x_0
-
-            if negative_sampling:
-                # v_target = x_1 - x_0_augmented
-                v_target = x_1 - x_0
-            else:
-                v_target = x_1 - x_0
+            x_t = t_expanded * x_1 + (1 - t_expanded) * x_0
+            v_target = x_1 - x_0
             
         elif flow_type == 'cfm':
             t_expanded = t.view(-1, 1)
@@ -302,41 +290,49 @@ class FlowMatchingTransformers(nn.Module):
         
         v_pred = self.model(x_t, t)
 
-        # # one step euler
-        # t_pos = torch.zeros(x_0.shape[0]).to(self.device)
-        # v_pos = self.model(x_0, t_pos)
-        # x_pos = x_0 + v_pos 
-
-        # # ene_pos = energy(x_pos,  self.centroid, torch.sqrt(self.var)) 
-        # # loss_pos = -ene_pos.mean()
-        # dist_pos = torch.norm(x_pos - self.centroid, dim=1)
-        # r = 0.2
-        # # dist_pos = torch.sum((x_pos - self.centroid) ** 2, dim=1)
-        # loss_marge_pos = F.relu(dist_pos - r).mean()
-
+        # <<<<<<<<<<<<<<<<<<<<< LOSS FM >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         loss_fm = F.mse_loss(v_pred, v_target)
 
-        # lambda_svdd = 1e-3
-        # t_zeros = torch.zeros(x_0.shape[0], device=self.device)  
-        # v_svdd = self.model(x_0, t_zeros)                        
-        # x_svdd = x_0 + v_svdd                                    
 
-        # dist_sq = torch.sum((x_svdd - self.centroid)**2, dim=1)    
-        # r_sq = self.r_in ** 2                                         
-        # loss_svdd = r_sq + F.relu(dist_sq - r_sq).mean()          
+        if not warmup_activated:
 
-        # # Push : outliers hors de r_out
-        # t_neg = torch.zeros(x_0_negative.shape[0]).to(self.device)
-        # v_neg = self.model(x_0_negative, t_neg)
-        # x_neg = x_0_negative + v_neg 
-        # dist_out = torch.norm(x_neg - self.centroid, dim=1)         
-        # loss_push = F.relu(self.r_out - dist_out).mean()
-        # lambda_push = 1e-1
-                
-        # lambda_margin = 1e-2
-        
-        # loss_total = loss_fm + lambda_svdd * loss_svdd + lambda_push * loss_push + lambda_margin * self.margin
-        loss_total = loss_fm
+            # <<<<<<<<<<<<<<<<<<<<< LOSS SVDD >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+            lambda_svdd = 1e-3
+            
+            t_zeros = torch.zeros(x_0.shape[0], device=self.device)  
+            v_svdd = self.model(x_0, t_zeros)                        
+            x_svdd = x_0 + v_svdd                                    
+
+            dist_sq = torch.sum((x_svdd - self.centroid)**2, dim=1)    
+            r_sq = self.r_in ** 2                                         
+            loss_svdd = r_sq + F.relu(dist_sq - r_sq).mean()    
+
+
+            # <<<<<<<<<<<<<<<<<<<<< LOSS PUSH >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            t_neg = torch.zeros(x_0_negative.shape[0]).to(self.device)
+            v_neg = self.model(x_0_negative, t_neg)
+            x_neg = x_0_negative + v_neg 
+            dist_out = torch.norm(x_neg - self.centroid, dim=1)         
+            loss_push = F.relu(self.r_out - dist_out).mean()
+            lambda_push = 1e-2
+
+
+            # <<<<<<<<<<<<<<<<<<<<< REGUL MARGIN >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                    
+            lambda_margin = 1e-2
+            
+            loss_total = loss_fm + lambda_svdd * loss_svdd + lambda_push * loss_push + lambda_margin * self.margin
+            return loss_total, loss_fm.item(), loss_svdd.item(), loss_push.item(), self.margin.item(), self.r_in.item()
+
+        else:
+
+            loss_total = loss_fm
+            return loss_total, 0, 0, 0, 0, 0
 
         # print(f"Loss FM : {loss_fm}")
         # print(f"Loss SVDD : {loss_svdd}")
@@ -344,53 +340,9 @@ class FlowMatchingTransformers(nn.Module):
         # print(f"Loss Tot : {loss_total}")
         # print("----------------------------------------")
 
-        # return loss_total, loss_fm.item(), loss_svdd.item(), loss_push.item(), self.margin.item(), self.r_in.item()
-        return loss_total, 0, 0, 0, 0, 0
-        # return loss_total, loss_fm.item(), 0.0, 0.0
-
-        
-        # if negative_sampling:
-
-        #     # r = 5.0
-        #     lambda_marge = 1e-2
-
-        #     # one step euler
-        #     # t_neg = torch.zeros(x_0_negative.shape[0]).to(self.device)
-        #     # v_neg = self.model(x_0_negative, t_neg)
-        #     # x_neg = x_0_negative + v_neg 
-        #     # ene_neg = energy(x_neg,  self.centroid, torch.sqrt(self.var)) 
-
-        #     # loss_neg =  ene_neg.mean()
-
-        #     # dist_neg = torch.norm(x_neg - self.centroid, dim=1)
-        #     # dist_neg = torch.sum((x_neg - self.centroid) ** 2, dim=1)
 
 
-        #     # loss_marge_neg = F.relu(r - dist_neg).mean()
-        #     # loss_marge = torch.mean(torch.clamp(r - dist, min=0))     
-        #     # loss_total = loss_fm + lambda_marge * loss_neg + lambda_marge * loss_pos
-        #     # loss_total = loss_fm + lambda_marge * loss_marge_neg + lambda_marge * loss_marge_pos
-        #     # loss_total = loss_fm + lambda_marge * loss_marge_pos
-        #     loss_total = loss_fm
-        # else:
-        #     loss_total = loss_fm
-
-        # print(f"Energy Positive : {ene_pos}")
-        # print(f"Energy Negative : {ene_neg}")
-        # print(f"Distance Positive : {dist_pos}")
-        # print(f"Distance Negative : {dist_neg}")
-        # print(f"Loss FM : {loss_fm}")
-        # print(f"Loss Marge Neg : {loss_neg}")
-        # print(f"Loss Marge Pos : {loss_pos}")
-        # print(f"Loss Marge Neg : {loss_marge_neg}")
-        # print(f"Loss Marge Pos : {loss_marge_pos}")
-        # print(f"Loss Total : {loss_total}")
-        # print("---------------------------")
-        # return loss_total, v_pred, v_target, ene_neg.mean().item(), ene_pos.mean().item(), loss_neg.item(), loss_pos.item()
-        # return loss_total, v_pred, v_target, dist_neg.mean().item(), dist_pos.mean().item(), loss_marge_neg.item(), loss_marge_pos.item()
-        # return loss_total, v_pred, v_target, dist_pos.mean().item(), loss_marge_pos.item()
-
-    def train_epoch(self, dataloader, optimizer, epoch):
+    def train_epoch(self, dataloader, optimizer, warmup_activated):
 
         self.model.train()
         self.optimizer = optimizer
@@ -402,18 +354,17 @@ class FlowMatchingTransformers(nn.Module):
         margin_value_liste = []
         r_in_value_liste = []
 
-        # print(epoch)
-
         # for x_0, y, indices in dataloader:
         for x_0, indices in dataloader:
 
             x_0 = x_0.to(self.device)
-            # loss_fm, *anythingelse = self.compute_flow_loss(
-            loss_total, loss_fm, loss_svdd, loss_push, margin_value, r_in_value = self.compute_flow_loss(
+            loss_total, *anythingelse = self.compute_flow_loss(
+            # loss_total, loss_fm, loss_svdd, loss_push, margin_value, r_in_value = self.compute_flow_loss(
                 x_0,
                 indices,
                 flow_type=self.config['flow_type'],
-                sigma=self.config['sigma']
+                sigma=self.config['sigma'],
+                warmup_activated=warmup_activated
             )
 
             self.optimizer.zero_grad()
@@ -427,11 +378,11 @@ class FlowMatchingTransformers(nn.Module):
             self.optimizer.step()
 
             total_loss_liste.append(loss_total.item())
-            loss_fm_liste.append(loss_fm)
-            loss_svdd_liste.append(loss_svdd)
-            loss_push_liste.append(loss_push)
-            margin_value_liste.append(margin_value)
-            r_in_value_liste.append(r_in_value)
+            loss_fm_liste.append(anythingelse[0])
+            loss_svdd_liste.append(anythingelse[1])
+            loss_push_liste.append(anythingelse[2])
+            margin_value_liste.append(anythingelse[3])
+            r_in_value_liste.append(anythingelse[4])
 
         return np.mean(total_loss_liste), np.mean(loss_fm_liste), np.mean(loss_svdd_liste),\
               np.mean(loss_push_liste),  np.mean(margin_value_liste), np.mean(r_in_value_liste)
@@ -463,26 +414,41 @@ class FlowMatchingTransformers(nn.Module):
         margin_value_liste = []
         r_in_value_liste = []
 
+
         for epoch in range(self.config['epochs']):
+
+            warmup_activated = epoch <= self.config['warmup_epochs']
+
+            if epoch == self.config['warmup_epochs']:
+                self.model.eval()
+                with torch.no_grad():
+                    t_zeros = torch.zeros(X_inlier.shape[0]).to(self.device)
+                    v = self.model(X_inlier, t_zeros)
+                    phi_1 = X_inlier + v
+
+                dist_train = torch.norm(phi_1 - self.centroid, dim=1)
+                r_init = torch.quantile(dist_train, 0.90)
+                self.log_r.data.fill_(torch.log(r_init).item())
+                print(f"FM Warmup is finished.... initialization r_in : {self.r_in}")
             
             lr = self.get_lr_schedule(epoch, self.config['warmup_epochs'], self.config['epochs'], self.config['lr'])
             for param_group in optimizer.param_groups:
                 param_group['lr'] = lr
 
-            # train_loss, *anythingelse = self.train_epoch(
-            loss_total, loss_fm, loss_svdd, loss_push, margin_value, r_in_value = self.train_epoch(
+            loss_total, *anythingelse = self.train_epoch(
+            # loss_total, loss_fm, loss_svdd, loss_push, margin_value, r_in_value = self.train_epoch(
                 X_inlier_dl, 
                 optimizer, 
-                epoch,
+                warmup_activated,
             )
 
             total_loss_liste.append(loss_total.item())
-            loss_fm_liste.append(loss_fm)
-            loss_svdd_liste.append(loss_svdd)
-            loss_push_liste.append(loss_push)
-            margin_value_liste.append(margin_value)
-            r_in_value_liste.append(r_in_value)
-            
+            loss_fm_liste.append(anythingelse[0])
+            loss_svdd_liste.append(anythingelse[1])
+            loss_push_liste.append(anythingelse[2])
+            margin_value_liste.append(anythingelse[3])
+            r_in_value_liste.append(anythingelse[4])
+        
 
             if epoch % (self.config['epochs'] // 3) == 0 and verbose:
                 print(f"\nEpoch {epoch+1}/{self.config['epochs']}")

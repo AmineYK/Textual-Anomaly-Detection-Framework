@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 dataset_topics_dict= {
     '20newsgroups' : ['computer', 'recreation', 'science', 'miscellaneous', 'politics', 'religion'],
     'reuters' : ['earn', 'trade', 'acq', 'money-fx', 'crude', 'ship', 'interest'],
-    # 'reuters' : ['trade', 'acq', 'money-fx', 'crude', 'ship', 'interest'],
+    # 'reuters' : ['trade', 'money-fx', 'crude', 'ship', 'interest'],
     'agnews' : ['World', 'Sports', 'Business', 'Sci-Tech'] ,
     'dbpedia14' : ["Company", "Educational Institution", "Artist", "Athlete", "Office Holder", 
                   "Mean Of Transportation", "Building", "Natural Place", "Village", "Animal", "Plant", "Album", "Film", "Written Work"],
@@ -534,15 +534,17 @@ def main(args):
                     'n_heads': 8,
                     'lr': 1e-3,
                     'weight_decay': 1e-5,
-                    'epochs': 350,
-                    'warmup_epochs': 80,
+                    'epochs': 500,
+                    'warmup_epochs': 130,
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
                     'sigma': 0.1, 
-                    'batch_size' : 32,
+                    'batch_size' : 256,
                     'lambda_reg_angle': None,
                     'lambda_reg_kl': None,
                     'coef_var': 1,
+                    'rate_neg_batch':0.3,
+                    'sig_levels_neg' : [0.9, 1.3],
                     'target' : 'gaussian-neigh',
                     'source' : X_inlier.to(device)
                 }
@@ -585,7 +587,7 @@ def main(args):
                 dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers-PP",
                 auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
                 auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
-                train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='naive'
+                train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='smart'
                 )
 
         
