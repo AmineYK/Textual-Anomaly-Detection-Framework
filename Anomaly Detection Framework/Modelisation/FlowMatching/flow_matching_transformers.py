@@ -173,7 +173,7 @@ class FlowMatchingTransformers(nn.Module):
         # cosinus decrease
         else:
             progress = (epoch - warmup_epochs) / (total_epochs - warmup_epochs)
-            return lr * 0.5 * (1 + torch.cos(torch.tensor(progress * 3.14159)))
+            return (lr * 0.5 * (1 + torch.cos(torch.tensor(progress * 3.14159)))).item()
         
 
     def get_lambda_kl(self, epoch, lambda_max, kl_warmup_epochs):
@@ -201,6 +201,19 @@ class FlowMatchingTransformers(nn.Module):
         if type == 'sphere':
             z = torch.randn(x_0.shape[0], x_0.shape[1])
             return Tensor(z / z.norm(dim=1, keepdim=True)).to(self.device)
+
+
+    def euler_integrate(self, x_0, N_steps=10):
+        x_t = x_0
+        dt = 1.0 / N_steps
+        
+        for i in range(N_steps):
+            t_val = i * dt
+            t = torch.full((x_t.shape[0],), t_val, device=self.device)
+            v = self.model(x_t, t)
+            x_t = x_t + dt * v 
+        
+        return x_t
 
 
     def compute_flow_loss(self, x_0, indices, flow_type='linear', sigma=0.1, warmup_activated=False):
@@ -299,34 +312,24 @@ class FlowMatchingTransformers(nn.Module):
 
             # <<<<<<<<<<<<<<<<<<<<< LOSS SVDD >>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-            lambda_svdd = 1e-3
-            
-            t_zeros = torch.zeros(x_0.shape[0], device=self.device)  
-            v_svdd = self.model(x_0, t_zeros)                        
-            x_svdd = x_0 + v_svdd                                    
+            x_svdd  = self.euler_integrate(x_0, N_steps=self.config['n_step_euler_integrate'])                            
 
             dist_sq = torch.sum((x_svdd - self.centroid)**2, dim=1)    
             r_sq = self.r_in ** 2                                         
             loss_svdd = r_sq + F.relu(dist_sq - r_sq).mean()    
 
-
             # <<<<<<<<<<<<<<<<<<<<< LOSS PUSH >>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            t_neg = torch.zeros(x_0_negative.shape[0]).to(self.device)
-            v_neg = self.model(x_0_negative, t_neg)
-            x_neg = x_0_negative + v_neg 
+            x_neg  = self.euler_integrate(x_0_negative, N_steps=self.config['n_step_euler_integrate'])      
+
             dist_out = torch.norm(x_neg - self.centroid, dim=1)         
             loss_push = F.relu(self.r_out - dist_out).mean()
-            lambda_push = 1e-2
-
 
             # <<<<<<<<<<<<<<<<<<<<< REGUL MARGIN >>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                    
-            lambda_margin = 1e-2
-            
-            loss_total = loss_fm + lambda_svdd * loss_svdd + lambda_push * loss_push + lambda_margin * self.margin
+                           
+            loss_total = loss_fm + self.config['lambda_svdd'] * loss_svdd \
+                  + self.config['lambda_push'] * loss_push + self.config['lambda_margin'] * self.margin
             return loss_total, loss_fm.item(), loss_svdd.item(), loss_push.item(), self.margin.item(), self.r_in.item()
 
         else:
@@ -419,19 +422,36 @@ class FlowMatchingTransformers(nn.Module):
 
             warmup_activated = epoch <= self.config['warmup_epochs']
 
-            if epoch == self.config['warmup_epochs']:
+            if self.config['warmup_epochs'] == 0 and epoch == self.config['warmup_epochs']:
+                self.log_r.data.fill_(0.0)
+                print(f"Initialization r_in : {self.r_in}")
+
+            elif epoch == self.config['warmup_epochs']:
                 self.model.eval()
                 with torch.no_grad():
-                    t_zeros = torch.zeros(X_inlier.shape[0]).to(self.device)
-                    v = self.model(X_inlier, t_zeros)
-                    phi_1 = X_inlier + v
+                    # t_zeros = torch.zeros(X_inlier.shape[0]).to(self.device)
+                    # v = self.model(X_inlier, t_zeros)
+                    # phi_1 = X_inlier + v
 
-                dist_train = torch.norm(phi_1 - self.centroid, dim=1)
-                r_init = torch.quantile(dist_train, 0.90)
-                self.log_r.data.fill_(torch.log(r_init).item())
-                print(f"FM Warmup is finished.... initialization r_in : {self.r_in}")
+                    # dist_train = torch.norm(phi_1 - self.centroid, dim=1)
+                    # r_init = torch.quantile(dist_train, 0.90)
+                    # self.log_r.data.fill_(torch.log(r_init).item())
+                    all_dists = []
+                    for x_batch, _ in X_inlier_dl:
+                        x_batch = x_batch.to(self.device)
+                        t_zeros = torch.zeros(x_batch.shape[0]).to(self.device)
+                        v = self.model(x_batch, t_zeros)
+                        phi_1 = x_batch + v
+                        dist = torch.norm(phi_1 - self.centroid, dim=1)
+                        all_dists.append(dist)
+
+                    all_dists = torch.cat(all_dists)
+                    r_init = torch.quantile(all_dists, 0.90)
+                    self.log_r.data.fill_(torch.log(r_init).item())
+                print(f"FM Warmup is finished after .... initialization r_in : {self.r_in}")
+                self.model.train()
             
-            lr = self.get_lr_schedule(epoch, self.config['warmup_epochs'], self.config['epochs'], self.config['lr'])
+            lr = self.get_lr_schedule(epoch, self.config['lr_epochs'], self.config['epochs'], self.config['lr'])
             for param_group in optimizer.param_groups:
                 param_group['lr'] = lr
 
@@ -448,7 +468,6 @@ class FlowMatchingTransformers(nn.Module):
             loss_push_liste.append(anythingelse[2])
             margin_value_liste.append(anythingelse[3])
             r_in_value_liste.append(anythingelse[4])
-        
 
             if epoch % (self.config['epochs'] // 3) == 0 and verbose:
                 print(f"\nEpoch {epoch+1}/{self.config['epochs']}")
@@ -602,9 +621,3 @@ class FlowMatchingTransformers(nn.Module):
 
         scores = self.compute_anomaly_scores(X_test, X_inlier, type)
         return ev.evaluation(y_test, scores, verbose=False)
-
-
-def energy(phi_1, centroid, sigma):
-    dist_sq = torch.sum((phi_1 - centroid)**2, dim=1)  # (B,)
-    return torch.exp(-dist_sq / (2 * sigma**2))   
-    # return dist_sq.mean() / (2 * sigma**2 )   

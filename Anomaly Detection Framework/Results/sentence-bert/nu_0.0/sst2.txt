@@ -123,11 +123,11 @@ Dataset:        sst2
 Inlier class:   negative
 Embedding type: sentence-bert
 AD model:       DATE
-Training time:  402.41 sec
+Training time:  208.28 sec
 ----------------------------------------
-AUC:            0.7054 ± 0.0155
-Avg Precision:  0.2460 ± 0.0113
-FPR@95:         0.7064 ± 0.0481
+AUC:            0.5413 ± 0.0452
+Avg Precision:  0.1106 ± 0.0125
+FPR@95:         0.9135 ± 0.0507
 ========================================
 
 ========================================
@@ -212,5 +212,29 @@ Training time:  90.82 sec
 AUC:            0.5013 ± 0.0444
 Avg Precision:  0.1037 ± 0.0197
 FPR@95:         0.9181 ± 0.0247
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-PP
+Training time:  516.90 sec
+----------------------------------------
+AUC:            0.4976 ± 0.0501
+Avg Precision:  0.1046 ± 0.0218
+FPR@95:         0.9189 ± 0.0376
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-PP
+Training time:  628.59 sec
+----------------------------------------
+AUC:            0.6527 ± 0.0417
+Avg Precision:  0.2024 ± 0.0273
+FPR@95:         0.7968 ± 0.0666
 ========================================
 

@@ -87,7 +87,7 @@ Dataset:        imdb
 Inlier class:   negative
 Embedding type: sentence-bert
 AD model:       ocsvm
-Training time:  12.75 sec
+Training time:  13.10 sec
 ----------------------------------------
 AUC:            0.7152 ± 0.0053
 Avg Precision:  0.2078 ± 0.0064
@@ -224,5 +224,17 @@ Training time:  721.71 sec
 AUC:            0.5055 ± 0.0063
 Avg Precision:  0.0991 ± 0.0020
 FPR@95:         0.9386 ± 0.0094
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-PP
+Training time:  218.20 sec
+----------------------------------------
+AUC:            0.6526 ± 0.0070
+Avg Precision:  0.1658 ± 0.0040
+FPR@95:         0.8522 ± 0.0102
 ========================================
 
