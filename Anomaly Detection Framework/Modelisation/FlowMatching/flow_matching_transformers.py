@@ -145,7 +145,8 @@ class FlowMatchingTransformers(nn.Module):
         # print(self.log_r)
 
 
-        self.log_margin = nn.Parameter(torch.tensor(0.0).to(self.device))
+        self.log_margin = nn.Parameter(torch.tensor(-1.0).to(self.device))
+        # self.log_margin = nn.Parameter(torch.tensor(0.0).to(self.device))
         # self.margin = 0.1
 
 
@@ -306,30 +307,42 @@ class FlowMatchingTransformers(nn.Module):
         # <<<<<<<<<<<<<<<<<<<<< LOSS FM >>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         loss_fm = F.mse_loss(v_pred, v_target)
+        # loss_fm = torch.tensor(0.0, device=self.device, requires_grad=True)
 
+        loss_svdd = torch.tensor(0.0, device=self.device)
+        loss_push = torch.tensor(0.0, device=self.device)
 
         if not warmup_activated:
 
             # <<<<<<<<<<<<<<<<<<<<< LOSS SVDD >>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            x_svdd  = self.euler_integrate(x_0, N_steps=self.config['n_step_euler_integrate'])                            
+            if self.config['lambda_svdd'] > 0:
+                x_svdd  = self.euler_integrate(x_0, N_steps=self.config['n_step_euler_integrate'])                            
 
-            dist_sq = torch.sum((x_svdd - self.centroid)**2, dim=1)    
-            r_sq = self.r_in ** 2                                         
-            loss_svdd = r_sq + F.relu(dist_sq - r_sq).mean()    
+                dist_sq = torch.sum((x_svdd - self.centroid)**2, dim=1)    
+                r_sq = self.r_in ** 2                                         
+                loss_svdd = r_sq + F.relu(dist_sq - r_sq).mean()    
 
             # <<<<<<<<<<<<<<<<<<<<< LOSS PUSH >>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            x_neg  = self.euler_integrate(x_0_negative, N_steps=self.config['n_step_euler_integrate'])      
+            if self.config['lambda_push'] > 0:
+                x_neg  = self.euler_integrate(x_0_negative, N_steps=self.config['n_step_euler_integrate'])      
 
-            dist_out = torch.norm(x_neg - self.centroid, dim=1)         
-            loss_push = F.relu(self.r_out - dist_out).mean()
+                dist_out = torch.norm(x_neg - self.centroid, dim=1)         
+                loss_push = F.relu(self.r_out - dist_out).mean()
 
             # <<<<<<<<<<<<<<<<<<<<< REGUL MARGIN >>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                            
             loss_total = loss_fm + self.config['lambda_svdd'] * loss_svdd \
                   + self.config['lambda_push'] * loss_push + self.config['lambda_margin'] * self.margin
+            
+            # print(f"Loss FM : {loss_fm}")
+            # print(f"Loss SVDD : {loss_svdd}")
+            # print(f"Loss Push : {loss_push}")
+            # print(f"Loss Tot : {loss_total}")
+            # print("----------------------------------------")
+
             return loss_total, loss_fm.item(), loss_svdd.item(), loss_push.item(), self.margin.item(), self.r_in.item()
 
         else:
@@ -337,11 +350,6 @@ class FlowMatchingTransformers(nn.Module):
             loss_total = loss_fm
             return loss_total, 0, 0, 0, 0, 0
 
-        # print(f"Loss FM : {loss_fm}")
-        # print(f"Loss SVDD : {loss_svdd}")
-        # print(f"Loss Push : {loss_push}")
-        # print(f"Loss Tot : {loss_total}")
-        # print("----------------------------------------")
 
 
 
