@@ -529,15 +529,15 @@ def main(args):
             if args.fm_trans:
                 config = {
                     'latent_dim': 768,
-                    'hidden_dim': 516,
-                    'depth': 12,
-                    'n_heads': 12,
+                    'hidden_dim': 512,
+                    'depth': 16,
+                    'n_heads': 16,
                     'lr': 1e-3,
                     'weight_decay': 1e-5,
                     'lambda_svdd': 1e-3,
                     'lambda_push': 1e-2,
                     'lambda_margin': 1e-2,
-                    'epochs': 350,
+                    'epochs': 500,
                     'lr_epochs': 100,
                     'warmup_epochs': 0,
                     'grad_clip': 1.0,
@@ -549,7 +549,7 @@ def main(args):
                     'n_step_euler_integrate':1,
                     'coef_var': 1,
                     'rate_neg_batch':1.0,
-                    'sig_levels_neg' : [0.5, 0.7],
+                    'sig_levels_neg' : [0.2, 0.4],
                     'target' : 'gaussian-neigh',
                     'source' : X_inlier.to(device)
                 }
@@ -651,10 +651,6 @@ def main(args):
             auc_std = np.std(list_auc_fate),ap_std =  np.std(list_ap_fate),fpr_std = np.std(list_fpr_fate),
             train_time = np.mean(list_time_fate), nu=args.nu, overwrite='naive'
             )
-
-
-
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Experiments script")

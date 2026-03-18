@@ -419,11 +419,11 @@ Dataset:        agnews
 Inlier class:   Business
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers-PP
-Training time:  1135.96 sec
+Training time:  1415.88 sec
 ----------------------------------------
-AUC:            0.9279 ± 0.0106
-Avg Precision:  0.7044 ± 0.0219
-FPR@95:         0.3543 ± 0.0702
+AUC:            0.9335 ± 0.0092
+Avg Precision:  0.7036 ± 0.0105
+FPR@95:         0.2966 ± 0.0746
 ========================================
 
 ========================================
@@ -431,11 +431,11 @@ Dataset:        agnews
 Inlier class:   Sports
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers-PP
-Training time:  1135.21 sec
+Training time:  1413.97 sec
 ----------------------------------------
-AUC:            0.9879 ± 0.0033
-Avg Precision:  0.9546 ± 0.0049
-FPR@95:         0.0198 ± 0.0050
+AUC:            0.9902 ± 0.0026
+Avg Precision:  0.9588 ± 0.0063
+FPR@95:         0.0213 ± 0.0065
 ========================================
 
 ========================================
@@ -443,11 +443,11 @@ Dataset:        agnews
 Inlier class:   World
 Embedding type: sentence-bert
 AD model:       flow-matching-Transformers-PP
-Training time:  1139.21 sec
+Training time:  1442.67 sec
 ----------------------------------------
-AUC:            0.9277 ± 0.0054
-Avg Precision:  0.5950 ± 0.0328
-FPR@95:         0.2742 ± 0.0269
+AUC:            0.9349 ± 0.0058
+Avg Precision:  0.6052 ± 0.0257
+FPR@95:         0.2261 ± 0.0381
 ========================================
 
 ========================================

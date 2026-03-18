@@ -145,8 +145,8 @@ class FlowMatchingTransformers(nn.Module):
         # print(self.log_r)
 
 
-        self.log_margin = nn.Parameter(torch.tensor(-1.0).to(self.device))
-        # self.log_margin = nn.Parameter(torch.tensor(0.0).to(self.device))
+        # self.log_margin = nn.Parameter(torch.tensor(-1.0).to(self.device))
+        self.log_margin = nn.Parameter(torch.tensor(0.0).to(self.device))
         # self.margin = 0.1
 
 
