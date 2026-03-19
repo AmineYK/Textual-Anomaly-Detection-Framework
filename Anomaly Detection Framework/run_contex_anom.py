@@ -25,7 +25,7 @@ def main(args):
     anomaly_rate = 0.1
     save_dir = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Data"
     n_run = 6
-    name = f"{dataset_name}_{inlier_topic}_{n_run}_wo_fm"
+    name = f"{dataset_name}_{inlier_topic}_{n_run}_temp"
     saving_path = f"/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/fm_trained_models/{name}"
 
     data_train = load_data_inlier(dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
@@ -46,7 +46,7 @@ def main(args):
             'lr': 1e-3,
             'weight_decay': 1e-5,
             'lambda_svdd': 1e-3,
-            'lambda_push': 1e-2,
+            'lambda_push': 0,
             'lambda_margin': 1e-2,
             'epochs': 500,
             'lr_epochs': 100,
@@ -223,12 +223,12 @@ def main(args):
 
 
 
-        # checkpoint = {
-        #     "model": flowmodel.state_dict(),
-        #     "config": config
-        # }
+        checkpoint = {
+            "model": flowmodel.state_dict(),
+            "config": config
+        }
 
-        # torch.save(checkpoint, saving_path)
+        torch.save(checkpoint, saving_path)
 
 
 

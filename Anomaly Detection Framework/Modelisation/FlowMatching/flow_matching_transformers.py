@@ -240,6 +240,22 @@ class FlowMatchingTransformers(nn.Module):
 
             x_0_negative = torch.stack(x_0_negative).to(self.device)
 
+
+            # direction = x_0 - self.centroid                                        # (B, D)
+            # direction_norm = torch.norm(direction, dim=1, keepdim=True) + 1e-8    # (B, 1)
+            # direction_normalized = direction / direction_norm                       # (B, D)
+            
+            # with torch.no_grad():
+            #     r_in_val  = self.r_in.item()
+            #     r_out_val = self.r_out.item()
+                
+            #     # Sample distance aléatoire strictement dans [r_in, r_out]
+            #     # → push loss TOUJOURS active
+            #     alpha = torch.rand(x_0.shape[0], 1, device=self.device)
+            #     target_dist = r_in_val + alpha * (r_out_val - r_in_val)           # (B, 1)
+            
+            # x_0_negative = self.centroid + target_dist * direction_normalized             # (B, D)
+
             # sigma_levels = [
             #     # 0.9 * torch.sqrt(self.var),
             #     # 1.3 * torch.sqrt(self.var)
@@ -319,18 +335,18 @@ class FlowMatchingTransformers(nn.Module):
             if self.config['lambda_svdd'] > 0:
                 x_svdd  = self.euler_integrate(x_0, N_steps=self.config['n_step_euler_integrate'])                            
 
-                dist_sq = torch.sum((x_svdd - self.centroid)**2, dim=1)    
+                dist_sq = torch.sum((x_svdd - self.centroid)**2, dim=1)   
                 r_sq = self.r_in ** 2                                         
-                loss_svdd = r_sq + F.relu(dist_sq - r_sq).mean()    
+                loss_svdd = r_sq + F.relu(dist_sq - r_sq).mean()     
 
             # <<<<<<<<<<<<<<<<<<<<< LOSS PUSH >>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             if self.config['lambda_push'] > 0:
                 x_neg  = self.euler_integrate(x_0_negative, N_steps=self.config['n_step_euler_integrate'])      
 
-                dist_out = torch.norm(x_neg - self.centroid, dim=1)         
-                loss_push = F.relu(self.r_out - dist_out).mean()
+                dist_out = torch.norm(x_neg - self.centroid, dim=1)
 
+                loss_push = F.relu(self.r_out - dist_out).mean()
             # <<<<<<<<<<<<<<<<<<<<< REGUL MARGIN >>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                            
@@ -469,6 +485,9 @@ class FlowMatchingTransformers(nn.Module):
                 optimizer, 
                 warmup_activated,
             )
+
+            # with torch.no_grad():
+            #     print(f"Epoch {epoch} - Push loss : {anythingelse[2]}")
 
             total_loss_liste.append(loss_total.item())
             loss_fm_liste.append(anythingelse[0])
