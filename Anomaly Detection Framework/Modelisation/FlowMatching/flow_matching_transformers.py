@@ -227,18 +227,30 @@ class FlowMatchingTransformers(nn.Module):
         if not warmup_activated:
             
             # garde fou
-            nb_samples_neg = int((self.config['rate_neg_batch'] * x_0.shape[0]) / 3)
-            if nb_samples_neg < 1:
-                nb_samples_neg = 5
+            # nb_samples_neg = int((self.config['rate_neg_batch'] * x_0.shape[0]) / 3)
+            # if nb_samples_neg < 1:
+            #     nb_samples_neg = 5
 
-            x_0_negative = []
-            sigma_levels = torch.tensor(self.config['sig_levels_neg']).to(self.device) * torch.sqrt(self.var)
-            for i,sig in enumerate(sigma_levels):
+            # x_0_negative = []
+            # sigma_levels = torch.tensor(self.config['sig_levels_neg']).to(self.device) * torch.sqrt(self.var)
+            # for i,sig in enumerate(sigma_levels):
 
-                eps = sig * torch.randn((i+1)*nb_samples_neg, x_0.shape[1]).to(self.device)
-                x_0_negative.extend(self.centroid + eps)
+            #     eps = sig * torch.randn((i+1)*nb_samples_neg, x_0.shape[1]).to(self.device)
+            #     x_0_negative.extend(self.centroid + eps)
 
-            x_0_negative = torch.stack(x_0_negative).to(self.device)
+            # x_0_negative = torch.stack(x_0_negative).to(self.device)
+
+            # direction = torch.randn_like(x_0)
+            # direction = direction / direction.norm(dim=1, keepdim=True)
+            # alpha = 1.1
+            # x_0_negative = x_0 + alpha * direction
+
+
+            p = 0.10
+            sigma = 0.25
+            mask = torch.rand_like(x_0) < p  # p = proportion de dims perturbées
+            noise = torch.randn_like(x_0) * sigma
+            x_0_negative = x_0 + mask * noise
 
 
             # direction = x_0 - self.centroid                                        # (B, D)
@@ -443,7 +455,6 @@ class FlowMatchingTransformers(nn.Module):
 
 
         for epoch in range(self.config['epochs']):
-
             warmup_activated = epoch <= self.config['warmup_epochs']
 
             if self.config['warmup_epochs'] == 0 and epoch == self.config['warmup_epochs']:
