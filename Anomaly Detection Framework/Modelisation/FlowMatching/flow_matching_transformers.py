@@ -170,7 +170,7 @@ class FlowMatchingTransformers(nn.Module):
         # return lr
         # linear increase
         if epoch < warmup_epochs:
-            return lr * (epoch + 1) / warmup_epochs
+            return lr * (epoch + 1) / (warmup_epochs + 1)
         # cosinus decrease
         else:
             progress = (epoch - warmup_epochs) / (total_epochs - warmup_epochs)
@@ -240,17 +240,17 @@ class FlowMatchingTransformers(nn.Module):
 
             # x_0_negative = torch.stack(x_0_negative).to(self.device)
 
-            # direction = torch.randn_like(x_0)
-            # direction = direction / direction.norm(dim=1, keepdim=True)
-            # alpha = 1.1
-            # x_0_negative = x_0 + alpha * direction
+            direction = torch.randn_like(x_0)
+            direction = direction / direction.norm(dim=1, keepdim=True)
+            alpha = 1.1
+            x_0_negative = x_0 + alpha * direction
 
 
-            p = 0.10
-            sigma = 0.25
-            mask = torch.rand_like(x_0) < p  # p = proportion de dims perturbées
-            noise = torch.randn_like(x_0) * sigma
-            x_0_negative = x_0 + mask * noise
+            # p = 0.10
+            # sigma = 0.25
+            # mask = torch.rand_like(x_0) < p  # p = proportion de dims perturbées
+            # noise = torch.randn_like(x_0) * sigma
+            # x_0_negative = x_0 + mask * noise
 
 
             # direction = x_0 - self.centroid                                        # (B, D)
@@ -354,11 +354,37 @@ class FlowMatchingTransformers(nn.Module):
             # <<<<<<<<<<<<<<<<<<<<< LOSS PUSH >>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             if self.config['lambda_push'] > 0:
-                x_neg  = self.euler_integrate(x_0_negative, N_steps=self.config['n_step_euler_integrate'])      
 
-                dist_out = torch.norm(x_neg - self.centroid, dim=1)
+                # ---------------- PUSH RELU ---------------
 
-                loss_push = F.relu(self.r_out - dist_out).mean()
+                # x_neg  = self.euler_integrate(x_0_negative, N_steps=self.config['n_step_euler_integrate'])      
+
+                # dist_out = torch.norm(x_neg - self.centroid, dim=1)
+
+                # loss_push = F.relu(self.r_out - dist_out).mean()
+
+
+                # ---------------- PUSH VELOCITY DIRECTION  ---------------
+
+                # t = torch.rand(x_0_negative.shape[0], device=self.device)
+                # v = self.model(x_0_negative, t)
+                # v_normalized = v / (torch.norm(v, dim=1, keepdim=True) + 1e-8)
+                # direction_out = x_0_negative - self.centroid  
+                # direction_out = direction_out / (
+                # torch.norm(direction_out, dim=1, keepdim=True) + 1e-8
+                # )  
+                # radial_component = (v_normalized * direction_out).sum(dim=1)   
+                # loss_push = -radial_component.mean()
+
+
+                # ---------------- PUSH COSINUS SIM  ---------------
+
+                v_neg  = self.model(x_0_negative,  t)       
+                cos_sim = F.cosine_similarity(v_pred, v_neg, dim=1)     
+
+                loss_push = cos_sim.mean()
+
+
             # <<<<<<<<<<<<<<<<<<<<< REGUL MARGIN >>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                            
@@ -410,7 +436,7 @@ class FlowMatchingTransformers(nn.Module):
             loss_total.backward()
 
             torch.nn.utils.clip_grad_norm_(
-                self.model.parameters(),
+                list(self.model.parameters()) + [self.log_r, self.log_margin],
                 self.config['grad_clip']
             )
 
@@ -499,7 +525,10 @@ class FlowMatchingTransformers(nn.Module):
 
             # with torch.no_grad():
             #     print(f"Epoch {epoch} - Push loss : {anythingelse[2]}")
-
+            #     print(f"Epoch {epoch} - FM loss : {anythingelse[0]}")
+            #     print(f"Epoch {epoch} - SVDD loss : {anythingelse[1]}")
+            #     print(lr)
+            #     print("----------------------------------")
             total_loss_liste.append(loss_total.item())
             loss_fm_liste.append(anythingelse[0])
             loss_svdd_liste.append(anythingelse[1])

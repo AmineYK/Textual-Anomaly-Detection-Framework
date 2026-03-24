@@ -15,9 +15,47 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+
+
 def main(args):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    def trajectory_direction(fmt, X, N_steps=20, device=device):
+        """
+        Retourne la distance au centroid à chaque timestep
+        et la direction (convergente ou divergente)
+        """
+        fmt.model.eval()
+        with torch.no_grad():
+            trajectory = [X.clone()]
+            distances  = [torch.norm(X - fmt.centroid, dim=1)]  # (B,)
+            
+            dt = 1.0 / N_steps
+            x_t = X.clone()
+            
+            for i in range(N_steps):
+                t_val = i * dt
+                t = torch.full((x_t.shape[0],), t_val, device=device)
+                v = fmt.model(x_t, t)
+                x_t = x_t + dt * v
+                
+                dist = torch.norm(x_t - fmt.centroid, dim=1)  # (B,)
+                trajectory.append(x_t.clone())
+                distances.append(dist)
+            
+            distances = torch.stack(distances)  # (N_steps+1, B)
+            
+            # Dérivée discrète : dist[t+1] - dist[t]
+            delta_dist = distances[1:] - distances[:-1]  # (N_steps, B)
+            
+            # Direction globale : convergente ou divergente ?
+            # On regarde si la distance finale < distance initiale
+            global_direction = distances[-1] - distances[0]  # (B,)
+            # négatif = convergente, positif = divergente
+            
+        return distances.cpu(), delta_dist.cpu(), global_direction.cpu()
+
 
     dataset_name = 'sms'
     inlier_topic = 'normal'
@@ -25,7 +63,7 @@ def main(args):
     anomaly_rate = 0.1
     save_dir = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Data"
     n_run = 6
-    name = f"{dataset_name}_{inlier_topic}_{n_run}_temp"
+    name = f"{dataset_name}_{inlier_topic}_{n_run}_push1e-4"
     saving_path = f"/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/fm_trained_models/{name}"
 
     data_train = load_data_inlier(dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
@@ -46,21 +84,21 @@ def main(args):
             'lr': 1e-3,
             'weight_decay': 1e-5,
             'lambda_svdd': 1e-3,
-            'lambda_push': 0,
-            'lambda_margin': 1e-2,
+            'lambda_push': 1e-3,
+            'lambda_margin': 1e-4,
             'epochs': 500,
             'lr_epochs': 100,
             'warmup_epochs': 0,
-            'grad_clip': 1.0,
+            'grad_clip': 0.5,
             'flow_type': 'linear',  
             'sigma': 0.1, 
-            'batch_size' : 128,
+            'batch_size' : 126,
             'lambda_reg_angle': None,
             'lambda_reg_kl': None,
             'n_step_euler_integrate' : 1,
             'coef_var': 1,
-            'rate_neg_batch':0.3,
-            'sig_levels_neg' : [0.5, 0.7],
+            'rate_neg_batch':1.0,
+            'sig_levels_neg' : [0.3, 0.5],
             'target' : 'gaussian-neigh',
             'source' : X_inlier.to(device)
     }
@@ -71,6 +109,8 @@ def main(args):
     }
 
     for _ in range(1):
+
+        print("LOSS PUSH COSINUS : NEGATIVE DIRECTION")
 
         flowmodel = FlowDiT(
                     latent_dim=config['latent_dim'],
@@ -220,15 +260,26 @@ def main(args):
         print(f"Cohen's d : {d_cohen:.4f}") 
         print(f"r_in                            : {fm_transformer.r_in.item():.4f}")
         print(f"r_out                           : {fm_transformer.r_out.item():.4f}")
+        print()
+        distances, delta_dist, global_direction = trajectory_direction(fm_transformer, X_test, N_steps=50, device=device) 
+        print(f" Test Nb INLIER Examples diverge from centroid {(global_direction[y_test == 0][global_direction[y_test == 0] > 0].shape[0] / X_test.shape[0])*100}%") 
+        print(f" Test Nb INLIER Examples converge to centroid {(global_direction[y_test == 0][global_direction[y_test == 0] < 0].shape[0] / X_test.shape[0])*100}%")  
+
+        print(f" Test Nb ANOMALIES Examples diverge from centroid {(global_direction[y_test == 1][global_direction[y_test == 1] > 0].shape[0] / X_test.shape[0])*100}%") 
+        print(f" Test Nb ANOMALIES Examples converge to centroid {(global_direction[y_test == 1][global_direction[y_test == 1] < 0].shape[0] / X_test.shape[0])*100}%")  
+        print()    
+        distances, delta_dist, global_direction = trajectory_direction(fm_transformer, X_inlier, N_steps=50, device=device)   
+        print(f" Train Nb Examples diverge from centroid {(global_direction[global_direction > 0].shape[0] / X_inlier.shape[0])*100}%") 
+        print(f" Train Nb Examples converge to centroid {(global_direction[global_direction < 0].shape[0] / X_inlier.shape[0])*100}%")   
 
 
 
-        checkpoint = {
-            "model": flowmodel.state_dict(),
-            "config": config
-        }
+        # checkpoint = {
+        #     "model": flowmodel.state_dict(),
+        #     "config": config
+        # }
 
-        torch.save(checkpoint, saving_path)
+        # torch.save(checkpoint, saving_path)
 
 
 
