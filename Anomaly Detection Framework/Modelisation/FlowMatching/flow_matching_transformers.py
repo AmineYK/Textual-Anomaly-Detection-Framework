@@ -45,10 +45,12 @@ class SinusoidalPosEmb(nn.Module):
     
 
 class FlowDiT(nn.Module):
-    def __init__(self, latent_dim=768, hidden_dim=64, depth=2, n_heads=2):
+    def __init__(self, latent_dim=768, hidden_dim=64, depth=2, n_heads=2, max_len=128):
         super().__init__()
 
         self.input_proj = nn.Linear(latent_dim, hidden_dim)
+        # ✅ AJOUT : positional embedding pour la séquence
+        self.pos_emb = nn.Embedding(max_len, hidden_dim)
         
         self.time_mlp = nn.Sequential(
             SinusoidalPosEmb(hidden_dim),
@@ -67,7 +69,23 @@ class FlowDiT(nn.Module):
     
     def forward(self, x, t):
         # x: [batch, latent_dim], t: [batch]
+        # ✅ MODIF : x peut être (B, D) ou (B, N, D)
+        
+        if x.dim() == 2:
+            # Cas actuel : sentence-level (B, D) → (B, 1, D)
+            x = x.unsqueeze(1)
+            is_sentence = True
+        else:
+            # Nouveau cas : token-level (B, N, D)
+            is_sentence = False
+        
+        B, N, D = x.shape
+
         h = self.input_proj(x)
+        # ✅ AJOUT : positional embedding
+        positions = torch.arange(N, device=x.device)       # (N,)
+        h = h + self.pos_emb(positions).unsqueeze(0)  
+
         t_emb = self.time_mlp(t)
         
         for block in self.blocks:
@@ -75,6 +93,9 @@ class FlowDiT(nn.Module):
             h = block(h, t_emb)  
         
         v = self.output_proj(h)
+                
+        if is_sentence:
+            v = v.squeeze(1)   
         return v
     
 
@@ -96,16 +117,37 @@ class DiTBlock(nn.Module):
             nn.Linear(dim, 6 * dim)  
         )
     
-    def forward(self, x, t_emb):
+    def forward(self, x, t_emb, mask=None):
         
-        shift_msa, scale_msa, gate_msa, shift_mlp, scale_mlp, gate_mlp = \
-            self.adaLN(t_emb).chunk(6, dim=-1)
+        # shift_msa, scale_msa, gate_msa, shift_mlp, scale_mlp, gate_mlp = \
+        #     self.adaLN(t_emb).chunk(6, dim=-1)
+
+        # ✅ MODIF : x est maintenant (B, N, hidden_dim)
+        
+        # adaLN — t_emb : (B, dim) → expand pour la séquence
+        ada = self.adaLN(t_emb)                             # (B, 6*dim)
+        ada = ada.unsqueeze(1)                              # (B, 1, 6*dim) broadcast sur N
+        
+        shift_msa, scale_msa, gate_msa, \
+        shift_mlp, scale_mlp, gate_mlp = ada.chunk(6, dim=-1)
                 
         x_norm = modulate(self.norm1(x), shift_msa, scale_msa)
         # ajoute une dimension sequence (self-attention sur un seul token)
-        x_norm = x_norm.unsqueeze(1)  
-        attn_out, _ = self.attn(x_norm, x_norm, x_norm)  
-        attn_out = attn_out.squeeze(1)  
+        # x_norm = x_norm.unsqueeze(1)  
+
+
+        # attn_out, _ = self.attn(x_norm, x_norm, x_norm)  
+        # attn_out = attn_out.squeeze(1)  
+        # ✅ MODIF : mask pour ignorer les tokens de padding
+        key_padding_mask = None
+        if mask is not None:
+            # MultiheadAttention attend True = ignorer
+            key_padding_mask = (mask == 0)                  # (B, N)
+        
+        attn_out, _ = self.attn(
+            x_norm, x_norm, x_norm,
+            key_padding_mask=key_padding_mask
+        )   
         x = x + gate_msa * attn_out
         
         x = x + gate_mlp * self.mlp(
@@ -126,13 +168,21 @@ class FlowMatchingTransformers(nn.Module):
         self.noise_is_target = noise_is_target
         if self.noise_is_target:
             self.device = self.source.device
-            self.centroid = Tensor(self.source.mean(dim=0)).to(self.device)
-            self.var = Tensor(self.source.var(dim=0)).mean().to(self.device)
+            # self.centroid = Tensor(self.source.mean(dim=0)).to(self.device)
+            # self.var = Tensor(self.source.var(dim=0)).mean().to(self.device)
+            # ✅ MODIF : centroid sur [CLS] uniquement (index 0)
+            cls_tokens = self.source[:, 0, :]               # (N_samples, D)
+            self.centroid = cls_tokens.mean(dim=0)          # (D,)
+            self.var = cls_tokens.var(dim=0).mean()
             # self.centroid = torch.ones((self.source.shape[1]), device=self.device)*2
         else:
             self.device = self.target.device
-            self.centroid = Tensor(self.target.mean(dim=0)).to(self.device)
-            self.var = Tensor(self.target.var(dim=0)).mean().to(self.device)
+            # ✅ MODIF : centroid sur [CLS] uniquement (index 0)
+            cls_tokens = self.target[:, 0, :]               # (N_samples, D)
+            self.centroid = cls_tokens.mean(dim=0)          # (D,)
+            self.var = cls_tokens.var(dim=0).mean()
+            # self.centroid = Tensor(self.target.mean(dim=0)).to(self.device)
+            # self.var = Tensor(self.target.var(dim=0)).mean().to(self.device)
             # self.centroid = torch.ones((self.target.shape[1]), device=self.device)*2
         self.rectified = rectified
         self.config = config
@@ -227,27 +277,27 @@ class FlowMatchingTransformers(nn.Module):
         if not warmup_activated:
             
             # garde fou
-            # nb_samples_neg = int((self.config['rate_neg_batch'] * x_0.shape[0]) / 3)
-            # if nb_samples_neg < 1:
-            #     nb_samples_neg = 5
+            nb_samples_neg = int((self.config['rate_neg_batch'] * x_0.shape[0]) / 3)
+            if nb_samples_neg < 1:
+                nb_samples_neg = 5
 
-            # x_0_negative = []
-            # sigma_levels = torch.tensor(self.config['sig_levels_neg']).to(self.device) * torch.sqrt(self.var)
-            # for i,sig in enumerate(sigma_levels):
+            x_0_negative = []
+            sigma_levels = torch.tensor(self.config['sig_levels_neg']).to(self.device) * torch.sqrt(self.var)
+            for i,sig in enumerate(sigma_levels):
 
-            #     eps = sig * torch.randn((i+1)*nb_samples_neg, x_0.shape[1]).to(self.device)
-            #     x_0_negative.extend(self.centroid + eps)
+                eps = sig * torch.randn((i+1)*nb_samples_neg, x_0.shape[2]).to(self.device)
+                x_0_negative.extend(self.centroid + eps)
 
-            # x_0_negative = torch.stack(x_0_negative).to(self.device)
+            x_0_negative = torch.stack(x_0_negative).to(self.device)
 
-            direction = torch.randn_like(x_0)
-            direction = direction / direction.norm(dim=1, keepdim=True)
-            alpha = 1.1
-            x_0_negative = x_0 + alpha * direction
+            # direction = torch.randn_like(x_0)
+            # direction = direction / direction.norm(dim=1, keepdim=True)
+            # alpha = 1.1
+            # x_0_negative = x_0 + alpha * direction
 
 
             # p = 0.10
-            # sigma = 0.25
+            # sigma = 0.75
             # mask = torch.rand_like(x_0) < p  # p = proportion de dims perturbées
             # noise = torch.randn_like(x_0) * sigma
             # x_0_negative = x_0 + mask * noise
@@ -314,7 +364,7 @@ class FlowMatchingTransformers(nn.Module):
 
         if flow_type == 'linear':
             
-            t_expanded = t.view(-1, 1)
+            t_expanded = t.view(-1, 1, 1)
             x_t = t_expanded * x_1 + (1 - t_expanded) * x_0
             v_target = x_1 - x_0
             
@@ -357,13 +407,12 @@ class FlowMatchingTransformers(nn.Module):
 
                 # ---------------- PUSH RELU ---------------
 
-                # x_neg  = self.euler_integrate(x_0_negative, N_steps=self.config['n_step_euler_integrate'])      
+                x_neg  = self.euler_integrate(x_0_negative, N_steps=self.config['n_step_euler_integrate'])      
 
-                # dist_out = torch.norm(x_neg - self.centroid, dim=1)
+                dist_out = torch.norm(x_neg - self.centroid, dim=1)
 
-                # loss_push = F.relu(self.r_out - dist_out).mean()
-
-
+                loss_push = F.relu(self.r_out - dist_out).mean()
+    
                 # ---------------- PUSH VELOCITY DIRECTION  ---------------
 
                 # t = torch.rand(x_0_negative.shape[0], device=self.device)
@@ -379,10 +428,10 @@ class FlowMatchingTransformers(nn.Module):
 
                 # ---------------- PUSH COSINUS SIM  ---------------
 
-                v_neg  = self.model(x_0_negative,  t)       
-                cos_sim = F.cosine_similarity(v_pred, v_neg, dim=1)     
+                # v_neg  = self.model(x_0_negative,  t)       
+                # cos_sim = F.cosine_similarity(v_pred, v_neg, dim=1)     
 
-                loss_push = cos_sim.mean()
+                # loss_push = cos_sim.mean()
 
 
             # <<<<<<<<<<<<<<<<<<<<< REGUL MARGIN >>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -524,7 +573,7 @@ class FlowMatchingTransformers(nn.Module):
             )
 
             # with torch.no_grad():
-            #     print(f"Epoch {epoch} - Push loss : {anythingelse[2]}")
+                # print(f"Epoch {epoch} - Push loss : {anythingelse[2]}")
             #     print(f"Epoch {epoch} - FM loss : {anythingelse[0]}")
             #     print(f"Epoch {epoch} - SVDD loss : {anythingelse[1]}")
             #     print(lr)
@@ -600,6 +649,7 @@ class FlowMatchingTransformers(nn.Module):
         solver = ODESolver(velocity_model=wrapped_model)
 
         time_steps = torch.linspace(0.0, 1.0, n_steps)
+        # x_inter_source_to_target = solver.sample(x_init=x_0, method=solver_type, step_size=1.0 / n_steps, time_grid=time_steps, return_intermediates=False)
         x_inter_source_to_target = solver.sample(x_init=x_0, method=solver_type, step_size=1.0 / n_steps, time_grid=time_steps, return_intermediates=True)
 
         return x_inter_source_to_target
@@ -611,6 +661,7 @@ class FlowMatchingTransformers(nn.Module):
         solver = ODESolver(velocity_model=wrapped_model)
 
         time_steps = torch.linspace(1.0, 0.0, n_steps)
+        # x_inter_target_to_source = solver.sample(x_init=x_1, method=solver_type, step_size=1.0 / n_steps, time_grid=time_steps, return_intermediates=False)
         x_inter_target_to_source = solver.sample(x_init=x_1, method=solver_type, step_size=1.0 / n_steps, time_grid=time_steps, return_intermediates=True)
 
         return x_inter_target_to_source
@@ -665,7 +716,8 @@ class FlowMatchingTransformers(nn.Module):
             scores = np.sum(x_1_test ** 2, axis=1)
 
         elif type == 'norm-centroid':
-            scores = np.sum((x_1_test - self.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
+            scores = np.sum((x_1_test[:, 0, :] - self.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
+            # scores = np.sum((x_1_test - self.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
 
         ##################################
         ######## RECONSTRUCTION ##########

@@ -110,7 +110,7 @@ def main(args):
 
     for _ in range(1):
 
-        print("LOSS PUSH COSINUS : NEGATIVE DIRECTION")
+        print("LOSS PUSH DIST : NEGATIVE DIM PERTUB")
 
         flowmodel = FlowDiT(
                     latent_dim=config['latent_dim'],
