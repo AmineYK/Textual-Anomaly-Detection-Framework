@@ -15,8 +15,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-
-
 def main(args):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -39,7 +37,6 @@ def main(args):
                 t = torch.full((x_t.shape[0],), t_val, device=device)
                 v = fmt.model(x_t, t)
                 x_t = x_t + dt * v
-                
                 dist = torch.norm(x_t - fmt.centroid, dim=1)  # (B,)
                 trajectory.append(x_t.clone())
                 distances.append(dist)
@@ -57,8 +54,8 @@ def main(args):
         return distances.cpu(), delta_dist.cpu(), global_direction.cpu()
 
 
-    dataset_name = 'sms'
-    inlier_topic = 'normal'
+    dataset_name = '20newsgroups'
+    inlier_topic = 'computer'
     type_tac = None
     anomaly_rate = 0.1
     save_dir = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Data"
@@ -81,24 +78,27 @@ def main(args):
             'hidden_dim': 256,
             'depth': 8,
             'n_heads': 8,
+            'mlp_ratio': 4.0,
+            'n_patches': 64,
+            'freq_embed_size': 128,
             'lr': 1e-3,
             'weight_decay': 1e-5,
             'lambda_svdd': 1e-3,
             'lambda_push': 1e-3,
             'lambda_margin': 1e-4,
             'epochs': 500,
-            'lr_epochs': 100,
+            'lr_epochs': 150,
             'warmup_epochs': 0,
             'grad_clip': 0.5,
             'flow_type': 'linear',  
             'sigma': 0.1, 
-            'batch_size' : 126,
+            'batch_size' : 128,
             'lambda_reg_angle': None,
             'lambda_reg_kl': None,
             'n_step_euler_integrate' : 1,
             'coef_var': 1,
             'rate_neg_batch':1.0,
-            'sig_levels_neg' : [0.3, 0.5],
+            'sig_levels_neg' : [0.5, 0.7],
             'target' : 'gaussian-neigh',
             'source' : X_inlier.to(device)
     }
@@ -110,13 +110,15 @@ def main(args):
 
     for _ in range(1):
 
-        print("LOSS PUSH DIST : NEGATIVE DIM PERTUB")
-
         flowmodel = FlowDiT(
                     latent_dim=config['latent_dim'],
                     hidden_dim=config['hidden_dim'],
                     depth=config['depth'],
-                    n_heads=config['n_heads']
+                    n_heads=config['n_heads'],
+                    mlp_ratio=config['mlp_ratio'],
+                    n_patches=config['n_patches'],
+                    freq_embed_size=config['freq_embed_size'],
+                    
             ).to(device)
 
         fm_transformer = FlowMatchingTransformers(flowmodel, config['source'], config['target'], config, noise_is_target=noise_is_target, rectified=None)

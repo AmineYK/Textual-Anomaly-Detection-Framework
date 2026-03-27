@@ -21,142 +21,217 @@ class BatchedVelocityWrapper(torch.nn.Module):
             t = t.expand(x.shape[0])
         return self.model(x, t)
     
-class SinusoidalPosEmb(nn.Module):
-    def __init__(self, hidden_dim):
+class TimestepEmbedder(nn.Module):
+    def __init__(self, hidden_size, frequency_embedding_size=256):
         super().__init__()
-        assert hidden_dim % 2 == 0
-        self.hidden_dim = hidden_dim
-
-    def forward(self, x):
-        # x: Tensor (batch,) ou (batch, 1)
-        if x.dim() == 2:
-            x = x.squeeze(-1)
-
-        device = x.device
-        half_dim = self.hidden_dim // 2
-
-        emb_scale = math.log(10000) / (half_dim - 1)
-        emb = torch.exp(
-            torch.arange(half_dim, device=device) * -emb_scale
+        self.mlp = nn.Sequential(
+            nn.Linear(frequency_embedding_size, hidden_size, bias=True),
+            nn.SiLU(),
+            nn.Linear(hidden_size, hidden_size, bias=True),
         )
+        self.frequency_embedding_size = frequency_embedding_size
 
-        x = x[:, None] * emb[None, :]
-        return torch.cat([torch.sin(x), torch.cos(x)], dim=-1)
-    
+    @staticmethod
+    def timestep_embedding(t, dim, max_period=10000):
+        half = dim // 2
+        freqs = torch.exp(
+            -math.log(max_period) *
+            torch.arange(start=0, end=half, dtype=torch.float32) / half
+        ).to(device=t.device)
+        args = t[:, None].float() * freqs[None]
+        embedding = torch.cat([torch.cos(args), torch.sin(args)], dim=-1)
+        if dim % 2:
+            embedding = torch.cat(
+                [embedding, torch.zeros_like(embedding[:, :1])], dim=-1
+            )
+        return embedding
 
-class FlowDiT(nn.Module):
-    def __init__(self, latent_dim=768, hidden_dim=64, depth=2, n_heads=2, max_len=128):
-        super().__init__()
+    def forward(self, t):
+        t_freq = self.timestep_embedding(t, self.frequency_embedding_size)
+        return self.mlp(t_freq)
 
-        self.input_proj = nn.Linear(latent_dim, hidden_dim)
-        # ✅ AJOUT : positional embedding pour la séquence
-        self.pos_emb = nn.Embedding(max_len, hidden_dim)
-        
-        self.time_mlp = nn.Sequential(
-            SinusoidalPosEmb(hidden_dim),
-            nn.Linear(hidden_dim, hidden_dim * 4),
-            nn.GELU(),
-            nn.Linear(hidden_dim * 4, hidden_dim)
-        )
-        
-        # Blocs DiT avec adaLN
-        self.blocks = nn.ModuleList([
-            DiTBlock(hidden_dim, n_heads) for _ in range(depth)
-        ])
-        
-        # Tête de prédiction du champ de vecteurs
-        self.output_proj = nn.Linear(hidden_dim, latent_dim)
-    
-    def forward(self, x, t):
-        # x: [batch, latent_dim], t: [batch]
-        # ✅ MODIF : x peut être (B, D) ou (B, N, D)
-        
-        if x.dim() == 2:
-            # Cas actuel : sentence-level (B, D) → (B, 1, D)
-            x = x.unsqueeze(1)
-            is_sentence = True
-        else:
-            # Nouveau cas : token-level (B, N, D)
-            is_sentence = False
-        
-        B, N, D = x.shape
-
-        h = self.input_proj(x)
-        # ✅ AJOUT : positional embedding
-        positions = torch.arange(N, device=x.device)       # (N,)
-        h = h + self.pos_emb(positions).unsqueeze(0)  
-
-        t_emb = self.time_mlp(t)
-        
-        for block in self.blocks:
-            # adaLN conditioning
-            h = block(h, t_emb)  
-        
-        v = self.output_proj(h)
-                
-        if is_sentence:
-            v = v.squeeze(1)   
-        return v
-    
 
 class DiTBlock(nn.Module):
-    def __init__(self, dim, n_heads):
+    """
+    Compatible sentence (B, D) et token (B, T, D)
+    La clé : on ne squeeze/unsqueeze plus — on gère le shape en entrée
+    """
+    def __init__(self, hidden_size, num_heads, mlp_ratio=4.0):
         super().__init__()
-        self.norm1 = nn.LayerNorm(dim, elementwise_affine=False)
-        self.attn = nn.MultiheadAttention(dim, n_heads, batch_first=True)
-        self.norm2 = nn.LayerNorm(dim, elementwise_affine=False)
+        self.norm1 = nn.LayerNorm(hidden_size, elementwise_affine=False, eps=1e-6)
+        self.attn  = nn.MultiheadAttention(hidden_size, num_heads, batch_first=True)
+        self.norm2 = nn.LayerNorm(hidden_size, elementwise_affine=False, eps=1e-6)
+        
+        mlp_hidden = int(hidden_size * mlp_ratio)
         self.mlp = nn.Sequential(
-            nn.Linear(dim, dim * 4),
-            nn.GELU(),
-            nn.Linear(dim * 4, dim)
+            nn.Linear(hidden_size, mlp_hidden),
+            nn.GELU(approximate="tanh"),
+            nn.Linear(mlp_hidden, hidden_size)
         )
-        
-        # adaLN: prédit scale et shift à partir du timestep
-        self.adaLN = nn.Sequential(
+        self.adaLN_modulation = nn.Sequential(
             nn.SiLU(),
-            nn.Linear(dim, 6 * dim)  
+            nn.Linear(hidden_size, 6 * hidden_size, bias=True)
         )
+        
+        # Zero-init adaLN (comme l'original)
+        nn.init.constant_(self.adaLN_modulation[-1].weight, 0)
+        nn.init.constant_(self.adaLN_modulation[-1].bias,   0)
     
-    def forward(self, x, t_emb, mask=None):
-        
-        # shift_msa, scale_msa, gate_msa, shift_mlp, scale_mlp, gate_mlp = \
-        #     self.adaLN(t_emb).chunk(6, dim=-1)
 
-        # ✅ MODIF : x est maintenant (B, N, hidden_dim)
-        
-        # adaLN — t_emb : (B, dim) → expand pour la séquence
-        ada = self.adaLN(t_emb)                             # (B, 6*dim)
-        ada = ada.unsqueeze(1)                              # (B, 1, 6*dim) broadcast sur N
-        
+    def forward(self, x, t):
+        """
+        x : (B, D)    → sentence level
+        x : (B, T, D) → token level
+        c : (B, D)    → timestep embedding (toujours)
+        """
         shift_msa, scale_msa, gate_msa, \
-        shift_mlp, scale_mlp, gate_mlp = ada.chunk(6, dim=-1)
-                
-        x_norm = modulate(self.norm1(x), shift_msa, scale_msa)
-        # ajoute une dimension sequence (self-attention sur un seul token)
-        # x_norm = x_norm.unsqueeze(1)  
+        shift_mlp, scale_mlp, gate_mlp = \
+            self.adaLN_modulation(t).chunk(6, dim=-1)  # (B, D) chacun
 
+        # --- Gestion sentence vs token ---
+        # is_sentence = (x.dim() == 2)
+        # if is_sentence:
+        #     x = x.unsqueeze(1)  # (B, 1, D) — séquence de longueur 1
 
-        # attn_out, _ = self.attn(x_norm, x_norm, x_norm)  
-        # attn_out = attn_out.squeeze(1)  
-        # ✅ MODIF : mask pour ignorer les tokens de padding
-        key_padding_mask = None
-        if mask is not None:
-            # MultiheadAttention attend True = ignorer
-            key_padding_mask = (mask == 0)                  # (B, N)
-        
-        attn_out, _ = self.attn(
-            x_norm, x_norm, x_norm,
-            key_padding_mask=key_padding_mask
-        )   
-        x = x + gate_msa * attn_out
-        
-        x = x + gate_mlp * self.mlp(
+        # Maintenant x est toujours (B, T, D)
+        x_mod = modulate(self.norm1(x), shift_msa, scale_msa)  # (B, T, D)
+        attn_out, _ = self.attn(x_mod, x_mod, x_mod)           # (B, T, D)
+
+        # gate : (B, D) → (B, 1, D) pour broadcaster sur T
+        x = x + gate_msa.unsqueeze(1) * attn_out
+        x = x + gate_mlp.unsqueeze(1) * self.mlp(
             modulate(self.norm2(x), shift_mlp, scale_mlp)
         )
+
+        # if is_sentence:
+        #     x = x.squeeze(1)  # (B, D) — retour au format sentence
+
         return x
+    
+
+class FinalLayer(nn.Module):
+    """Couche finale avec adaLN — comme l'original"""
+    def __init__(self, hidden_size, out_dim):
+        super().__init__()
+        self.norm_final = nn.LayerNorm(
+            hidden_size, elementwise_affine=False, eps=1e-6
+        )
+        self.linear = nn.Linear(hidden_size, out_dim, bias=True)
+        self.adaLN_modulation = nn.Sequential(
+            nn.SiLU(),
+            nn.Linear(hidden_size, 2 * hidden_size, bias=True)
+        )
+        # Zero-init
+        nn.init.constant_(self.adaLN_modulation[-1].weight, 0)
+        nn.init.constant_(self.adaLN_modulation[-1].bias,   0)
+        nn.init.constant_(self.linear.weight, 0)
+        nn.init.constant_(self.linear.bias,   0)
+
+    def forward(self, x, c):
+        """
+        x : (B, D) ou (B, T, D)
+        c : (B, D)
+        """
+        shift, scale = self.adaLN_modulation(c).chunk(2, dim=-1)
+        x = modulate(self.norm_final(x), shift, scale)
+        return self.linear(x)
 
 def modulate(x, shift, scale):
-    return x * (1 + scale) + shift
+    if x.dim() == 2:
+        # Sentence level : (B, D)
+        return x * (1 + scale) + shift
+    else:
+        # Token level : (B, T, D)
+        return x * (1 + scale.unsqueeze(1)) + shift.unsqueeze(1)
+ 
+class FlowDiT(nn.Module):
+    """
+    DiT générique : sentence level (B, D) ou token level (B, T, D)
+    """
+    def __init__(
+        self,
+        latent_dim=768,
+        hidden_dim=256,
+        depth=4,
+        n_heads=4,
+        mlp_ratio=4.0,
+        freq_embed_size=256,
+        n_patches=12 
+    ):
+        super().__init__()
+
+        assert latent_dim % n_patches == 0, \
+        f"latent_dim {latent_dim} doit être divisible par n_patches {n_patches}"
+
+        self.n_patches  = n_patches
+        self.patch_size = latent_dim // n_patches  # ex: 768 // 12 = 64
+
+        # Projection d'entrée
+        self.input_proj = nn.Linear(self.patch_size, hidden_dim)
+
+        # Timestep embedder
+        self.t_embedder = TimestepEmbedder(hidden_dim, freq_embed_size)
+
+        # Blocs DiT
+        self.blocks = nn.ModuleList([
+            DiTBlock(hidden_dim, n_heads, mlp_ratio)
+            for _ in range(depth)
+        ])
+
+        # Couche finale avec adaLN
+        self.final_layer = FinalLayer(hidden_dim, self.patch_size)
+
+        # Init weights
+        self._init_weights()
+
+    def _init_weights(self):
+        def _basic_init(m):
+            if isinstance(m, nn.Linear):
+                nn.init.xavier_uniform_(m.weight)
+                if m.bias is not None:
+                    nn.init.constant_(m.bias, 0)
+        self.apply(_basic_init)
+
+        # ✅ Ré-appliquer le zero-init APRÈS _basic_init
+        for block in self.blocks:
+            nn.init.constant_(block.adaLN_modulation[-1].weight, 0)
+            nn.init.constant_(block.adaLN_modulation[-1].bias,   0)
+
+        # ✅ Zero-init FinalLayer APRÈS _basic_init
+        nn.init.constant_(self.final_layer.adaLN_modulation[-1].weight, 0)
+        nn.init.constant_(self.final_layer.adaLN_modulation[-1].bias,   0)
+        nn.init.constant_(self.final_layer.linear.weight, 0)
+        nn.init.constant_(self.final_layer.linear.bias,   0)
+
+        # Timestep MLP
+        nn.init.normal_(self.t_embedder.mlp[0].weight, std=0.02)
+        nn.init.normal_(self.t_embedder.mlp[2].weight, std=0.02)
+
+    def forward(self, x, t):
+        """
+        x : (B, D)  → sentence level
+        t : (B,)
+        → retourne v : (B, D)
+        """
+        B, D = x.shape
+        h = x.reshape(B, self.n_patches, self.patch_size)
+        # Projection entrée
+        h = self.input_proj(h)          # (B, D) ou (B, T, D)
+
+        # Timestep embedding — toujours (B, hidden_dim)
+        c = self.t_embedder(t)          # (B, hidden_dim)
+
+        # Blocs DiT
+        for block in self.blocks:
+            h = block(h, c)             # (B, D) ou (B, T, D)
+
+        # Couche finale
+        v_inter = self.final_layer(h, c)      # (B, D) ou (B, T, D)
+
+        v = v_inter.reshape(B, D)
+
+        return v
+    
 
 class FlowMatchingTransformers(nn.Module):
 
@@ -168,21 +243,21 @@ class FlowMatchingTransformers(nn.Module):
         self.noise_is_target = noise_is_target
         if self.noise_is_target:
             self.device = self.source.device
-            # self.centroid = Tensor(self.source.mean(dim=0)).to(self.device)
-            # self.var = Tensor(self.source.var(dim=0)).mean().to(self.device)
+            self.centroid = Tensor(self.source.mean(dim=0)).to(self.device)
+            self.var = Tensor(self.source.var(dim=0)).mean().to(self.device)
             # ✅ MODIF : centroid sur [CLS] uniquement (index 0)
-            cls_tokens = self.source[:, 0, :]               # (N_samples, D)
-            self.centroid = cls_tokens.mean(dim=0)          # (D,)
-            self.var = cls_tokens.var(dim=0).mean()
+            # cls_tokens = self.source[:, 0, :]               # (N_samples, D)
+            # self.centroid = cls_tokens.mean(dim=0)          # (D,)
+            # self.var = cls_tokens.var(dim=0).mean()
             # self.centroid = torch.ones((self.source.shape[1]), device=self.device)*2
         else:
             self.device = self.target.device
             # ✅ MODIF : centroid sur [CLS] uniquement (index 0)
-            cls_tokens = self.target[:, 0, :]               # (N_samples, D)
-            self.centroid = cls_tokens.mean(dim=0)          # (D,)
-            self.var = cls_tokens.var(dim=0).mean()
-            # self.centroid = Tensor(self.target.mean(dim=0)).to(self.device)
-            # self.var = Tensor(self.target.var(dim=0)).mean().to(self.device)
+            # cls_tokens = self.target[:, 0, :]               # (N_samples, D)
+            # self.centroid = cls_tokens.mean(dim=0)          # (D,)
+            # self.var = cls_tokens.var(dim=0).mean()
+            self.centroid = Tensor(self.target.mean(dim=0)).to(self.device)
+            self.var = Tensor(self.target.var(dim=0)).mean().to(self.device)
             # self.centroid = torch.ones((self.target.shape[1]), device=self.device)*2
         self.rectified = rectified
         self.config = config
@@ -285,7 +360,7 @@ class FlowMatchingTransformers(nn.Module):
             sigma_levels = torch.tensor(self.config['sig_levels_neg']).to(self.device) * torch.sqrt(self.var)
             for i,sig in enumerate(sigma_levels):
 
-                eps = sig * torch.randn((i+1)*nb_samples_neg, x_0.shape[2]).to(self.device)
+                eps = sig * torch.randn((i+1)*nb_samples_neg, x_0.shape[1]).to(self.device)
                 x_0_negative.extend(self.centroid + eps)
 
             x_0_negative = torch.stack(x_0_negative).to(self.device)
@@ -364,7 +439,7 @@ class FlowMatchingTransformers(nn.Module):
 
         if flow_type == 'linear':
             
-            t_expanded = t.view(-1, 1, 1)
+            t_expanded = t.view(-1, 1)
             x_t = t_expanded * x_1 + (1 - t_expanded) * x_0
             v_target = x_1 - x_0
             
@@ -452,8 +527,6 @@ class FlowMatchingTransformers(nn.Module):
 
             loss_total = loss_fm
             return loss_total, 0, 0, 0, 0, 0
-
-
 
 
     def train_epoch(self, dataloader, optimizer, warmup_activated):
@@ -716,8 +789,8 @@ class FlowMatchingTransformers(nn.Module):
             scores = np.sum(x_1_test ** 2, axis=1)
 
         elif type == 'norm-centroid':
-            scores = np.sum((x_1_test[:, 0, :] - self.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
-            # scores = np.sum((x_1_test - self.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
+            # scores = np.sum((x_1_test[:, 0, :] - self.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
+            scores = np.sum((x_1_test - self.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
 
         ##################################
         ######## RECONSTRUCTION ##########
@@ -736,7 +809,7 @@ class FlowMatchingTransformers(nn.Module):
 
         return scores
 
-    def test(self, X_test, y_test, X_inlier, type='mahalanobis'):
+    def test(self, X_test, y_test, X_inlier, type='norm-centroid'):
 
         scores = self.compute_anomaly_scores(X_test, X_inlier, type)
         return ev.evaluation(y_test, scores, verbose=False)
