@@ -145,43 +145,30 @@ def modulate(x, shift, scale):
         return x * (1 + scale.unsqueeze(1)) + shift.unsqueeze(1)
  
 class FlowDiT(nn.Module):
-    """
-    DiT générique : sentence level (B, D) ou token level (B, T, D)
-    """
     def __init__(
         self,
-        latent_dim=768,
+        latent_dim=768,        # dimension par token SBERT
         hidden_dim=256,
         depth=4,
         n_heads=4,
         mlp_ratio=4.0,
         freq_embed_size=256,
-        n_patches=12 
     ):
         super().__init__()
 
-        assert latent_dim % n_patches == 0, \
-        f"latent_dim {latent_dim} doit être divisible par n_patches {n_patches}"
+        # ✅ MODIF : input_proj prend token_dim (768) au lieu de patch_size
+        self.input_proj = nn.Linear(latent_dim, hidden_dim)
 
-        self.n_patches  = n_patches
-        self.patch_size = latent_dim // n_patches  # ex: 768 // 12 = 64
-
-        # Projection d'entrée
-        self.input_proj = nn.Linear(self.patch_size, hidden_dim)
-
-        # Timestep embedder
         self.t_embedder = TimestepEmbedder(hidden_dim, freq_embed_size)
 
-        # Blocs DiT
         self.blocks = nn.ModuleList([
             DiTBlock(hidden_dim, n_heads, mlp_ratio)
             for _ in range(depth)
         ])
 
-        # Couche finale avec adaLN
-        self.final_layer = FinalLayer(hidden_dim, self.patch_size)
+        # ✅ MODIF : FinalLayer sort token_dim (768)
+        self.final_layer = FinalLayer(hidden_dim, latent_dim)
 
-        # Init weights
         self._init_weights()
 
     def _init_weights(self):
@@ -207,30 +194,39 @@ class FlowDiT(nn.Module):
         nn.init.normal_(self.t_embedder.mlp[0].weight, std=0.02)
         nn.init.normal_(self.t_embedder.mlp[2].weight, std=0.02)
 
-    def forward(self, x, t):
+    def forward(self, x_tokens, t, attention_mask=None):
         """
-        x : (B, D)  → sentence level
-        t : (B,)
-        → retourne v : (B, D)
+        x_tokens       : (B, T, 768)  ← vrais token embeddings SBERT
+        t              : (B,)
+        attention_mask : (B, T)       ← 1=vrai token, 0=padding (optionnel)
+        
+        Retourne :
+            v_sentence : (B, 768)     ← velocity field au niveau phrase
+            v_tokens   : (B, T, 768)  ← velocity field par token
         """
-        B, D = x.shape
-        h = x.reshape(B, self.n_patches, self.patch_size)
-        # Projection entrée
-        h = self.input_proj(h)          # (B, D) ou (B, T, D)
+        # Projection tokens → hidden_dim
+        h = self.input_proj(x_tokens)       # (B, T, hidden_dim)
 
-        # Timestep embedding — toujours (B, hidden_dim)
-        c = self.t_embedder(t)          # (B, hidden_dim)
+        # Timestep embedding
+        c = self.t_embedder(t)              # (B, hidden_dim)
 
-        # Blocs DiT
+        # DiT blocks
         for block in self.blocks:
-            h = block(h, c)             # (B, D) ou (B, T, D)
+            h = block(h, c)                 # (B, T, hidden_dim)
 
-        # Couche finale
-        v_inter = self.final_layer(h, c)      # (B, D) ou (B, T, D)
+        # FinalLayer → velocity field par token
+        v_tokens = self.final_layer(h, c)   # (B, T, 768)
 
-        v = v_inter.reshape(B, D)
+        # ✅ Mean pooling avec masque si padding
+        if attention_mask is not None:
+            # Ne moyenne que sur les vrais tokens
+            mask = attention_mask.unsqueeze(-1).float()  # (B, T, 1)
+            v_sentence = (v_tokens * mask).sum(dim=1) / \
+                          mask.sum(dim=1).clamp(min=1e-8) # (B, 768)
+        else:
+            v_sentence = v_tokens.mean(dim=1)            # (B, 768)
 
-        return v
+        return v_sentence, v_tokens
     
 
 class FlowMatchingTransformers(nn.Module):
@@ -455,7 +451,8 @@ class FlowMatchingTransformers(nn.Module):
         else:
             raise ValueError(f"Unknown flow_type: {flow_type}")
         
-        v_pred = self.model(x_t, t)
+        # v_pred = self.model(x_t, t)
+        v_pred, v_tokens = self.model(x_t, t)
 
         # <<<<<<<<<<<<<<<<<<<<< LOSS FM >>>>>>>>>>>>>>>>>>>>>>>>>>>>
         # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
