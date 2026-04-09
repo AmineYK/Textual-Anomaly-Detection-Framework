@@ -26,6 +26,13 @@ import numpy as np
 import os
 import datasets
 from datasets import concatenate_datasets
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+# télécharger si besoin
+nltk.download('punkt')
+nltk.download('stopwords')
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -128,6 +135,18 @@ def main(args):
         # load the X_inlier matrix
         # X_inlier = load_data_inlier(args.dataset_name, inlier_topic, save_dir)
 
+
+        stop_words = set(stopwords.words('english'))  # ou 'french'
+
+        def remove_stopwords(text):
+            tokens = word_tokenize(text)
+            filtered = [word for word in tokens if word.lower() not in stop_words]
+            return " ".join(filtered)
+
+        def remove_stopwords_batch(batch):
+            batch['text'] = [remove_stopwords(t) for t in batch['text']]
+            return batch
+
         if args.nu > 0:
             path = os.path.join(save_dir, f"{args.dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_anomaly_{int(args.nu*100)}.pt")
             data_train_anomaly = datasets.load_from_disk(path)
@@ -135,6 +154,10 @@ def main(args):
             print(X_anom_for_train.shape)
 
         data_train = load_data_inlier(args.dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
+
+        if args.type_emb == 'bert':
+            # remove stop words
+            data_train = data_train.map(remove_stopwords_batch, batched=True)
 
         if args.fate:
             path = os.path.join(save_dir, f"{args.dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_anomaly.pt")

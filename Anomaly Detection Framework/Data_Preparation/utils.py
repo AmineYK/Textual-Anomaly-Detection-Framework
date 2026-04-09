@@ -8,6 +8,7 @@ from Data_Preparation.Embedding.embedding_encoder import EmbeddingEncoder
 import numpy as np
 from torch import Tensor
 from Data_Preparation.Tac import tac
+import torch
 
 
 # def preprocess(dataset):
@@ -71,6 +72,87 @@ def preprocess(dataset):
     dataset = dataset.filter(lambda x: x["text"] != "")
 
     return dataset
+
+
+# @torch.no_grad()
+# def encode_tokens(model, tokenizer, texts, device, batch_size=16, max_length=128):
+#     all_embeddings = []
+#     all_tokens = []
+#     all_attentions = []
+
+#     for i in range(0, len(texts), batch_size):
+#         batch = texts[i:i+batch_size]
+
+#         inputs = tokenizer(
+#             batch,
+#             padding="max_length",
+#             truncation=True,
+#             max_length=max_length,
+#             return_tensors="pt"
+#         ).to(device)
+
+#         outputs = model(**inputs, output_attentions=True)
+#         last_hidden_state = outputs.last_hidden_state  # (B, T, D)
+
+#         emb = torch.nn.functional.normalize(last_hidden_state, p=2, dim=2)
+#         all_embeddings.append(emb.cpu())
+
+#         # ✅ Agrégation immédiate : moyenne sur layers ET heads → (B, T, T)
+#         # outputs.attentions = tuple de 12 × (B, H, T, T)
+#         batch_attn = torch.stack(outputs.attentions, dim=1)  # (B, 12, 12, T, T)
+#         batch_attn = batch_attn.mean(dim=(1, 2)).cpu()       # (B, T, T) ← beaucoup plus léger
+#         all_attentions.append(batch_attn)
+
+#         tokens = [tokenizer.convert_ids_to_tokens(ids) for ids in inputs["input_ids"]]
+#         all_tokens.extend(tokens)
+
+#     return (
+#         torch.cat(all_embeddings, dim=0).to(device),
+#         all_tokens,
+#         torch.cat(all_attentions, dim=0)  # (N, T, T)
+#     )
+
+@torch.no_grad()
+def encode_tokens(model, tokenizer, texts, device, batch_size=16, max_length=128):
+    all_embeddings = []
+    all_tokens = []
+    all_attentions = []
+    all_attention_masks = []
+
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i:i+batch_size]
+
+        inputs = tokenizer(
+            batch,
+            padding="max_length",
+            truncation=True,
+            max_length=max_length,
+            return_tensors="pt"
+        ).to(device)
+
+        outputs = model(**inputs, output_attentions=True)
+        last_hidden_state = outputs.last_hidden_state  # (B, T, D)
+
+        emb = torch.nn.functional.normalize(last_hidden_state, p=2, dim=2)
+        all_embeddings.append(emb.cpu())
+
+        # attentions (B, T, T)
+        batch_attn = torch.stack(outputs.attentions, dim=1)  # (B, L, H, T, T)
+        batch_attn = batch_attn.mean(dim=(1, 2)).cpu()
+        all_attentions.append(batch_attn)
+
+        # ✅ récupérer attention_mask
+        all_attention_masks.append(inputs["attention_mask"].cpu())
+
+        tokens = [tokenizer.convert_ids_to_tokens(ids) for ids in inputs["input_ids"]]
+        all_tokens.extend(tokens)
+
+    return (
+        torch.cat(all_embeddings, dim=0).to(device),   # (N, T, D)
+        all_tokens,
+        torch.cat(all_attentions, dim=0),              # (N, T, T)
+        torch.cat(all_attention_masks, dim=0)          # (N, T)
+    )
 
 # Dataset Importing
 #--------------------
