@@ -21,18 +21,15 @@ from Modelisation.Baselines.FATE.fate import FATEModel
 from Modelisation.Baselines.DATE.date import DATEModel
 from Modelisation.FlowMatching.flow_matching import BasicFlowMatching
 from Modelisation.FlowMatching.flow_matching_transformers import FlowDiT, FlowMatchingTransformers
+from Modelisation.FlowMatching.flow_matching_transformers_token import FlowDiTToken,  FlowMatchingTransformersToken
 from utils import save_results
 import numpy as np
 import os
 import datasets
 from datasets import concatenate_datasets
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
+from transformers import AutoTokenizer, AutoModel
+from Data_Preparation.utils import encode_tokens
 
-# télécharger si besoin
-nltk.download('punkt')
-nltk.download('stopwords')
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -52,6 +49,25 @@ dataset_topics_dict= {
 }
 
 def main(args):
+
+    if args.remove_stopwords:
+        import nltk
+        from nltk.corpus import stopwords
+        from nltk.tokenize import word_tokenize
+
+        nltk.download('punkt')
+        nltk.download('stopwords')
+
+        stop_words = set(stopwords.words('english'))  # ou 'french'
+
+        def remove_stopwords(text):
+            tokens = word_tokenize(text)
+            filtered = [word for word in tokens if word.lower() not in stop_words]
+            return " ".join(filtered)
+
+        def remove_stopwords_batch(batch):
+            batch['text'] = [remove_stopwords(t) for t in batch['text']]
+            return batch
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # create_tables()
@@ -84,6 +100,13 @@ def main(args):
             list_fpr_fm_trans = []
             list_ap_fm_trans = []
             list_time_fm_trans = []
+
+            methods = ["sum", "mediane", "topk", "max", "attention_weighted", "weights"]
+
+            metrics = {
+                m: {"auc": [], "fpr": [], "ap": []}
+                for m in methods
+            }
 
         if args.ocsvm:
             list_auc_ocsvm = []
@@ -136,17 +159,6 @@ def main(args):
         # X_inlier = load_data_inlier(args.dataset_name, inlier_topic, save_dir)
 
 
-        stop_words = set(stopwords.words('english'))  # ou 'french'
-
-        def remove_stopwords(text):
-            tokens = word_tokenize(text)
-            filtered = [word for word in tokens if word.lower() not in stop_words]
-            return " ".join(filtered)
-
-        def remove_stopwords_batch(batch):
-            batch['text'] = [remove_stopwords(t) for t in batch['text']]
-            return batch
-
         if args.nu > 0:
             path = os.path.join(save_dir, f"{args.dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_anomaly_{int(args.nu*100)}.pt")
             data_train_anomaly = datasets.load_from_disk(path)
@@ -155,9 +167,9 @@ def main(args):
 
         data_train = load_data_inlier(args.dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
 
-        if args.type_emb == 'bert':
-            # remove stop words
+        if args.remove_stopwords:
             data_train = data_train.map(remove_stopwords_batch, batched=True)
+
 
         if args.fate:
             path = os.path.join(save_dir, f"{args.dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_anomaly.pt")
@@ -168,6 +180,14 @@ def main(args):
         
         elif args.type_emb == 'sentence-bert':
             X_inlier = Tensor(data_train['sbert_embeddings']).to(device)
+
+        elif args.type_emb == 'bert':
+            model_name = "roberta-base"
+            tokenizer = AutoTokenizer.from_pretrained(model_name)
+            bertmodel = AutoModel.from_pretrained(model_name).to(device)
+            bertmodel.eval()
+
+            X_inlier, tokens_train, attentions_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train['text'], device, 16, 256)
 
         else: raise Exception("type_emb must be completed !")
 
@@ -188,6 +208,10 @@ def main(args):
             # X_test, y_test = load_data_test(args.dataset_name, inlier_topic, n_run, save_dir)
 
             data_test = load_data_test(args.dataset_name, inlier_topic, n_run, save_dir, is_cvdd=True)
+            
+            if args.remove_stopwords:
+                data_test = data_test.map(remove_stopwords_batch, batched=True)
+
             y_test = np.array(data_test['anomaly_class'])
 
             if args.type_emb == "fasttext":
@@ -195,9 +219,13 @@ def main(args):
         
             elif args.type_emb == 'sentence-bert':
                 X_test = Tensor(data_test['sbert_embeddings']).to(device)
-                print(X_test.shape)
+            
+            elif args.type_emb == 'bert':
+                X_test,  tokens_test,  attentions_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test['text'], device, 16, 256)
 
             else: raise Exception("type_emb must be completed !")
+            
+            print(X_test.shape)
             
 
             #########################################
@@ -552,9 +580,9 @@ def main(args):
             if args.fm_trans:
                 config = {
                     'latent_dim': 768,
-                    'hidden_dim': 256,
-                    'depth': 8,
-                    'n_heads': 8,
+                    'hidden_dim': 64,
+                    'depth': 4,
+                    'n_heads': 4,
                     'lr': 1e-3,
                     'weight_decay': 1e-5,
                     'lambda_svdd': 1e-3,
@@ -562,12 +590,12 @@ def main(args):
                     'lambda_push': 0,
                     'lambda_margin': 1e-2,
                     'epochs': 500,
-                    'lr_epochs': 100,
-                    'warmup_epochs': 0,
+                    'lr_epochs': 150,
+                    'warmup_epochs': -1,
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
                     'sigma': 0.1, 
-                    'batch_size' : 256,
+                    'batch_size' : 512,
                     'lambda_reg_angle': None,
                     'lambda_reg_kl': None,
                     'n_step_euler_integrate':1,
@@ -578,27 +606,60 @@ def main(args):
                     'source' : X_inlier.to(device)
                 }
 
-                model = FlowDiT(
+                model = FlowDiTToken(
                     latent_dim=config['latent_dim'],
                     hidden_dim=config['hidden_dim'],
                     depth=config['depth'],
                     n_heads=config['n_heads']
                 ).to(device)
 
-                fm_transformer = FlowMatchingTransformers(model, config['source'], config['target'], config, noise_is_target=True, rectified=None)
+                fm_transformer = FlowMatchingTransformersToken(model, config['source'], config['target'], config, noise_is_target=True, rectified=None)
 
                 taac = time.time()
-                fm_transformer.train(True)
+                fm_transformer.train(attentions_train_mask.to(device), True)
                 tiic = time.time()
                 print(f"\nFM Transformer finishing... after {(tiic-taac)/60:.3f} mn")
 
 
-                auc_fm_trans, fpr95_fm_trans, ap_fm_trans = fm_transformer.test(X_test, y_test, X_inlier, 'norm-centroid')
-                print(f"FM --> AUC: {auc_fm_trans:.4f} | FPR@95: {fpr95_fm_trans:.4f} | AP: {ap_fm_trans:.4f}\n")
+                for method in methods:                    
+                    if method == "topk":
+                        auc, fpr, ap = fm_transformer.test(
+                            X_test,
+                            attentions_test_mask.to(device),
+                            y_test,
+                            method,
+                            k_rate=0.3
+                        )
+                        
+                    elif method in ["attention_weighted", "weights"]:
+                        auc, fpr, ap = fm_transformer.test(
+                            X_test,
+                            attentions_test_mask.to(device),
+                            y_test,
+                            method,
+                            None,
+                            attentions_test.to(device)
+                        )
+                        
+                    else:
+                        auc, fpr, ap = fm_transformer.test(
+                            X_test,
+                            attentions_test_mask.to(device),
+                            y_test,
+                            method
+                        )
 
-                list_auc_fm_trans.append(auc_fm_trans)
-                list_fpr_fm_trans.append(fpr95_fm_trans)    
-                list_ap_fm_trans.append(ap_fm_trans)
+                    metrics[method]["auc"].append(auc)
+                    metrics[method]["fpr"].append(fpr)
+                    metrics[method]["ap"].append(ap)
+
+
+                # auc_fm_trans, fpr95_fm_trans, ap_fm_trans = fm_transformer.test(X_test, y_test, X_inlier, 'norm-centroid')
+                # print(f"FM --> AUC: {auc_fm_trans:.4f} | FPR@95: {fpr95_fm_trans:.4f} | AP: {ap_fm_trans:.4f}\n")
+
+                # list_auc_fm_trans.append(auc_fm_trans)
+                # list_fpr_fm_trans.append(fpr95_fm_trans)    
+                # list_ap_fm_trans.append(ap_fm_trans)
                 list_time_fm_trans.append((tiic-taac))
 
         if args.fm:
@@ -611,12 +672,32 @@ def main(args):
                 )
             
         if args.fm_trans:
-            print(inlier_topic, np.mean(list_auc_fm_trans), np.mean(list_fpr_fm_trans), np.mean(list_ap_fm_trans))
-            save_results(
-                dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers-PP",
-                auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
-                auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
-                train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='smart'
+            # print(inlier_topic, np.mean(list_auc_fm_trans), np.mean(list_fpr_fm_trans), np.mean(list_ap_fm_trans))
+            # save_results(
+            #     dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers-PP",
+            #     auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
+            #     auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
+            #     train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='smart'
+            #     )
+            for method in methods:
+                print(np.mean(metrics[method]["auc"]), np.mean(metrics[method]["ap"]), np.mean(metrics[method]["fpr"]))
+                save_results(
+                    dataset_name=args.dataset_name,
+                    inlier_topic=inlier_topic,
+                    type_emb=args.type_emb,
+                    ad_model=f"FMTToken-{method}",
+                    
+                    auc_mean=np.mean(metrics[method]["auc"]),
+                    ap_mean=np.mean(metrics[method]["ap"]),
+                    fpr_mean=np.mean(metrics[method]["fpr"]),
+                    
+                    auc_std=np.std(metrics[method]["auc"]),
+                    ap_std=np.std(metrics[method]["ap"]),
+                    fpr_std=np.std(metrics[method]["fpr"]),
+                    
+                    train_time=np.mean(list_time_fm_trans),
+                    nu=args.nu,
+                    overwrite='smart'
                 )
 
         
@@ -709,6 +790,11 @@ if __name__ == "__main__":
         "--nu",
         type=float,
         default=0.0
+    )
+
+    parser.add_argument(
+        "--remove_stopwords",
+        action="store_true"
     )
 
     parser.add_argument(

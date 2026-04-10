@@ -298,3 +298,435 @@ AUC:            0.7486 ± 0.0168
 Avg Precision:  0.3013 ± 0.0264
 FPR@95:         0.8416 ± 0.0575
 ========================================
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: bert
+AD model:       FMTToken-sum
+Training time:  223.50 sec
+----------------------------------------
+AUC:            0.6817 ± 0.0179
+Avg Precision:  0.3280 ± 0.0318
+FPR@95:         0.9034 ± 0.0203
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: bert
+AD model:       FMTToken-mediane
+Training time:  223.50 sec
+----------------------------------------
+AUC:            0.6720 ± 0.0167
+Avg Precision:  0.3147 ± 0.0277
+FPR@95:         0.9214 ± 0.0170
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: bert
+AD model:       FMTToken-topk
+Training time:  223.50 sec
+----------------------------------------
+AUC:            0.6855 ± 0.0184
+Avg Precision:  0.2827 ± 0.0278
+FPR@95:         0.9169 ± 0.0141
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: bert
+AD model:       FMTToken-max
+Training time:  223.50 sec
+----------------------------------------
+AUC:            0.6332 ± 0.0080
+Avg Precision:  0.1574 ± 0.0080
+FPR@95:         0.8927 ± 0.0195
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: bert
+AD model:       FMTToken-attention_weighted
+Training time:  223.50 sec
+----------------------------------------
+AUC:            0.6778 ± 0.0216
+Avg Precision:  0.3440 ± 0.0355
+FPR@95:         0.9126 ± 0.0229
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: bert
+AD model:       FMTToken-weights
+Training time:  223.50 sec
+----------------------------------------
+AUC:            0.4951 ± 0.0069
+Avg Precision:  0.0989 ± 0.0012
+FPR@95:         0.9625 ± 0.0111
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: bert
+AD model:       FMTToken-sum
+Training time:  181.76 sec
+----------------------------------------
+AUC:            0.6012 ± 0.0295
+Avg Precision:  0.1570 ± 0.0182
+FPR@95:         0.9043 ± 0.0459
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: bert
+AD model:       FMTToken-mediane
+Training time:  181.76 sec
+----------------------------------------
+AUC:            0.5971 ± 0.0314
+Avg Precision:  0.1557 ± 0.0190
+FPR@95:         0.9179 ± 0.0295
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: bert
+AD model:       FMTToken-topk
+Training time:  181.76 sec
+----------------------------------------
+AUC:            0.5735 ± 0.0257
+Avg Precision:  0.1285 ± 0.0105
+FPR@95:         0.9105 ± 0.0205
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: bert
+AD model:       FMTToken-max
+Training time:  181.76 sec
+----------------------------------------
+AUC:            0.5127 ± 0.0218
+Avg Precision:  0.1065 ± 0.0101
+FPR@95:         0.9321 ± 0.0227
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: bert
+AD model:       FMTToken-attention_weighted
+Training time:  181.76 sec
+----------------------------------------
+AUC:            0.5963 ± 0.0266
+Avg Precision:  0.1819 ± 0.0208
+FPR@95:         0.9276 ± 0.0209
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: bert
+AD model:       FMTToken-weights
+Training time:  181.76 sec
+----------------------------------------
+AUC:            0.4866 ± 0.0108
+Avg Precision:  0.0988 ± 0.0020
+FPR@95:         0.9690 ± 0.0130
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: bert
+AD model:       FMTToken-sum
+Training time:  179.72 sec
+----------------------------------------
+AUC:            0.5381 ± 0.0200
+Avg Precision:  0.1344 ± 0.0124
+FPR@95:         0.9483 ± 0.0114
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: bert
+AD model:       FMTToken-mediane
+Training time:  179.72 sec
+----------------------------------------
+AUC:            0.5397 ± 0.0189
+Avg Precision:  0.1331 ± 0.0097
+FPR@95:         0.9485 ± 0.0190
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: bert
+AD model:       FMTToken-topk
+Training time:  179.72 sec
+----------------------------------------
+AUC:            0.5319 ± 0.0227
+Avg Precision:  0.1289 ± 0.0155
+FPR@95:         0.9505 ± 0.0059
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: bert
+AD model:       FMTToken-max
+Training time:  179.72 sec
+----------------------------------------
+AUC:            0.4989 ± 0.0247
+Avg Precision:  0.1040 ± 0.0072
+FPR@95:         0.9565 ± 0.0145
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: bert
+AD model:       FMTToken-attention_weighted
+Training time:  179.72 sec
+----------------------------------------
+AUC:            0.5387 ± 0.0205
+Avg Precision:  0.1595 ± 0.0173
+FPR@95:         0.9465 ± 0.0094
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: bert
+AD model:       FMTToken-weights
+Training time:  179.72 sec
+----------------------------------------
+AUC:            0.5053 ± 0.0066
+Avg Precision:  0.1029 ± 0.0034
+FPR@95:         0.9587 ± 0.0140
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: bert
+AD model:       FMTToken-sum
+Training time:  50.72 sec
+----------------------------------------
+AUC:            0.7843 ± 0.0350
+Avg Precision:  0.3458 ± 0.0380
+FPR@95:         0.7366 ± 0.0871
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: bert
+AD model:       FMTToken-mediane
+Training time:  50.72 sec
+----------------------------------------
+AUC:            0.7444 ± 0.0440
+Avg Precision:  0.3290 ± 0.0410
+FPR@95:         0.8294 ± 0.0827
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: bert
+AD model:       FMTToken-topk
+Training time:  50.72 sec
+----------------------------------------
+AUC:            0.7855 ± 0.0367
+Avg Precision:  0.4432 ± 0.0563
+FPR@95:         0.7398 ± 0.0854
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: bert
+AD model:       FMTToken-max
+Training time:  50.72 sec
+----------------------------------------
+AUC:            0.7047 ± 0.0313
+Avg Precision:  0.2045 ± 0.0203
+FPR@95:         0.8302 ± 0.0738
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: bert
+AD model:       FMTToken-attention_weighted
+Training time:  50.72 sec
+----------------------------------------
+AUC:            0.7815 ± 0.0521
+Avg Precision:  0.4614 ± 0.0584
+FPR@95:         0.7735 ± 0.0868
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: bert
+AD model:       FMTToken-weights
+Training time:  50.72 sec
+----------------------------------------
+AUC:            0.5173 ± 0.0270
+Avg Precision:  0.1061 ± 0.0100
+FPR@95:         0.9512 ± 0.0216
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: bert
+AD model:       FMTToken-sum
+Training time:  117.80 sec
+----------------------------------------
+AUC:            0.5407 ± 0.0260
+Avg Precision:  0.1624 ± 0.0271
+FPR@95:         0.9387 ± 0.0270
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: bert
+AD model:       FMTToken-mediane
+Training time:  117.80 sec
+----------------------------------------
+AUC:            0.5374 ± 0.0278
+Avg Precision:  0.1651 ± 0.0268
+FPR@95:         0.9443 ± 0.0114
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: bert
+AD model:       FMTToken-topk
+Training time:  117.80 sec
+----------------------------------------
+AUC:            0.5218 ± 0.0320
+Avg Precision:  0.1335 ± 0.0248
+FPR@95:         0.9502 ± 0.0104
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: bert
+AD model:       FMTToken-max
+Training time:  117.80 sec
+----------------------------------------
+AUC:            0.4890 ± 0.0197
+Avg Precision:  0.0995 ± 0.0064
+FPR@95:         0.9583 ± 0.0224
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: bert
+AD model:       FMTToken-attention_weighted
+Training time:  117.80 sec
+----------------------------------------
+AUC:            0.5250 ± 0.0239
+Avg Precision:  0.1603 ± 0.0254
+FPR@95:         0.9438 ± 0.0213
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: bert
+AD model:       FMTToken-weights
+Training time:  117.80 sec
+----------------------------------------
+AUC:            0.4928 ± 0.0105
+Avg Precision:  0.0990 ± 0.0018
+FPR@95:         0.9726 ± 0.0115
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: bert
+AD model:       FMTToken-sum
+Training time:  106.70 sec
+----------------------------------------
+AUC:            0.5548 ± 0.0329
+Avg Precision:  0.1656 ± 0.0190
+FPR@95:         0.9314 ± 0.0317
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: bert
+AD model:       FMTToken-mediane
+Training time:  106.70 sec
+----------------------------------------
+AUC:            0.5494 ± 0.0328
+Avg Precision:  0.1612 ± 0.0176
+FPR@95:         0.9236 ± 0.0297
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: bert
+AD model:       FMTToken-topk
+Training time:  106.70 sec
+----------------------------------------
+AUC:            0.5391 ± 0.0395
+Avg Precision:  0.1392 ± 0.0149
+FPR@95:         0.9457 ± 0.0176
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: bert
+AD model:       FMTToken-max
+Training time:  106.70 sec
+----------------------------------------
+AUC:            0.5039 ± 0.0307
+Avg Precision:  0.1200 ± 0.0144
+FPR@95:         0.9470 ± 0.0265
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: bert
+AD model:       FMTToken-attention_weighted
+Training time:  106.70 sec
+----------------------------------------
+AUC:            0.5386 ± 0.0432
+Avg Precision:  0.1960 ± 0.0298
+FPR@95:         0.9544 ± 0.0240
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: bert
+AD model:       FMTToken-weights
+Training time:  106.70 sec
+----------------------------------------
+AUC:            0.5058 ± 0.0184
+Avg Precision:  0.1033 ± 0.0078
+FPR@95:         0.9716 ± 0.0128
+========================================
+

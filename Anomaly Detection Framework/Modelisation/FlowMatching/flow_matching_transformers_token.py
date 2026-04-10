@@ -7,25 +7,8 @@ import numpy as np
 from flow_matching.solver import ODESolver
 import time
 from torch.utils.data import TensorDataset, DataLoader
-from sklearn.metrics import roc_auc_score, roc_curve, average_precision_score
+import Modelisation.evaluation as ev
 
-def fpr95_score(y_true, scores):
-    fpr, tpr, thresholds = roc_curve(y_true, scores, pos_label=1)  # 1 = anomalie
-    idx = np.where(tpr >= 0.95)[0][0]
-    return fpr[idx]
-
-def evaluation(y_true, scores, verbose=True):
-
-    auc = roc_auc_score(y_true, scores)
-    ap = average_precision_score(y_true, scores)
-    fpr95 = fpr95_score(y_true, scores)
-
-    if verbose:
-        print(f"AUC:        {auc:.4f}")
-        print(f"Avg Precision: {ap:.4f}")
-        print(f"FPR@95:     {fpr95:.4f}")
-
-    return auc, fpr95, ap
 
 class BatchedVelocityWrapper(torch.nn.Module):
     def __init__(self, model):
@@ -160,7 +143,7 @@ def modulate(x, shift, scale):
         # Token level : (B, T, D)
         return x * (1 + scale.unsqueeze(1)) + shift.unsqueeze(1)
 
-class FlowDiT(nn.Module):
+class FlowDiTToken(nn.Module):
     """
     DiT générique : sentence level (B, D) ou token level (B, T, D)
     """
@@ -261,7 +244,7 @@ class FlowDiT(nn.Module):
         return v_sentence, v_tokens, None
 
 
-class FlowMatchingTransformers(nn.Module):
+class FlowMatchingTransformersToken(nn.Module):
 
     def __init__(self, model, source, target, config, noise_is_target, rectified):
         super().__init__()
@@ -379,24 +362,93 @@ class FlowMatchingTransformers(nn.Module):
             return Tensor(z / z.norm(dim=1, keepdim=True)).to(self.device)
 
 
-    def euler_integrate(self, x_0, mask, N_steps=10):
+    # def euler_integrate(self, x_0, mask, N_steps=10, save_all=False):
+    #     with torch.no_grad():
+    #         x_t = x_0
+    #         dt = 1.0 / N_steps
+
+    #         if save_all:
+    #             velocities_tokens = []
+    #             x_t_inter = [x_t]
+
+    #         for i in range(N_steps):
+    #             t_val = i * dt
+    #             t = torch.full((x_t.shape[0],), t_val, device=self.device)
+    #             v_sen, v_tokens, _ = self.model(x_t, t, mask)
+    #             x_t = x_t + dt * v_tokens
+    #             if save_all:
+    #                 velocities_tokens.append(v_tokens.detach().cpu())
+    #                 x_t_inter.append(x_t.detach().cpu())
+
+    #         if save_all:
+    #             velocities_tokens = torch.stack(velocities_tokens)
+    #             x_t_inter = torch.stack(x_t_inter)
+
+    #     return x_t, velocities_tokens, x_t_inter
+
+    def _euler_integrate_single(self, x_0, mask, N_steps=10, save_all=False):
         with torch.no_grad():
-          x_t = x_0
-          dt = 1.0 / N_steps
+            x_t = x_0
+            dt = 1.0 / N_steps
 
-          velocities_tokens = []
+            if save_all:
+                velocities_tokens = []
+                x_t_inter = [x_t.detach().cpu()]
 
-          for i in range(N_steps):
-              t_val = i * dt
-              t = torch.full((x_t.shape[0],), t_val, device=self.device)
-              v_sen, v_tokens, _ = self.model(x_t, t, mask)
-              x_t = x_t + dt * v_tokens
-              velocities_tokens.append(v_tokens.detach())
+            for i in range(N_steps):
+                t_val = i * dt
+                t = torch.full((x_t.shape[0],), t_val, device=self.device)
 
-          velocities_tokens = torch.stack(velocities_tokens)
+                v_sen, v_tokens, _ = self.model(x_t, t, mask)
+                x_t = x_t + dt * v_tokens
 
-          return x_t, velocities_tokens
+                if save_all:
+                    velocities_tokens.append(v_tokens.detach().cpu())
+                    x_t_inter.append(x_t.detach().cpu())
 
+            if save_all:
+                velocities_tokens = torch.stack(velocities_tokens)
+                x_t_inter = torch.stack(x_t_inter)
+            else:
+                velocities_tokens, x_t_inter = None, None
+
+        return x_t, velocities_tokens, x_t_inter
+
+
+    def euler_integrate(self, x_0, mask, N_steps=10, save_all=False, batch_size=64):
+        all_x_final = []
+
+        if save_all:
+            all_velocities = []
+            all_x_inter = []
+
+        for start in range(0, x_0.shape[0], batch_size):
+            end = start + batch_size
+
+            x_batch = x_0[start:end].to(self.device)
+            mask_batch = mask[start:end].to(self.device)
+
+            x_final, velocities, x_inter = self._euler_integrate_single(
+                x_batch, mask_batch, N_steps=N_steps, save_all=save_all
+            )
+
+            all_x_final.append(x_final.detach().cpu())
+
+            if save_all:
+                all_velocities.append(velocities)
+                all_x_inter.append(x_inter)
+
+            del x_batch, mask_batch, x_final, velocities, x_inter
+            torch.cuda.empty_cache()
+
+        all_x_final = torch.cat(all_x_final, dim=0)
+
+        if save_all:
+            all_velocities = torch.cat(all_velocities, dim=1)
+            all_x_inter = torch.cat(all_x_inter, dim=1)
+            return all_x_final, all_velocities, all_x_inter
+
+        return all_x_final.to(self.device), None, None
 
     def compute_flow_loss(self, x_0, mask_x_0, indices, flow_type='linear', sigma=0.1, warmup_activated=False):
 
@@ -471,7 +523,7 @@ class FlowMatchingTransformers(nn.Module):
             # <<<<<<<<<<<<<<<<<<<<< LOSS SVDD >>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             if self.config['lambda_svdd'] > 0:
-                x_svdd, _ = self.euler_integrate(x_0, mask, N_steps=self.config['n_step_euler_integrate'])
+                x_svdd, _, _ = self.euler_integrate(x_0, mask, N_steps=self.config['n_step_euler_integrate'], save_all=False)
 
                 # x_mean = x_0.mean(dim=1, keepdim=True).expand_as(x_0)  # (B, T, 768)
                 dist_sq = torch.sum((x_svdd - self.centroid)**2, dim=1)
@@ -526,7 +578,6 @@ class FlowMatchingTransformers(nn.Module):
             total_loss_liste.append(loss_total.item())
             loss_fm_liste.append(anythingelse[0])
             loss_svdd_liste.append(anythingelse[1])
-
 
         return np.mean(total_loss_liste), np.mean(loss_fm_liste), np.mean(loss_svdd_liste)
 
@@ -746,7 +797,7 @@ class FlowMatchingTransformers(nn.Module):
 
     def test(self, X_test, mask, y_test, type='topk', k_rate=None, attentions=None):
 
-        x_final, _ = self.euler_integrate(X_test.to(self.device), mask, 15)
+        x_final, _, _ = self.euler_integrate(X_test.to(self.device), mask, 15, False)
         # x_final = self.forward_flow(X_test, solver_type='midpoint', n_steps=15)
         s_norm = torch.norm(x_final - self.centroid, dim=-1)
 
@@ -761,7 +812,6 @@ class FlowMatchingTransformers(nn.Module):
 
         if type == 'topk':
             k = int(x_final.shape[1] * k_rate)
-            print(k)
             topk_vals, _ = torch.topk(s_norm, k=min(k, s_norm.shape[-1]), dim=-1)
             topk_vals = topk_vals.clamp(min=0.0)
             score = topk_vals.mean(dim=-1)
@@ -780,7 +830,7 @@ class FlowMatchingTransformers(nn.Module):
             score = weights.mean(dim=-1)
 
 
-        return evaluation(y_test, score.cpu().numpy())
+        return ev.evaluation(y_test, score.cpu().numpy(), True)
 
 def compactness_pairwise(X):
     ll = []

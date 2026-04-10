@@ -27,23 +27,71 @@ os.makedirs(OUTPUT_LATEX_DIR, exist_ok=True)
 # MODELS & GROUPS
 # =========================
 
+# MODEL_GROUPS = [
+#     ("Classical baselines", ["ocsvm", "AE"]),
+#     ("Deep baselines", ["RSRAE", "CVDD", "DATE", "FATE"]),
+#     ("Flow-based models", ["TCCM", "flow-matching", "flow-matching-Transformers", "flow-matching-Transformers-PP"]),
+# ]
+
 MODEL_GROUPS = [
     ("Classical baselines", ["ocsvm", "AE"]),
     ("Deep baselines", ["RSRAE", "CVDD", "DATE", "FATE"]),
-    ("Flow-based models", ["TCCM", "flow-matching", "flow-matching-Transformers", "flow-matching-Transformers-PP"]),
+    ("Flow-based models", [
+        "TCCM",
+        "flow-matching",
+        "flow-matching-Transformers",
+        "flow-matching-Transformers-PP",
+
+        "FMTToken-sum",
+        "FMTToken-mediane",
+        "FMTToken-topk",
+        "FMTToken-max",
+        "FMTToken-attention_weighted",
+        "FMTToken-weights",
+    ]),
 ]
 
-MODEL_LATEX = {
-    "ocsvm": "OCSVM",
-    "AE": "AE",
-    "RSRAE": "RSRAE",
-    "CVDD": "CVDD",
-    "DATE": "DATE",
-    "FATE": "FATE",
-    "TCCM": "TCCM",
-    "flow-matching": "\\textbf{BasicFM}",
-    "flow-matching-Transformers": "\\textbf{TranFM}",
-    "flow-matching-Transformers-PP": "\\textbf{TranFM-PP}"
+# MODEL_LATEX = {
+#     "ocsvm": "OCSVM",
+#     "AE": "AE",
+#     "RSRAE": "RSRAE",
+#     "CVDD": "CVDD",
+#     "DATE": "DATE",
+#     "FATE": "FATE",
+#     "TCCM": "TCCM",
+#     "flow-matching": "\\textbf{BasicFM}",
+#     "flow-matching-Transformers": "\\textbf{TranFM}",
+#     "flow-matching-Transformers-PP": "\\textbf{TranFM-PP}"
+# }
+
+MODEL_LATEX_BY_ENCODING = {
+    "sentence-bert": {
+        "ocsvm": "OCSVM",
+        "AE": "AE",
+        "RSRAE": "RSRAE",
+        "CVDD": "CVDD",
+        "DATE": "DATE",
+        "FATE": "FATE",
+        "TCCM": "TCCM",
+        "flow-matching": "\\textbf{BasicFM}",
+        "flow-matching-Transformers": "\\textbf{TranFM}",
+        "flow-matching-Transformers-PP": "\\textbf{TranFM-PP}",
+    },
+
+    "bert": {
+        "ocsvm": "OCSVM",
+        "AE": "AE",
+        "RSRAE": "RSRAE",
+        "CVDD": "CVDD",
+        "TCCM": "TCCM",
+
+        "FMTToken-sum": "FMTToken-sum",
+        "FMTToken-mediane": "FMTToken-med",
+        "FMTToken-topk": "FMTToken-topk",
+        "FMTToken-max": "FMTToken-max",
+        "FMTToken-attention_weighted": "FMTToken-attn",
+        "FMTToken-weights": "FMTToken-w",
+    }
 }
 
 MODEL_ORDER = [m for _, g in MODEL_GROUPS for m in g]
@@ -139,7 +187,7 @@ def load_results_for_config(encoding, nu, metric="auc"):
 # TABLE GENERATION
 # =========================
 
-def generate_global_table(results, metric_name="AUC"):
+def generate_global_table(results, encoding, metric_name="AUC"):
     datasets = list(results.keys())
 
     global_means = {m: [] for m in MODEL_ORDER}
@@ -183,7 +231,8 @@ def generate_global_table(results, metric_name="AUC"):
             latex.append("\\midrule")
             continue
 
-        row = [MODEL_LATEX[item]]
+        # row = [MODEL_LATEX[item]]
+        row = [MODEL_LATEX_BY_ENCODING[encoding].get(item, item)]
         for c in range(len(datasets)):
             mean = global_means[item][c]
             std = global_stds[item][c]
@@ -216,7 +265,7 @@ def generate_global_table(results, metric_name="AUC"):
 
     return "\n".join(latex)
 
-def generate_dataset_tables(results, metric_name="AUC"):
+def generate_dataset_tables(results, encoding, metric_name="AUC"):
     all_tables = []
 
     for ds in results:
@@ -253,7 +302,8 @@ def generate_dataset_tables(results, metric_name="AUC"):
                 latex.append("\\midrule")
                 continue
 
-            row = [MODEL_LATEX[item]]
+            # row = [MODEL_LATEX[item]]
+            row = [MODEL_LATEX_BY_ENCODING[encoding].get(item, item)]
             for c, ic in enumerate(inliers):
                 if item in results[ds][ic]:
                     mean, std = results[ds][ic][item]
@@ -300,9 +350,9 @@ def generate_tables_for_config(encoding, nu, metric="auc"):
         for type_emb in results:
             title = type_emb.replace("_", " ").title()
             f.write(f"\\subsection {{{title}}}\n\n")
-            f.write(generate_global_table(results[type_emb], metric_name=metric.upper()))
+            f.write(generate_global_table(results[type_emb], encoding, metric_name=metric.upper()))
             f.write("\n\n")
-            f.write(generate_dataset_tables(results[type_emb], metric_name=metric.upper()))
+            f.write(generate_dataset_tables(results[type_emb], encoding, metric_name=metric.upper()))
             f.write("\n\n")
 
     print(f"[OK] Generated {out_tex}")

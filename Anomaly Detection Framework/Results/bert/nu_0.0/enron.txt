@@ -1,0 +1,72 @@
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: bert
+AD model:       FMTToken-sum
+Training time:  1261.12 sec
+----------------------------------------
+AUC:            0.5774 ± 0.0217
+Avg Precision:  0.1842 ± 0.0171
+FPR@95:         0.9277 ± 0.0482
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: bert
+AD model:       FMTToken-mediane
+Training time:  1261.12 sec
+----------------------------------------
+AUC:            0.5551 ± 0.0206
+Avg Precision:  0.1669 ± 0.0142
+FPR@95:         0.9686 ± 0.0198
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: bert
+AD model:       FMTToken-topk
+Training time:  1261.12 sec
+----------------------------------------
+AUC:            0.5509 ± 0.0235
+Avg Precision:  0.1494 ± 0.0203
+FPR@95:         0.9112 ± 0.0430
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: bert
+AD model:       FMTToken-max
+Training time:  1261.12 sec
+----------------------------------------
+AUC:            0.5458 ± 0.0310
+Avg Precision:  0.1404 ± 0.0258
+FPR@95:         0.8971 ± 0.0279
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: bert
+AD model:       FMTToken-attention_weighted
+Training time:  1261.12 sec
+----------------------------------------
+AUC:            0.5798 ± 0.0300
+Avg Precision:  0.1631 ± 0.0182
+FPR@95:         0.8938 ± 0.0603
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: bert
+AD model:       FMTToken-weights
+Training time:  1261.12 sec
+----------------------------------------
+AUC:            0.5078 ± 0.0109
+Avg Precision:  0.1023 ± 0.0022
+FPR@95:         0.9560 ± 0.0082
+========================================
+

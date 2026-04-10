@@ -1,0 +1,157 @@
+\subsection {Bert}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on all datasets}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcccc}
+\toprule
+Model & Reuters & Agnews & 20newsgroups & Sms \\
+\midrule
+OCSVM & 0.7231 $\pm$ 0.1364 & 0.8227 $\pm$ 0.0351 & 0.8612 $\pm$ 0.0364 & — \\
+AE & 0.8173 $\pm$ 0.1460 & 0.7243 $\pm$ 0.0317 & 0.8255 $\pm$ 0.0553 & — \\
+\midrule
+RSRAE & 0.7695 $\pm$ 0.1175 & \textbf{0.6898 $\pm$ 0.0387} & 0.8137 $\pm$ 0.0383 & — \\
+CVDD & \textbf{0.2735 $\pm$ 0.0437} & 0.7497 $\pm$ 0.0312 & \textbf{0.2729 $\pm$ 0.0255} & — \\
+DATE & — & — & — & — \\
+FATE & — & — & — & — \\
+\midrule
+TCCM & 0.8070 $\pm$ 0.1624 & \underline{0.7035 $\pm$ 0.0482} & \underline{0.7962 $\pm$ 0.0637} & — \\
+flow-matching & — & — & — & — \\
+flow-matching-Transformers & — & — & — & — \\
+flow-matching-Transformers-PP & — & — & — & — \\
+FMTToken-sum & \underline{0.6306 $\pm$ 0.1722} & — & 0.9039 $\pm$ 0.0331 & 0.9060 $\pm$ 0.0043 \\
+FMTToken-med & 0.7427 $\pm$ 0.1877 & — & 0.9197 $\pm$ 0.0232 & 0.9102 $\pm$ 0.0047 \\
+FMTToken-topk & 0.7253 $\pm$ 0.1368 & — & 0.9137 $\pm$ 0.0173 & 0.8985 $\pm$ 0.0067 \\
+FMTToken-max & 0.7784 $\pm$ 0.1109 & — & 0.9124 $\pm$ 0.0211 & \underline{0.8002 $\pm$ 0.0149} \\
+FMTToken-attn & 0.6629 $\pm$ 0.1364 & — & 0.9201 $\pm$ 0.0219 & \textbf{0.7134 $\pm$ 0.0352} \\
+FMTToken-w & 0.9604 $\pm$ 0.0163 & — & 0.9657 $\pm$ 0.0120 & 0.9868 $\pm$ 0.0068 \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:global}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on Reuters}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lccccccc}
+\toprule
+Model & acq & earn & trade & crude & interest & money-fx & ship \\
+\midrule
+OCSVM & \underline{0.4783 $\pm$ 0.1189} & 0.8241 $\pm$ 0.0526 & 0.6368 $\pm$ 0.2099 & 0.8798 $\pm$ 0.0694 & 0.9000 $\pm$ 0.0750 & 0.6063 $\pm$ 0.1985 & 0.7364 $\pm$ 0.2308 \\
+AE & 0.9874 $\pm$ 0.0069 & 0.9977 $\pm$ 0.0011 & 0.8588 $\pm$ 0.2424 & 0.9358 $\pm$ 0.0587 & 0.7425 $\pm$ 0.1812 & 0.7532 $\pm$ 0.3081 & \underline{0.4455 $\pm$ 0.2235} \\
+\midrule
+RSRAE & 1.0000 $\pm$ 0.0000 & 1.0000 $\pm$ 0.0000 & \underline{0.5838 $\pm$ 0.2127} & 0.9248 $\pm$ 0.0762 & 0.7959 $\pm$ 0.1385 & 0.6544 $\pm$ 0.2207 & \textbf{0.4273 $\pm$ 0.1743} \\
+CVDD & \textbf{0.1492 $\pm$ 0.0112} & 0.2319 $\pm$ 0.0216 & \textbf{0.5760 $\pm$ 0.0789} & \textbf{0.1858 $\pm$ 0.0239} & \textbf{0.1358 $\pm$ 0.0168} & \textbf{0.1705 $\pm$ 0.0255} & 0.4654 $\pm$ 0.1282 \\
+DATE & — & — & — & — & — & — & — \\
+FATE & — & — & — & — & — & — & — \\
+\midrule
+TCCM & 1.0000 $\pm$ 0.0000 & 1.0000 $\pm$ 0.0000 & 0.8426 $\pm$ 0.2149 & 0.9587 $\pm$ 0.1239 & 0.6836 $\pm$ 0.2651 & 0.6823 $\pm$ 0.3260 & 0.4818 $\pm$ 0.2066 \\
+flow-matching & — & — & — & — & — & — & — \\
+flow-matching-Transformers & — & — & — & — & — & — & — \\
+flow-matching-Transformers-PP & — & — & — & — & — & — & — \\
+FMTToken-sum & 0.7760 $\pm$ 0.0725 & \underline{0.2125 $\pm$ 0.0278} & 0.8318 $\pm$ 0.2667 & \underline{0.7111 $\pm$ 0.1205} & \underline{0.5231 $\pm$ 0.2204} & \underline{0.6032 $\pm$ 0.2090} & 0.7562 $\pm$ 0.2884 \\
+FMTToken-med & 0.8038 $\pm$ 0.0473 & 0.6241 $\pm$ 0.1017 & 0.8485 $\pm$ 0.2709 & 0.8167 $\pm$ 0.0799 & 0.6096 $\pm$ 0.2933 & 0.6714 $\pm$ 0.2421 & 0.8250 $\pm$ 0.2789 \\
+FMTToken-topk & 0.8669 $\pm$ 0.0488 & 0.2201 $\pm$ 0.0430 & 0.9076 $\pm$ 0.2378 & 0.8256 $\pm$ 0.0966 & 0.7385 $\pm$ 0.0765 & 0.7587 $\pm$ 0.1307 & 0.7594 $\pm$ 0.3239 \\
+FMTToken-max & 0.9216 $\pm$ 0.0502 & 0.2579 $\pm$ 0.0198 & 0.8500 $\pm$ 0.1457 & 0.8967 $\pm$ 0.1546 & 0.8692 $\pm$ 0.0929 & 0.8937 $\pm$ 0.0890 & 0.7594 $\pm$ 0.2241 \\
+FMTToken-attn & 0.7553 $\pm$ 0.0748 & \textbf{0.1497 $\pm$ 0.0252} & 0.8106 $\pm$ 0.2572 & 0.8022 $\pm$ 0.1074 & 0.5808 $\pm$ 0.1175 & 0.6476 $\pm$ 0.2405 & 0.8938 $\pm$ 0.1320 \\
+FMTToken-w & 0.9691 $\pm$ 0.0137 & 0.9659 $\pm$ 0.0171 & 0.9727 $\pm$ 0.0201 & 0.9833 $\pm$ 0.0090 & 0.9577 $\pm$ 0.0240 & 0.9270 $\pm$ 0.0105 & 0.9469 $\pm$ 0.0200 \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:reuters}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on Agnews}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcccc}
+\toprule
+Model & World & Sports & Business & Sci-Tech \\
+\midrule
+OCSVM & 0.7554 $\pm$ 0.0501 & 0.7839 $\pm$ 0.0378 & 0.9132 $\pm$ 0.0272 & 0.8382 $\pm$ 0.0254 \\
+AE & \underline{0.6382 $\pm$ 0.0303} & \textbf{0.6592 $\pm$ 0.0234} & 0.7658 $\pm$ 0.0401 & 0.8341 $\pm$ 0.0331 \\
+\midrule
+RSRAE & \textbf{0.5696 $\pm$ 0.0423} & 0.6837 $\pm$ 0.0307 & \textbf{0.7011 $\pm$ 0.0378} & 0.8047 $\pm$ 0.0442 \\
+CVDD & 0.7347 $\pm$ 0.0275 & 0.7323 $\pm$ 0.0143 & 0.7953 $\pm$ 0.0234 & \textbf{0.7364 $\pm$ 0.0596} \\
+DATE & — & — & — & — \\
+FATE & — & — & — & — \\
+\midrule
+TCCM & 0.6665 $\pm$ 0.0561 & \underline{0.6600 $\pm$ 0.0275} & \underline{0.7184 $\pm$ 0.0642} & \underline{0.7690 $\pm$ 0.0450} \\
+flow-matching & — & — & — & — \\
+flow-matching-Transformers & — & — & — & — \\
+flow-matching-Transformers-PP & — & — & — & — \\
+FMTToken-sum & — & — & — & — \\
+FMTToken-med & — & — & — & — \\
+FMTToken-topk & — & — & — & — \\
+FMTToken-max & — & — & — & — \\
+FMTToken-attn & — & — & — & — \\
+FMTToken-w & — & — & — & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:agnews}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on 20newsgroups}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcccccc}
+\toprule
+Model & computer & recreation & science & miscellaneous & politics & religion \\
+\midrule
+OCSVM & 0.8220 $\pm$ 0.0355 & 0.8988 $\pm$ 0.0241 & 0.9014 $\pm$ 0.0138 & 0.8026 $\pm$ 0.0734 & 0.8868 $\pm$ 0.0320 & 0.8558 $\pm$ 0.0396 \\
+AE & 0.7891 $\pm$ 0.0433 & 0.8824 $\pm$ 0.0307 & 0.9111 $\pm$ 0.0245 & 0.7340 $\pm$ 0.0973 & 0.8422 $\pm$ 0.0614 & \underline{0.7942 $\pm$ 0.0749} \\
+\midrule
+RSRAE & 0.7666 $\pm$ 0.0307 & 0.8895 $\pm$ 0.0261 & 0.9081 $\pm$ 0.0177 & 0.6808 $\pm$ 0.0585 & 0.8079 $\pm$ 0.0361 & 0.8294 $\pm$ 0.0607 \\
+CVDD & \textbf{0.2903 $\pm$ 0.0126} & \textbf{0.5436 $\pm$ 0.0421} & \textbf{0.1854 $\pm$ 0.0143} & \textbf{0.2380 $\pm$ 0.0563} & \textbf{0.1839 $\pm$ 0.0156} & \textbf{0.1963 $\pm$ 0.0118} \\
+DATE & — & — & — & — & — & — \\
+FATE & — & — & — & — & — & — \\
+\midrule
+TCCM & \underline{0.7331 $\pm$ 0.0633} & \underline{0.8683 $\pm$ 0.0273} & \underline{0.8992 $\pm$ 0.0234} & \underline{0.6631 $\pm$ 0.1412} & \underline{0.7718 $\pm$ 0.0693} & 0.8416 $\pm$ 0.0575 \\
+flow-matching & — & — & — & — & — & — \\
+flow-matching-Transformers & — & — & — & — & — & — \\
+flow-matching-Transformers-PP & — & — & — & — & — & — \\
+FMTToken-sum & 0.9034 $\pm$ 0.0203 & 0.9043 $\pm$ 0.0459 & — & — & — & — \\
+FMTToken-med & 0.9214 $\pm$ 0.0170 & 0.9179 $\pm$ 0.0295 & — & — & — & — \\
+FMTToken-topk & 0.9169 $\pm$ 0.0141 & 0.9105 $\pm$ 0.0205 & — & — & — & — \\
+FMTToken-max & 0.8927 $\pm$ 0.0195 & 0.9321 $\pm$ 0.0227 & — & — & — & — \\
+FMTToken-attn & 0.9126 $\pm$ 0.0229 & 0.9276 $\pm$ 0.0209 & — & — & — & — \\
+FMTToken-w & 0.9625 $\pm$ 0.0111 & 0.9690 $\pm$ 0.0130 & — & — & — & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:20newsgroups}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on Sms}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lc}
+\toprule
+Model & normal \\
+\midrule
+OCSVM & — \\
+AE & — \\
+\midrule
+RSRAE & — \\
+CVDD & — \\
+DATE & — \\
+FATE & — \\
+\midrule
+TCCM & — \\
+flow-matching & — \\
+flow-matching-Transformers & — \\
+flow-matching-Transformers-PP & — \\
+FMTToken-sum & 0.9060 $\pm$ 0.0043 \\
+FMTToken-med & 0.9102 $\pm$ 0.0047 \\
+FMTToken-topk & 0.8985 $\pm$ 0.0067 \\
+FMTToken-max & \underline{0.8002 $\pm$ 0.0149} \\
+FMTToken-attn & \textbf{0.7134 $\pm$ 0.0352} \\
+FMTToken-w & 0.9868 $\pm$ 0.0068 \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:sms}
+\end{table}
+

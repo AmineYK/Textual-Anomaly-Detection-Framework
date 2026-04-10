@@ -39,7 +39,7 @@ def main(args):
             # generate_tables_for_config(encoding, nu)
             for me in metrics:
                 print(f"<<<< {encoding}, {nu}, {me} >>>> \n")
-                generate_tables_for_config("sentence-bert", 0.0, metric=me)
+                generate_tables_for_config(encoding, 0.0, metric=me)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Create Tables Latex script")
