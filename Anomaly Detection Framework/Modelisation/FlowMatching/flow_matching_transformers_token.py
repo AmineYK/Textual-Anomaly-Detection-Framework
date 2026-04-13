@@ -169,8 +169,17 @@ class FlowDiTToken(nn.Module):
             for _ in range(depth)
         ])
 
+        # ✅ AJOUT : query appris pour attention pooling
+        self.attn_pool_query = nn.Parameter(
+            torch.randn(1, 1, hidden_dim)
+        )
+        self.attn_pool = nn.MultiheadAttention(
+            hidden_dim, n_heads, batch_first=True
+        )
+
         # Couche finale avec adaLN
         self.final_layer = FinalLayer(hidden_dim, latent_dim)
+        self._init_weights()
 
         # Init weights
         self._init_weights()
@@ -208,6 +217,8 @@ class FlowDiTToken(nn.Module):
             v_sentence : (B, 768)     ← velocity field au niveau phrase
             v_tokens   : (B, T, 768)  ← velocity field par token
         """
+
+        B, T, _ = x_tokens.shape
         # Projection tokens → hidden_dim
         h = self.input_proj(x_tokens)       # (B, T, hidden_dim)
 
@@ -224,22 +235,57 @@ class FlowDiTToken(nn.Module):
                 all_attentions.append(attn_w)  # (B, T, T)
 
 
-        # FinalLayer → velocity field par token
-        v_tokens = self.final_layer(h, c)   # (B, T, 768)
+        # ✅ Attention pooling : query appris interroge tous les tokens
+        query = self.attn_pool_query.expand(B, 1, -1)  # (B, 1, hidden_dim)
 
-        # ✅ Mean pooling avec masque si padding
+
+        # # FinalLayer → velocity field par token
+        # v_tokens = self.final_layer(h, c)   # (B, T, 768)
+
+        # # ✅ Mean pooling avec masque si padding
+        # if attention_mask is not None:
+        #     # Ne moyenne que sur les vrais tokens
+        #     mask = attention_mask.unsqueeze(-1).float()  # (B, T, 1)
+        #     v_sentence = (v_tokens * mask).sum(dim=1) / \
+        #                   mask.sum(dim=1).clamp(min=1e-8) # (B, 768)
+        # else:
+        #     v_sentence = v_tokens.mean(dim=1)            # (B, 768)
+
+        # if return_attention:
+        #     # Stack : (n_blocks, B, T, T)
+        #     all_attentions = torch.stack(all_attentions, dim=0)
+        #     return v_sentence, v_tokens, all_attentions
+
+        # return v_sentence, v_tokens, None
+
+        # Masque pour ignorer PAD dans l'attention pooling
+        key_padding_mask = None
         if attention_mask is not None:
-            # Ne moyenne que sur les vrais tokens
-            mask = attention_mask.unsqueeze(-1).float()  # (B, T, 1)
-            v_sentence = (v_tokens * mask).sum(dim=1) / \
-                          mask.sum(dim=1).clamp(min=1e-8) # (B, 768)
-        else:
-            v_sentence = v_tokens.mean(dim=1)            # (B, 768)
+            # MultiheadAttention attend True = ignorer
+            key_padding_mask = (attention_mask == 0)   # (B, T) bool
+
+        pool_out, pool_attn = self.attn_pool(
+            query,                                      # (B, 1, hidden_dim)
+            h,                                          # (B, T, hidden_dim)
+            h,                                          # (B, T, hidden_dim)
+            key_padding_mask=key_padding_mask,
+            need_weights=True,
+            average_attn_weights=True
+        )
+        # pool_out  : (B, 1, hidden_dim)
+        # pool_attn : (B, 1, T) ← poids d'attention sur les tokens
+
+        h_sentence = pool_out.squeeze(1)               # (B, hidden_dim)
+
+        # ✅ FinalLayer sur la représentation sentence
+        v_sentence = self.final_layer(h_sentence, c)   # (B, 768)
+
+        # ✅ v_tokens pour insights XAI — projection directe
+        v_tokens = self.final_layer(h, c)              # (B, T, 768)
 
         if return_attention:
-            # Stack : (n_blocks, B, T, T)
-            all_attentions = torch.stack(all_attentions, dim=0)
-            return v_sentence, v_tokens, all_attentions
+            all_attentions = torch.stack(all_attentions, dim=0)  # (n_blocks, B, T, T)
+            return v_sentence, v_tokens, all_attentions, pool_attn
 
         return v_sentence, v_tokens, None
 
@@ -257,9 +303,17 @@ class FlowMatchingTransformersToken(nn.Module):
             # self.centroid = Tensor(self.source.mean(dim=0)).to(self.device)
             # self.var = Tensor(self.source.var(dim=0)).mean().to(self.device)
             # ✅ MODIF : centroid sur [CLS] uniquement (index 0)
-            cls_tokens = self.source[:, 0, :]               # (N_samples, D)
-            self.centroid = cls_tokens.mean(dim=0)          # (D,)
-            self.var = cls_tokens.var(dim=0).mean()
+            # cls_tokens = self.source[:, 0, :]               # (N_samples, D)
+            # self.centroid = cls_tokens.mean(dim=0)          # (D,)
+            # self.var = cls_tokens.var(dim=0).mean()
+
+
+            source_tokens = self.source           # (N, T, 768)
+            # Mean pooling sur tous les tokens non-PAD
+            # On suppose que source est déjà masqué
+            self.centroid = source_tokens.mean(dim=1).mean(dim=0)  # (768,)
+            self.var      = source_tokens.mean(dim=1).var(dim=0).mean()
+
             # self.centroid = torch.ones((self.source.shape[1]), device=self.device)*2
         else:
             self.device = self.target.device
@@ -362,20 +416,22 @@ class FlowMatchingTransformersToken(nn.Module):
             return Tensor(z / z.norm(dim=1, keepdim=True)).to(self.device)
 
 
-    # def euler_integrate(self, x_0, mask, N_steps=10, save_all=False):
+    # def _euler_integrate_single(self, x_0, mask, N_steps=10, save_all=False):
     #     with torch.no_grad():
     #         x_t = x_0
     #         dt = 1.0 / N_steps
 
     #         if save_all:
     #             velocities_tokens = []
-    #             x_t_inter = [x_t]
+    #             x_t_inter = [x_t.detach().cpu()]
 
     #         for i in range(N_steps):
     #             t_val = i * dt
     #             t = torch.full((x_t.shape[0],), t_val, device=self.device)
+
     #             v_sen, v_tokens, _ = self.model(x_t, t, mask)
     #             x_t = x_t + dt * v_tokens
+
     #             if save_all:
     #                 velocities_tokens.append(v_tokens.detach().cpu())
     #                 x_t_inter.append(x_t.detach().cpu())
@@ -383,36 +439,52 @@ class FlowMatchingTransformersToken(nn.Module):
     #         if save_all:
     #             velocities_tokens = torch.stack(velocities_tokens)
     #             x_t_inter = torch.stack(x_t_inter)
+    #         else:
+    #             velocities_tokens, x_t_inter = None, None
 
     #     return x_t, velocities_tokens, x_t_inter
 
     def _euler_integrate_single(self, x_0, mask, N_steps=10, save_all=False):
         with torch.no_grad():
-            x_t = x_0
+
+            # ✅ x_0_sentence pour le transport
+            mask_exp     = mask.unsqueeze(-1).float()
+            x_0_sentence = (x_0 * mask_exp).sum(dim=1) / \
+                            mask_exp.sum(dim=1).clamp(min=1e-8)   # (B, 768)
+
+            x_t_sent = x_0_sentence.clone()
             dt = 1.0 / N_steps
 
             if save_all:
                 velocities_tokens = []
-                x_t_inter = [x_t.detach().cpu()]
+                x_t_inter         = [x_t_sent.detach().cpu()]
 
             for i in range(N_steps):
                 t_val = i * dt
-                t = torch.full((x_t.shape[0],), t_val, device=self.device)
+                t     = torch.full(
+                    (x_t_sent.shape[0],), t_val, device=self.device
+                )
 
-                v_sen, v_tokens, _ = self.model(x_t, t, mask)
-                x_t = x_t + dt * v_tokens
+                # ✅ x_t_tokens = x_t_sentence + résidu original
+                residual   = x_0 - x_0_sentence.unsqueeze(1)
+                x_t_tokens = x_t_sent.unsqueeze(1) + residual     # (B, T, 768)
+
+                v_sentence, v_tokens, _ = self.model(x_t_tokens, t, mask)
+
+                # ✅ Intégration au niveau sentence
+                x_t_sent = x_t_sent + dt * v_sentence             # (B, 768)
 
                 if save_all:
                     velocities_tokens.append(v_tokens.detach().cpu())
-                    x_t_inter.append(x_t.detach().cpu())
+                    x_t_inter.append(x_t_sent.detach().cpu())
 
             if save_all:
                 velocities_tokens = torch.stack(velocities_tokens)
-                x_t_inter = torch.stack(x_t_inter)
+                x_t_inter         = torch.stack(x_t_inter)
             else:
                 velocities_tokens, x_t_inter = None, None
 
-        return x_t, velocities_tokens, x_t_inter
+        return x_t_sent, velocities_tokens, x_t_inter
 
 
     def euler_integrate(self, x_0, mask, N_steps=10, save_all=False, batch_size=64):
@@ -450,96 +522,149 @@ class FlowMatchingTransformersToken(nn.Module):
 
         return all_x_final.to(self.device), None, None
 
-    def compute_flow_loss(self, x_0, mask_x_0, indices, flow_type='linear', sigma=0.1, warmup_activated=False):
+    # def compute_flow_loss(self, x_0, mask_x_0, indices, flow_type='linear', sigma=0.1, warmup_activated=False):
 
 
-        mask = mask_x_0.clone() 
+    #     mask = mask_x_0.clone() 
 
+    #     if self.target == 'gaussian-neigh' or self.source == 'gaussian-neigh':
+    #         x_1 = self.sample_like(x_0, 'gaussian-neigh')
 
+    #     batch_size = x_1.shape[0]
+    #     t = torch.rand(batch_size, device=self.device)
 
-        if self.target == 'gaussian' or self.source == 'gaussian':
-            x_1 = self.sample_like(x_0, 'gaussian')
+    #     seq_lengths = mask.sum(dim=1).long()  # (B,) — longueur réelle
+    #     for b in range(x_0.shape[0]):
+    #         mask[b, seq_lengths[b] - 1] = 0  # ← ignore SEP
 
-        if self.target == 'gaussian-neigh' or self.source == 'gaussian-neigh':
-            x_1 = self.sample_like(x_0, 'gaussian-neigh')
+    #     # j'inverse juste la source et la target
+    #     if not self.noise_is_target:
+    #         x_0, x_1 = x_1, x_0
 
-        if self.target == 'centroid' or self.source == 'centroid':
-            x_1 = self.sample_like(x_0, 'centroid')
+    #     if flow_type == 'linear':
 
-        if self.target == 'sphere' or self.source == 'sphere':
-            x_1 = self.sample_like(x_0, 'sphere-noised')
+    #         t_expanded = t.view(-1, 1, 1)
+    #         x_t = t_expanded * x_1 + (1 - t_expanded) * x_0
+    #         # v_target = x_1 - x_0
+    #         v_target = (x_1 - x_0).mean(dim=1)
 
-        if self.target == 'sphere-noised' or self.source == 'sphere-noised':
-            x_1 = self.sample_like(x_0, 'sphere-noised')
+    #     elif flow_type == 'cfm':
+    #         t_expanded = t.view(-1, 1, 1)
+    #         mu_t = t_expanded * x_1 + (1 - t_expanded) * x_0
 
-        batch_size = x_1.shape[0]
-        t = torch.rand(batch_size, device=self.device)
+    #         eps = torch.randn_like(x_0)
+    #         x_t = mu_t + sigma * eps
 
-        seq_lengths = mask.sum(dim=1).long()  # (B,) — longueur réelle
-        for b in range(x_0.shape[0]):
-            mask[b, seq_lengths[b] - 1] = 0  # ← ignore SEP
+    #         v_target = x_1 - x_0
 
-        # j'inverse juste la source et la target
-        if not self.noise_is_target:
-            x_0, x_1 = x_1, x_0
+    #     else:
+    #         raise ValueError(f"Unknown flow_type: {flow_type}")
+
+    #     # v_pred = self.model(x_t, t)
+    #     v_pred, v_tokens, _ = self.model(x_t, t, mask)
+
+    #     mask_expanded = mask.unsqueeze(-1).float()  
+    #     loss_fm = (
+    #         F.mse_loss(v_tokens, v_target, reduction='none')
+    #         * mask_expanded                                   
+    #     ).sum() / mask_expanded.sum()   
+
+    #     # <<<<<<<<<<<<<<<<<<<<< LOSS FM >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    #     # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    #     # loss_fm = F.mse_loss(v_pred, v_target)
+
+    #     # loss_fm = torch.tensor(0.0, device=self.device, requires_grad=True)
+
+    #     loss_svdd = torch.tensor(0.0, device=self.device)
+
+    #     if not warmup_activated:
+
+    #         # <<<<<<<<<<<<<<<<<<<<< LOSS SVDD >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    #         # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    #         if self.config['lambda_svdd'] > 0:
+    #             x_svdd, _, _ = self.euler_integrate(x_0, mask, N_steps=self.config['n_step_euler_integrate'], save_all=False)
+    #             # x_mean = x_0.mean(dim=1, keepdim=True).expand_as(x_0)  # (B, T, 768)
+    #             dist_sq = torch.sum((x_svdd - self.centroid)**2, dim=1)
+    #             # dist_sq = torch.sum((x_svdd.mean(dim=1) - self.centroid)**2, dim=1)
+    #             # dist_sq = torch.sum((x_svdd - x_mean)**2, dim=1)
+
+    #             r_sq = self.r_in ** 2
+    #             loss_svdd = r_sq + F.relu(dist_sq - r_sq).mean()
+
+    #             loss_total = loss_fm + self.config['lambda_svdd'] * loss_svdd
+
+    #             return loss_total, loss_fm.item(), loss_svdd.item()
+
+    #     else:
+
+    #         loss_total = loss_fm
+    #         return loss_total, loss_fm, 0
+
+    def compute_flow_loss(self, x_0, mask_x_0, indices,
+                          flow_type='linear', sigma=0.1,
+                          warmup_activated=False):
+
+        mask = mask_x_0.clone()
+
+        # ✅ x_0_sentence : mean pooling masqué des tokens
+        mask_exp      = mask.unsqueeze(-1).float()              # (B, T, 1)
+        x_0_sentence  = (x_0 * mask_exp).sum(dim=1) / \
+                         mask_exp.sum(dim=1).clamp(min=1e-8)    # (B, 768)
+
+        # ✅ x_1 : gaussienne compacte autour de mu — niveau sentence
+        B = x_0.shape[0]
+        sigma_val = torch.sqrt(self.var * self.config['coef_var'])
+        x_1_sentence = self.centroid + sigma_val * \
+                        torch.randn(B, self.centroid.shape[0],
+                                    device=self.device)          # (B, 768)
+
+        # Ignore SEP token
+        seq_lengths = mask.sum(dim=1).long()
+        for b in range(B):
+            mask[b, seq_lengths[b] - 1] = 0
+
+        t = torch.rand(B, device=self.device)
 
         if flow_type == 'linear':
+            t_exp      = t.view(-1, 1)
+            x_t_sent   = t_exp * x_1_sentence + \
+                         (1 - t_exp) * x_0_sentence              # (B, 768)
+            v_target   = x_1_sentence - x_0_sentence             # (B, 768)
 
-            t_expanded = t.view(-1, 1, 1)
-            x_t = t_expanded * x_1 + (1 - t_expanded) * x_0
-            v_target = x_1 - x_0
+        # ✅ Construire x_t_tokens : x_t_sentence + résidu token
+        residual   = x_0 - x_0_sentence.unsqueeze(1)             # (B, T, 768)
+        x_t_tokens = x_t_sent.unsqueeze(1) + residual            # (B, T, 768)
 
-        elif flow_type == 'cfm':
-            t_expanded = t.view(-1, 1, 1)
-            mu_t = t_expanded * x_1 + (1 - t_expanded) * x_0
+        # Forward DiT
+        v_sentence, v_tokens, _ = self.model(x_t_tokens, t, mask)
 
-            eps = torch.randn_like(x_0)
-            x_t = mu_t + sigma * eps
-
-            v_target = x_1 - x_0
-
-        else:
-            raise ValueError(f"Unknown flow_type: {flow_type}")
-
-        # v_pred = self.model(x_t, t)
-        v_pred, v_tokens, _ = self.model(x_t, t, mask)
-
-        mask_expanded = mask.unsqueeze(-1).float()  
-        loss_fm = (
-            F.mse_loss(v_tokens, v_target, reduction='none')
-            * mask_expanded                                   
-        ).sum() / mask_expanded.sum()   
-
-        # <<<<<<<<<<<<<<<<<<<<< LOSS FM >>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        # loss_fm = F.mse_loss(v_tokens, v_target)
-
-        # loss_fm = torch.tensor(0.0, device=self.device, requires_grad=True)
-
-        loss_svdd = torch.tensor(0.0, device=self.device)
+        # ✅ Loss FM au niveau sentence uniquement
+        loss_fm = F.mse_loss(v_sentence, v_target)
 
         if not warmup_activated:
 
-            # <<<<<<<<<<<<<<<<<<<<< LOSS SVDD >>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             if self.config['lambda_svdd'] > 0:
-                x_svdd, _, _ = self.euler_integrate(x_0, mask, N_steps=self.config['n_step_euler_integrate'], save_all=False)
 
-                # x_mean = x_0.mean(dim=1, keepdim=True).expand_as(x_0)  # (B, T, 768)
-                dist_sq = torch.sum((x_svdd - self.centroid)**2, dim=1)
-                # dist_sq = torch.sum((x_svdd - x_mean)**2, dim=1)
+                # SVDD au niveau sentence
+                t_zeros    = torch.zeros(B, device=self.device)
+                x_0_res    = x_0 - x_0_sentence.unsqueeze(1)     # résidu
+                x_t_zeros  = x_0_sentence.unsqueeze(1) + x_0_res # (B, T, 768)
 
-                r_sq = self.r_in ** 2
+                v_svdd, _, _ = self.model(x_t_zeros, t_zeros, mask)
+                phi_1        = x_0_sentence + v_svdd              # (B, 768)
+
+                dist_sq = torch.sum(
+                    (phi_1 - self.centroid)**2, dim=1
+                )                                                  # (B,)
+                r_sq      = self.r_in ** 2
                 loss_svdd = r_sq + F.relu(dist_sq - r_sq).mean()
 
-                loss_total = loss_fm + self.config['lambda_svdd'] * loss_svdd
-
+                loss_total = loss_fm + \
+                             self.config['lambda_svdd'] * loss_svdd
                 return loss_total, loss_fm.item(), loss_svdd.item()
 
-        else:
-
-            loss_total = loss_fm
-            return loss_total, loss_fm, 0
+        loss_total = loss_fm
+        return loss_total, loss_fm.item(), 0
 
 
     def train_epoch(self, dataloader, optimizer, warmup_activated):
@@ -649,6 +774,8 @@ class FlowMatchingTransformersToken(nn.Module):
             if epoch % (self.config['epochs'] // 3) == 0 and verbose:
                 print(f"\nEpoch {epoch+1}/{self.config['epochs']}")
                 print(f"Train Loss: {loss_total:.4f}, LR: {lr:.6f}")
+                print(self.r_in)
+
 
         if self.rectified is None:
             return total_loss_liste, loss_fm_liste, loss_svdd_liste

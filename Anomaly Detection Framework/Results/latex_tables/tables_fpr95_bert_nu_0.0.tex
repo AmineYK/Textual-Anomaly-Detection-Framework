@@ -3,28 +3,28 @@
 \begin{table}[H]
 \centering
 \caption{FPR95 on all datasets}\resizebox{1.1\textwidth}{!}{
-\begin{tabular}{lcccc}
+\begin{tabular}{lccccc}
 \toprule
-Model & Reuters & Agnews & 20newsgroups & Sms \\
+Model & Reuters & Agnews & 20newsgroups & Sms & Enron \\
 \midrule
-OCSVM & 0.7231 $\pm$ 0.1364 & 0.8227 $\pm$ 0.0351 & 0.8612 $\pm$ 0.0364 & — \\
-AE & 0.8173 $\pm$ 0.1460 & 0.7243 $\pm$ 0.0317 & 0.8255 $\pm$ 0.0553 & — \\
+OCSVM & \underline{0.6679 $\pm$ 0.1816} & 0.8227 $\pm$ 0.0351 & 0.8612 $\pm$ 0.0364 & — & — \\
+AE & 0.9874 $\pm$ 0.0069 & 0.7243 $\pm$ 0.0317 & 0.8255 $\pm$ 0.0553 & — & — \\
 \midrule
-RSRAE & 0.7695 $\pm$ 0.1175 & \textbf{0.6898 $\pm$ 0.0387} & 0.8137 $\pm$ 0.0383 & — \\
-CVDD & \textbf{0.2735 $\pm$ 0.0437} & 0.7497 $\pm$ 0.0312 & \textbf{0.2729 $\pm$ 0.0255} & — \\
-DATE & — & — & — & — \\
-FATE & — & — & — & — \\
+RSRAE & 1.0000 $\pm$ 0.0000 & \textbf{0.6898 $\pm$ 0.0387} & 0.8137 $\pm$ 0.0383 & — & — \\
+CVDD & — & 0.7497 $\pm$ 0.0312 & \textbf{0.2729 $\pm$ 0.0255} & — & — \\
+DATE & — & — & — & — & — \\
+FATE & — & — & — & — & — \\
 \midrule
-TCCM & 0.8070 $\pm$ 0.1624 & \underline{0.7035 $\pm$ 0.0482} & \underline{0.7962 $\pm$ 0.0637} & — \\
-flow-matching & — & — & — & — \\
-flow-matching-Transformers & — & — & — & — \\
-flow-matching-Transformers-PP & — & — & — & — \\
-FMTToken-sum & \underline{0.6306 $\pm$ 0.1722} & — & 0.9039 $\pm$ 0.0331 & 0.9060 $\pm$ 0.0043 \\
-FMTToken-med & 0.7427 $\pm$ 0.1877 & — & 0.9197 $\pm$ 0.0232 & 0.9102 $\pm$ 0.0047 \\
-FMTToken-topk & 0.7253 $\pm$ 0.1368 & — & 0.9137 $\pm$ 0.0173 & 0.8985 $\pm$ 0.0067 \\
-FMTToken-max & 0.7784 $\pm$ 0.1109 & — & 0.9124 $\pm$ 0.0211 & \underline{0.8002 $\pm$ 0.0149} \\
-FMTToken-attn & 0.6629 $\pm$ 0.1364 & — & 0.9201 $\pm$ 0.0219 & \textbf{0.7134 $\pm$ 0.0352} \\
-FMTToken-w & 0.9604 $\pm$ 0.0163 & — & 0.9657 $\pm$ 0.0120 & 0.9868 $\pm$ 0.0068 \\
+TCCM & — & \underline{0.7035 $\pm$ 0.0482} & \underline{0.7962 $\pm$ 0.0637} & — & — \\
+flow-matching & — & — & — & — & — \\
+flow-matching-Transformers & — & — & — & — & — \\
+flow-matching-Transformers-PP & — & — & — & — & — \\
+FMTToken-sum & 0.7002 $\pm$ 0.1963 & — & 0.8938 $\pm$ 0.0372 & 0.9060 $\pm$ 0.0043 & 0.9277 $\pm$ 0.0482 \\
+FMTToken-med & 0.7427 $\pm$ 0.1877 & — & 0.9142 $\pm$ 0.0316 & 0.9102 $\pm$ 0.0047 & 0.9686 $\pm$ 0.0198 \\
+FMTToken-topk & 0.7253 $\pm$ 0.1368 & — & 0.9023 $\pm$ 0.0257 & 0.8985 $\pm$ 0.0067 & 0.9112 $\pm$ 0.0430 \\
+FMTToken-max & 0.7784 $\pm$ 0.1109 & — & 0.9195 $\pm$ 0.0299 & \underline{0.8002 $\pm$ 0.0149} & \underline{0.8971 $\pm$ 0.0279} \\
+FMTToken-attn & \textbf{0.6629 $\pm$ 0.1364} & — & 0.9097 $\pm$ 0.0309 & \textbf{0.7134 $\pm$ 0.0352} & \textbf{0.8938 $\pm$ 0.0603} \\
+FMTToken-w & 0.9604 $\pm$ 0.0163 & — & 0.9643 $\pm$ 0.0140 & 0.9868 $\pm$ 0.0068 & 0.9560 $\pm$ 0.0082 \\
 \bottomrule
 \end{tabular}
 }
@@ -36,26 +36,26 @@ FMTToken-w & 0.9604 $\pm$ 0.0163 & — & 0.9657 $\pm$ 0.0120 & 0.9868 $\pm$ 0.00
 \caption{FPR95 on Reuters}\resizebox{1.1\textwidth}{!}{
 \begin{tabular}{lccccccc}
 \toprule
-Model & acq & earn & trade & crude & interest & money-fx & ship \\
+Model & acq & earn & trade & money-fx & crude & ship & interest \\
 \midrule
-OCSVM & \underline{0.4783 $\pm$ 0.1189} & 0.8241 $\pm$ 0.0526 & 0.6368 $\pm$ 0.2099 & 0.8798 $\pm$ 0.0694 & 0.9000 $\pm$ 0.0750 & 0.6063 $\pm$ 0.1985 & 0.7364 $\pm$ 0.2308 \\
-AE & 0.9874 $\pm$ 0.0069 & 0.9977 $\pm$ 0.0011 & 0.8588 $\pm$ 0.2424 & 0.9358 $\pm$ 0.0587 & 0.7425 $\pm$ 0.1812 & 0.7532 $\pm$ 0.3081 & \underline{0.4455 $\pm$ 0.2235} \\
+OCSVM & \textbf{0.7059 $\pm$ 0.0627} & — & \textbf{0.7788 $\pm$ 0.2039} & 0.6587 $\pm$ 0.1667 & \underline{0.7689 $\pm$ 0.1174} & \textbf{0.4531 $\pm$ 0.3209} & 0.6423 $\pm$ 0.2179 \\
+AE & 0.9874 $\pm$ 0.0069 & — & — & — & — & — & — \\
 \midrule
-RSRAE & 1.0000 $\pm$ 0.0000 & 1.0000 $\pm$ 0.0000 & \underline{0.5838 $\pm$ 0.2127} & 0.9248 $\pm$ 0.0762 & 0.7959 $\pm$ 0.1385 & 0.6544 $\pm$ 0.2207 & \textbf{0.4273 $\pm$ 0.1743} \\
-CVDD & \textbf{0.1492 $\pm$ 0.0112} & 0.2319 $\pm$ 0.0216 & \textbf{0.5760 $\pm$ 0.0789} & \textbf{0.1858 $\pm$ 0.0239} & \textbf{0.1358 $\pm$ 0.0168} & \textbf{0.1705 $\pm$ 0.0255} & 0.4654 $\pm$ 0.1282 \\
+RSRAE & 1.0000 $\pm$ 0.0000 & — & — & — & — & — & — \\
+CVDD & — & — & — & — & — & — & — \\
 DATE & — & — & — & — & — & — & — \\
 FATE & — & — & — & — & — & — & — \\
 \midrule
-TCCM & 1.0000 $\pm$ 0.0000 & 1.0000 $\pm$ 0.0000 & 0.8426 $\pm$ 0.2149 & 0.9587 $\pm$ 0.1239 & 0.6836 $\pm$ 0.2651 & 0.6823 $\pm$ 0.3260 & 0.4818 $\pm$ 0.2066 \\
+TCCM & — & — & — & — & — & — & — \\
 flow-matching & — & — & — & — & — & — & — \\
 flow-matching-Transformers & — & — & — & — & — & — & — \\
 flow-matching-Transformers-PP & — & — & — & — & — & — & — \\
-FMTToken-sum & 0.7760 $\pm$ 0.0725 & \underline{0.2125 $\pm$ 0.0278} & 0.8318 $\pm$ 0.2667 & \underline{0.7111 $\pm$ 0.1205} & \underline{0.5231 $\pm$ 0.2204} & \underline{0.6032 $\pm$ 0.2090} & 0.7562 $\pm$ 0.2884 \\
-FMTToken-med & 0.8038 $\pm$ 0.0473 & 0.6241 $\pm$ 0.1017 & 0.8485 $\pm$ 0.2709 & 0.8167 $\pm$ 0.0799 & 0.6096 $\pm$ 0.2933 & 0.6714 $\pm$ 0.2421 & 0.8250 $\pm$ 0.2789 \\
-FMTToken-topk & 0.8669 $\pm$ 0.0488 & 0.2201 $\pm$ 0.0430 & 0.9076 $\pm$ 0.2378 & 0.8256 $\pm$ 0.0966 & 0.7385 $\pm$ 0.0765 & 0.7587 $\pm$ 0.1307 & 0.7594 $\pm$ 0.3239 \\
-FMTToken-max & 0.9216 $\pm$ 0.0502 & 0.2579 $\pm$ 0.0198 & 0.8500 $\pm$ 0.1457 & 0.8967 $\pm$ 0.1546 & 0.8692 $\pm$ 0.0929 & 0.8937 $\pm$ 0.0890 & 0.7594 $\pm$ 0.2241 \\
-FMTToken-attn & 0.7553 $\pm$ 0.0748 & \textbf{0.1497 $\pm$ 0.0252} & 0.8106 $\pm$ 0.2572 & 0.8022 $\pm$ 0.1074 & 0.5808 $\pm$ 0.1175 & 0.6476 $\pm$ 0.2405 & 0.8938 $\pm$ 0.1320 \\
-FMTToken-w & 0.9691 $\pm$ 0.0137 & 0.9659 $\pm$ 0.0171 & 0.9727 $\pm$ 0.0201 & 0.9833 $\pm$ 0.0090 & 0.9577 $\pm$ 0.0240 & 0.9270 $\pm$ 0.0105 & 0.9469 $\pm$ 0.0200 \\
+FMTToken-sum & 0.7760 $\pm$ 0.0725 & — & 0.8318 $\pm$ 0.2667 & \textbf{0.6032 $\pm$ 0.2090} & \textbf{0.7111 $\pm$ 0.1205} & \underline{0.7562 $\pm$ 0.2884} & \textbf{0.5231 $\pm$ 0.2204} \\
+FMTToken-med & 0.8038 $\pm$ 0.0473 & 0.6241 $\pm$ 0.1017 & 0.8485 $\pm$ 0.2709 & 0.6714 $\pm$ 0.2421 & 0.8167 $\pm$ 0.0799 & 0.8250 $\pm$ 0.2789 & 0.6096 $\pm$ 0.2933 \\
+FMTToken-topk & 0.8669 $\pm$ 0.0488 & \underline{0.2201 $\pm$ 0.0430} & 0.9076 $\pm$ 0.2378 & 0.7587 $\pm$ 0.1307 & 0.8256 $\pm$ 0.0966 & 0.7594 $\pm$ 0.3239 & 0.7385 $\pm$ 0.0765 \\
+FMTToken-max & 0.9216 $\pm$ 0.0502 & 0.2579 $\pm$ 0.0198 & 0.8500 $\pm$ 0.1457 & 0.8937 $\pm$ 0.0890 & 0.8967 $\pm$ 0.1546 & 0.7594 $\pm$ 0.2241 & 0.8692 $\pm$ 0.0929 \\
+FMTToken-attn & \underline{0.7553 $\pm$ 0.0748} & \textbf{0.1497 $\pm$ 0.0252} & \underline{0.8106 $\pm$ 0.2572} & \underline{0.6476 $\pm$ 0.2405} & 0.8022 $\pm$ 0.1074 & 0.8938 $\pm$ 0.1320 & \underline{0.5808 $\pm$ 0.1175} \\
+FMTToken-w & 0.9691 $\pm$ 0.0137 & 0.9659 $\pm$ 0.0171 & 0.9727 $\pm$ 0.0201 & 0.9270 $\pm$ 0.0105 & 0.9833 $\pm$ 0.0090 & 0.9469 $\pm$ 0.0200 & 0.9577 $\pm$ 0.0240 \\
 \bottomrule
 \end{tabular}
 }
@@ -112,12 +112,12 @@ TCCM & \underline{0.7331 $\pm$ 0.0633} & \underline{0.8683 $\pm$ 0.0273} & \unde
 flow-matching & — & — & — & — & — & — \\
 flow-matching-Transformers & — & — & — & — & — & — \\
 flow-matching-Transformers-PP & — & — & — & — & — & — \\
-FMTToken-sum & 0.9034 $\pm$ 0.0203 & 0.9043 $\pm$ 0.0459 & — & — & — & — \\
-FMTToken-med & 0.9214 $\pm$ 0.0170 & 0.9179 $\pm$ 0.0295 & — & — & — & — \\
-FMTToken-topk & 0.9169 $\pm$ 0.0141 & 0.9105 $\pm$ 0.0205 & — & — & — & — \\
-FMTToken-max & 0.8927 $\pm$ 0.0195 & 0.9321 $\pm$ 0.0227 & — & — & — & — \\
-FMTToken-attn & 0.9126 $\pm$ 0.0229 & 0.9276 $\pm$ 0.0209 & — & — & — & — \\
-FMTToken-w & 0.9625 $\pm$ 0.0111 & 0.9690 $\pm$ 0.0130 & — & — & — & — \\
+FMTToken-sum & 0.9034 $\pm$ 0.0203 & 0.9043 $\pm$ 0.0459 & 0.9483 $\pm$ 0.0114 & 0.7366 $\pm$ 0.0871 & 0.9387 $\pm$ 0.0270 & 0.9314 $\pm$ 0.0317 \\
+FMTToken-med & 0.9214 $\pm$ 0.0170 & 0.9179 $\pm$ 0.0295 & 0.9485 $\pm$ 0.0190 & 0.8294 $\pm$ 0.0827 & 0.9443 $\pm$ 0.0114 & 0.9236 $\pm$ 0.0297 \\
+FMTToken-topk & 0.9169 $\pm$ 0.0141 & 0.9105 $\pm$ 0.0205 & 0.9505 $\pm$ 0.0059 & 0.7398 $\pm$ 0.0854 & 0.9502 $\pm$ 0.0104 & 0.9457 $\pm$ 0.0176 \\
+FMTToken-max & 0.8927 $\pm$ 0.0195 & 0.9321 $\pm$ 0.0227 & 0.9565 $\pm$ 0.0145 & 0.8302 $\pm$ 0.0738 & 0.9583 $\pm$ 0.0224 & 0.9470 $\pm$ 0.0265 \\
+FMTToken-attn & 0.9126 $\pm$ 0.0229 & 0.9276 $\pm$ 0.0209 & 0.9465 $\pm$ 0.0094 & 0.7735 $\pm$ 0.0868 & 0.9438 $\pm$ 0.0213 & 0.9544 $\pm$ 0.0240 \\
+FMTToken-w & 0.9625 $\pm$ 0.0111 & 0.9690 $\pm$ 0.0130 & 0.9587 $\pm$ 0.0140 & 0.9512 $\pm$ 0.0216 & 0.9726 $\pm$ 0.0115 & 0.9716 $\pm$ 0.0128 \\
 \bottomrule
 \end{tabular}
 }
@@ -153,5 +153,36 @@ FMTToken-w & 0.9868 $\pm$ 0.0068 \\
 \end{tabular}
 }
 \label{tab:sms}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on Enron}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lc}
+\toprule
+Model & normal \\
+\midrule
+OCSVM & — \\
+AE & — \\
+\midrule
+RSRAE & — \\
+CVDD & — \\
+DATE & — \\
+FATE & — \\
+\midrule
+TCCM & — \\
+flow-matching & — \\
+flow-matching-Transformers & — \\
+flow-matching-Transformers-PP & — \\
+FMTToken-sum & 0.9277 $\pm$ 0.0482 \\
+FMTToken-med & 0.9686 $\pm$ 0.0198 \\
+FMTToken-topk & 0.9112 $\pm$ 0.0430 \\
+FMTToken-max & \underline{0.8971 $\pm$ 0.0279} \\
+FMTToken-attn & \textbf{0.8938 $\pm$ 0.0603} \\
+FMTToken-w & 0.9560 $\pm$ 0.0082 \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:enron}
 \end{table}
 

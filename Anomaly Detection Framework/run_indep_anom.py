@@ -29,6 +29,7 @@ import datasets
 from datasets import concatenate_datasets
 from transformers import AutoTokenizer, AutoModel
 from Data_Preparation.utils import encode_tokens
+import Modelisation.evaluation as ev
 
 
 logging.basicConfig(level=logging.INFO)
@@ -188,6 +189,7 @@ def main(args):
             bertmodel.eval()
 
             X_inlier, tokens_train, attentions_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train['text'], device, 16, 256)
+            # X_inlier = X_inlier.mean(dim=1)
 
         else: raise Exception("type_emb must be completed !")
 
@@ -222,6 +224,7 @@ def main(args):
             
             elif args.type_emb == 'bert':
                 X_test,  tokens_test,  attentions_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test['text'], device, 16, 256)
+                # X_test = X_test.mean(dim=1)
 
             else: raise Exception("type_emb must be completed !")
             
@@ -246,10 +249,12 @@ def main(args):
                     _ = ocsvm_model.train(torch.concatenate([X_inlier, X_anom_for_train]).cpu())
                 else:
                     _ = ocsvm_model.train(X_inlier.cpu())
+                    # _ = ocsvm_model.train(X_inlier.mean(dim=1).cpu())
                 tiic = time.time()
                 print(f"\nOCSVM finishing... after {(tiic-taac)/60:.3f} mn")
 
                 auc_ocsvm, fpr95_ocsvm, ap_ocsvm = ocsvm_model.test(X_test.cpu(), y_test)
+                # auc_ocsvm, fpr95_ocsvm, ap_ocsvm = ocsvm_model.test(X_test.mean(dim=1).cpu(), y_test)
                 print(f"OCSVM --> AUC: {auc_ocsvm:.4f} | FPR@95: {fpr95_ocsvm:.4f} | AP: {ap_ocsvm:.4f}\n")
 
                 list_auc_ocsvm.append(auc_ocsvm)
@@ -580,11 +585,11 @@ def main(args):
             if args.fm_trans:
                 config = {
                     'latent_dim': 768,
-                    'hidden_dim': 64,
+                    'hidden_dim': 256,
                     'depth': 4,
                     'n_heads': 4,
                     'lr': 1e-3,
-                    'weight_decay': 1e-5,
+                    'weight_decay': 1e-4,
                     'lambda_svdd': 1e-3,
                     # 'lambda_push': 1e-2,
                     'lambda_push': 0,
@@ -595,7 +600,7 @@ def main(args):
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
                     'sigma': 0.1, 
-                    'batch_size' : 512,
+                    'batch_size' : 256,
                     'lambda_reg_angle': None,
                     'lambda_reg_kl': None,
                     'n_step_euler_integrate':1,
@@ -621,45 +626,51 @@ def main(args):
                 print(f"\nFM Transformer finishing... after {(tiic-taac)/60:.3f} mn")
 
 
-                for method in methods:                    
-                    if method == "topk":
-                        auc, fpr, ap = fm_transformer.test(
-                            X_test,
-                            attentions_test_mask.to(device),
-                            y_test,
-                            method,
-                            k_rate=0.3
-                        )
+                # for method in methods:                    
+                #     if method == "topk":
+                #         auc, fpr, ap = fm_transformer.test(
+                #             X_test,
+                #             attentions_test_mask.to(device),
+                #             y_test,
+                #             method,
+                #             k_rate=0.3
+                #         )
                         
-                    elif method in ["attention_weighted", "weights"]:
-                        auc, fpr, ap = fm_transformer.test(
-                            X_test,
-                            attentions_test_mask.to(device),
-                            y_test,
-                            method,
-                            None,
-                            attentions_test.to(device)
-                        )
+                #     elif method in ["attention_weighted", "weights"]:
+                #         auc, fpr, ap = fm_transformer.test(
+                #             X_test,
+                #             attentions_test_mask.to(device),
+                #             y_test,
+                #             method,
+                #             None,
+                #             attentions_test.to(device)
+                #         )
                         
-                    else:
-                        auc, fpr, ap = fm_transformer.test(
-                            X_test,
-                            attentions_test_mask.to(device),
-                            y_test,
-                            method
-                        )
+                #     else:
+                #         auc, fpr, ap = fm_transformer.test(
+                #             X_test,
+                #             attentions_test_mask.to(device),
+                #             y_test,
+                #             method
+                #         )
 
-                    metrics[method]["auc"].append(auc)
-                    metrics[method]["fpr"].append(fpr)
-                    metrics[method]["ap"].append(ap)
+                #     metrics[method]["auc"].append(auc)
+                #     metrics[method]["fpr"].append(fpr)
+                    # metrics[method]["ap"].append(ap)
 
 
                 # auc_fm_trans, fpr95_fm_trans, ap_fm_trans = fm_transformer.test(X_test, y_test, X_inlier, 'norm-centroid')
-                # print(f"FM --> AUC: {auc_fm_trans:.4f} | FPR@95: {fpr95_fm_trans:.4f} | AP: {ap_fm_trans:.4f}\n")
+                x_final, _, _ = fm_transformer.euler_integrate(X_test.to(device), attentions_test_mask.to(device), 15, False)
 
-                # list_auc_fm_trans.append(auc_fm_trans)
-                # list_fpr_fm_trans.append(fpr95_fm_trans)    
-                # list_ap_fm_trans.append(ap_fm_trans)
+                x_1_test = x_final.cpu().numpy()
+                scores = np.sum((x_1_test - fm_transformer.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
+                auc_fm_trans, fpr95_fm_trans, ap_fm_trans = ev.evaluation(y_test, scores)
+
+                print(f"FM --> AUC: {auc_fm_trans:.4f} | FPR@95: {fpr95_fm_trans:.4f} | AP: {ap_fm_trans:.4f}\n")
+
+                list_auc_fm_trans.append(auc_fm_trans)
+                list_fpr_fm_trans.append(fpr95_fm_trans)    
+                list_ap_fm_trans.append(ap_fm_trans)
                 list_time_fm_trans.append((tiic-taac))
 
         if args.fm:
@@ -672,33 +683,33 @@ def main(args):
                 )
             
         if args.fm_trans:
-            # print(inlier_topic, np.mean(list_auc_fm_trans), np.mean(list_fpr_fm_trans), np.mean(list_ap_fm_trans))
+            print(inlier_topic, np.mean(list_auc_fm_trans), np.mean(list_fpr_fm_trans), np.mean(list_ap_fm_trans))
             # save_results(
             #     dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers-PP",
             #     auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
             #     auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
             #     train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='smart'
             #     )
-            for method in methods:
-                print(np.mean(metrics[method]["auc"]), np.mean(metrics[method]["ap"]), np.mean(metrics[method]["fpr"]))
-                save_results(
-                    dataset_name=args.dataset_name,
-                    inlier_topic=inlier_topic,
-                    type_emb=args.type_emb,
-                    ad_model=f"FMTToken-{method}",
+            # for method in methods:
+            #     print(np.mean(metrics[method]["auc"]), np.mean(metrics[method]["ap"]), np.mean(metrics[method]["fpr"]))
+            #     save_results(
+            #         dataset_name=args.dataset_name,
+            #         inlier_topic=inlier_topic,
+            #         type_emb=args.type_emb,
+            #         ad_model=f"FMTToken-{method}",
                     
-                    auc_mean=np.mean(metrics[method]["auc"]),
-                    ap_mean=np.mean(metrics[method]["ap"]),
-                    fpr_mean=np.mean(metrics[method]["fpr"]),
+            #         auc_mean=np.mean(metrics[method]["auc"]),
+            #         ap_mean=np.mean(metrics[method]["ap"]),
+            #         fpr_mean=np.mean(metrics[method]["fpr"]),
                     
-                    auc_std=np.std(metrics[method]["auc"]),
-                    ap_std=np.std(metrics[method]["ap"]),
-                    fpr_std=np.std(metrics[method]["fpr"]),
+            #         auc_std=np.std(metrics[method]["auc"]),
+            #         ap_std=np.std(metrics[method]["ap"]),
+            #         fpr_std=np.std(metrics[method]["fpr"]),
                     
-                    train_time=np.mean(list_time_fm_trans),
-                    nu=args.nu,
-                    overwrite='smart'
-                )
+            #         train_time=np.mean(list_time_fm_trans),
+            #         nu=args.nu,
+            #         overwrite='smart'
+            #     )
 
         
         if args.ae : 
