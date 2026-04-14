@@ -1,0 +1,72 @@
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: bert
+AD model:       flow-matching-Transformers-Comp
+Training time:  722.25 sec
+----------------------------------------
+AUC:            0.7906 ± 0.0361
+Avg Precision:  0.2495 ± 0.0422
+FPR@95:         0.5980 ± 0.1186
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: bert
+AD model:       flow-matching-Transformers-Comp
+Training time:  202.88 sec
+----------------------------------------
+AUC:            0.8146 ± 0.0249
+Avg Precision:  0.2799 ± 0.0321
+FPR@95:         0.5800 ± 0.0791
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: bert
+AD model:       flow-matching-Transformers-Comp
+Training time:  1737.47 sec
+----------------------------------------
+AUC:            0.8244 ± 0.0159
+Avg Precision:  0.3041 ± 0.0286
+FPR@95:         0.5780 ± 0.0570
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: bert
+AD model:       flow-matching-Transformers-Comp
+Training time:  2465.95 sec
+----------------------------------------
+AUC:            0.7654 ± 0.0186
+Avg Precision:  0.2116 ± 0.0157
+FPR@95:         0.6381 ± 0.0677
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: bert
+AD model:       flow-matching-Transformers-Comp
+Training time:  2473.17 sec
+----------------------------------------
+AUC:            0.6916 ± 0.0437
+Avg Precision:  0.1832 ± 0.0231
+FPR@95:         0.7879 ± 0.0482
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: bert
+AD model:       flow-matching-Transformers-Comp
+Training time:  3053.99 sec
+----------------------------------------
+AUC:            0.7601 ± 0.0975
+Avg Precision:  0.2607 ± 0.1141
+FPR@95:         0.6240 ± 0.1511
+========================================
+

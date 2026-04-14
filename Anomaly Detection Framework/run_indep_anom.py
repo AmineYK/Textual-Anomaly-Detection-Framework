@@ -585,22 +585,22 @@ def main(args):
             if args.fm_trans:
                 config = {
                     'latent_dim': 768,
-                    'hidden_dim': 256,
+                    'hidden_dim': 64,
                     'depth': 4,
                     'n_heads': 4,
                     'lr': 1e-3,
-                    'weight_decay': 1e-4,
-                    'lambda_svdd': 1e-3,
+                    'weight_decay': 1e-3,
+                    'lambda_svdd': 1e-2,
                     # 'lambda_push': 1e-2,
                     'lambda_push': 0,
-                    'lambda_margin': 1e-2,
-                    'epochs': 500,
-                    'lr_epochs': 150,
+                    'lambda_margin': 0,
+                    'epochs': 250,
+                    'lr_epochs': 90,
                     'warmup_epochs': -1,
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
                     'sigma': 0.1, 
-                    'batch_size' : 256,
+                    'batch_size' : 512,
                     'lambda_reg_angle': None,
                     'lambda_reg_kl': None,
                     'n_step_euler_integrate':1,
@@ -684,12 +684,12 @@ def main(args):
             
         if args.fm_trans:
             print(inlier_topic, np.mean(list_auc_fm_trans), np.mean(list_fpr_fm_trans), np.mean(list_ap_fm_trans))
-            # save_results(
-            #     dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers-PP",
-            #     auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
-            #     auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
-            #     train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='smart'
-            #     )
+            save_results(
+                dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers-Comp",
+                auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
+                auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
+                train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='smart'
+                )
             # for method in methods:
             #     print(np.mean(metrics[method]["auc"]), np.mean(metrics[method]["ap"]), np.mean(metrics[method]["fpr"]))
             #     save_results(

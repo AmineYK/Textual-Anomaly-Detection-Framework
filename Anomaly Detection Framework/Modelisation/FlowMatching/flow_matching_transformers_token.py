@@ -173,8 +173,9 @@ class FlowDiTToken(nn.Module):
         self.attn_pool_query = nn.Parameter(
             torch.randn(1, 1, hidden_dim)
         )
+        n_heads_ = 2
         self.attn_pool = nn.MultiheadAttention(
-            hidden_dim, n_heads, batch_first=True
+            hidden_dim, n_heads_, batch_first=True
         )
 
         # Couche finale avec adaLN
