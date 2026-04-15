@@ -1,0 +1,12 @@
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: bert
+AD model:       flow-matching-Transformers-Comp
+Training time:  196.18 sec
+----------------------------------------
+AUC:            0.7298 ± 0.0000
+Avg Precision:  0.1736 ± 0.0000
+FPR@95:         0.6425 ± 0.0000
+========================================
+

@@ -48,6 +48,7 @@ MODEL_GROUPS = [
         "FMTToken-max",
         "FMTToken-attention_weighted",
         "FMTToken-weights",
+        "flow-matching-Transformers-Comp"
     ]),
 ]
 
@@ -91,6 +92,7 @@ MODEL_LATEX_BY_ENCODING = {
         "FMTToken-max": "FMTToken-max",
         "FMTToken-attention_weighted": "FMTToken-attn",
         "FMTToken-weights": "FMTToken-w",
+        "flow-matching-Transformers-Comp": "FMTToken-Sentence",
     }
 }
 

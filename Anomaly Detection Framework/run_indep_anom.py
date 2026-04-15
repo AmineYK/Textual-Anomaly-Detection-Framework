@@ -188,7 +188,7 @@ def main(args):
             bertmodel = AutoModel.from_pretrained(model_name).to(device)
             bertmodel.eval()
 
-            X_inlier, tokens_train, attentions_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train['text'], device, 16, 256)
+            X_inlier, tokens_train, attentions_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train['text'], device, 512, 128)
             # X_inlier = X_inlier.mean(dim=1)
 
         else: raise Exception("type_emb must be completed !")
@@ -200,7 +200,7 @@ def main(args):
         # get the hyperparamter for the FM model for this specific inlier category
         hyp = load_hyperparams(args.dataset_name, inlier_topic, 'sentence_bert', file_path_hyp)
         # print(hyp)
-        nb_runs = 11
+        nb_runs = 6
         for n_run in range(1, nb_runs):
 
             print(f"+++++++++++++++++++++ run : {n_run} +++++++++++++++++\n")
@@ -223,7 +223,7 @@ def main(args):
                 X_test = Tensor(data_test['sbert_embeddings']).to(device)
             
             elif args.type_emb == 'bert':
-                X_test,  tokens_test,  attentions_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test['text'], device, 16, 256)
+                X_test,  tokens_test,  attentions_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test['text'], device, 512, 128)
                 # X_test = X_test.mean(dim=1)
 
             else: raise Exception("type_emb must be completed !")

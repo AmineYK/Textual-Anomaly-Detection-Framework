@@ -198,3 +198,15 @@ AUC:            0.7269 ± 0.0107
 Avg Precision:  0.2743 ± 0.0198
 FPR@95:         0.7690 ± 0.0450
 ========================================
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: bert
+AD model:       flow-matching-Transformers-Comp
+Training time:  2575.46 sec
+----------------------------------------
+AUC:            0.9093 ± 0.0046
+Avg Precision:  0.5495 ± 0.0100
+FPR@95:         0.3487 ± 0.0428
+========================================
+
