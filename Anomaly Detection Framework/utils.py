@@ -42,12 +42,12 @@ MODEL_GROUPS = [
         "flow-matching-Transformers",
         "flow-matching-Transformers-PP",
 
-        "FMTToken-sum",
-        "FMTToken-mediane",
-        "FMTToken-topk",
-        "FMTToken-max",
-        "FMTToken-attention_weighted",
-        "FMTToken-weights",
+        # "FMTToken-sum",
+        # "FMTToken-mediane",
+        # "FMTToken-topk",
+        # "FMTToken-max",
+        # "FMTToken-attention_weighted",
+        # "FMTToken-weights",
         "flow-matching-Transformers-Comp"
     ]),
 ]
@@ -86,12 +86,12 @@ MODEL_LATEX_BY_ENCODING = {
         "CVDD": "CVDD",
         "TCCM": "TCCM",
 
-        "FMTToken-sum": "FMTToken-sum",
-        "FMTToken-mediane": "FMTToken-med",
-        "FMTToken-topk": "FMTToken-topk",
-        "FMTToken-max": "FMTToken-max",
-        "FMTToken-attention_weighted": "FMTToken-attn",
-        "FMTToken-weights": "FMTToken-w",
+        # "FMTToken-sum": "FMTToken-sum",
+        # "FMTToken-mediane": "FMTToken-med",
+        # "FMTToken-topk": "FMTToken-topk",
+        # "FMTToken-max": "FMTToken-max",
+        # "FMTToken-attention_weighted": "FMTToken-attn",
+        # "FMTToken-weights": "FMTToken-w",
         "flow-matching-Transformers-Comp": "FMTToken-Sentence",
     }
 }

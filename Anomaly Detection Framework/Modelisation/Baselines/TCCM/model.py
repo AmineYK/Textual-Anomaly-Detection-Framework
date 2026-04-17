@@ -50,8 +50,8 @@ class TCCMModel:
 
         with torch.no_grad():
             t = torch.ones(X_test.shape[0], 1, device=self.device, dtype=torch.float32)  # Set t to 1
-            f_xt = self.model(X_test, t)
-            anomaly_scores = torch.norm(f_xt + X_test, dim=1)
+            f_xt = self.model(X_test.to(self.device), t)
+            anomaly_scores = torch.norm(f_xt + X_test.to(self.device), dim=1)
 
         return anomaly_scores.cpu().numpy()
 

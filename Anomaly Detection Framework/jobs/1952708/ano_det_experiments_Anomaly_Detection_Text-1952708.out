@@ -1,0 +1,140 @@
+Job ID: 1952708
+
+<<<<<<<<<<<<<< imdb >>>>>>>>>>>>>>>>>>>
+
+------------------------ positive(1/2) -----------------------------
+torch.Size([12500, 256, 768])
++++++++++++++++++++++ run : 1 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+Training sur 12500 samples, 98 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 426.81 (RMD: 4.0393, RTD: 0.4575) | Masked: 46.20%
+Epoch 7/30 - Loss: 335.74 (RMD: 3.1961, RTD: 0.3226) | Masked: 46.14%
+Epoch 13/30 - Loss: 330.00 (RMD: 3.0918, RTD: 0.4163) | Masked: 46.14%
+Epoch 19/30 - Loss: 326.88 (RMD: 3.0517, RTD: 0.4343) | Masked: 46.17%
+Epoch 25/30 - Loss: 330.54 (RMD: 3.0406, RTD: 0.5297) | Masked: 46.24%
+\DATE finishing... after 1.788 mn
+DATE --> AUC: 0.4985 | FPR@95: 0.9476 | AP: 0.0989
+
++++++++++++++++++++++ run : 2 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+Training sur 12500 samples, 98 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 415.84 (RMD: 3.9447, RTD: 0.4275) | Masked: 46.51%
+Epoch 7/30 - Loss: 329.69 (RMD: 3.1526, RTD: 0.2886) | Masked: 46.47%
+Epoch 13/30 - Loss: 323.43 (RMD: 3.1299, RTD: 0.2089) | Masked: 46.49%
+Epoch 19/30 - Loss: 319.64 (RMD: 3.0958, RTD: 0.2012) | Masked: 46.40%
+Epoch 25/30 - Loss: 314.41 (RMD: 3.0463, RTD: 0.1957) | Masked: 46.48%
+\DATE finishing... after 1.781 mn
+DATE --> AUC: 0.4667 | FPR@95: 0.9484 | AP: 0.0884
+
++++++++++++++++++++++ run : 3 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+Training sur 12500 samples, 98 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 402.10 (RMD: 3.8539, RTD: 0.3342) | Masked: 46.33%
+Epoch 7/30 - Loss: 349.85 (RMD: 3.1525, RTD: 0.6920) | Masked: 46.30%
+Epoch 13/30 - Loss: 340.93 (RMD: 3.0921, RTD: 0.6345) | Masked: 46.35%
+Epoch 19/30 - Loss: 342.03 (RMD: 3.1083, RTD: 0.6241) | Masked: 46.31%
+Epoch 25/30 - Loss: 333.70 (RMD: 2.9903, RTD: 0.6934) | Masked: 46.28%
+\DATE finishing... after 1.750 mn
+DATE --> AUC: 0.5080 | FPR@95: 0.9289 | AP: 0.1010
+
++++++++++++++++++++++ run : 4 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+Training sur 12500 samples, 98 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 416.48 (RMD: 3.8509, RTD: 0.6278) | Masked: 46.60%
+Epoch 7/30 - Loss: 338.44 (RMD: 3.1231, RTD: 0.5228) | Masked: 46.49%
+Epoch 13/30 - Loss: 340.07 (RMD: 3.1516, RTD: 0.4982) | Masked: 46.52%
+Epoch 19/30 - Loss: 332.31 (RMD: 3.0625, RTD: 0.5212) | Masked: 46.54%
+Epoch 25/30 - Loss: 336.56 (RMD: 3.0337, RTD: 0.6639) | Masked: 46.57%
+\DATE finishing... after 1.740 mn
+DATE --> AUC: 0.5232 | FPR@95: 0.9417 | AP: 0.1108
+
++++++++++++++++++++++ run : 5 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+Training sur 12500 samples, 98 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 404.40 (RMD: 3.8849, RTD: 0.3182) | Masked: 46.36%
+Epoch 7/30 - Loss: 353.77 (RMD: 3.1908, RTD: 0.6937) | Masked: 46.27%
+Epoch 13/30 - Loss: 342.08 (RMD: 3.0741, RTD: 0.6933) | Masked: 46.39%
+Epoch 19/30 - Loss: 342.04 (RMD: 3.0738, RTD: 0.6932) | Masked: 46.37%
+Epoch 25/30 - Loss: 342.48 (RMD: 3.0782, RTD: 0.6932) | Masked: 46.31%
+\DATE finishing... after 1.763 mn
+DATE --> AUC: 0.5067 | FPR@95: 1.0000 | AP: 0.1014
+
+Nouveaux résultats ajoutés pour (imdb, positive, bert, DATE, nu=0.0).
+------------------------ negative(2/2) -----------------------------
+torch.Size([12500, 256, 768])
++++++++++++++++++++++ run : 1 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+Training sur 12500 samples, 98 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 421.30 (RMD: 4.0332, RTD: 0.3597) | Masked: 46.99%
+Epoch 7/30 - Loss: 349.98 (RMD: 3.1526, RTD: 0.6944) | Masked: 47.08%
+Epoch 13/30 - Loss: 343.09 (RMD: 3.0840, RTD: 0.6939) | Masked: 47.02%
+Epoch 19/30 - Loss: 345.41 (RMD: 3.1074, RTD: 0.6933) | Masked: 47.01%
+Epoch 25/30 - Loss: 338.94 (RMD: 3.0428, RTD: 0.6933) | Masked: 47.11%
+\DATE finishing... after 1.777 mn
+DATE --> AUC: 0.5236 | FPR@95: 0.9422 | AP: 0.1074
+
++++++++++++++++++++++ run : 2 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+Training sur 12500 samples, 98 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 404.63 (RMD: 3.8421, RTD: 0.4083) | Masked: 46.57%
+Epoch 7/30 - Loss: 351.83 (RMD: 3.2104, RTD: 0.6156) | Masked: 46.56%
+Epoch 13/30 - Loss: 331.76 (RMD: 3.0761, RTD: 0.4831) | Masked: 46.69%
+Epoch 19/30 - Loss: 330.65 (RMD: 3.0790, RTD: 0.4551) | Masked: 46.79%
+Epoch 25/30 - Loss: 328.73 (RMD: 3.0554, RTD: 0.4640) | Masked: 46.63%
+\DATE finishing... after 1.781 mn
+DATE --> AUC: 0.5690 | FPR@95: 0.9305 | AP: 0.1248
+
++++++++++++++++++++++ run : 3 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+Training sur 12500 samples, 98 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 429.74 (RMD: 3.8658, RTD: 0.8633) | Masked: 46.82%
+Epoch 7/30 - Loss: 345.53 (RMD: 3.1085, RTD: 0.6936) | Masked: 46.70%
+Epoch 13/30 - Loss: 346.61 (RMD: 3.1195, RTD: 0.6933) | Masked: 46.66%
+Epoch 19/30 - Loss: 340.16 (RMD: 3.0550, RTD: 0.6932) | Masked: 46.87%
+Epoch 25/30 - Loss: 341.96 (RMD: 3.0731, RTD: 0.6931) | Masked: 46.76%
+\DATE finishing... after 1.764 mn
+DATE --> AUC: 0.5311 | FPR@95: 0.9998 | AP: 0.1070
+
++++++++++++++++++++++ run : 4 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+Training sur 12500 samples, 98 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 401.99 (RMD: 3.8319, RTD: 0.3761) | Masked: 46.77%
+Epoch 7/30 - Loss: 341.97 (RMD: 3.2212, RTD: 0.3971) | Masked: 46.80%
+Epoch 13/30 - Loss: 341.50 (RMD: 3.0980, RTD: 0.6340) | Masked: 46.80%
+Epoch 19/30 - Loss: 333.08 (RMD: 3.0487, RTD: 0.5643) | Masked: 46.80%
+Epoch 25/30 - Loss: 332.67 (RMD: 3.0384, RTD: 0.5767) | Masked: 46.87%
+\DATE finishing... after 1.770 mn
+DATE --> AUC: 0.5635 | FPR@95: 0.9201 | AP: 0.1217
+
++++++++++++++++++++++ run : 5 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+Training sur 12500 samples, 98 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 423.81 (RMD: 3.9020, RTD: 0.6723) | Masked: 47.06%
+Epoch 7/30 - Loss: 346.84 (RMD: 3.1217, RTD: 0.6934) | Masked: 47.04%
+Epoch 13/30 - Loss: 343.69 (RMD: 3.0902, RTD: 0.6933) | Masked: 47.20%
+Epoch 19/30 - Loss: 342.01 (RMD: 3.0735, RTD: 0.6932) | Masked: 47.09%
+Epoch 25/30 - Loss: 341.23 (RMD: 3.0657, RTD: 0.6932) | Masked: 47.08%
+\DATE finishing... after 1.772 mn
+DATE --> AUC: 0.5146 | FPR@95: 0.9626 | AP: 0.1069
+
+Nouveaux résultats ajoutés pour (imdb, negative, bert, DATE, nu=0.0).

@@ -1,0 +1,12 @@
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: bert
+AD model:       RSRAE
+Training time:  9.03 sec
+----------------------------------------
+AUC:            0.6794 ± 0.0124
+Avg Precision:  0.1512 ± 0.0057
+FPR@95:         0.7836 ± 0.0482
+========================================
+

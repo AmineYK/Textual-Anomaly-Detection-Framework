@@ -70,3 +70,87 @@ Avg Precision:  0.0953 ± 0.0015
 FPR@95:         0.9868 ± 0.0068
 ========================================
 
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: bert
+AD model:       flow-matching-Transformers-Comp
+Training time:  3420.58 sec
+----------------------------------------
+AUC:            0.7668 ± 0.0127
+Avg Precision:  0.2101 ± 0.0097
+FPR@95:         0.6090 ± 0.0506
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: bert
+AD model:       AE
+Training time:  3.82 sec
+----------------------------------------
+AUC:            0.4733 ± 0.0130
+Avg Precision:  0.1006 ± 0.0042
+FPR@95:         0.8778 ± 0.0043
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: bert
+AD model:       ocsvm
+Training time:  1.23 sec
+----------------------------------------
+AUC:            0.4507 ± 0.0141
+Avg Precision:  0.0895 ± 0.0028
+FPR@95:         0.9783 ± 0.0069
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: bert
+AD model:       TCCM
+Training time:  5.34 sec
+----------------------------------------
+AUC:            0.4629 ± 0.0133
+Avg Precision:  0.0948 ± 0.0032
+FPR@95:         0.8824 ± 0.0076
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: bert
+AD model:       RSRAE
+Training time:  41.27 sec
+----------------------------------------
+AUC:            0.4540 ± 0.0131
+Avg Precision:  0.0954 ± 0.0040
+FPR@95:         0.8915 ± 0.0074
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: bert
+AD model:       DATE
+Training time:  57.12 sec
+----------------------------------------
+AUC:            0.6733 ± 0.1932
+Avg Precision:  0.2544 ± 0.1758
+FPR@95:         0.7094 ± 0.2864
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: bert
+AD model:       CVDD
+Training time:  319.59 sec
+----------------------------------------
+AUC:            0.7581 ± 0.1069
+Avg Precision:  0.2640 ± 0.1416
+FPR@95:         0.6948 ± 0.1581
+========================================
+

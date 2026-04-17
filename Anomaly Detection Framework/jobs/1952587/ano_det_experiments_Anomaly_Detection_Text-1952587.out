@@ -1,0 +1,93 @@
+Working directory: /home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework
+Job ID: 1952587
+Timestamp: 
+
+<<<<<<<<<<<<<< imdb >>>>>>>>>>>>>>>>>>>
+
+------------------------ negative(1/1) -----------------------------
+torch.Size([12500, 256, 768])
++++++++++++++++++++++ run : 1 / 4 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+Epoch 1/100
+Train Loss: 0.0101, LR: 0.000032
+tensor(0.9992, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 34/100
+Train Loss: 0.0049, LR: 0.000995
+tensor(0.6875, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 67/100
+Train Loss: 0.0024, LR: 0.000478
+tensor(0.4858, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 100/100
+Train Loss: 0.0021, LR: 0.000001
+tensor(0.4530, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 48.773 mn
+AUC:        0.6655
+Avg Precision: 0.1641
+FPR@95:     0.8360
+FM --> AUC: 0.6655 | FPR@95: 0.8360 | AP: 0.1641
+
++++++++++++++++++++++ run : 2 / 4 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+Epoch 1/100
+Train Loss: 0.0101, LR: 0.000032
+tensor(0.9992, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 34/100
+Train Loss: 0.0049, LR: 0.000995
+tensor(0.6875, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 67/100
+Train Loss: 0.0024, LR: 0.000478
+tensor(0.4861, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 100/100
+Train Loss: 0.0021, LR: 0.000001
+tensor(0.4533, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 48.761 mn
+AUC:        0.6673
+Avg Precision: 0.1656
+FPR@95:     0.8463
+FM --> AUC: 0.6673 | FPR@95: 0.8463 | AP: 0.1656
+
++++++++++++++++++++++ run : 3 / 4 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+Epoch 1/100
+Train Loss: 0.0101, LR: 0.000032
+tensor(0.9992, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 34/100
+Train Loss: 0.0049, LR: 0.000995
+tensor(0.6876, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 67/100
+Train Loss: 0.0024, LR: 0.000478
+tensor(0.4861, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 100/100
+Train Loss: 0.0021, LR: 0.000001
+tensor(0.4533, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 48.794 mn
+AUC:        0.6038
+Avg Precision: 0.1317
+FPR@95:     0.8820
+FM --> AUC: 0.6038 | FPR@95: 0.8820 | AP: 0.1317
+
++++++++++++++++++++++ run : 4 / 4 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+Epoch 1/100
+Train Loss: 0.0101, LR: 0.000032
+tensor(0.9992, device='cuda:0', grad_fn=<ExpBackward0>)

@@ -1,0 +1,96 @@
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: bert
+AD model:       AE
+Training time:  3.87 sec
+----------------------------------------
+AUC:            0.5115 ± 0.0039
+Avg Precision:  0.0989 ± 0.0012
+FPR@95:         0.9230 ± 0.0059
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: bert
+AD model:       RSRAE
+Training time:  42.06 sec
+----------------------------------------
+AUC:            0.5166 ± 0.0019
+Avg Precision:  0.0997 ± 0.0008
+FPR@95:         0.9171 ± 0.0032
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: bert
+AD model:       ocsvm
+Training time:  13.11 sec
+----------------------------------------
+AUC:            0.4764 ± 0.0063
+Avg Precision:  0.0936 ± 0.0018
+FPR@95:         0.9618 ± 0.0019
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: bert
+AD model:       AE
+Training time:  3.46 sec
+----------------------------------------
+AUC:            0.6827 ± 0.0027
+Avg Precision:  0.1723 ± 0.0036
+FPR@95:         0.8129 ± 0.0108
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: bert
+AD model:       RSRAE
+Training time:  42.00 sec
+----------------------------------------
+AUC:            0.6835 ± 0.0025
+Avg Precision:  0.1736 ± 0.0019
+FPR@95:         0.8147 ± 0.0096
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: bert
+AD model:       ocsvm
+Training time:  13.02 sec
+----------------------------------------
+AUC:            0.5548 ± 0.0054
+Avg Precision:  0.1186 ± 0.0010
+FPR@95:         0.8849 ± 0.0123
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: bert
+AD model:       TCCM
+Training time:  19.21 sec
+----------------------------------------
+AUC:            0.5196 ± 0.0129
+Avg Precision:  0.1000 ± 0.0029
+FPR@95:         0.9112 ± 0.0098
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: bert
+AD model:       TCCM
+Training time:  29.21 sec
+----------------------------------------
+AUC:            0.6607 ± 0.0113
+Avg Precision:  0.1576 ± 0.0052
+FPR@95:         0.8495 ± 0.0198
+========================================
+

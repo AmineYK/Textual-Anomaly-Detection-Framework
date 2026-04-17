@@ -1,0 +1,129 @@
+Working directory: /home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework
+Job ID: 1952569
+Timestamp: 
+
+<<<<<<<<<<<<<< sms >>>>>>>>>>>>>>>>>>>
+
+------------------------ normal(1/1) -----------------------------
+torch.Size([3858, 256, 768])
++++++++++++++++++++++ run : 1 / 10 +++++++++++++++++
+
+torch.Size([966, 256, 768])
+Epoch 1 | Loss: 0.487321
+Epoch 11 | Loss: 0.135918
+Epoch 21 | Loss: 0.023748
+\CVDD finishing... after 5.325 mn
+AUC:        0.9015
+Avg Precision: 0.4654
+FPR@95:     0.4563
+CVDD --> AUC: 0.9015 | FPR@95: 0.4563 | AP: 0.4654
+
++++++++++++++++++++++ run : 2 / 10 +++++++++++++++++
+
+torch.Size([966, 256, 768])
+Epoch 1 | Loss: 0.495281
+Epoch 11 | Loss: 0.186279
+Epoch 21 | Loss: 0.025522
+\CVDD finishing... after 5.319 mn
+AUC:        0.6319
+Avg Precision: 0.1290
+FPR@95:     0.8839
+CVDD --> AUC: 0.6319 | FPR@95: 0.8839 | AP: 0.1290
+
++++++++++++++++++++++ run : 3 / 10 +++++++++++++++++
+
+torch.Size([966, 256, 768])
+Epoch 1 | Loss: 0.502980
+Epoch 11 | Loss: 0.210409
+Epoch 21 | Loss: 0.024776
+\CVDD finishing... after 5.323 mn
+AUC:        0.6883
+Avg Precision: 0.1630
+FPR@95:     0.8483
+CVDD --> AUC: 0.6883 | FPR@95: 0.8483 | AP: 0.1630
+
++++++++++++++++++++++ run : 4 / 10 +++++++++++++++++
+
+torch.Size([966, 256, 768])
+Epoch 1 | Loss: 0.501336
+Epoch 11 | Loss: 0.210071
+Epoch 21 | Loss: 0.029703
+\CVDD finishing... after 5.318 mn
+AUC:        0.7003
+Avg Precision: 0.1607
+FPR@95:     0.8379
+CVDD --> AUC: 0.7003 | FPR@95: 0.8379 | AP: 0.1607
+
++++++++++++++++++++++ run : 5 / 10 +++++++++++++++++
+
+torch.Size([966, 256, 768])
+Epoch 1 | Loss: 0.497790
+Epoch 11 | Loss: 0.192857
+Epoch 21 | Loss: 0.023926
+\CVDD finishing... after 5.319 mn
+AUC:        0.8802
+Avg Precision: 0.4166
+FPR@95:     0.4989
+CVDD --> AUC: 0.8802 | FPR@95: 0.4989 | AP: 0.4166
+
++++++++++++++++++++++ run : 6 / 10 +++++++++++++++++
+
+torch.Size([966, 256, 768])
+Epoch 1 | Loss: 0.501408
+Epoch 11 | Loss: 0.205040
+Epoch 21 | Loss: 0.025858
+\CVDD finishing... after 5.328 mn
+AUC:        0.6404
+Avg Precision: 0.1344
+FPR@95:     0.7586
+CVDD --> AUC: 0.6404 | FPR@95: 0.7586 | AP: 0.1344
+
++++++++++++++++++++++ run : 7 / 10 +++++++++++++++++
+
+torch.Size([966, 256, 768])
+Epoch 1 | Loss: 0.505565
+Epoch 11 | Loss: 0.232153
+Epoch 21 | Loss: 0.024516
+\CVDD finishing... after 5.336 mn
+AUC:        0.8911
+Avg Precision: 0.4586
+FPR@95:     0.5379
+CVDD --> AUC: 0.8911 | FPR@95: 0.5379 | AP: 0.4586
+
++++++++++++++++++++++ run : 8 / 10 +++++++++++++++++
+
+torch.Size([966, 256, 768])
+Epoch 1 | Loss: 0.505107
+Epoch 11 | Loss: 0.221193
+Epoch 21 | Loss: 0.023762
+\CVDD finishing... after 5.334 mn
+AUC:        0.6966
+Avg Precision: 0.1615
+FPR@95:     0.7908
+CVDD --> AUC: 0.6966 | FPR@95: 0.7908 | AP: 0.1615
+
++++++++++++++++++++++ run : 9 / 10 +++++++++++++++++
+
+torch.Size([966, 256, 768])
+Epoch 1 | Loss: 0.498628
+Epoch 11 | Loss: 0.193203
+Epoch 21 | Loss: 0.023026
+\CVDD finishing... after 5.328 mn
+AUC:        0.8721
+Avg Precision: 0.4021
+FPR@95:     0.5345
+CVDD --> AUC: 0.8721 | FPR@95: 0.5345 | AP: 0.4021
+
++++++++++++++++++++++ run : 10 / 10 +++++++++++++++++
+
+torch.Size([966, 256, 768])
+Epoch 1 | Loss: 0.495148
+Epoch 11 | Loss: 0.180386
+Epoch 21 | Loss: 0.028870
+\CVDD finishing... after 5.335 mn
+AUC:        0.6785
+Avg Precision: 0.1486
+FPR@95:     0.8011
+CVDD --> AUC: 0.6785 | FPR@95: 0.8011 | AP: 0.1486
+
+Nouveaux résultats ajoutés pour (sms, normal, bert, CVDD, nu=0.0).

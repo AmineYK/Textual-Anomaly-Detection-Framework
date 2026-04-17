@@ -84,6 +84,7 @@ def main(args):
     file_path_hyp = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/hyperparams.txt"
     ft_path = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Modelisation/Baselines/CVDD/embedding_models/wiki-news-300d-1M.vec"
 
+    print(f"\n<<<<<<<<<<<<<< {args.dataset_name} >>>>>>>>>>>>>>>>>>>\n")
 
     # for every inlier category 
     for i, inlier_topic in enumerate(inlier_topics):
@@ -160,11 +161,8 @@ def main(args):
         # X_inlier = load_data_inlier(args.dataset_name, inlier_topic, save_dir)
 
 
-        if args.nu > 0:
-            path = os.path.join(save_dir, f"{args.dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_anomaly_{int(args.nu*100)}.pt")
-            data_train_anomaly = datasets.load_from_disk(path)
-            X_anom_for_train = Tensor(data_train_anomaly['sbert_embeddings']).to(device) 
-            print(X_anom_for_train.shape)
+
+
 
         data_train = load_data_inlier(args.dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
 
@@ -188,10 +186,21 @@ def main(args):
             bertmodel = AutoModel.from_pretrained(model_name).to(device)
             bertmodel.eval()
 
-            X_inlier, tokens_train, attentions_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train['text'], device, 512, 128)
+            X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train['text'], device, 64, 256)
             # X_inlier = X_inlier.mean(dim=1)
-
         else: raise Exception("type_emb must be completed !")
+
+        if args.nu > 0:
+            path = os.path.join(save_dir, f"{args.dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_anomaly_{int(args.nu*100)}.pt")
+            data_train_anomaly = datasets.load_from_disk(path)
+            X_anom_for_train = Tensor(data_train_anomaly['sbert_embeddings']).to(device) 
+            print(X_anom_for_train.shape)
+
+            # bert
+            # X_inlier_anomaly, _, _ = encode_tokens(bertmodel, tokenizer, data_train_anomaly['text'], device, 64, 256)
+            # print("Anom : ")
+            # print(X_inlier_anomaly.shape)
+
 
         print(X_inlier.shape)
 
@@ -200,10 +209,10 @@ def main(args):
         # get the hyperparamter for the FM model for this specific inlier category
         hyp = load_hyperparams(args.dataset_name, inlier_topic, 'sentence_bert', file_path_hyp)
         # print(hyp)
-        nb_runs = 6
+        nb_runs = args.nb_runs
         for n_run in range(1, nb_runs):
 
-            print(f"+++++++++++++++++++++ run : {n_run} +++++++++++++++++\n")
+            print(f"+++++++++++++++++++++ run : {n_run} / {nb_runs - 1} +++++++++++++++++\n")
 
             # if args.cvdd:
             #     data_test = load_data_test(args.dataset_name, inlier_topic, n_run, save_dir, is_cvdd=True)
@@ -223,7 +232,7 @@ def main(args):
                 X_test = Tensor(data_test['sbert_embeddings']).to(device)
             
             elif args.type_emb == 'bert':
-                X_test,  tokens_test,  attentions_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test['text'], device, 512, 128)
+                X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test['text'], device, 64, 256)
                 # X_test = X_test.mean(dim=1)
 
             else: raise Exception("type_emb must be completed !")
@@ -248,13 +257,13 @@ def main(args):
                 if args.nu > 0:   
                     _ = ocsvm_model.train(torch.concatenate([X_inlier, X_anom_for_train]).cpu())
                 else:
-                    _ = ocsvm_model.train(X_inlier.cpu())
-                    # _ = ocsvm_model.train(X_inlier.mean(dim=1).cpu())
+                    # _ = ocsvm_model.train(X_inlier.cpu())
+                    _ = ocsvm_model.train(X_inlier.mean(dim=1).cpu())
                 tiic = time.time()
                 print(f"\nOCSVM finishing... after {(tiic-taac)/60:.3f} mn")
 
-                auc_ocsvm, fpr95_ocsvm, ap_ocsvm = ocsvm_model.test(X_test.cpu(), y_test)
-                # auc_ocsvm, fpr95_ocsvm, ap_ocsvm = ocsvm_model.test(X_test.mean(dim=1).cpu(), y_test)
+                # auc_ocsvm, fpr95_ocsvm, ap_ocsvm = ocsvm_model.test(X_test.cpu(), y_test)
+                auc_ocsvm, fpr95_ocsvm, ap_ocsvm = ocsvm_model.test(X_test.mean(dim=1).cpu(), y_test)
                 print(f"OCSVM --> AUC: {auc_ocsvm:.4f} | FPR@95: {fpr95_ocsvm:.4f} | AP: {ap_ocsvm:.4f}\n")
 
                 list_auc_ocsvm.append(auc_ocsvm)
@@ -270,26 +279,33 @@ def main(args):
             if args.rsrae:
 
                 rsrae_args = {
-                    "input_dim": X_inlier.shape[1], "hidden_layer_sizes": (64,32,16), "intrinsic_size": 10,
+                    # "input_dim": X_inlier.shape[2], "hidden_layer_sizes": (64,32,16), "intrinsic_size": 10,
+                    "input_dim": X_inlier.shape[2], "hidden_layer_sizes": (128,64,32), "intrinsic_size": 10,
                     "activation": nn.ReLU(), "norm_type": 'l21', "loss_norm_type": 'mse',
                     "if_rsr": True, "enforce_proj": True, "all_alt": True,
-                    "learning_rate": 1e-3, "lambda1": 0.1, "lambda2": 0.1,
-                    "epoch_size": 20, "batch_show": 50, "normalize": True,
-                    "bn": False, "seed": 42, 'batch_size': X_inlier.shape[0] // 5
+                    "learning_rate": 1e-4, "lambda1": 0.1, "lambda2": 0.1,
+                    "epoch_size": 100, "batch_show": 50, "normalize": True,
+                    "bn": False, "seed": 42, 'batch_size': X_inlier.shape[0] // 100
                 }
 
                 rsrae_model = RSRAE(rsrae_args)
 
                 taac = time.time()
                 if args.nu > 0.0:
-                    _ = rsrae_model.train(torch.concatenate([X_inlier, X_anom_for_train]), device)
+                    # _ = rsrae_model.train(torch.concatenate([X_inlier, X_anom_for_train]), device)
+                    _ = rsrae_model.train(torch.concatenate([X_inlier.mean(dim=1), X_inlier_anomaly.mean(dim=1)]), device)
                 else:
-                    _ = rsrae_model.train(X_inlier, device)
+                    # _ = rsrae_model.train(X_inlier, device)
+                    _ = rsrae_model.train(X_inlier.mean(dim=1), device)
+                    
+
+
                 tiic = time.time()
                 
                 print(f"\nRSRAE finishing... after {(tiic-taac)/60:.3f} mn")
 
-                auc_rsrae, fpr95_rsrae, ap_rsrae = rsrae_model.test(X_test, y_test)
+                # auc_rsrae, fpr95_rsrae, ap_rsrae = rsrae_model.test(X_test, y_test)
+                auc_rsrae, fpr95_rsrae, ap_rsrae = rsrae_model.test(X_test.mean(dim=1), y_test, device)
                 print(f"RSRAE --> AUC: {auc_rsrae:.4f} | FPR@95: {fpr95_rsrae:.4f} | AP: {ap_rsrae:.4f}\n")
 
                 list_auc_rsrae.append(auc_rsrae)
@@ -308,7 +324,7 @@ def main(args):
                     "contamination": 0.1,
                     "hidden_neuron_list": [64, 32, 16],
                     "hidden_activation_name": "relu",
-                    "epoch_num": 10,
+                    "epoch_num": 30,
                     "batch_size": X_inlier.shape[0] // 5,
                     "dropout_rate": 0.0,
                     "verbose": 0
@@ -321,11 +337,13 @@ def main(args):
                 if args.nu > 0:   
                     _ = ae_model.train(torch.concatenate([X_inlier, X_anom_for_train]).cpu())
                 else:
-                    _ = ae_model.train(X_inlier)
+                    # _ = ae_model.train(X_inlier)
+                    _ = ae_model.train(X_inlier.mean(dim=1))
                 tiic = time.time()
                 print(f"\nAE finishing... after {(tiic-taac)/60:.3f} mn")
                 
-                auc_ae, fpr95_ae, ap_ae = ae_model.test(X_test, y_test)
+                # auc_ae, fpr95_ae, ap_ae = ae_model.test(X_test, y_test)
+                auc_ae, fpr95_ae, ap_ae = ae_model.test(X_test.mean(dim=1), y_test)
                 print(f"AE --> AUC: {auc_ae:.4f} | FPR@95: {fpr95_ae:.4f} | AP: {ap_ae:.4f}\n")
 
                 list_auc_ae.append(auc_ae)
@@ -341,9 +359,10 @@ def main(args):
             if args.tccm:
 
                 tccm_args={
-                    "n_features": X_inlier.shape[1],
-                    "epochs" : 30,
-                    "learning_rate" : 1e-4,
+                    # "n_features": X_inlier.shape[1],
+                    "n_features": X_inlier.shape[2],
+                    "epochs" : 100,
+                    "learning_rate" : 1e-3,
                     "batch_size": 128,
                     "device": device
                 }
@@ -354,11 +373,13 @@ def main(args):
                 if args.nu > 0:   
                     _ = tccm_model.train(torch.concatenate([X_inlier, X_anom_for_train]))
                 else:
-                    _ = tccm_model.train(X_inlier)
+                    # _ = tccm_model.train(X_inlier)
+                    _ = tccm_model.train(X_inlier.mean(dim=1))
                 tiic = time.time()
                 print(f"\nTCCM finishing... after {(tiic-taac)/60:.3f} mn")
                 
-                auc_tccm, fpr95_tccm, ap_tccm = tccm_model.test(X_test, y_test)
+                # auc_tccm, fpr95_tccm, ap_tccm = tccm_model.test(X_test, y_test)
+                auc_tccm, fpr95_tccm, ap_tccm = tccm_model.test(X_test.mean(dim=1), y_test)
                 print(f"TCCM --> AUC: {auc_tccm:.4f} | FPR@95: {fpr95_tccm:.4f} | AP: {ap_tccm:.4f}\n")
                 
                 list_auc_tccm.append(auc_tccm)
@@ -426,16 +447,16 @@ def main(args):
 
             if args.cvdd:
                 cvdd_args = {
-                    "bert_name": "albert-base-v2", #albert-large-v2   
+                    "bert_name": "roberta-base", #albert-large-v2   
                     "hidden_size": 768, #1024 
-                    "n_attention_heads": 4,
+                    "n_attention_heads": 10,
                     "attention_size": 64,
                     "freeze_bert": True,
-                    "lr": 1e-1,
+                    "lr": 1e-3,
                     "weight_decay" : 0,
                     "lambda_p": 0.1,
-                    "n_epochs": 5,
-                    "batch_size": 128,
+                    "n_epochs": 30,
+                    "batch_size": 512,
                     "device": device
                     }
                 
@@ -467,14 +488,16 @@ def main(args):
                 date_args = {
                     # "which_config": "bert",
                     # "encoder_name": "albert-base-v2", 
-                    "which_config": "electra",
-                    "encoder_name": "google/electra-small-discriminator",
-                    "K": 50,
+                    "which_config": "roberta",
+                    "encoder_name":  "roberta-base",
+                    # "which_config": "electra",
+                    # "encoder_name": "google/electra-small-discriminator",
+                    "K": 20,
                     "lr": 1e-3,
                     "weight_decay" : 0,
-                    "seq_len": 200,
+                    "seq_len": 128,
                     "ratio": 0.50,
-                    "n_epochs": 15,
+                    "n_epochs": 30,
                     "batch_size": 128,
                     "device": device
                     }
@@ -586,16 +609,16 @@ def main(args):
                 config = {
                     'latent_dim': 768,
                     'hidden_dim': 64,
-                    'depth': 4,
-                    'n_heads': 4,
+                    'depth': 8,
+                    'n_heads': 8,
                     'lr': 1e-3,
                     'weight_decay': 1e-3,
                     'lambda_svdd': 1e-2,
                     # 'lambda_push': 1e-2,
                     'lambda_push': 0,
                     'lambda_margin': 0,
-                    'epochs': 250,
-                    'lr_epochs': 90,
+                    'epochs': 200,
+                    'lr_epochs':80,
                     'warmup_epochs': -1,
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
@@ -749,7 +772,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="CVDD",
             auc_mean=np.mean(list_auc_cvdd), ap_mean=np.mean(list_ap_cvdd),fpr_mean=np.mean(list_fpr_cvdd),
             auc_std = np.std(list_auc_cvdd),ap_std =  np.std(list_ap_cvdd),fpr_std = np.std(list_fpr_cvdd),
-            train_time = np.mean(list_time_cvdd), nu=args.nu, overwrite='naive'
+            train_time = np.mean(list_time_cvdd), nu=args.nu, overwrite='smart'
             )
 
         if args.date:
@@ -757,7 +780,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="DATE",
             auc_mean=np.mean(list_auc_date), ap_mean=np.mean(list_ap_date),fpr_mean=np.mean(list_fpr_date),
             auc_std = np.std(list_auc_date),ap_std =  np.std(list_ap_date),fpr_std = np.std(list_fpr_date),
-            train_time = np.mean(list_time_date), nu=args.nu, overwrite='naive'
+            train_time = np.mean(list_time_date), nu=args.nu, overwrite='smart'
             )
 
         if args.fate:
@@ -801,6 +824,12 @@ if __name__ == "__main__":
         "--nu",
         type=float,
         default=0.0
+    )
+
+    parser.add_argument(
+        "--nb_runs",
+        type=int,
+        default=5
     )
 
     parser.add_argument(

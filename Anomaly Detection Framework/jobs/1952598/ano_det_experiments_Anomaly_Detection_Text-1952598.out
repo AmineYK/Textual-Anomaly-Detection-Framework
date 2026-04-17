@@ -1,0 +1,186 @@
+Working directory: /home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework
+Job ID: 1952598
+Timestamp: 
+
+<<<<<<<<<<<<<< imdb >>>>>>>>>>>>>>>>>>>
+
+------------------------ positive(1/2) -----------------------------
+torch.Size([12500, 256, 768])
++++++++++++++++++++++ run : 1 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+OCSVM finishing... after 0.216 mn
+OCSVM --> AUC: 0.4790 | FPR@95: 0.9634 | AP: 0.0940
+
+Epoch 50/100 - Loss: 0.0088
+Epoch 100/100 - Loss: 0.0084
+
+RSRAE finishing... after 0.716 mn
+RSRAE --> AUC: 0.5164 | FPR@95: 0.9172 | AP: 0.0999
+
+
+AE finishing... after 0.094 mn
+AE --> AUC: 0.5093 | FPR@95: 0.9318 | AP: 0.0986
+
++++++++++++++++++++++ run : 2 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+OCSVM finishing... after 0.217 mn
+OCSVM --> AUC: 0.4738 | FPR@95: 0.9602 | AP: 0.0935
+
+Epoch 50/100 - Loss: 0.0088
+Epoch 100/100 - Loss: 0.0084
+
+RSRAE finishing... after 0.687 mn
+RSRAE --> AUC: 0.5202 | FPR@95: 0.9112 | AP: 0.1008
+
+
+AE finishing... after 0.060 mn
+AE --> AUC: 0.5167 | FPR@95: 0.9207 | AP: 0.1001
+
++++++++++++++++++++++ run : 3 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+OCSVM finishing... after 0.213 mn
+OCSVM --> AUC: 0.4796 | FPR@95: 0.9630 | AP: 0.0950
+
+Epoch 50/100 - Loss: 0.0088
+Epoch 100/100 - Loss: 0.0084
+
+RSRAE finishing... after 0.686 mn
+RSRAE --> AUC: 0.5152 | FPR@95: 0.9184 | AP: 0.0984
+
+
+AE finishing... after 0.055 mn
+AE --> AUC: 0.5113 | FPR@95: 0.9280 | AP: 0.0977
+
++++++++++++++++++++++ run : 4 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+OCSVM finishing... after 0.228 mn
+OCSVM --> AUC: 0.4654 | FPR@95: 0.9636 | AP: 0.0902
+
+Epoch 50/100 - Loss: 0.0088
+Epoch 100/100 - Loss: 0.0084
+
+RSRAE finishing... after 0.727 mn
+RSRAE --> AUC: 0.5151 | FPR@95: 0.9181 | AP: 0.0995
+
+
+AE finishing... after 0.058 mn
+AE --> AUC: 0.5057 | FPR@95: 0.9180 | AP: 0.0975
+
++++++++++++++++++++++ run : 5 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+OCSVM finishing... after 0.217 mn
+OCSVM --> AUC: 0.4839 | FPR@95: 0.9588 | AP: 0.0952
+
+Epoch 50/100 - Loss: 0.0088
+Epoch 100/100 - Loss: 0.0084
+
+RSRAE finishing... after 0.689 mn
+RSRAE --> AUC: 0.5160 | FPR@95: 0.9207 | AP: 0.1001
+
+
+AE finishing... after 0.055 mn
+AE --> AUC: 0.5146 | FPR@95: 0.9167 | AP: 0.1006
+
+Nouveaux résultats ajoutés pour (imdb, positive, bert, AE, nu=0.0).
+Nouveaux résultats ajoutés pour (imdb, positive, bert, RSRAE, nu=0.0).
+Nouveaux résultats ajoutés pour (imdb, positive, bert, ocsvm, nu=0.0).
+------------------------ negative(2/2) -----------------------------
+torch.Size([12500, 256, 768])
++++++++++++++++++++++ run : 1 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+OCSVM finishing... after 0.215 mn
+OCSVM --> AUC: 0.5446 | FPR@95: 0.8966 | AP: 0.1170
+
+Epoch 50/100 - Loss: 0.0086
+Epoch 100/100 - Loss: 0.0083
+
+RSRAE finishing... after 0.704 mn
+RSRAE --> AUC: 0.6804 | FPR@95: 0.8192 | AP: 0.1731
+
+
+AE finishing... after 0.058 mn
+AE --> AUC: 0.6820 | FPR@95: 0.8205 | AP: 0.1750
+
++++++++++++++++++++++ run : 2 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+OCSVM finishing... after 0.215 mn
+OCSVM --> AUC: 0.5607 | FPR@95: 0.8627 | AP: 0.1192
+
+Epoch 50/100 - Loss: 0.0086
+Epoch 100/100 - Loss: 0.0083
+
+RSRAE finishing... after 0.699 mn
+RSRAE --> AUC: 0.6871 | FPR@95: 0.8256 | AP: 0.1727
+
+
+AE finishing... after 0.058 mn
+AE --> AUC: 0.6837 | FPR@95: 0.7994 | AP: 0.1714
+
++++++++++++++++++++++ run : 3 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+OCSVM finishing... after 0.228 mn
+OCSVM --> AUC: 0.5562 | FPR@95: 0.8838 | AP: 0.1178
+
+Epoch 50/100 - Loss: 0.0086
+Epoch 100/100 - Loss: 0.0083
+
+RSRAE finishing... after 0.694 mn
+RSRAE --> AUC: 0.6856 | FPR@95: 0.8019 | AP: 0.1708
+
+
+AE finishing... after 0.058 mn
+AE --> AUC: 0.6786 | FPR@95: 0.8058 | AP: 0.1657
+
++++++++++++++++++++++ run : 4 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+OCSVM finishing... after 0.212 mn
+OCSVM --> AUC: 0.5562 | FPR@95: 0.8850 | AP: 0.1190
+
+Epoch 50/100 - Loss: 0.0086
+Epoch 100/100 - Loss: 0.0083
+
+RSRAE finishing... after 0.687 mn
+RSRAE --> AUC: 0.6833 | FPR@95: 0.8220 | AP: 0.1747
+
+
+AE finishing... after 0.057 mn
+AE --> AUC: 0.6871 | FPR@95: 0.8295 | AP: 0.1749
+
++++++++++++++++++++++ run : 5 / 5 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+OCSVM finishing... after 0.215 mn
+OCSVM --> AUC: 0.5561 | FPR@95: 0.8963 | AP: 0.1200
+
+Epoch 50/100 - Loss: 0.0086
+Epoch 100/100 - Loss: 0.0083
+
+RSRAE finishing... after 0.715 mn
+RSRAE --> AUC: 0.6812 | FPR@95: 0.8046 | AP: 0.1765
+
+
+AE finishing... after 0.058 mn
+AE --> AUC: 0.6823 | FPR@95: 0.8095 | AP: 0.1746
+
+Nouveaux résultats ajoutés pour (imdb, negative, bert, AE, nu=0.0).
+Nouveaux résultats ajoutés pour (imdb, negative, bert, RSRAE, nu=0.0).
+Nouveaux résultats ajoutés pour (imdb, negative, bert, ocsvm, nu=0.0).

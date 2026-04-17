@@ -9,6 +9,7 @@ import numpy as np
 from torch import Tensor
 from Data_Preparation.Tac import tac
 import torch
+from tqdm import tqdm
 
 
 # def preprocess(dataset):
@@ -74,11 +75,97 @@ def preprocess(dataset):
     return dataset
 
 
+@torch.no_grad()
+def encode_tokens(
+    model,
+    tokenizer,
+    texts,
+    device,
+    batch_size=32,
+    max_length=256,
+    return_attentions=False,
+    use_fp16=False,           # ✅ moitié mémoire
+    save_to_disk=None,       # ✅ ex: "embeddings.pt" pour éviter OOM
+):
+    # Cast model en fp16 si demandé
+    if use_fp16:
+        model = model.half()
+
+    all_embeddings = []
+    all_tokens = []
+    all_attention_masks = []
+    all_attentions = [] if return_attentions else None
+
+    for i in tqdm(range(0, len(texts), batch_size)):
+        batch = texts[i:i + batch_size]
+
+        inputs = tokenizer(
+            batch,
+            padding="max_length",
+            truncation=True,
+            max_length=max_length,
+            return_tensors="pt"
+        ).to(device)
+
+        outputs = model(**inputs, output_attentions=return_attentions)
+
+        last_hidden_state = outputs.last_hidden_state  # (B, T, D)
+
+        # Normalisation + descente CPU immédiate
+        emb = torch.nn.functional.normalize(last_hidden_state, p=2, dim=2)
+        all_embeddings.append(emb.cpu())
+        all_attention_masks.append(inputs["attention_mask"].cpu())
+
+        tokens = [
+            tokenizer.convert_ids_to_tokens(ids.tolist())
+            for ids in inputs["input_ids"]
+        ]
+        all_tokens.extend(tokens)
+
+        if return_attentions:
+            batch_attn = torch.stack(outputs.attentions, dim=1)  # (B, L, H, T, T)
+            batch_attn = batch_attn.mean(dim=(1, 2)).cpu()        # (B, T, T)
+            all_attentions.append(batch_attn)
+
+        # Libération propre — on libère les inputs aussi !
+        del outputs, inputs
+        # ❌ pas de empty_cache() ici
+
+    # Concat en CPU — ✅ jamais remettre sur GPU
+    embeddings = torch.cat(all_embeddings, dim=0)          # reste CPU
+    attention_masks = torch.cat(all_attention_masks, dim=0)
+
+    # Sauvegarde disque optionnelle pour les très gros datasets
+    if save_to_disk:
+        torch.save({
+            "embeddings": embeddings,
+            "tokens": all_tokens,
+            "attention_masks": attention_masks,
+        }, save_to_disk)
+        print(f"✅ Sauvegardé dans {save_to_disk}")
+
+    if return_attentions:
+        attentions = torch.cat(all_attentions, dim=0)
+        return embeddings, all_tokens, attentions, attention_masks
+    else:
+        return embeddings, all_tokens, attention_masks
+
 # @torch.no_grad()
-# def encode_tokens(model, tokenizer, texts, device, batch_size=16, max_length=128):
+# def encode_tokens(
+#     model,
+#     tokenizer,
+#     texts,
+#     device,
+#     batch_size=16,
+#     max_length=128,
+#     return_attentions=False  # 🔥 booléen ici
+# ):
 #     all_embeddings = []
 #     all_tokens = []
-#     all_attentions = []
+#     all_attention_masks = []
+
+#     # ⚠️ seulement si activé
+#     all_attentions = [] if return_attentions else None
 
 #     for i in range(0, len(texts), batch_size):
 #         batch = texts[i:i+batch_size]
@@ -91,68 +178,44 @@ def preprocess(dataset):
 #             return_tensors="pt"
 #         ).to(device)
 
-#         outputs = model(**inputs, output_attentions=True)
+#         # 🔥 activer output_attentions seulement si nécessaire
+#         outputs = model(
+#             **inputs,
+#             output_attentions=return_attentions
+#         )
+
 #         last_hidden_state = outputs.last_hidden_state  # (B, T, D)
 
 #         emb = torch.nn.functional.normalize(last_hidden_state, p=2, dim=2)
 #         all_embeddings.append(emb.cpu())
 
-#         # ✅ Agrégation immédiate : moyenne sur layers ET heads → (B, T, T)
-#         # outputs.attentions = tuple de 12 × (B, H, T, T)
-#         batch_attn = torch.stack(outputs.attentions, dim=1)  # (B, 12, 12, T, T)
-#         batch_attn = batch_attn.mean(dim=(1, 2)).cpu()       # (B, T, T) ← beaucoup plus léger
-#         all_attentions.append(batch_attn)
+#         # ✅ Attention masks (toujours utiles)
+#         all_attention_masks.append(inputs["attention_mask"].cpu())
 
+#         # ✅ Tokens
 #         tokens = [tokenizer.convert_ids_to_tokens(ids) for ids in inputs["input_ids"]]
 #         all_tokens.extend(tokens)
 
-#     return (
-#         torch.cat(all_embeddings, dim=0).to(device),
-#         all_tokens,
-#         torch.cat(all_attentions, dim=0)  # (N, T, T)
-#     )
+#         # 🔥 Calcul des attentions uniquement si demandé
+#         if return_attentions:
+#             batch_attn = torch.stack(outputs.attentions, dim=1)  # (B, L, H, T, T)
+#             batch_attn = batch_attn.mean(dim=(1, 2)).cpu()       # (B, T, T)
+#             all_attentions.append(batch_attn)
 
-@torch.no_grad()
-def encode_tokens(model, tokenizer, texts, device, batch_size=16, max_length=128):
-    all_embeddings = []
-    all_tokens = []
-    all_attentions = []
-    all_attention_masks = []
+#         # 🔥 libération mémoire GPU (important)
+#         del outputs
+#         torch.cuda.empty_cache()
 
-    for i in range(0, len(texts), batch_size):
-        batch = texts[i:i+batch_size]
+#     # 🔥 concat final
+#     embeddings = torch.cat(all_embeddings, dim=0).to(device)
+#     attention_masks = torch.cat(all_attention_masks, dim=0)
 
-        inputs = tokenizer(
-            batch,
-            padding="max_length",
-            truncation=True,
-            max_length=max_length,
-            return_tensors="pt"
-        ).to(device)
-
-        outputs = model(**inputs, output_attentions=True)
-        last_hidden_state = outputs.last_hidden_state  # (B, T, D)
-
-        emb = torch.nn.functional.normalize(last_hidden_state, p=2, dim=2)
-        all_embeddings.append(emb.cpu())
-
-        # attentions (B, T, T)
-        batch_attn = torch.stack(outputs.attentions, dim=1)  # (B, L, H, T, T)
-        batch_attn = batch_attn.mean(dim=(1, 2)).cpu()
-        all_attentions.append(batch_attn)
-
-        # ✅ récupérer attention_mask
-        all_attention_masks.append(inputs["attention_mask"].cpu())
-
-        tokens = [tokenizer.convert_ids_to_tokens(ids) for ids in inputs["input_ids"]]
-        all_tokens.extend(tokens)
-
-    return (
-        torch.cat(all_embeddings, dim=0).to(device),   # (N, T, D)
-        all_tokens,
-        torch.cat(all_attentions, dim=0),              # (N, T, T)
-        torch.cat(all_attention_masks, dim=0)          # (N, T)
-    )
+#     if return_attentions:
+#         attentions = torch.cat(all_attentions, dim=0)
+#         return embeddings, all_tokens, attentions, attention_masks
+#     else:
+#         return embeddings, all_tokens, attention_masks
+        
 
 # Dataset Importing
 #--------------------

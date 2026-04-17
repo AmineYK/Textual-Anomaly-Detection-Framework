@@ -140,7 +140,8 @@ class CAE(nn.Module):
             for batch_idx in range(n_batch):
                 i_start = batch_idx * batch_size
                 i_end = min((batch_idx + 1) * batch_size, n_samples)
-                x_batch = X[idx[i_start:i_end]]
+                x_batch = X[idx[i_start:i_end]].to(device)
+                
                 
                 optimizer_main.zero_grad()
                 y_flat, y_rsr, z, x_hat = self.forward(x_batch)
@@ -209,6 +210,7 @@ class RSRAE(BaselineModel):
 
     def test(self, X_test, y_test, device='cuda'):
         with torch.no_grad():
+            X_test = X_test.to(device)
             features = self.model.get_output(X_test, device=device)
             flat_output = np.reshape(features, (features.shape[0], -1))
             flat_input = np.reshape(X_test.cpu().numpy(), (X_test.shape[0], -1))

@@ -445,7 +445,7 @@ class FlowMatchingTransformersToken(nn.Module):
 
     #     return x_t, velocities_tokens, x_t_inter
 
-    def _euler_integrate_single(self, x_0, mask, N_steps=10, save_all=False):
+    def _euler_integrate_single(self, x_0, mask, N_steps=5, save_all=False):
         with torch.no_grad():
 
             # ✅ x_0_sentence pour le transport
@@ -455,6 +455,7 @@ class FlowMatchingTransformersToken(nn.Module):
 
             x_t_sent = x_0_sentence.clone()
             dt = 1.0 / N_steps
+            residual = x_0 - x_0_sentence.unsqueeze(1)
 
             if save_all:
                 velocities_tokens = []
@@ -466,14 +467,11 @@ class FlowMatchingTransformersToken(nn.Module):
                     (x_t_sent.shape[0],), t_val, device=self.device
                 )
 
-                # ✅ x_t_tokens = x_t_sentence + résidu original
-                residual   = x_0 - x_0_sentence.unsqueeze(1)
-                x_t_tokens = x_t_sent.unsqueeze(1) + residual     # (B, T, 768)
+                x_t_tokens = x_t_sent.unsqueeze(1) + residual     
 
                 v_sentence, v_tokens, _ = self.model(x_t_tokens, t, mask)
-
-                # ✅ Intégration au niveau sentence
-                x_t_sent = x_t_sent + dt * v_sentence             # (B, 768)
+                
+                x_t_sent = x_t_sent + dt * v_sentence            
 
                 if save_all:
                     velocities_tokens.append(v_tokens.detach().cpu())
@@ -488,7 +486,7 @@ class FlowMatchingTransformersToken(nn.Module):
         return x_t_sent, velocities_tokens, x_t_inter
 
 
-    def euler_integrate(self, x_0, mask, N_steps=10, save_all=False, batch_size=64):
+    def euler_integrate(self, x_0, mask, N_steps=5, save_all=False, batch_size=16):
         all_x_final = []
 
         if save_all:
@@ -512,7 +510,6 @@ class FlowMatchingTransformersToken(nn.Module):
                 all_x_inter.append(x_inter)
 
             del x_batch, mask_batch, x_final, velocities, x_inter
-            torch.cuda.empty_cache()
 
         all_x_final = torch.cat(all_x_final, dim=0)
 
@@ -521,7 +518,7 @@ class FlowMatchingTransformersToken(nn.Module):
             all_x_inter = torch.cat(all_x_inter, dim=1)
             return all_x_final, all_velocities, all_x_inter
 
-        return all_x_final.to(self.device), None, None
+        return all_x_final, None, None
 
     # def compute_flow_loss(self, x_0, mask_x_0, indices, flow_type='linear', sigma=0.1, warmup_activated=False):
 

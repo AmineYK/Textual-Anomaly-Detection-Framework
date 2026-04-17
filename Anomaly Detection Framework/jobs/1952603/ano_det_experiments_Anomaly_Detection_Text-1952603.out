@@ -1,0 +1,69 @@
+Working directory: /home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework
+Job ID: 1952603
+Timestamp: 
+
+<<<<<<<<<<<<<< enron >>>>>>>>>>>>>>>>>>>
+
+------------------------ normal(1/1) -----------------------------
+torch.Size([15553, 256, 768])
++++++++++++++++++++++ run : 1 / 5 +++++++++++++++++
+
+torch.Size([992, 256, 768])
+Epoch 1 | Loss: 0.469716
+Epoch 11 | Loss: 0.016902
+Epoch 21 | Loss: 0.011787
+\CVDD finishing... after 25.064 mn
+AUC:        0.7827
+Avg Precision: 0.2654
+FPR@95:     0.6349
+CVDD --> AUC: 0.7827 | FPR@95: 0.6349 | AP: 0.2654
+
++++++++++++++++++++++ run : 2 / 5 +++++++++++++++++
+
+torch.Size([992, 256, 768])
+Epoch 1 | Loss: 0.476726
+Epoch 11 | Loss: 0.016392
+Epoch 21 | Loss: 0.011493
+\CVDD finishing... after 25.198 mn
+AUC:        0.7817
+Avg Precision: 0.2825
+FPR@95:     0.6349
+CVDD --> AUC: 0.7817 | FPR@95: 0.6349 | AP: 0.2825
+
++++++++++++++++++++++ run : 3 / 5 +++++++++++++++++
+
+torch.Size([992, 256, 768])
+Epoch 1 | Loss: 0.479709
+Epoch 11 | Loss: 0.016877
+Epoch 21 | Loss: 0.011588
+\CVDD finishing... after 25.186 mn
+AUC:        0.7772
+Avg Precision: 0.2506
+FPR@95:     0.8343
+CVDD --> AUC: 0.7772 | FPR@95: 0.8343 | AP: 0.2506
+
++++++++++++++++++++++ run : 4 / 5 +++++++++++++++++
+
+torch.Size([992, 256, 768])
+Epoch 1 | Loss: 0.469735
+Epoch 11 | Loss: 0.016497
+Epoch 21 | Loss: 0.011397
+\CVDD finishing... after 25.143 mn
+AUC:        0.7754
+Avg Precision: 0.2372
+FPR@95:     0.6551
+CVDD --> AUC: 0.7754 | FPR@95: 0.6551 | AP: 0.2372
+
++++++++++++++++++++++ run : 5 / 5 +++++++++++++++++
+
+torch.Size([992, 256, 768])
+Epoch 1 | Loss: 0.475053
+Epoch 11 | Loss: 0.016320
+Epoch 21 | Loss: 0.011507
+\CVDD finishing... after 25.199 mn
+AUC:        0.7932
+Avg Precision: 0.2519
+FPR@95:     0.6170
+CVDD --> AUC: 0.7932 | FPR@95: 0.6170 | AP: 0.2519
+
+Nouveaux résultats ajoutés pour (enron, normal, bert, CVDD, nu=0.0).
