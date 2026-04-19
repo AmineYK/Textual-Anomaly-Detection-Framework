@@ -154,6 +154,87 @@ def textual_anomaly_contamination_binary(
         is_trainset
     )
 
+# def textual_anomaly_contamination_dbpedia14(
+#     dataset,
+#     dataset_name,
+#     inlier_topic,
+#     type_tac='pantin',
+#     anomaly_rate=0.1,
+#     is_trainset=True
+# ):
+
+#     if type_tac != "pantin":
+#         raise ValueError("TAC not available")
+
+#     level_1_mapping = {
+#         "Company": 0,
+#         "Educational Institution": 1,
+#         "Artist": 2,
+#         "Athlete": 3,
+#         "Office Holder": 4,
+#         "Mean Of Transportation": 5,
+#         "Building": 6,
+#         "Natural Place": 7,
+#         "Village": 8,
+#         "Animal": 9,
+#         "Plant": 10,
+#         "Album": 11,
+#         "Film": 12,
+#         "Written Work": 13
+#     }
+
+#     named_groups = {
+#         "organization": [0, 1],
+#         "people": [2, 3, 4, 9, 10],
+#         "transport": [5],
+#         "construction": [6],
+#         "places": [7, 8],
+#         "media": [11, 12, 13]
+#     }
+
+#     label_to_group = {
+#         lab: group
+#         for group, labels in named_groups.items()
+#         for lab in labels
+#     }
+
+#     if inlier_topic in level_1_mapping:
+
+#         inlier_label = level_1_mapping[inlier_topic]
+#         # parent_group = label_to_group[inlier_label]
+#         # full_group = named_groups[parent_group]
+
+#         inlier_labels = [inlier_label]
+#         # anomaly_labels = [lab for lab in full_group if lab != inlier_label]
+#         anomaly_labels = [lab for lab in level_1_mapping.values() if lab != inlier_label]
+
+#         print(f"Ano : {anomaly_labels}")
+#         print(f"Ini : {inlier_labels}")
+
+#     elif inlier_topic in named_groups:
+
+#         inlier_labels = named_groups[inlier_topic]
+#         anomaly_labels = None
+
+#     else:
+#         raise ValueError(f"Invalid inlier_topic: {inlier_topic}")
+
+#     if anomaly_labels is not None:
+#         inlier_dataset = dataset.filter(lambda x: x["label"] in inlier_labels)
+#         anomaly_dataset = dataset.filter(lambda x: x["label"] in anomaly_labels)
+#     else:
+#         inlier_dataset = dataset.filter(lambda x: x["label"] in inlier_labels)
+#         anomaly_dataset = dataset.filter(lambda x: x["label"] not in inlier_labels)
+
+#     return _finalize_split(
+#         inlier_dataset,
+#         anomaly_dataset,
+#         anomaly_rate,
+#         is_trainset
+#     )
+
+
+
 def textual_anomaly_contamination_dbpedia14(
     dataset,
     dataset_name,
@@ -183,46 +264,22 @@ def textual_anomaly_contamination_dbpedia14(
         "Written Work": 13
     }
 
-    named_groups = {
-        "organization": [0, 1],
-        "people": [2, 3, 4, 9, 10],
-        "transport": [5],
-        "construction": [6],
-        "places": [7, 8],
-        "media": [11, 12, 13]
-    }
-
-    label_to_group = {
-        lab: group
-        for group, labels in named_groups.items()
-        for lab in labels
-    }
-
-    if inlier_topic in level_1_mapping:
-
-        inlier_label = level_1_mapping[inlier_topic]
-        parent_group = label_to_group[inlier_label]
-        full_group = named_groups[parent_group]
-
-        inlier_labels = [inlier_label]
-        anomaly_labels = [lab for lab in full_group if lab != inlier_label]
-
-        print(anomaly_labels)
-
-    elif inlier_topic in named_groups:
-
-        inlier_labels = named_groups[inlier_topic]
-        anomaly_labels = None
-
-    else:
+    if inlier_topic not in level_1_mapping:
         raise ValueError(f"Invalid inlier_topic: {inlier_topic}")
 
-    if anomaly_labels is not None:
-        inlier_dataset = dataset.filter(lambda x: x["label"] in inlier_labels)
-        anomaly_dataset = dataset.filter(lambda x: x["label"] in anomaly_labels)
-    else:
-        inlier_dataset = dataset.filter(lambda x: x["label"] in inlier_labels)
-        anomaly_dataset = dataset.filter(lambda x: x["label"] not in inlier_labels)
+    inlier_label = level_1_mapping[inlier_topic]
+
+    inlier_indices = []
+    anomaly_indices = []
+
+    for i, label in enumerate(dataset["label"]):
+        if label == inlier_label:
+            inlier_indices.append(i)
+        else:
+            anomaly_indices.append(i)
+
+    inlier_dataset = dataset.select(inlier_indices)
+    anomaly_dataset = dataset.select(anomaly_indices)
 
     return _finalize_split(
         inlier_dataset,

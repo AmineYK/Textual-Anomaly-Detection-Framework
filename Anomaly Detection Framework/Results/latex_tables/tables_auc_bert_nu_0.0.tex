@@ -3,23 +3,23 @@
 \begin{table}[H]
 \centering
 \caption{AUC on all datasets}\resizebox{1.1\textwidth}{!}{
-\begin{tabular}{lcccccc}
+\begin{tabular}{lcccccccc}
 \toprule
-Model & Reuters & Agnews & 20newsgroups & Sms & Enron & Imdb \\
+Model & Reuters & Agnews & 20newsgroups & Sms & Enron & Sst2 & Imdb & Dbpedia14 \\
 \midrule
-OCSVM & 0.7453 $\pm$ 0.0970 & 0.6799 $\pm$ 0.0147 & 0.5464 $\pm$ 0.0328 & 0.4507 $\pm$ 0.0141 & 0.4649 $\pm$ 0.0322 & 0.5156 $\pm$ 0.0059 \\
-AE & 0.8354 $\pm$ 0.0409 & 0.8234 $\pm$ 0.0134 & 0.7137 $\pm$ 0.0200 & 0.4733 $\pm$ 0.0130 & 0.8214 $\pm$ 0.0122 & \underline{0.5971 $\pm$ 0.0033} \\
+OCSVM & 0.7453 $\pm$ 0.0970 & 0.6799 $\pm$ 0.0147 & 0.5464 $\pm$ 0.0328 & 0.4507 $\pm$ 0.0141 & 0.4649 $\pm$ 0.0322 & 0.5182 $\pm$ 0.0284 & 0.5156 $\pm$ 0.0059 & 0.8101 $\pm$ 0.0063 \\
+AE & 0.8354 $\pm$ 0.0409 & 0.8234 $\pm$ 0.0134 & 0.7137 $\pm$ 0.0200 & 0.4733 $\pm$ 0.0130 & 0.8214 $\pm$ 0.0122 & 0.5333 $\pm$ 0.0533 & 0.5821 $\pm$ 0.0033 & 0.9093 $\pm$ 0.0026 \\
 \midrule
-RSRAE & 0.8383 $\pm$ 0.0486 & 0.8358 $\pm$ 0.0140 & 0.7150 $\pm$ 0.0211 & 0.4540 $\pm$ 0.0131 & 0.8215 $\pm$ 0.0154 & \textbf{0.6000 $\pm$ 0.0022} \\
-CVDD & 0.8490 $\pm$ 0.0764 & 0.7370 $\pm$ 0.0109 & 0.6956 $\pm$ 0.0323 & \underline{0.7581 $\pm$ 0.1069} & 0.7820 $\pm$ 0.0062 & — \\
-DATE & \underline{0.8580 $\pm$ 0.0951} & 0.6736 $\pm$ 0.1024 & \underline{0.7357 $\pm$ 0.0684} & 0.6733 $\pm$ 0.1932 & 0.6245 $\pm$ 0.1469 & — \\
-FATE & — & — & — & — & — & — \\
+RSRAE & 0.8383 $\pm$ 0.0486 & 0.8358 $\pm$ 0.0140 & 0.7150 $\pm$ 0.0211 & 0.4540 $\pm$ 0.0131 & 0.8215 $\pm$ 0.0154 & 0.5312 $\pm$ 0.0520 & \textbf{0.6000 $\pm$ 0.0022} & 0.8790 $\pm$ 0.0036 \\
+CVDD & 0.8490 $\pm$ 0.0764 & 0.7370 $\pm$ 0.0109 & 0.6956 $\pm$ 0.0323 & \underline{0.7581 $\pm$ 0.1069} & 0.7820 $\pm$ 0.0062 & 0.4954 $\pm$ 0.0280 & 0.5648 $\pm$ 0.0046 & — \\
+DATE & \underline{0.8580 $\pm$ 0.0951} & 0.6736 $\pm$ 0.1024 & \underline{0.7357 $\pm$ 0.0684} & 0.6733 $\pm$ 0.1932 & 0.6245 $\pm$ 0.1469 & 0.5371 $\pm$ 0.0513 & 0.5205 $\pm$ 0.0203 & — \\
+FATE & — & — & — & — & — & — & — & — \\
 \midrule
-TCCM & 0.7567 $\pm$ 0.0791 & \underline{0.8713 $\pm$ 0.0119} & 0.7213 $\pm$ 0.0225 & 0.4629 $\pm$ 0.0133 & \underline{0.8244 $\pm$ 0.0177} & 0.5901 $\pm$ 0.0121 \\
-flow-matching & — & — & — & — & — & — \\
-flow-matching-Transformers & — & — & — & — & — & — \\
-flow-matching-Transformers-PP & — & — & — & — & — & — \\
-FMTToken-Sentence & \textbf{0.9483 $\pm$ 0.0330} & \textbf{0.9054 $\pm$ 0.0075} & \textbf{0.7744 $\pm$ 0.0394} & \textbf{0.7668 $\pm$ 0.0127} & \textbf{0.8766 $\pm$ 0.0143} & — \\
+TCCM & 0.7567 $\pm$ 0.0791 & \underline{0.8713 $\pm$ 0.0119} & 0.7213 $\pm$ 0.0225 & 0.4629 $\pm$ 0.0133 & \underline{0.8244 $\pm$ 0.0177} & \underline{0.5378 $\pm$ 0.0539} & 0.5901 $\pm$ 0.0121 & \underline{0.9230 $\pm$ 0.0021} \\
+flow-matching & — & — & — & — & — & — & — & — \\
+flow-matching-Transformers & — & — & — & — & — & — & — & — \\
+flow-matching-Transformers-PP & — & — & — & — & — & — & — & — \\
+FMTToken-Sentence & \textbf{0.9483 $\pm$ 0.0330} & \textbf{0.9054 $\pm$ 0.0075} & \textbf{0.7744 $\pm$ 0.0394} & \textbf{0.7668 $\pm$ 0.0127} & \textbf{0.8766 $\pm$ 0.0143} & \textbf{0.5967 $\pm$ 0.0180} & \underline{0.5971 $\pm$ 0.0056} & \textbf{0.9678 $\pm$ 0.0018} \\
 \bottomrule
 \end{tabular}
 }
@@ -158,27 +158,79 @@ FMTToken-Sentence & \textbf{0.8766 $\pm$ 0.0143} \\
 
 \begin{table}[H]
 \centering
+\caption{AUC on Sst2}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcc}
+\toprule
+Model & positive & negative \\
+\midrule
+OCSVM & 0.5129 $\pm$ 0.0337 & 0.5235 $\pm$ 0.0232 \\
+AE & 0.5350 $\pm$ 0.0739 & 0.5315 $\pm$ 0.0328 \\
+\midrule
+RSRAE & 0.5247 $\pm$ 0.0753 & 0.5377 $\pm$ 0.0286 \\
+CVDD & \textbf{0.5483 $\pm$ 0.0309} & 0.4424 $\pm$ 0.0250 \\
+DATE & 0.4938 $\pm$ 0.0436 & \underline{0.5804 $\pm$ 0.0590} \\
+FATE & — & — \\
+\midrule
+TCCM & \underline{0.5367 $\pm$ 0.0801} & 0.5389 $\pm$ 0.0278 \\
+flow-matching & — & — \\
+flow-matching-Transformers & — & — \\
+flow-matching-Transformers-PP & — & — \\
+FMTToken-Sentence & — & \textbf{0.5967 $\pm$ 0.0180} \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:sst2}
+\end{table}
+
+\begin{table}[H]
+\centering
 \caption{AUC on Imdb}\resizebox{1.1\textwidth}{!}{
 \begin{tabular}{lcc}
 \toprule
 Model & positive & negative \\
 \midrule
 OCSVM & 0.4764 $\pm$ 0.0063 & 0.5548 $\pm$ 0.0054 \\
-AE & 0.5115 $\pm$ 0.0039 & \underline{0.6827 $\pm$ 0.0027} \\
+AE & 0.5115 $\pm$ 0.0039 & 0.6527 $\pm$ 0.0027 \\
 \midrule
-RSRAE & \underline{0.5166 $\pm$ 0.0019} & \textbf{0.6835 $\pm$ 0.0025} \\
-CVDD & — & — \\
-DATE & — & — \\
+RSRAE & 0.5166 $\pm$ 0.0019 & \textbf{0.6835 $\pm$ 0.0025} \\
+CVDD & 0.4660 $\pm$ 0.0052 & 0.6636 $\pm$ 0.0041 \\
+DATE & 0.5006 $\pm$ 0.0187 & 0.5404 $\pm$ 0.0219 \\
 FATE & — & — \\
 \midrule
-TCCM & \textbf{0.5196 $\pm$ 0.0129} & 0.6607 $\pm$ 0.0113 \\
+TCCM & \underline{0.5196 $\pm$ 0.0129} & 0.6607 $\pm$ 0.0113 \\
 flow-matching & — & — \\
 flow-matching-Transformers & — & — \\
 flow-matching-Transformers-PP & — & — \\
-FMTToken-Sentence & — & — \\
+FMTToken-Sentence & \textbf{0.5280 $\pm$ 0.0076} & \underline{0.6662 $\pm$ 0.0036} \\
 \bottomrule
 \end{tabular}
 }
 \label{tab:imdb}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AUC on Dbpedia14}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcccccccccccccc}
+\toprule
+Model & Company & Artist & Athlete & Building & Village & Animal & Plant & Album & Film & Educational Institution & Office Holder & Mean Of Transportation & Natural Place & Written Work \\
+\midrule
+OCSVM & 0.7809 $\pm$ 0.0064 & 0.7511 $\pm$ 0.0091 & 0.7490 $\pm$ 0.0059 & 0.7962 $\pm$ 0.0084 & 0.8967 $\pm$ 0.0060 & 0.9221 $\pm$ 0.0061 & 0.9376 $\pm$ 0.0020 & 0.8940 $\pm$ 0.0033 & 0.7654 $\pm$ 0.0028 & 0.7854 $\pm$ 0.0052 & 0.7554 $\pm$ 0.0059 & 0.8987 $\pm$ 0.0014 & 0.6493 $\pm$ 0.0116 & 0.7601 $\pm$ 0.0145 \\
+AE & 0.8127 $\pm$ 0.0051 & 0.7932 $\pm$ 0.0022 & 0.8994 $\pm$ 0.0021 & 0.9153 $\pm$ 0.0026 & 0.9793 $\pm$ 0.0010 & 0.9712 $\pm$ 0.0025 & 0.9697 $\pm$ 0.0022 & \underline{0.9571 $\pm$ 0.0018} & 0.8723 $\pm$ 0.0010 & 0.9211 $\pm$ 0.0024 & 0.8823 $\pm$ 0.0026 & 0.9604 $\pm$ 0.0007 & 0.9168 $\pm$ 0.0023 & 0.8791 $\pm$ 0.0077 \\
+\midrule
+RSRAE & 0.7853 $\pm$ 0.0068 & 0.7490 $\pm$ 0.0030 & 0.8698 $\pm$ 0.0019 & 0.8743 $\pm$ 0.0063 & 0.9721 $\pm$ 0.0009 & 0.9563 $\pm$ 0.0037 & 0.9635 $\pm$ 0.0043 & 0.9508 $\pm$ 0.0023 & 0.8474 $\pm$ 0.0034 & 0.8840 $\pm$ 0.0037 & 0.8308 $\pm$ 0.0027 & 0.9438 $\pm$ 0.0013 & 0.8463 $\pm$ 0.0021 & 0.8326 $\pm$ 0.0073 \\
+CVDD & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+DATE & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+FATE & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+\midrule
+TCCM & \underline{0.8531 $\pm$ 0.0012} & \underline{0.8350 $\pm$ 0.0036} & \underline{0.9278 $\pm$ 0.0019} & \underline{0.9299 $\pm$ 0.0016} & \underline{0.9900 $\pm$ 0.0006} & \underline{0.9745 $\pm$ 0.0020} & \underline{0.9719 $\pm$ 0.0022} & 0.9522 $\pm$ 0.0014 & \underline{0.8861 $\pm$ 0.0011} & \underline{0.9240 $\pm$ 0.0019} & \underline{0.8984 $\pm$ 0.0022} & \underline{0.9612 $\pm$ 0.0009} & \underline{0.9349 $\pm$ 0.0015} & \underline{0.8828 $\pm$ 0.0077} \\
+flow-matching & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+flow-matching-Transformers & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+flow-matching-Transformers-PP & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+FMTToken-Sentence & \textbf{0.8864 $\pm$ 0.0051} & \textbf{0.9263 $\pm$ 0.0028} & \textbf{0.9915 $\pm$ 0.0008} & \textbf{0.9609 $\pm$ 0.0015} & \textbf{0.9981 $\pm$ 0.0002} & \textbf{0.9892 $\pm$ 0.0012} & \textbf{0.9914 $\pm$ 0.0004} & \textbf{0.9753 $\pm$ 0.0024} & \textbf{0.9751 $\pm$ 0.0005} & \textbf{0.9636 $\pm$ 0.0011} & \textbf{0.9755 $\pm$ 0.0017} & \textbf{0.9913 $\pm$ 0.0012} & \textbf{0.9912 $\pm$ 0.0009} & \textbf{0.9335 $\pm$ 0.0058} \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:dbpedia14}
 \end{table}
 

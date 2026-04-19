@@ -49,10 +49,10 @@ def unify_text_column(dataset, dataset_name):
 
     return dataset
 
-def preprocess(dataset):
+def preprocess(dataset, column='text'):
 
     def clean_text(example):
-        text = example["text"]
+        text = example[column]
 
         if text is None:
             text = ""
@@ -63,14 +63,14 @@ def preprocess(dataset):
         text = re.sub(r"\W+", " ", text)
         text = re.sub(r"\s+", " ", text).strip()
 
-        example["text"] = text
+        example[column] = text
         return example
 
     # Appliquer le nettoyage
     dataset = dataset.map(clean_text)
 
     # Supprimer les textes vides
-    dataset = dataset.filter(lambda x: x["text"] != "")
+    dataset = dataset.filter(lambda x: x[column] != "")
 
     return dataset
 

@@ -230,14 +230,14 @@ class DATEModel(BaselineModel):
         self.n_epochs = args['n_epochs']
         self.batch_size = args['batch_size']
 
-    def train(self, data_train):
+    def train(self, data_train, column='text'):
         """
         VERSION FINALE CORRIGÉE avec :
         1. Random generator (meilleur que paramétré)
         2. Masking dynamique par séquence
         3. Logging détaillé pour debug
         """
-        train_texts = data_train['text']
+        train_texts = data_train[column]
         train_ds = DATEDataset(train_texts, None, self.tokenizer, max_len=self.seq_len)
         train_loader = DataLoader(train_ds, batch_size=self.batch_size, shuffle=True)
 
@@ -342,12 +342,12 @@ class DATEModel(BaselineModel):
                       f"(RMD: {avg_rmd:.4f}, RTD: {avg_rtd:.4f}) "
                       f"| Masked: {avg_masked:.2%}")
 
-    def test(self, data_test):
+    def test(self, data_test, column='text'):
         """
         CORRECTION : Ne pas inverser le score !
         date_anomaly_score retourne déjà un score où HIGHER = more normal
         """
-        test_texts = data_test['text']
+        test_texts = data_test[column]
         test_labels = data_test['anomaly_class']        
         
         test_ds = DATEDataset(test_texts, test_labels, self.tokenizer)

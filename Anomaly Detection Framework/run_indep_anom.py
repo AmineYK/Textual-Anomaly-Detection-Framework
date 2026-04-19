@@ -48,6 +48,8 @@ dataset_topics_dict= {
     'sst2': ['positive', 'negative'],
     'mage': ['normal']
 }
+# COL = 'text'
+COL = 'content'
 
 def main(args):
 
@@ -67,7 +69,7 @@ def main(args):
             return " ".join(filtered)
 
         def remove_stopwords_batch(batch):
-            batch['text'] = [remove_stopwords(t) for t in batch['text']]
+            batch[COL] = [remove_stopwords(t) for t in batch[COL]]
             return batch
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -186,7 +188,8 @@ def main(args):
             bertmodel = AutoModel.from_pretrained(model_name).to(device)
             bertmodel.eval()
 
-            X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train['text'], device, 64, 256)
+            X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train[:25000][COL], device, 64, 256)
+            # X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train[COL], device, 64, 256)
             # X_inlier = X_inlier.mean(dim=1)
         else: raise Exception("type_emb must be completed !")
 
@@ -197,7 +200,7 @@ def main(args):
             print(X_anom_for_train.shape)
 
             # bert
-            # X_inlier_anomaly, _, _ = encode_tokens(bertmodel, tokenizer, data_train_anomaly['text'], device, 64, 256)
+            # X_inlier_anomaly, _, _ = encode_tokens(bertmodel, tokenizer, data_train_anomaly[COL], device, 64, 256)
             # print("Anom : ")
             # print(X_inlier_anomaly.shape)
 
@@ -232,7 +235,8 @@ def main(args):
                 X_test = Tensor(data_test['sbert_embeddings']).to(device)
             
             elif args.type_emb == 'bert':
-                X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test['text'], device, 64, 256)
+                # X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test[:12000][COL], device, 64, 256)
+                X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test[COL], device, 64, 256)
                 # X_test = X_test.mean(dim=1)
 
             else: raise Exception("type_emb must be completed !")
@@ -285,7 +289,7 @@ def main(args):
                     "if_rsr": True, "enforce_proj": True, "all_alt": True,
                     "learning_rate": 1e-4, "lambda1": 0.1, "lambda2": 0.1,
                     "epoch_size": 100, "batch_show": 50, "normalize": True,
-                    "bn": False, "seed": 42, 'batch_size': X_inlier.shape[0] // 100
+                    "bn": False, "seed": 42, 'batch_size': X_inlier.shape[0] // 1000
                 }
 
                 rsrae_model = RSRAE(rsrae_args)
@@ -361,9 +365,9 @@ def main(args):
                 tccm_args={
                     # "n_features": X_inlier.shape[1],
                     "n_features": X_inlier.shape[2],
-                    "epochs" : 100,
+                    "epochs" : 50,
                     "learning_rate" : 1e-3,
-                    "batch_size": 128,
+                    "batch_size": 256,
                     "device": device
                 }
 
@@ -455,8 +459,8 @@ def main(args):
                     "lr": 1e-3,
                     "weight_decay" : 0,
                     "lambda_p": 0.1,
-                    "n_epochs": 30,
-                    "batch_size": 512,
+                    "n_epochs": 15,
+                    "batch_size": 1024,
                     "device": device
                     }
                 
@@ -466,11 +470,11 @@ def main(args):
                 if args.nu > 0:
                     cvdd_model.train(concatenate_datasets([data_train, data_train_anomaly]))
                 else:
-                    cvdd_model.train(data_train)
+                    cvdd_model.train(data_train, COL)
                 tiic = time.time()
                 print(f"\CVDD finishing... after {(tiic-taac)/60:.3f} mn")
                 
-                auc_cvdd, fpr95_cvdd, ap_cvdd = cvdd_model.test(data_test)
+                auc_cvdd, fpr95_cvdd, ap_cvdd = cvdd_model.test(data_test, COL)
                 print(f"CVDD --> AUC: {auc_cvdd:.4f} | FPR@95: {fpr95_cvdd:.4f} | AP: {ap_cvdd:.4f}\n")
             
                 list_auc_cvdd.append(auc_cvdd)
@@ -498,7 +502,7 @@ def main(args):
                     "seq_len": 128,
                     "ratio": 0.50,
                     "n_epochs": 30,
-                    "batch_size": 128,
+                    "batch_size": 512,
                     "device": device
                     }
                             
@@ -508,11 +512,11 @@ def main(args):
                 if args.nu > 0:
                     date_model.train(concatenate_datasets([data_train, data_train_anomaly]))
                 else:
-                    date_model.train(data_train)
+                    date_model.train(data_train, COL)
                 tiic = time.time()
                 print(f"\DATE finishing... after {(tiic-taac)/60:.3f} mn")
                 
-                auc_date, fpr95_date, ap_date = date_model.test(data_test)
+                auc_date, fpr95_date, ap_date = date_model.test(data_test, COL)
                 print(f"DATE --> AUC: {auc_date:.4f} | FPR@95: {fpr95_date:.4f} | AP: {ap_date:.4f}\n")
             
                 list_auc_date.append(auc_date)
@@ -540,10 +544,10 @@ def main(args):
                     "include_regularization": True,
                     "top_k": 0.1,
                     "nb_shot": 10,
-                    "train_inlier_text": data_train_['text'],     
-                    "train_anomaly_text": data_train_anomaly_fate['text'],
-                    "test_inlier_text": data_test_inlier['text'],
-                    "test_anomaly_text": data_test_anomaly['text']
+                    "train_inlier_text": data_train_[COL],     
+                    "train_anomaly_text": data_train_anomaly_fate[COL],
+                    "test_inlier_text": data_test_inlier[COL],
+                    "test_anomaly_text": data_test_anomaly[COL]
                 }
                             
                 fate_model = FATEModel(fate_args)
@@ -609,16 +613,16 @@ def main(args):
                 config = {
                     'latent_dim': 768,
                     'hidden_dim': 64,
-                    'depth': 8,
-                    'n_heads': 8,
+                    'depth': 4,
+                    'n_heads': 4,
                     'lr': 1e-3,
                     'weight_decay': 1e-3,
                     'lambda_svdd': 1e-2,
                     # 'lambda_push': 1e-2,
                     'lambda_push': 0,
                     'lambda_margin': 0,
-                    'epochs': 200,
-                    'lr_epochs':80,
+                    'epochs': 130,
+                    'lr_epochs':50,
                     'warmup_epochs': -1,
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
