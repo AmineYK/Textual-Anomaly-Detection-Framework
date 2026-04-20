@@ -1,0 +1,65 @@
+Job ID: 1956490
+
+<<<<<<<<<<<<<< dbpedia14 >>>>>>>>>>>>>>>>>>>
+
+------------------------ Natural Place(1/1) -----------------------------
+torch.Size([25000, 256, 768])
++++++++++++++++++++++ run : 1 / 3 +++++++++++++++++
+
+torch.Size([5000, 256, 768])
+Epoch 50/100 - Loss: 0.0068
+Epoch 100/100 - Loss: 0.0047
+
+RSRAE finishing... after 6.774 mn
+RSRAE --> AUC: 0.9539 | FPR@95: 0.0816 | AP: 0.5237
+
+Training sur 36000 samples, 71 batches
+K=50 masks, ratio=0.5, seq_len=256
+Epoch 1/50 - Loss: 535.22 (RMD: 5.0821, RTD: 0.5403) | Masked: 10.54%
+Epoch 11/50 - Loss: 439.76 (RMD: 4.1607, RTD: 0.4739) | Masked: 10.76%
+Epoch 21/50 - Loss: 431.17 (RMD: 3.9935, RTD: 0.6363) | Masked: 10.79%
+Epoch 31/50 - Loss: 436.03 (RMD: 4.0134, RTD: 0.6939) | Masked: 10.64%
+Epoch 41/50 - Loss: 432.18 (RMD: 3.9755, RTD: 0.6925) | Masked: 10.53%
+\DATE finishing... after 12.793 mn
+DATE --> AUC: 0.4858 | FPR@95: 0.9656 | AP: 0.1014
+
++++++++++++++++++++++ run : 2 / 3 +++++++++++++++++
+
+torch.Size([5000, 256, 768])
+Epoch 50/100 - Loss: 0.0068
+Epoch 100/100 - Loss: 0.0047
+
+RSRAE finishing... after 6.833 mn
+RSRAE --> AUC: 0.9562 | FPR@95: 0.0809 | AP: 0.5266
+
+Training sur 36000 samples, 71 batches
+K=50 masks, ratio=0.5, seq_len=256
+Epoch 1/50 - Loss: 535.22 (RMD: 5.0821, RTD: 0.5403) | Masked: 10.54%
+Epoch 11/50 - Loss: 439.76 (RMD: 4.1607, RTD: 0.4739) | Masked: 10.76%
+Epoch 21/50 - Loss: 431.17 (RMD: 3.9935, RTD: 0.6363) | Masked: 10.79%
+Epoch 31/50 - Loss: 436.03 (RMD: 4.0134, RTD: 0.6939) | Masked: 10.64%
+Epoch 41/50 - Loss: 432.18 (RMD: 3.9755, RTD: 0.6925) | Masked: 10.53%
+\DATE finishing... after 12.878 mn
+DATE --> AUC: 0.4790 | FPR@95: 0.9660 | AP: 0.1001
+
++++++++++++++++++++++ run : 3 / 3 +++++++++++++++++
+
+torch.Size([5000, 256, 768])
+Epoch 50/100 - Loss: 0.0068
+Epoch 100/100 - Loss: 0.0047
+
+RSRAE finishing... after 6.800 mn
+RSRAE --> AUC: 0.9540 | FPR@95: 0.0942 | AP: 0.5194
+
+Training sur 36000 samples, 71 batches
+K=50 masks, ratio=0.5, seq_len=256
+Epoch 1/50 - Loss: 535.22 (RMD: 5.0821, RTD: 0.5403) | Masked: 10.54%
+Epoch 11/50 - Loss: 439.76 (RMD: 4.1607, RTD: 0.4739) | Masked: 10.76%
+Epoch 21/50 - Loss: 431.17 (RMD: 3.9935, RTD: 0.6363) | Masked: 10.79%
+Epoch 31/50 - Loss: 436.03 (RMD: 4.0134, RTD: 0.6939) | Masked: 10.64%
+Epoch 41/50 - Loss: 432.18 (RMD: 3.9755, RTD: 0.6925) | Masked: 10.53%
+\DATE finishing... after 12.798 mn
+DATE --> AUC: 0.4878 | FPR@95: 0.9656 | AP: 0.1012
+
+Résultats mis à jour pour (dbpedia14, Natural Place, bert, RSRAE, nu=0.0).
+Résultats existants non modifiés pour (dbpedia14, Natural Place, bert, DATE, nu=0.0).

@@ -10,6 +10,11 @@ from torch import Tensor
 from Data_Preparation.Tac import tac
 import torch
 from tqdm import tqdm
+import json
+import os
+from datasets import Dataset, Features, Value
+from datasets import ClassLabel
+
 
 
 # def preprocess(dataset):
@@ -370,7 +375,126 @@ def import_dataset(name="20newsgroups", full_dataset_=False, batch_size=64):
             return DataLoader(full_dataset, batch_size=batch_size, shuffle=True)
 
         return train_dataloader, test_dataloader
-   
+    
+
+    # ***************************
+    if name == "m4": 
+
+        def load_jsonl(filepath):
+            data = []
+            with open(filepath, "r", encoding="utf-8") as f:
+                for line in f:
+                    data.append(json.loads(line))
+            return data
+
+
+        def parse_filename(filename):
+            name = filename.replace(".jsonl", "")
+            parts = name.split("_")
+
+            domain = parts[0].lower()
+            generator = parts[1].lower()
+
+            return domain, generator
+
+
+        def normalize_domain(domain):
+            if domain is None:
+                return None
+            domain = domain.lower()
+            if domain == "eli5":
+                return "reddit"
+            return domain
+
+
+        def convert_entry(entry, fallback_domain, generator):
+
+            samples = []
+
+            domain = entry.get("source")
+            if domain is None or domain == "":
+                domain = fallback_domain
+
+            domain = normalize_domain(domain)
+
+            # human
+            if entry.get("human_text"):
+                samples.append({
+                    "text": entry["human_text"],
+                    "label": 1,
+                    "domain": domain,
+                    "generator": "human",
+                    "prompt": entry.get("prompt", ""),
+                    "source_id": entry.get("source_ID", "")
+                })
+
+            # machine
+            if entry.get("machine_text"):
+                samples.append({
+                    "text": entry["machine_text"],
+                    "label": 0,
+                    "domain": domain,
+                    "generator": generator,
+                    "prompt": entry.get("prompt", ""),
+                    "source_id": entry.get("source_ID", "")
+                })
+
+            return samples
+
+
+        features = Features({
+            "text": Value("string"),
+            "label": Value("int64"),
+            "domain": Value("string"),
+            "generator": Value("string"),
+            "prompt": Value("string"),
+            "source_id": Value("string"),
+        })
+
+        def load_m4_dataset(data_dir="/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/m4_data"):
+            all_samples = []
+
+            for file in os.listdir(data_dir):
+                if not file.endswith(".jsonl"):
+                    continue
+
+                filepath = os.path.join(data_dir, file)
+
+                fallback_domain, generator = parse_filename(file)
+                raw_data = load_jsonl(filepath)
+
+                for entry in raw_data:
+                    all_samples.extend(
+                        convert_entry(entry, fallback_domain, generator)
+                    )
+            return Dataset.from_list(all_samples, features=features)
+
+
+        def combine_labels(example):
+            example["stratify_key"] = f"{example['domain']}_{example['generator']}"
+            return example
+
+        data = load_m4_dataset()
+        data = data.map(combine_labels)
+        unique_classes = list(set(data["stratify_key"]))
+        class_label = ClassLabel(names=unique_classes)
+        data = data.cast_column("stratify_key", class_label)
+
+        dataset_split = data.train_test_split(
+            test_size=0.2,
+            stratify_by_column="stratify_key",
+            seed=42
+        )
+
+        train_dataloader = DataLoader(dataset_split['train'], batch_size=batch_size, shuffle=True)
+        test_dataloader = DataLoader(dataset_split['test'], batch_size=batch_size, shuffle=True)
+
+        if full_dataset_:
+            full_dataset = concatenate_datasets([dataset['train'], dataset['test']])
+            return DataLoader(full_dataset, batch_size=batch_size, shuffle=True)
+
+        return train_dataloader, test_dataloader
+
 
     raise Exception("The dataset naming doesn't correspond !")
     

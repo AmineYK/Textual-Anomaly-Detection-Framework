@@ -169,9 +169,9 @@ class FlowDiTTokSen(nn.Module):
         if x.dim() == 2:
             # (B, 1, 768)
             x = x.unsqueeze(1)              
-            if attention_mask is not None:
+            # if attention_mask is not None:
                 # (B, 1)
-                attention_mask = torch.ones(x.shape[0], 1, device=x.device)
+            attention_mask = torch.ones(x.shape[0], 1, device=x.device)
 
         B, S , _ = x.shape
         h = self.input_proj(x)   

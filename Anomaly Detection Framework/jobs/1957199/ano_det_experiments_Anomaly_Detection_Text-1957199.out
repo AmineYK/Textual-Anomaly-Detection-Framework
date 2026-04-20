@@ -1,0 +1,16 @@
+Job ID: 1957199
+Requested time: 
+
+<<<<<<<<<<<<<< mage >>>>>>>>>>>>>>>>>>>
+
+------------------------ normal(1/1) -----------------------------
+torch.Size([25000, 256, 768])
++++++++++++++++++++++ run : 1 / 4 +++++++++++++++++
+
+torch.Size([12000, 256, 768])
+Training sur 225753 samples, 882 batches
+K=50 masks, ratio=0.5, seq_len=256
+Epoch 1/30 - Loss: 424.67 (RMD: 4.1047, RTD: 0.2840) | Masked: 27.98%
+Epoch 7/30 - Loss: 16.54 (RMD: 0.0530, RTD: 0.2248) | Masked: 27.90%
+Epoch 13/30 - Loss: 7.16 (RMD: 0.0094, RTD: 0.1244) | Masked: 27.94%
+Epoch 19/30 - Loss: 2.21 (RMD: 0.0067, RTD: 0.0309) | Masked: 27.89%

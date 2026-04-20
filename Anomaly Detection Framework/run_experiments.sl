@@ -6,7 +6,7 @@
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
 # SBATCH --gres=gpu:a100_3g.40gb
-#SBATCH --time 01:00:00
+#SBATCH --time 02:30:00
 # --time 00:10:00
 # --cpus-per-task 16
 
@@ -21,10 +21,12 @@ module load aidl/pytorch/2.5.1-cuda12.4
 # mkdir -p ${JOB_DIR}
 
 echo "Job ID: ${SLURM_JOB_ID}"
+echo "Requested time: ${SLURM_TIMELIMIT}"
 
 export PYTHONUNBUFFERED=1
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Written Work" --type_emb bert --nu 0.0 --nb_runs 5 --ocsvm --ae --rsrae --tccm
+# srun python3 run_indep_anom.py --dataset_name mage --inlier_topic "normal" --type_emb bert --nu 0.0 --nb_runs 4 --ocsvm --ae --rsrae --tccm
+srun python3 run_indep_anom.py --dataset_name m4 --runall --type_emb bert --nu 0.0 --nb_runs 6 --rsrae
 # srun python3 run_indep_anom.py --dataset_name dbpedia14 --runall --type_emb bert --nu 0.0 --nb_runs 5 --ocsvm --ae --rsrae --tccm
 # srun python3 run_indep_anom.py --dataset_name dbpedia14 --runall --type_emb bert --nu 0.0 --nb_runs 3 --ocsvm --ae --rsrae --tccm --date --cvdd
 # srun python3 run_indep_anom.py --dataset_name sst2 --inlier_topic positive --type_emb bert --nu 0.0 --nb_runs 6 --date
@@ -33,30 +35,30 @@ export PYTHONUNBUFFERED=1
 # srun python3 create_tables_latex.py --type_embedding bert --nu 0.0 --all_metrics
 
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Company" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Company" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Educational Institution" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Educational Institution" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Artist" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd 
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Artist" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Athlete" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Athlete" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Office Holder" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Office Holder" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Mean Of Transportation" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Mean Of Transportation" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Building" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Building" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Natural Place" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Natural Place" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Village" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Village" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Animal" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Animal" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Plant" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Plant" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Album" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Album" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Film" --type_emb bert --nu 0.0 --nb_runs 4 --cvdd
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Film" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Written Work" --type_emb bert --nu 0.0 --nb_runs 4 --date
+# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Written Work" --type_emb bert --nu 0.0 --nb_runs 4 --date

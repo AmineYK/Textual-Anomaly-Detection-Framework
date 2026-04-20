@@ -1,0 +1,65 @@
+Job ID: 1956488
+
+<<<<<<<<<<<<<< dbpedia14 >>>>>>>>>>>>>>>>>>>
+
+------------------------ Mean Of Transportation(1/1) -----------------------------
+torch.Size([25000, 256, 768])
++++++++++++++++++++++ run : 1 / 3 +++++++++++++++++
+
+torch.Size([5000, 256, 768])
+Epoch 50/100 - Loss: 0.0069
+Epoch 100/100 - Loss: 0.0060
+
+RSRAE finishing... after 6.814 mn
+RSRAE --> AUC: 0.9689 | FPR@95: 0.0909 | AP: 0.6729
+
+Training sur 36000 samples, 71 batches
+K=50 masks, ratio=0.5, seq_len=256
+Epoch 1/50 - Loss: 543.05 (RMD: 5.2322, RTD: 0.3966) | Masked: 12.46%
+Epoch 11/50 - Loss: 422.27 (RMD: 4.1394, RTD: 0.1665) | Masked: 12.73%
+Epoch 21/50 - Loss: 406.44 (RMD: 3.9913, RTD: 0.1461) | Masked: 12.77%
+Epoch 31/50 - Loss: 407.25 (RMD: 4.0086, RTD: 0.1279) | Masked: 12.59%
+Epoch 41/50 - Loss: 426.68 (RMD: 3.9672, RTD: 0.5992) | Masked: 12.45%
+\DATE finishing... after 12.787 mn
+DATE --> AUC: 0.7358 | FPR@95: 0.7333 | AP: 0.2141
+
++++++++++++++++++++++ run : 2 / 3 +++++++++++++++++
+
+torch.Size([5000, 256, 768])
+Epoch 50/100 - Loss: 0.0069
+Epoch 100/100 - Loss: 0.0060
+
+RSRAE finishing... after 6.859 mn
+RSRAE --> AUC: 0.9728 | FPR@95: 0.0689 | AP: 0.6778
+
+Training sur 36000 samples, 71 batches
+K=50 masks, ratio=0.5, seq_len=256
+Epoch 1/50 - Loss: 543.05 (RMD: 5.2322, RTD: 0.3966) | Masked: 12.46%
+Epoch 11/50 - Loss: 422.27 (RMD: 4.1394, RTD: 0.1665) | Masked: 12.73%
+Epoch 21/50 - Loss: 406.44 (RMD: 3.9913, RTD: 0.1461) | Masked: 12.77%
+Epoch 31/50 - Loss: 407.25 (RMD: 4.0086, RTD: 0.1279) | Masked: 12.59%
+Epoch 41/50 - Loss: 426.68 (RMD: 3.9672, RTD: 0.5992) | Masked: 12.45%
+\DATE finishing... after 12.796 mn
+DATE --> AUC: 0.7058 | FPR@95: 0.7807 | AP: 0.1866
+
++++++++++++++++++++++ run : 3 / 3 +++++++++++++++++
+
+torch.Size([5000, 256, 768])
+Epoch 50/100 - Loss: 0.0069
+Epoch 100/100 - Loss: 0.0060
+
+RSRAE finishing... after 6.961 mn
+RSRAE --> AUC: 0.9714 | FPR@95: 0.0693 | AP: 0.6799
+
+Training sur 36000 samples, 71 batches
+K=50 masks, ratio=0.5, seq_len=256
+Epoch 1/50 - Loss: 543.05 (RMD: 5.2322, RTD: 0.3966) | Masked: 12.46%
+Epoch 11/50 - Loss: 422.27 (RMD: 4.1394, RTD: 0.1665) | Masked: 12.73%
+Epoch 21/50 - Loss: 406.44 (RMD: 3.9913, RTD: 0.1461) | Masked: 12.77%
+Epoch 31/50 - Loss: 407.25 (RMD: 4.0086, RTD: 0.1279) | Masked: 12.59%
+Epoch 41/50 - Loss: 426.68 (RMD: 3.9672, RTD: 0.5992) | Masked: 12.45%
+\DATE finishing... after 12.865 mn
+DATE --> AUC: 0.7134 | FPR@95: 0.7613 | AP: 0.1999
+
+Résultats mis à jour pour (dbpedia14, Mean Of Transportation, bert, RSRAE, nu=0.0).
+Résultats mis à jour pour (dbpedia14, Mean Of Transportation, bert, DATE, nu=0.0).

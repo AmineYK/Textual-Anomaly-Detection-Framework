@@ -1,0 +1,156 @@
+========================================
+Dataset:        m4
+Inlier class:   arxiv_chatgpt
+Embedding type: bert
+AD model:       AE
+Training time:  1.20 sec
+----------------------------------------
+AUC:            0.9575 ± 0.0089
+Avg Precision:  0.7465 ± 0.0296
+FPR@95:         0.2156 ± 0.0669
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv_chatgpt
+Embedding type: bert
+AD model:       ocsvm
+Training time:  0.38 sec
+----------------------------------------
+AUC:            0.9663 ± 0.0085
+Avg Precision:  0.8135 ± 0.0404
+FPR@95:         0.1719 ± 0.0516
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv_chatgpt
+Embedding type: bert
+AD model:       TCCM
+Training time:  1.11 sec
+----------------------------------------
+AUC:            0.9702 ± 0.0093
+Avg Precision:  0.8214 ± 0.0404
+FPR@95:         0.1178 ± 0.0329
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv_flant5
+Embedding type: bert
+AD model:       AE
+Training time:  0.83 sec
+----------------------------------------
+AUC:            0.8643 ± 0.0063
+Avg Precision:  0.2700 ± 0.0090
+FPR@95:         0.2604 ± 0.0322
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv_flant5
+Embedding type: bert
+AD model:       ocsvm
+Training time:  0.37 sec
+----------------------------------------
+AUC:            0.4559 ± 0.0306
+Avg Precision:  0.0910 ± 0.0064
+FPR@95:         0.9470 ± 0.0118
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv_flant5
+Embedding type: bert
+AD model:       TCCM
+Training time:  1.18 sec
+----------------------------------------
+AUC:            0.9085 ± 0.0056
+Avg Precision:  0.3569 ± 0.0123
+FPR@95:         0.1759 ± 0.0115
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit_chatgpt
+Embedding type: bert
+AD model:       AE
+Training time:  0.84 sec
+----------------------------------------
+AUC:            0.7585 ± 0.0246
+Avg Precision:  0.3226 ± 0.0430
+FPR@95:         0.7348 ± 0.0411
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit_chatgpt
+Embedding type: bert
+AD model:       ocsvm
+Training time:  0.37 sec
+----------------------------------------
+AUC:            0.3447 ± 0.0223
+Avg Precision:  0.0893 ± 0.0233
+FPR@95:         0.9604 ± 0.0113
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit_chatgpt
+Embedding type: bert
+AD model:       TCCM
+Training time:  1.18 sec
+----------------------------------------
+AUC:            0.8012 ± 0.0228
+Avg Precision:  0.3404 ± 0.0358
+FPR@95:         0.5815 ± 0.0748
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit_flant5
+Embedding type: bert
+AD model:       AE
+Training time:  0.84 sec
+----------------------------------------
+AUC:            0.8341 ± 0.0035
+Avg Precision:  0.2337 ± 0.0026
+FPR@95:         0.2933 ± 0.0309
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit_flant5
+Embedding type: bert
+AD model:       ocsvm
+Training time:  0.38 sec
+----------------------------------------
+AUC:            0.6284 ± 0.0115
+Avg Precision:  0.1428 ± 0.0070
+FPR@95:         0.9567 ± 0.0201
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit_flant5
+Embedding type: bert
+AD model:       TCCM
+Training time:  1.13 sec
+----------------------------------------
+AUC:            0.9547 ± 0.0024
+Avg Precision:  0.5216 ± 0.0130
+FPR@95:         0.0915 ± 0.0106
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv_chatgpt
+Embedding type: bert
+AD model:       RSRAE
+Training time:  417.43 sec
+----------------------------------------
+AUC:            0.9499 ± 0.0073
+Avg Precision:  0.7561 ± 0.0281
+FPR@95:         0.2430 ± 0.0546
+========================================
+

@@ -17,7 +17,7 @@ BASE_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly D
 BASE_RESULTS_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results"
 OUTPUT_LATEX_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/latex_tables"
 
-DATASETS = ["reuters", "agnews", "20newsgroups", "sms", "enron", "sst2", "imdb", "dbpedia14", "mage"]
+DATASETS = ["reuters","20newsgroups", "agnews", "dbpedia14", "sms", "enron", "sst2", "imdb", "mage", "m4"]
 ENCODING_TYPES = ["sentence-bert", "bert", "fasttext"]
 NU_VALUES = [0.0, 0.1]
 
@@ -27,11 +27,6 @@ os.makedirs(OUTPUT_LATEX_DIR, exist_ok=True)
 # MODELS & GROUPS
 # =========================
 
-# MODEL_GROUPS = [
-#     ("Classical baselines", ["ocsvm", "AE"]),
-#     ("Deep baselines", ["RSRAE", "CVDD", "DATE", "FATE"]),
-#     ("Flow-based models", ["TCCM", "flow-matching", "flow-matching-Transformers", "flow-matching-Transformers-PP"]),
-# ]
 
 MODEL_GROUPS = [
     ("Classical baselines", ["ocsvm", "AE"]),
@@ -41,13 +36,6 @@ MODEL_GROUPS = [
         "flow-matching",
         "flow-matching-Transformers",
         "flow-matching-Transformers-PP",
-
-        # "FMTToken-sum",
-        # "FMTToken-mediane",
-        # "FMTToken-topk",
-        # "FMTToken-max",
-        # "FMTToken-attention_weighted",
-        # "FMTToken-weights",
         "flow-matching-Transformers-Comp"
     ]),
 ]
@@ -85,13 +73,6 @@ MODEL_LATEX_BY_ENCODING = {
         "RSRAE": "RSRAE",
         "CVDD": "CVDD",
         "TCCM": "TCCM",
-
-        # "FMTToken-sum": "FMTToken-sum",
-        # "FMTToken-mediane": "FMTToken-med",
-        # "FMTToken-topk": "FMTToken-topk",
-        # "FMTToken-max": "FMTToken-max",
-        # "FMTToken-attention_weighted": "FMTToken-attn",
-        # "FMTToken-weights": "FMTToken-w",
         "flow-matching-Transformers-Comp": "FMTToken-Sentence",
     }
 }

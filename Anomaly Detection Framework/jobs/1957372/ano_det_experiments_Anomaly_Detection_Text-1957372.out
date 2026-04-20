@@ -1,0 +1,60 @@
+Job ID: 1957372
+Requested time: 
+
+<<<<<<<<<<<<<< mage >>>>>>>>>>>>>>>>>>>
+
+------------------------ normal(1/1) -----------------------------
+torch.Size([25000, 256, 768])
++++++++++++++++++++++ run : 1 / 4 +++++++++++++++++
+
+torch.Size([12000, 256, 768])
+Training sur 225753 samples, 441 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 355.58 (RMD: 3.4172, RTD: 0.2773) | Masked: 36.58%
+Epoch 7/30 - Loss: 336.15 (RMD: 3.0387, RTD: 0.6457) | Masked: 36.54%
+Epoch 13/30 - Loss: 331.91 (RMD: 3.0164, RTD: 0.6055) | Masked: 36.53%
+Epoch 19/30 - Loss: 338.85 (RMD: 3.0418, RTD: 0.6934) | Masked: 36.57%
+Epoch 25/30 - Loss: 334.50 (RMD: 2.9986, RTD: 0.6929) | Masked: 36.52%
+\DATE finishing... after 23.762 mn
+DATE --> AUC: 0.4796 | FPR@95: 0.9625 | AP: 0.0934
+
++++++++++++++++++++++ run : 2 / 4 +++++++++++++++++
+
+torch.Size([12000, 256, 768])
+Training sur 225753 samples, 441 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 353.55 (RMD: 3.4011, RTD: 0.2688) | Masked: 36.53%
+Epoch 7/30 - Loss: 332.14 (RMD: 3.0386, RTD: 0.5655) | Masked: 36.52%
+Epoch 13/30 - Loss: 328.76 (RMD: 3.0221, RTD: 0.5310) | Masked: 36.48%
+Epoch 19/30 - Loss: 326.86 (RMD: 3.0044, RTD: 0.5284) | Masked: 36.54%
+Epoch 25/30 - Loss: 326.99 (RMD: 3.0015, RTD: 0.5368) | Masked: 36.55%
+\DATE finishing... after 23.811 mn
+DATE --> AUC: 0.5462 | FPR@95: 0.9150 | AP: 0.1161
+
++++++++++++++++++++++ run : 3 / 4 +++++++++++++++++
+
+torch.Size([12000, 256, 768])
+Training sur 225753 samples, 441 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 350.17 (RMD: 3.3731, RTD: 0.2572) | Masked: 36.75%
+Epoch 7/30 - Loss: 339.10 (RMD: 3.0444, RTD: 0.6932) | Masked: 36.84%
+Epoch 13/30 - Loss: 335.95 (RMD: 3.0129, RTD: 0.6931) | Masked: 36.82%
+Epoch 19/30 - Loss: 335.09 (RMD: 3.0043, RTD: 0.6931) | Masked: 36.75%
+Epoch 25/30 - Loss: 334.78 (RMD: 3.0013, RTD: 0.6931) | Masked: 36.76%
+\DATE finishing... after 23.862 mn
+DATE --> AUC: 0.5010 | FPR@95: 0.9564 | AP: 0.1002
+
++++++++++++++++++++++ run : 4 / 4 +++++++++++++++++
+
+torch.Size([12000, 256, 768])
+Training sur 225753 samples, 441 batches
+K=20 masks, ratio=0.5, seq_len=128
+Epoch 1/30 - Loss: 347.22 (RMD: 3.3358, RTD: 0.2728) | Masked: 36.72%
+Epoch 7/30 - Loss: 338.28 (RMD: 3.0362, RTD: 0.6931) | Masked: 36.76%
+Epoch 13/30 - Loss: 337.24 (RMD: 3.0258, RTD: 0.6931) | Masked: 36.77%
+Epoch 19/30 - Loss: 334.71 (RMD: 3.0005, RTD: 0.6931) | Masked: 36.82%
+Epoch 25/30 - Loss: 335.00 (RMD: 3.0035, RTD: 0.6930) | Masked: 36.64%
+\DATE finishing... after 23.612 mn
+DATE --> AUC: 0.4991 | FPR@95: 1.0000 | AP: 0.0998
+
+Nouveaux résultats ajoutés pour (mage, normal, bert, DATE, nu=0.0).

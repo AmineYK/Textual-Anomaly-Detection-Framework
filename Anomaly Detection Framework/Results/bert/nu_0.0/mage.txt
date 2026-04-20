@@ -1,0 +1,72 @@
+========================================
+Dataset:        mage
+Inlier class:   normal
+Embedding type: bert
+AD model:       AE
+Training time:  7.06 sec
+----------------------------------------
+AUC:            0.5278 ± 0.0064
+Avg Precision:  0.1131 ± 0.0043
+FPR@95:         0.9647 ± 0.0009
+========================================
+
+========================================
+Dataset:        mage
+Inlier class:   normal
+Embedding type: bert
+AD model:       RSRAE
+Training time:  411.69 sec
+----------------------------------------
+AUC:            0.5376 ± 0.0038
+Avg Precision:  0.1188 ± 0.0031
+FPR@95:         0.9414 ± 0.0033
+========================================
+
+========================================
+Dataset:        mage
+Inlier class:   normal
+Embedding type: bert
+AD model:       ocsvm
+Training time:  64.62 sec
+----------------------------------------
+AUC:            0.4702 ± 0.0051
+Avg Precision:  0.1026 ± 0.0027
+FPR@95:         0.9638 ± 0.0053
+========================================
+
+========================================
+Dataset:        mage
+Inlier class:   normal
+Embedding type: bert
+AD model:       TCCM
+Training time:  13.24 sec
+----------------------------------------
+AUC:            0.5341 ± 0.0048
+Avg Precision:  0.1210 ± 0.0035
+FPR@95:         0.9506 ± 0.0044
+========================================
+
+========================================
+Dataset:        mage
+Inlier class:   normal
+Embedding type: bert
+AD model:       DATE
+Training time:  1425.70 sec
+----------------------------------------
+AUC:            0.5065 ± 0.0244
+Avg Precision:  0.1024 ± 0.0084
+FPR@95:         0.9585 ± 0.0301
+========================================
+
+========================================
+Dataset:        mage
+Inlier class:   normal
+Embedding type: bert
+AD model:       flow-matching-Transformers-Comp
+Training time:  2017.3 sec
+----------------------------------------
+AUC:            0.5443 ± 0.0040
+Avg Precision:  0.1257 ± 0.0019
+FPR@95:         0.9466 ± 0.0007
+========================================
+

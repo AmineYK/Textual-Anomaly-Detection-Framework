@@ -1,0 +1,95 @@
+Job ID: 1957201
+Requested time: 
+
+<<<<<<<<<<<<<< mage >>>>>>>>>>>>>>>>>>>
+
+------------------------ normal(1/1) -----------------------------
+torch.Size([25000, 256, 768])
++++++++++++++++++++++ run : 1 / 4 +++++++++++++++++
+
+torch.Size([12000, 256, 768])
+
+OCSVM finishing... after 1.070 mn
+OCSVM --> AUC: 0.4682 | FPR@95: 0.9692 | AP: 0.1049
+
+Epoch 50/100 - Loss: 0.0079
+Epoch 100/100 - Loss: 0.0069
+
+RSRAE finishing... after 6.805 mn
+RSRAE --> AUC: 0.5425 | FPR@95: 0.9461 | AP: 0.1228
+
+
+AE finishing... after 0.142 mn
+AE --> AUC: 0.5422 | FPR@95: 0.9655 | AP: 0.1278
+
+
+TCCM finishing... after 0.216 mn
+TCCM --> AUC: 0.5362 | FPR@95: 0.9538 | AP: 0.1248
+
++++++++++++++++++++++ run : 2 / 4 +++++++++++++++++
+
+torch.Size([12000, 256, 768])
+
+OCSVM finishing... after 1.091 mn
+OCSVM --> AUC: 0.4654 | FPR@95: 0.9639 | AP: 0.0987
+
+Epoch 50/100 - Loss: 0.0079
+Epoch 100/100 - Loss: 0.0069
+
+RSRAE finishing... after 6.935 mn
+RSRAE --> AUC: 0.5328 | FPR@95: 0.9429 | AP: 0.1146
+
+
+AE finishing... after 0.110 mn
+AE --> AUC: 0.5268 | FPR@95: 0.9654 | AP: 0.1163
+
+
+TCCM finishing... after 0.220 mn
+TCCM --> AUC: 0.5267 | FPR@95: 0.9561 | AP: 0.1155
+
++++++++++++++++++++++ run : 3 / 4 +++++++++++++++++
+
+torch.Size([12000, 256, 768])
+
+OCSVM finishing... after 1.066 mn
+OCSVM --> AUC: 0.4682 | FPR@95: 0.9669 | AP: 0.1016
+
+Epoch 50/100 - Loss: 0.0079
+Epoch 100/100 - Loss: 0.0069
+
+RSRAE finishing... after 6.890 mn
+RSRAE --> AUC: 0.5400 | FPR@95: 0.9378 | AP: 0.1175
+
+
+AE finishing... after 0.109 mn
+AE --> AUC: 0.5419 | FPR@95: 0.9634 | AP: 0.1227
+
+
+TCCM finishing... after 0.223 mn
+TCCM --> AUC: 0.5398 | FPR@95: 0.9462 | AP: 0.1206
+
++++++++++++++++++++++ run : 4 / 4 +++++++++++++++++
+
+torch.Size([12000, 256, 768])
+
+OCSVM finishing... after 1.081 mn
+OCSVM --> AUC: 0.4788 | FPR@95: 0.9552 | AP: 0.1051
+
+Epoch 50/100 - Loss: 0.0079
+Epoch 100/100 - Loss: 0.0069
+
+RSRAE finishing... after 6.817 mn
+RSRAE --> AUC: 0.5352 | FPR@95: 0.9389 | AP: 0.1203
+
+
+AE finishing... after 0.109 mn
+AE --> AUC: 0.5403 | FPR@95: 0.9643 | AP: 0.1257
+
+
+TCCM finishing... after 0.223 mn
+TCCM --> AUC: 0.5336 | FPR@95: 0.9462 | AP: 0.1231
+
+Nouveaux résultats ajoutés pour (mage, normal, bert, AE, nu=0.0).
+Nouveaux résultats ajoutés pour (mage, normal, bert, RSRAE, nu=0.0).
+Nouveaux résultats ajoutés pour (mage, normal, bert, ocsvm, nu=0.0).
+Nouveaux résultats ajoutés pour (mage, normal, bert, TCCM, nu=0.0).

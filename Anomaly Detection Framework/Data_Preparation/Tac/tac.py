@@ -85,6 +85,7 @@ def textual_anomaly_contamination(
         "imdb": textual_anomaly_contamination_binary,
         "sst2": textual_anomaly_contamination_binary,
         "mage": textual_anomaly_contamination_binary,
+        "m4": textual_anomaly_contamination_m4,
     }
 
     if dataset_name not in handlers:
@@ -154,87 +155,6 @@ def textual_anomaly_contamination_binary(
         is_trainset
     )
 
-# def textual_anomaly_contamination_dbpedia14(
-#     dataset,
-#     dataset_name,
-#     inlier_topic,
-#     type_tac='pantin',
-#     anomaly_rate=0.1,
-#     is_trainset=True
-# ):
-
-#     if type_tac != "pantin":
-#         raise ValueError("TAC not available")
-
-#     level_1_mapping = {
-#         "Company": 0,
-#         "Educational Institution": 1,
-#         "Artist": 2,
-#         "Athlete": 3,
-#         "Office Holder": 4,
-#         "Mean Of Transportation": 5,
-#         "Building": 6,
-#         "Natural Place": 7,
-#         "Village": 8,
-#         "Animal": 9,
-#         "Plant": 10,
-#         "Album": 11,
-#         "Film": 12,
-#         "Written Work": 13
-#     }
-
-#     named_groups = {
-#         "organization": [0, 1],
-#         "people": [2, 3, 4, 9, 10],
-#         "transport": [5],
-#         "construction": [6],
-#         "places": [7, 8],
-#         "media": [11, 12, 13]
-#     }
-
-#     label_to_group = {
-#         lab: group
-#         for group, labels in named_groups.items()
-#         for lab in labels
-#     }
-
-#     if inlier_topic in level_1_mapping:
-
-#         inlier_label = level_1_mapping[inlier_topic]
-#         # parent_group = label_to_group[inlier_label]
-#         # full_group = named_groups[parent_group]
-
-#         inlier_labels = [inlier_label]
-#         # anomaly_labels = [lab for lab in full_group if lab != inlier_label]
-#         anomaly_labels = [lab for lab in level_1_mapping.values() if lab != inlier_label]
-
-#         print(f"Ano : {anomaly_labels}")
-#         print(f"Ini : {inlier_labels}")
-
-#     elif inlier_topic in named_groups:
-
-#         inlier_labels = named_groups[inlier_topic]
-#         anomaly_labels = None
-
-#     else:
-#         raise ValueError(f"Invalid inlier_topic: {inlier_topic}")
-
-#     if anomaly_labels is not None:
-#         inlier_dataset = dataset.filter(lambda x: x["label"] in inlier_labels)
-#         anomaly_dataset = dataset.filter(lambda x: x["label"] in anomaly_labels)
-#     else:
-#         inlier_dataset = dataset.filter(lambda x: x["label"] in inlier_labels)
-#         anomaly_dataset = dataset.filter(lambda x: x["label"] not in inlier_labels)
-
-#     return _finalize_split(
-#         inlier_dataset,
-#         anomaly_dataset,
-#         anomaly_rate,
-#         is_trainset
-#     )
-
-
-
 def textual_anomaly_contamination_dbpedia14(
     dataset,
     dataset_name,
@@ -277,6 +197,56 @@ def textual_anomaly_contamination_dbpedia14(
             inlier_indices.append(i)
         else:
             anomaly_indices.append(i)
+
+    inlier_dataset = dataset.select(inlier_indices)
+    anomaly_dataset = dataset.select(anomaly_indices)
+
+    return _finalize_split(
+        inlier_dataset,
+        anomaly_dataset,
+        anomaly_rate,
+        is_trainset
+    )
+
+
+def textual_anomaly_contamination_m4(
+    dataset,
+    dataset_name,
+    inlier_topic,
+    type_tac=None,
+    anomaly_rate=0.1,
+    is_trainset=True
+):
+    """
+    dataset: list of dict (output de ton loader)
+    """
+
+    # 🔹 parse inlier_topic
+    try:
+        inlier_domain, inlier_generator = inlier_topic.split("_")
+    except:
+        raise ValueError(f"Invalid inlier_topic: {inlier_topic}")
+
+    inlier_indices = []
+    anomaly_indices = []
+
+    for i, sample in enumerate(dataset):
+        domain = sample["domain"]
+        generator = sample["generator"]
+        label = sample["label"]  # 0 = human, 1 = machine
+
+        # 🔹 INLIER = machine du bon domain + generator
+        if (
+            label == 0
+            and domain == inlier_domain
+            and generator == inlier_generator
+        ):
+            inlier_indices.append(i)
+
+        # 🔹 ANOMALY = human
+        elif label == 1:
+            if domain == inlier_domain:
+                anomaly_indices.append(i)
 
     inlier_dataset = dataset.select(inlier_indices)
     anomaly_dataset = dataset.select(anomaly_indices)

@@ -1,0 +1,22 @@
+Job ID: 1958198
+Requested time: 
+
+<<<<<<<<<<<<<< mage >>>>>>>>>>>>>>>>>>>
+
+------------------------ normal(1/1) -----------------------------
+torch.Size([25000, 256, 768])
++++++++++++++++++++++ run : 1 / 3 +++++++++++++++++
+
+torch.Size([12000, 256, 768])
+
+Epoch 1/200
+Train Loss: 0.0102, LR: 0.000012
+tensor(0.9994, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 67/200
+Train Loss: 0.0019, LR: 0.000827
+tensor(0.4235, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 133/200
+Train Loss: 0.0004, LR: 0.000604
+tensor(0.1703, device='cuda:0', grad_fn=<ExpBackward0>)

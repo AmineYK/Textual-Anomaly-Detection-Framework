@@ -1,0 +1,36 @@
+Job ID: 1957204
+Requested time: 
+
+<<<<<<<<<<<<<< mage >>>>>>>>>>>>>>>>>>>
+
+------------------------ normal(1/1) -----------------------------
+torch.Size([25000, 256, 768])
++++++++++++++++++++++ run : 1 / 4 +++++++++++++++++
+
+torch.Size([12000, 256, 768])
+
+Epoch 1/150
+Train Loss: 0.0101, LR: 0.000020
+tensor(0.9990, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 51/150
+Train Loss: 0.0022, LR: 0.001000
+tensor(0.4511, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/150
+Train Loss: 0.0006, LR: 0.000500
+tensor(0.2277, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 33.742 mn
+AUC:        0.5414
+Avg Precision: 0.1271
+FPR@95:     0.9498
+FM --> AUC: 0.5414 | FPR@95: 0.9498 | AP: 0.1271
+
++++++++++++++++++++++ run : 2 / 4 +++++++++++++++++
+
+torch.Size([12000, 256, 768])
+
+Epoch 1/150
+Train Loss: 0.0101, LR: 0.000020
+tensor(0.9990, device='cuda:0', grad_fn=<ExpBackward0>)

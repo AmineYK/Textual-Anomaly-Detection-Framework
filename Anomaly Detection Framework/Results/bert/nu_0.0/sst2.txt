@@ -154,3 +154,15 @@ Avg Precision:  0.1226 ± 0.0081
 FPR@95:         0.8187 ± 0.0116
 ========================================
 
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: bert
+AD model:       flow-matching-Transformers-Comp
+Training time:  2149.65 sec
+----------------------------------------
+AUC:            0.6332 ± 0.0078
+Avg Precision:  0.1750 ± 0.0141
+FPR@95:         0.8575 ± 0.0625
+========================================
+

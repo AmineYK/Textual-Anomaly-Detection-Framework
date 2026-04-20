@@ -1,0 +1,23 @@
+Unloading the cpe module is insufficient to restore the system defaults.
+Please run 'source
+/opt/cray/pe/cpe/24.07/restore_lmod_system_defaults.[csh|sh]'. 
+remove gcc/13.2 - cray-mpich/8.1.30 - milan - cpe 24.07
+load python3 3.12 for pytorch environment (with numpy 1.26.4, scikit-learn 1.5.2, torch 2.5.1, optuna 4.1.0, timm 1.0.11, transformers 4.46.2)
+load more details: pip list
+/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/run_indep_anom.py:476: SyntaxWarning: invalid escape sequence '\C'
+  print(f"\CVDD finishing... after {(tiic-taac)/60:.3f} mn")
+/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/run_indep_anom.py:518: SyntaxWarning: invalid escape sequence '\D'
+  print(f"\DATE finishing... after {(tiic-taac)/60:.3f} mn")
+/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/run_indep_anom.py:559: SyntaxWarning: invalid escape sequence '\F'
+  print(f"\FATE finishing... after {(tiic-taac)/60:.3f} mn")
+2026-04-20 17:33:11.499899: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Traceback (most recent call last):
+  File "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/run_indep_anom.py", line 891, in <module>
+    main(args)
+  File "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/run_indep_anom.py", line 81, in main
+    inlier_topics = dataset_topics_dict[args.dataset_name]
+                    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+KeyError: 'm4'
+srun: error: c23gpu6: task 0: Exited with exit code 1
+srun: Terminating StepId=1958521.0

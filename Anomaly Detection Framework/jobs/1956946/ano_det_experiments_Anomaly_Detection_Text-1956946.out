@@ -1,0 +1,35 @@
+Job ID: 1956946
+
+<<<<<<<<<<<<<< imdb >>>>>>>>>>>>>>>>>>>
+
+------------------------ negative(1/1) -----------------------------
+torch.Size([12500, 256, 768])
++++++++++++++++++++++ run : 1 / 2 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+Epoch 1/150
+Train Loss: 0.0101, LR: 0.000020
+tensor(0.9995, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 51/150
+Train Loss: 0.0039, LR: 0.001000
+tensor(0.6178, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 101/150
+Train Loss: 0.0016, LR: 0.000500
+tensor(0.3894, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 11.895 mn
+AUC:        0.6771
+Avg Precision: 0.1750
+FPR@95:     0.8523
+FM --> AUC: 0.6771 | FPR@95: 0.8523 | AP: 0.1750
+
++++++++++++++++++++++ run : 2 / 2 +++++++++++++++++
+
+torch.Size([12500, 256, 768])
+
+Epoch 1/150
+Train Loss: 0.0101, LR: 0.000020
+tensor(0.9995, device='cuda:0', grad_fn=<ExpBackward0>)

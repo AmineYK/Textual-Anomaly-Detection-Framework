@@ -46,10 +46,12 @@ dataset_topics_dict= {
     'enron': ['normal'],
     'imdb' : ['positive', 'negative'],
     'sst2': ['positive', 'negative'],
-    'mage': ['normal']
+    'mage': ['normal'],
+    'm4': ["arxiv_chatgpt", "arxiv_flant5", "reddit_chatgpt", "reddit_flant5"]
+
 }
-# COL = 'text'
-COL = 'content'
+COL = 'text'
+# COL = 'content'
 
 def main(args):
 
@@ -188,8 +190,8 @@ def main(args):
             bertmodel = AutoModel.from_pretrained(model_name).to(device)
             bertmodel.eval()
 
-            X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train[:25000][COL], device, 64, 256)
-            # X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train[COL], device, 64, 256)
+            # X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train[:10000][COL], device, 64, 256)
+            X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train[COL], device, 64, 256)
             # X_inlier = X_inlier.mean(dim=1)
         else: raise Exception("type_emb must be completed !")
 
@@ -226,6 +228,7 @@ def main(args):
             if args.remove_stopwords:
                 data_test = data_test.map(remove_stopwords_batch, batched=True)
 
+            # y_test = np.array(data_test['anomaly_class'][:12000])
             y_test = np.array(data_test['anomaly_class'])
 
             if args.type_emb == "fasttext":
@@ -235,7 +238,7 @@ def main(args):
                 X_test = Tensor(data_test['sbert_embeddings']).to(device)
             
             elif args.type_emb == 'bert':
-                # X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test[:12000][COL], device, 64, 256)
+                # X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test[:5000][COL], device, 64, 256)
                 X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test[COL], device, 64, 256)
                 # X_test = X_test.mean(dim=1)
 
@@ -284,7 +287,7 @@ def main(args):
 
                 rsrae_args = {
                     # "input_dim": X_inlier.shape[2], "hidden_layer_sizes": (64,32,16), "intrinsic_size": 10,
-                    "input_dim": X_inlier.shape[2], "hidden_layer_sizes": (128,64,32), "intrinsic_size": 10,
+                    "input_dim": X_inlier.shape[2], "hidden_layer_sizes": (256,128,64), "intrinsic_size": 10,
                     "activation": nn.ReLU(), "norm_type": 'l21', "loss_norm_type": 'mse',
                     "if_rsr": True, "enforce_proj": True, "all_alt": True,
                     "learning_rate": 1e-4, "lambda1": 0.1, "lambda2": 0.1,
@@ -453,14 +456,14 @@ def main(args):
                 cvdd_args = {
                     "bert_name": "roberta-base", #albert-large-v2   
                     "hidden_size": 768, #1024 
-                    "n_attention_heads": 10,
-                    "attention_size": 64,
+                    "n_attention_heads": 4,
+                    "attention_size": 32,
                     "freeze_bert": True,
                     "lr": 1e-3,
                     "weight_decay" : 0,
                     "lambda_p": 0.1,
                     "n_epochs": 15,
-                    "batch_size": 1024,
+                    "batch_size": 512,
                     "device": device
                     }
                 
@@ -498,7 +501,7 @@ def main(args):
                     # "encoder_name": "google/electra-small-discriminator",
                     "K": 20,
                     "lr": 1e-3,
-                    "weight_decay" : 0,
+                    "weight_decay" : 1e-4,
                     "seq_len": 128,
                     "ratio": 0.50,
                     "n_epochs": 30,
@@ -612,7 +615,7 @@ def main(args):
             if args.fm_trans:
                 config = {
                     'latent_dim': 768,
-                    'hidden_dim': 64,
+                    'hidden_dim': 128,
                     'depth': 4,
                     'n_heads': 4,
                     'lr': 1e-3,
@@ -621,8 +624,8 @@ def main(args):
                     # 'lambda_push': 1e-2,
                     'lambda_push': 0,
                     'lambda_margin': 0,
-                    'epochs': 130,
-                    'lr_epochs':50,
+                    'epochs': 200,
+                    'lr_epochs':80,
                     'warmup_epochs': -1,
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
@@ -752,7 +755,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="RSRAE",
             auc_mean=np.mean(list_auc_rsrae), ap_mean=np.mean(list_ap_rsrae),fpr_mean=np.mean(list_fpr_rsrae),
             auc_std = np.std(list_auc_rsrae),ap_std =  np.std(list_ap_rsrae),fpr_std = np.std(list_fpr_rsrae),
-            train_time = np.mean(list_time_rsrae), nu=args.nu, overwrite='naive'
+            train_time = np.mean(list_time_rsrae), nu=args.nu, overwrite='smart'
             )
 
         if args.ocsvm:
