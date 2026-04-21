@@ -383,8 +383,14 @@ def import_dataset(name="20newsgroups", full_dataset_=False, batch_size=64):
         def load_jsonl(filepath):
             data = []
             with open(filepath, "r", encoding="utf-8") as f:
-                for line in f:
-                    data.append(json.loads(line))
+                for i, line in enumerate(f):
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        data.append(json.loads(line))
+                    except json.JSONDecodeError:
+                        print(f"[WARNING] skip ligne {i} dans {filepath}")
             return data
 
 
@@ -397,33 +403,17 @@ def import_dataset(name="20newsgroups", full_dataset_=False, batch_size=64):
 
             return domain, generator
 
-
-        def normalize_domain(domain):
-            if domain is None:
-                return None
-            domain = domain.lower()
-            if domain == "eli5":
-                return "reddit"
-            return domain
-
-
-        def convert_entry(entry, fallback_domain, generator):
-
+        def convert_entry(entry, file_domain, generator):
             samples = []
-
-            domain = entry.get("source")
-            if domain is None or domain == "":
-                domain = fallback_domain
-
-            domain = normalize_domain(domain)
+            domain = file_domain
 
             # human
             if entry.get("human_text"):
                 samples.append({
                     "text": entry["human_text"],
                     "label": 1,
-                    "domain": domain,
                     "generator": "human",
+                    "inlier_topic": domain,   
                     "prompt": entry.get("prompt", ""),
                     "source_id": entry.get("source_ID", "")
                 })
@@ -433,25 +423,24 @@ def import_dataset(name="20newsgroups", full_dataset_=False, batch_size=64):
                 samples.append({
                     "text": entry["machine_text"],
                     "label": 0,
-                    "domain": domain,
                     "generator": generator,
+                    "inlier_topic": domain,  
                     "prompt": entry.get("prompt", ""),
                     "source_id": entry.get("source_ID", "")
                 })
 
             return samples
 
-
         features = Features({
             "text": Value("string"),
             "label": Value("int64"),
-            "domain": Value("string"),
             "generator": Value("string"),
+            "inlier_topic": Value("string"),
             "prompt": Value("string"),
             "source_id": Value("string"),
         })
 
-        def load_m4_dataset(data_dir="/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/m4_data"):
+        def load_m4_dataset(data_dir="Anomaly Detection Framework/m4_data"):
             all_samples = []
 
             for file in os.listdir(data_dir):
@@ -460,40 +449,61 @@ def import_dataset(name="20newsgroups", full_dataset_=False, batch_size=64):
 
                 filepath = os.path.join(data_dir, file)
 
-                fallback_domain, generator = parse_filename(file)
+                file_domain, generator = parse_filename(file)
                 raw_data = load_jsonl(filepath)
 
                 for entry in raw_data:
                     all_samples.extend(
-                        convert_entry(entry, fallback_domain, generator)
+                        convert_entry(entry, file_domain, generator)
                     )
-            return Dataset.from_list(all_samples, features=features)
+
+            dataset = Dataset.from_list(all_samples, features=features)
+
+            return dataset
 
 
-        def combine_labels(example):
-            example["stratify_key"] = f"{example['domain']}_{example['generator']}"
+        def add_stratify_key(example):
+            example["stratify_key"] = f"{example['inlier_topic']}_{example['label']}"
             return example
 
-        data = load_m4_dataset()
-        data = data.map(combine_labels)
-        unique_classes = list(set(data["stratify_key"]))
-        class_label = ClassLabel(names=unique_classes)
-        data = data.cast_column("stratify_key", class_label)
 
-        dataset_split = data.train_test_split(
-            test_size=0.2,
-            stratify_by_column="stratify_key",
-            seed=42
-        )
+        def create_dataloaders(dataset, batch_size=32, test_size=0.2, seed=42):
 
-        train_dataloader = DataLoader(dataset_split['train'], batch_size=batch_size, shuffle=True)
-        test_dataloader = DataLoader(dataset_split['test'], batch_size=batch_size, shuffle=True)
+            dataset = dataset.map(add_stratify_key)
 
-        if full_dataset_:
-            full_dataset = concatenate_datasets([dataset['train'], dataset['test']])
-            return DataLoader(full_dataset, batch_size=batch_size, shuffle=True)
+            unique_keys = list(set(dataset["stratify_key"]))
+            dataset = dataset.cast_column(
+                "stratify_key",
+                ClassLabel(names=unique_keys)
+            )
 
-        return train_dataloader, test_dataloader
+            split = dataset.train_test_split(
+                test_size=test_size,
+                stratify_by_column="stratify_key",
+                seed=seed
+            )
+
+            train_loader = DataLoader(
+                split["train"],
+                batch_size=batch_size,
+                shuffle=True
+            )
+
+            test_loader = DataLoader(
+                split["test"],
+                batch_size=batch_size,
+                shuffle=False
+            )
+
+            return train_loader, test_loader
+
+
+        data = load_m4_dataset('/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/m4_data')
+
+        return create_dataloaders(
+            data,
+            batch_size=16
+            )
 
 
     raise Exception("The dataset naming doesn't correspond !")

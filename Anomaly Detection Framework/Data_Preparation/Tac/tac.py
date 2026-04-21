@@ -218,35 +218,24 @@ def textual_anomaly_contamination_m4(
     is_trainset=True
 ):
     """
-    dataset: list of dict (output de ton loader)
+    dataset: HuggingFace Dataset
+    inlier_topic: str (ex: "arxiv")
     """
-
-    # 🔹 parse inlier_topic
-    try:
-        inlier_domain, inlier_generator = inlier_topic.split("_")
-    except:
-        raise ValueError(f"Invalid inlier_topic: {inlier_topic}")
 
     inlier_indices = []
     anomaly_indices = []
 
     for i, sample in enumerate(dataset):
-        domain = sample["domain"]
-        generator = sample["generator"]
-        label = sample["label"]  # 0 = human, 1 = machine
+        domain = sample["inlier_topic"]   # 🔥 important
+        label = sample["label"]           # 0 = machine, 1 = human
 
-        # 🔹 INLIER = machine du bon domain + generator
-        if (
-            label == 0
-            and domain == inlier_domain
-            and generator == inlier_generator
-        ):
+        # 🔹 INLIER = machine du domaine cible
+        if label == 0 and domain == inlier_topic:
             inlier_indices.append(i)
 
-        # 🔹 ANOMALY = human
-        elif label == 1:
-            if domain == inlier_domain:
-                anomaly_indices.append(i)
+        # 🔹 ANOMALY = human du même domaine
+        elif label == 1 and domain == inlier_topic:
+            anomaly_indices.append(i)
 
     inlier_dataset = dataset.select(inlier_indices)
     anomaly_dataset = dataset.select(anomaly_indices)
@@ -257,6 +246,56 @@ def textual_anomaly_contamination_m4(
         anomaly_rate,
         is_trainset
     )
+
+
+# def textual_anomaly_contamination_m4(
+#     dataset,
+#     dataset_name,
+#     inlier_topic,
+#     type_tac=None,
+#     anomaly_rate=0.1,
+#     is_trainset=True
+# ):
+#     """
+#     dataset: list of dict (output de ton loader)
+#     """
+
+#     # 🔹 parse inlier_topic
+#     try:
+#         inlier_domain, inlier_generator = inlier_topic.split("_")
+#     except:
+#         raise ValueError(f"Invalid inlier_topic: {inlier_topic}")
+
+#     inlier_indices = []
+#     anomaly_indices = []
+
+#     for i, sample in enumerate(dataset):
+#         domain = sample["domain"]
+#         generator = sample["generator"]
+#         label = sample["label"]  # 0 = human, 1 = machine
+
+#         # 🔹 INLIER = machine du bon domain + generator
+#         if (
+#             label == 0
+#             and domain == inlier_domain
+#             and generator == inlier_generator
+#         ):
+#             inlier_indices.append(i)
+
+#         # 🔹 ANOMALY = human
+#         elif label == 1:
+#             if domain == inlier_domain:
+#                 anomaly_indices.append(i)
+
+#     inlier_dataset = dataset.select(inlier_indices)
+#     anomaly_dataset = dataset.select(anomaly_indices)
+
+#     return _finalize_split(
+#         inlier_dataset,
+#         anomaly_dataset,
+#         anomaly_rate,
+#         is_trainset
+#     )
 
 def textual_anomaly_contamination_20newsgroups(
     dataset,

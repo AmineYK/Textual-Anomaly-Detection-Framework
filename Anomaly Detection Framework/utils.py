@@ -17,7 +17,7 @@ BASE_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly D
 BASE_RESULTS_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results"
 OUTPUT_LATEX_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/latex_tables"
 
-DATASETS = ["reuters","20newsgroups", "agnews", "dbpedia14", "sms", "enron", "sst2", "imdb", "mage", "m4"]
+DATASETS = ["reuters","20newsgroups", "agnews", "dbpedia14", "sms", "enron", "sst2", "imdb", "m4"]
 ENCODING_TYPES = ["sentence-bert", "bert", "fasttext"]
 NU_VALUES = [0.0, 0.1]
 

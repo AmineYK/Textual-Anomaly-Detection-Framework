@@ -2,11 +2,12 @@
 #SBATCH --job-name=ano_det_experiments_Anomaly_Detection_Text
 #SBATCH --output=jobs/%j/%x-%j.out
 #SBATCH --error=jobs/%j/%x-%j.err
-#SBATCH --partition=gpu
+# SBATCH --partition=gpu
+#SBATCH --partition=hpda_mig
 #SBATCH --nodes=1
-#SBATCH --gres=gpu:1
-# SBATCH --gres=gpu:a100_3g.40gb
-#SBATCH --time 02:30:00
+# SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:a100_3g.40gb
+#SBATCH --time 00:30:00
 # --time 00:10:00
 # --cpus-per-task 16
 
@@ -25,8 +26,8 @@ echo "Requested time: ${SLURM_TIMELIMIT}"
 
 export PYTHONUNBUFFERED=1
 
-# srun python3 run_indep_anom.py --dataset_name mage --inlier_topic "normal" --type_emb bert --nu 0.0 --nb_runs 4 --ocsvm --ae --rsrae --tccm
-srun python3 run_indep_anom.py --dataset_name m4 --runall --type_emb bert --nu 0.0 --nb_runs 6 --rsrae
+srun python3 run_indep_anom.py --dataset_name m4 --inlier_topic "wikipedia" --type_emb bert --nu 0.0 --nb_runs 4 --ocsvm --ae --tccm
+# srun python3 run_indep_anom.py --dataset_name m4 --inlier_topic "reddit_chatgpt" --type_emb bert --nu 0.0 --nb_runs 6 --fm_trans
 # srun python3 run_indep_anom.py --dataset_name dbpedia14 --runall --type_emb bert --nu 0.0 --nb_runs 5 --ocsvm --ae --rsrae --tccm
 # srun python3 run_indep_anom.py --dataset_name dbpedia14 --runall --type_emb bert --nu 0.0 --nb_runs 3 --ocsvm --ae --rsrae --tccm --date --cvdd
 # srun python3 run_indep_anom.py --dataset_name sst2 --inlier_topic positive --type_emb bert --nu 0.0 --nb_runs 6 --date

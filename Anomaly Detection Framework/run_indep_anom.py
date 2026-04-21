@@ -47,7 +47,7 @@ dataset_topics_dict= {
     'imdb' : ['positive', 'negative'],
     'sst2': ['positive', 'negative'],
     'mage': ['normal'],
-    'm4': ["arxiv_chatgpt", "arxiv_flant5", "reddit_chatgpt", "reddit_flant5"]
+    'm4': ["wikipedia", "arxiv", "wikihow", "reddit", "peerread"]
 
 }
 COL = 'text'
@@ -191,7 +191,7 @@ def main(args):
             bertmodel.eval()
 
             # X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train[:10000][COL], device, 64, 256)
-            X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train[COL], device, 64, 256)
+            X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train[COL], device, 64, 128)
             # X_inlier = X_inlier.mean(dim=1)
         else: raise Exception("type_emb must be completed !")
 
@@ -239,7 +239,7 @@ def main(args):
             
             elif args.type_emb == 'bert':
                 # X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test[:5000][COL], device, 64, 256)
-                X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test[COL], device, 64, 256)
+                X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test[COL], device, 64, 128)
                 # X_test = X_test.mean(dim=1)
 
             else: raise Exception("type_emb must be completed !")
@@ -287,12 +287,12 @@ def main(args):
 
                 rsrae_args = {
                     # "input_dim": X_inlier.shape[2], "hidden_layer_sizes": (64,32,16), "intrinsic_size": 10,
-                    "input_dim": X_inlier.shape[2], "hidden_layer_sizes": (256,128,64), "intrinsic_size": 10,
+                    "input_dim": X_inlier.shape[2], "hidden_layer_sizes": (128,64,32), "intrinsic_size": 10,
                     "activation": nn.ReLU(), "norm_type": 'l21', "loss_norm_type": 'mse',
                     "if_rsr": True, "enforce_proj": True, "all_alt": True,
                     "learning_rate": 1e-4, "lambda1": 0.1, "lambda2": 0.1,
                     "epoch_size": 100, "batch_show": 50, "normalize": True,
-                    "bn": False, "seed": 42, 'batch_size': X_inlier.shape[0] // 1000
+                    "bn": False, "seed": 42, 'batch_size': X_inlier.shape[0] // 100
                 }
 
                 rsrae_model = RSRAE(rsrae_args)
@@ -456,14 +456,14 @@ def main(args):
                 cvdd_args = {
                     "bert_name": "roberta-base", #albert-large-v2   
                     "hidden_size": 768, #1024 
-                    "n_attention_heads": 4,
-                    "attention_size": 32,
+                    "n_attention_heads": 10,
+                    "attention_size": 64,
                     "freeze_bert": True,
                     "lr": 1e-3,
                     "weight_decay" : 0,
                     "lambda_p": 0.1,
-                    "n_epochs": 15,
-                    "batch_size": 512,
+                    "n_epochs": 30,
+                    "batch_size": 64,
                     "device": device
                     }
                 
@@ -502,10 +502,10 @@ def main(args):
                     "K": 20,
                     "lr": 1e-3,
                     "weight_decay" : 1e-4,
-                    "seq_len": 128,
+                    "seq_len": 256,
                     "ratio": 0.50,
-                    "n_epochs": 30,
-                    "batch_size": 512,
+                    "n_epochs": 50,
+                    "batch_size": 64,
                     "device": device
                     }
                             
@@ -615,7 +615,7 @@ def main(args):
             if args.fm_trans:
                 config = {
                     'latent_dim': 768,
-                    'hidden_dim': 128,
+                    'hidden_dim': 64,
                     'depth': 4,
                     'n_heads': 4,
                     'lr': 1e-3,
@@ -624,13 +624,13 @@ def main(args):
                     # 'lambda_push': 1e-2,
                     'lambda_push': 0,
                     'lambda_margin': 0,
-                    'epochs': 200,
-                    'lr_epochs':80,
+                    'epochs': 300,
+                    'lr_epochs':100,
                     'warmup_epochs': -1,
                     'grad_clip': 1.0,
                     'flow_type': 'linear',  
                     'sigma': 0.1, 
-                    'batch_size' : 512,
+                    'batch_size' : 32,
                     'lambda_reg_angle': None,
                     'lambda_reg_kl': None,
                     'n_step_euler_integrate':1,
@@ -755,7 +755,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="RSRAE",
             auc_mean=np.mean(list_auc_rsrae), ap_mean=np.mean(list_ap_rsrae),fpr_mean=np.mean(list_fpr_rsrae),
             auc_std = np.std(list_auc_rsrae),ap_std =  np.std(list_ap_rsrae),fpr_std = np.std(list_fpr_rsrae),
-            train_time = np.mean(list_time_rsrae), nu=args.nu, overwrite='smart'
+            train_time = np.mean(list_time_rsrae), nu=args.nu, overwrite='naive'
             )
 
         if args.ocsvm:

@@ -194,7 +194,6 @@ class FlowDiTTokSen(nn.Module):
                 # no padding to ignore
                 key_padding_mask = None
             else:
-                # MultiheadAttention attend True = ignorer
                 key_padding_mask = (attention_mask == 0)   
 
         pool_out, pool_attn = self.attn_pool(
