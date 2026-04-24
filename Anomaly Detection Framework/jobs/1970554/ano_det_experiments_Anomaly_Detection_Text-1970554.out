@@ -1,0 +1,19 @@
+Job ID: 1970554
+
+<<<<<<<<<<<<<< sst2 >>>>>>>>>>>>>>>>>>>
+
+------------------------ positive(1/1) -----------------------------
+st5_large_embedding
+torch.Size([37563, 768])
++++++++++++++++++++++ run : 1 / 4 +++++++++++++++++
+
+st5_large_embedding
+torch.Size([444, 768])
+
+Epoch 1/350
+Train Loss: 0.0107, LR: 0.000007
+tensor(0.9990, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 117/350
+Train Loss: 0.0011, LR: 0.000775
+tensor(0.1296, device='cuda:0', grad_fn=<ExpBackward0>)

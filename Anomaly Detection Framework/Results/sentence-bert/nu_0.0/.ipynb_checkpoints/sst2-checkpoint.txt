@@ -1,0 +1,240 @@
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       AE
+Training time:  3.39 sec
+----------------------------------------
+AUC:            0.6351 ± 0.0417
+Avg Precision:  0.1604 ± 0.0308
+FPR@95:         0.8012 ± 0.0349
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       RSRAE
+Training time:  0.51 sec
+----------------------------------------
+AUC:            0.6701 ± 0.0394
+Avg Precision:  0.1710 ± 0.0290
+FPR@95:         0.7110 ± 0.0609
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       ocsvm
+Training time:  165.97 sec
+----------------------------------------
+AUC:            0.6492 ± 0.0397
+Avg Precision:  0.1637 ± 0.0296
+FPR@95:         0.7702 ± 0.0541
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       TCCM
+Training time:  12.82 sec
+----------------------------------------
+AUC:            0.6322 ± 0.0375
+Avg Precision:  0.1758 ± 0.0309
+FPR@95:         0.7905 ± 0.0447
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       AE
+Training time:  2.56 sec
+----------------------------------------
+AUC:            0.5259 ± 0.0379
+Avg Precision:  0.1218 ± 0.0309
+FPR@95:         0.9109 ± 0.0384
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       RSRAE
+Training time:  0.44 sec
+----------------------------------------
+AUC:            0.5557 ± 0.0435
+Avg Precision:  0.1191 ± 0.0205
+FPR@95:         0.9023 ± 0.0519
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       ocsvm
+Training time:  103.11 sec
+----------------------------------------
+AUC:            0.6237 ± 0.0357
+Avg Precision:  0.1523 ± 0.0271
+FPR@95:         0.8567 ± 0.0573
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       TCCM
+Training time:  10.16 sec
+----------------------------------------
+AUC:            0.5058 ± 0.0503
+Avg Precision:  0.1039 ± 0.0195
+FPR@95:         0.9096 ± 0.0391
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  1962.49 sec
+----------------------------------------
+AUC:            0.4450 ± 0.0264
+Avg Precision:  0.0909 ± 0.0063
+FPR@95:         0.9692 ± 0.0165
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       DATE
+Training time:  510.23 sec
+----------------------------------------
+AUC:            0.5989 ± 0.0363
+Avg Precision:  0.1686 ± 0.0403
+FPR@95:         0.8792 ± 0.0348
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       DATE
+Training time:  208.28 sec
+----------------------------------------
+AUC:            0.5413 ± 0.0452
+Avg Precision:  0.1106 ± 0.0125
+FPR@95:         0.9135 ± 0.0507
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  1558.97 sec
+----------------------------------------
+AUC:            0.5926 ± 0.0266
+Avg Precision:  0.1373 ± 0.0141
+FPR@95:         0.8791 ± 0.0171
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       flow-matching
+Training time:  15.16 sec
+----------------------------------------
+AUC:            0.6498 ± 0.0422
+Avg Precision:  0.1886 ± 0.0356
+FPR@95:         0.7725 ± 0.0518
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       flow-matching
+Training time:  11.82 sec
+----------------------------------------
+AUC:            0.5001 ± 0.0453
+Avg Precision:  0.1008 ± 0.0154
+FPR@95:         0.9228 ± 0.0283
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  246.92 sec
+----------------------------------------
+AUC:            0.6318 ± 0.0637
+Avg Precision:  0.2044 ± 0.0934
+FPR@95:         0.8935 ± 0.0633
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  195.71 sec
+----------------------------------------
+AUC:            0.5279 ± 0.0549
+Avg Precision:  0.1438 ± 0.0464
+FPR@95:         0.9241 ± 0.0518
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  326.93 sec
+----------------------------------------
+AUC:            0.6551 ± 0.0390
+Avg Precision:  0.2052 ± 0.0363
+FPR@95:         0.7973 ± 0.0584
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  90.82 sec
+----------------------------------------
+AUC:            0.5013 ± 0.0444
+Avg Precision:  0.1037 ± 0.0197
+FPR@95:         0.9181 ± 0.0247
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-PP
+Training time:  516.90 sec
+----------------------------------------
+AUC:            0.4976 ± 0.0501
+Avg Precision:  0.1046 ± 0.0218
+FPR@95:         0.9189 ± 0.0376
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-PP
+Training time:  628.59 sec
+----------------------------------------
+AUC:            0.6527 ± 0.0417
+Avg Precision:  0.2024 ± 0.0273
+FPR@95:         0.7968 ± 0.0666
+========================================
+

@@ -1,0 +1,840 @@
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: distilroberta
+AD model:       AE
+Training time:  3.18 sec
+----------------------------------------
+AUC:            0.9366 ± 0.0040
+Avg Precision:  0.7116 ± 0.0079
+FPR@95:         0.1926 ± 0.0443
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.06 sec
+----------------------------------------
+AUC:            0.9037 ± 0.0066
+Avg Precision:  0.6542 ± 0.0073
+FPR@95:         0.3567 ± 0.0590
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  12.69 sec
+----------------------------------------
+AUC:            0.9614 ± 0.0009
+Avg Precision:  0.8034 ± 0.0031
+FPR@95:         0.1972 ± 0.0097
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.69 sec
+----------------------------------------
+AUC:            0.9158 ± 0.0055
+Avg Precision:  0.5722 ± 0.0211
+FPR@95:         0.3721 ± 0.0283
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.78 sec
+----------------------------------------
+AUC:            0.9966 ± 0.0005
+Avg Precision:  0.9723 ± 0.0013
+FPR@95:         0.0096 ± 0.0010
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.48 sec
+----------------------------------------
+AUC:            0.9946 ± 0.0010
+Avg Precision:  0.9561 ± 0.0041
+FPR@95:         0.0140 ± 0.0009
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  12.24 sec
+----------------------------------------
+AUC:            0.9679 ± 0.0004
+Avg Precision:  0.9418 ± 0.0025
+FPR@95:         0.0952 ± 0.0005
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.71 sec
+----------------------------------------
+AUC:            0.9923 ± 0.0006
+Avg Precision:  0.9375 ± 0.0031
+FPR@95:         0.0326 ± 0.0045
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.82 sec
+----------------------------------------
+AUC:            0.9659 ± 0.0016
+Avg Precision:  0.9005 ± 0.0079
+FPR@95:         0.1046 ± 0.0143
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.77 sec
+----------------------------------------
+AUC:            0.9499 ± 0.0037
+Avg Precision:  0.8509 ± 0.0091
+FPR@95:         0.1975 ± 0.0220
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  12.24 sec
+----------------------------------------
+AUC:            0.9622 ± 0.0019
+Avg Precision:  0.9054 ± 0.0062
+FPR@95:         0.1456 ± 0.0226
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.71 sec
+----------------------------------------
+AUC:            0.9758 ± 0.0026
+Avg Precision:  0.8890 ± 0.0101
+FPR@95:         0.1397 ± 0.0119
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.77 sec
+----------------------------------------
+AUC:            0.9965 ± 0.0009
+Avg Precision:  0.9837 ± 0.0022
+FPR@95:         0.0069 ± 0.0019
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.25 sec
+----------------------------------------
+AUC:            0.9948 ± 0.0012
+Avg Precision:  0.9710 ± 0.0044
+FPR@95:         0.0152 ± 0.0033
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  12.29 sec
+----------------------------------------
+AUC:            0.9791 ± 0.0002
+Avg Precision:  0.9735 ± 0.0010
+FPR@95:         0.0537 ± 0.0008
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.70 sec
+----------------------------------------
+AUC:            0.9977 ± 0.0004
+Avg Precision:  0.9790 ± 0.0025
+FPR@95:         0.0072 ± 0.0021
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.84 sec
+----------------------------------------
+AUC:            0.9638 ± 0.0017
+Avg Precision:  0.9043 ± 0.0043
+FPR@95:         0.1217 ± 0.0059
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.23 sec
+----------------------------------------
+AUC:            0.9904 ± 0.0027
+Avg Precision:  0.9499 ± 0.0050
+FPR@95:         0.0353 ± 0.0061
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  12.04 sec
+----------------------------------------
+AUC:            0.9962 ± 0.0009
+Avg Precision:  0.9787 ± 0.0026
+FPR@95:         0.0134 ± 0.0018
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.69 sec
+----------------------------------------
+AUC:            0.9920 ± 0.0004
+Avg Precision:  0.9443 ± 0.0014
+FPR@95:         0.0344 ± 0.0032
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.77 sec
+----------------------------------------
+AUC:            0.9990 ± 0.0008
+Avg Precision:  0.9950 ± 0.0010
+FPR@95:         0.0009 ± 0.0002
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.15 sec
+----------------------------------------
+AUC:            0.9983 ± 0.0008
+Avg Precision:  0.9900 ± 0.0025
+FPR@95:         0.0032 ± 0.0005
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  11.92 sec
+----------------------------------------
+AUC:            0.9988 ± 0.0007
+Avg Precision:  0.9925 ± 0.0015
+FPR@95:         0.0010 ± 0.0002
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.69 sec
+----------------------------------------
+AUC:            0.9963 ± 0.0006
+Avg Precision:  0.9729 ± 0.0029
+FPR@95:         0.0154 ± 0.0021
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  1359.10 sec
+----------------------------------------
+AUC:            0.9363 ± 0.0024
+Avg Precision:  0.6248 ± 0.0160
+FPR@95:         0.2558 ± 0.0096
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.78 sec
+----------------------------------------
+AUC:            0.9815 ± 0.0020
+Avg Precision:  0.9114 ± 0.0061
+FPR@95:         0.1077 ± 0.0223
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.62 sec
+----------------------------------------
+AUC:            0.9705 ± 0.0024
+Avg Precision:  0.8602 ± 0.0096
+FPR@95:         0.1629 ± 0.0293
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  12.49 sec
+----------------------------------------
+AUC:            0.9901 ± 0.0019
+Avg Precision:  0.9454 ± 0.0062
+FPR@95:         0.0502 ± 0.0117
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.72 sec
+----------------------------------------
+AUC:            0.9508 ± 0.0074
+Avg Precision:  0.8248 ± 0.0126
+FPR@95:         0.3017 ± 0.0519
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.76 sec
+----------------------------------------
+AUC:            0.9967 ± 0.0007
+Avg Precision:  0.9836 ± 0.0018
+FPR@95:         0.0063 ± 0.0022
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.22 sec
+----------------------------------------
+AUC:            0.9893 ± 0.0012
+Avg Precision:  0.9613 ± 0.0036
+FPR@95:         0.0220 ± 0.0064
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  12.20 sec
+----------------------------------------
+AUC:            0.9992 ± 0.0003
+Avg Precision:  0.9942 ± 0.0011
+FPR@95:         0.0029 ± 0.0012
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.68 sec
+----------------------------------------
+AUC:            0.9896 ± 0.0013
+Avg Precision:  0.9580 ± 0.0039
+FPR@95:         0.0376 ± 0.0116
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.80 sec
+----------------------------------------
+AUC:            0.9966 ± 0.0006
+Avg Precision:  0.9772 ± 0.0031
+FPR@95:         0.0182 ± 0.0047
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.33 sec
+----------------------------------------
+AUC:            0.9966 ± 0.0003
+Avg Precision:  0.9761 ± 0.0010
+FPR@95:         0.0174 ± 0.0023
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  11.96 sec
+----------------------------------------
+AUC:            0.9980 ± 0.0006
+Avg Precision:  0.9870 ± 0.0029
+FPR@95:         0.0102 ± 0.0026
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.70 sec
+----------------------------------------
+AUC:            0.9988 ± 0.0002
+Avg Precision:  0.9893 ± 0.0015
+FPR@95:         0.0060 ± 0.0014
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.79 sec
+----------------------------------------
+AUC:            0.9972 ± 0.0012
+Avg Precision:  0.9868 ± 0.0041
+FPR@95:         0.0046 ± 0.0031
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.38 sec
+----------------------------------------
+AUC:            0.9957 ± 0.0010
+Avg Precision:  0.9800 ± 0.0032
+FPR@95:         0.0100 ± 0.0042
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  11.95 sec
+----------------------------------------
+AUC:            0.9923 ± 0.0025
+Avg Precision:  0.9731 ± 0.0051
+FPR@95:         0.0235 ± 0.0066
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.69 sec
+----------------------------------------
+AUC:            0.9891 ± 0.0023
+Avg Precision:  0.9609 ± 0.0058
+FPR@95:         0.0622 ± 0.0228
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.85 sec
+----------------------------------------
+AUC:            0.9949 ± 0.0010
+Avg Precision:  0.9655 ± 0.0013
+FPR@95:         0.0091 ± 0.0026
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.44 sec
+----------------------------------------
+AUC:            0.9939 ± 0.0012
+Avg Precision:  0.9577 ± 0.0022
+FPR@95:         0.0114 ± 0.0026
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  11.96 sec
+----------------------------------------
+AUC:            0.9952 ± 0.0007
+Avg Precision:  0.9652 ± 0.0014
+FPR@95:         0.0120 ± 0.0032
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.70 sec
+----------------------------------------
+AUC:            0.9930 ± 0.0007
+Avg Precision:  0.9555 ± 0.0028
+FPR@95:         0.0200 ± 0.0045
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  512.55 sec
+----------------------------------------
+AUC:            0.9942 ± 0.0008
+Avg Precision:  0.9460 ± 0.0038
+FPR@95:         0.0251 ± 0.0015
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.83 sec
+----------------------------------------
+AUC:            0.9942 ± 0.0020
+Avg Precision:  0.9678 ± 0.0049
+FPR@95:         0.0143 ± 0.0080
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.27 sec
+----------------------------------------
+AUC:            0.9854 ± 0.0024
+Avg Precision:  0.9363 ± 0.0036
+FPR@95:         0.0733 ± 0.0081
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  12.28 sec
+----------------------------------------
+AUC:            0.9969 ± 0.0004
+Avg Precision:  0.9844 ± 0.0023
+FPR@95:         0.0013 ± 0.0005
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.77 sec
+----------------------------------------
+AUC:            0.9796 ± 0.0046
+Avg Precision:  0.9206 ± 0.0106
+FPR@95:         0.0953 ± 0.0280
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.72 sec
+----------------------------------------
+AUC:            0.9976 ± 0.0005
+Avg Precision:  0.9834 ± 0.0014
+FPR@95:         0.0095 ± 0.0012
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.22 sec
+----------------------------------------
+AUC:            0.9903 ± 0.0009
+Avg Precision:  0.9550 ± 0.0019
+FPR@95:         0.0427 ± 0.0026
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  12.16 sec
+----------------------------------------
+AUC:            0.9988 ± 0.0006
+Avg Precision:  0.9932 ± 0.0021
+FPR@95:         0.0024 ± 0.0004
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.68 sec
+----------------------------------------
+AUC:            0.9823 ± 0.0015
+Avg Precision:  0.9073 ± 0.0060
+FPR@95:         0.0941 ± 0.0123
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: distilroberta
+AD model:       AE
+Training time:  2.80 sec
+----------------------------------------
+AUC:            0.9841 ± 0.0017
+Avg Precision:  0.8996 ± 0.0030
+FPR@95:         0.0510 ± 0.0080
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  77.32 sec
+----------------------------------------
+AUC:            0.9654 ± 0.0016
+Avg Precision:  0.8595 ± 0.0032
+FPR@95:         0.1864 ± 0.0068
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  12.30 sec
+----------------------------------------
+AUC:            0.9851 ± 0.0029
+Avg Precision:  0.9410 ± 0.0022
+FPR@95:         0.0552 ± 0.0073
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  4.69 sec
+----------------------------------------
+AUC:            0.9129 ± 0.0019
+Avg Precision:  0.5557 ± 0.0085
+FPR@95:         0.3491 ± 0.0086
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  505.01 sec
+----------------------------------------
+AUC:            0.9904 ± 0.0021
+Avg Precision:  0.9571 ± 0.0112
+FPR@95:         0.1028 ± 0.0151
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  498.85 sec
+----------------------------------------
+AUC:            0.9988 ± 0.0002
+Avg Precision:  0.9842 ± 0.0015
+FPR@95:         0.0041 ± 0.0004
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  498.74 sec
+----------------------------------------
+AUC:            0.9952 ± 0.0008
+Avg Precision:  0.9601 ± 0.0017
+FPR@95:         0.0174 ± 0.0011
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  498.98 sec
+----------------------------------------
+AUC:            0.9976 ± 0.0004
+Avg Precision:  0.9795 ± 0.0031
+FPR@95:         0.0091 ± 0.0013
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  1381.34 sec
+----------------------------------------
+AUC:            0.9966 ± 0.0039
+Avg Precision:  0.9124 ± 0.0128
+FPR@95:         0.1293 ± 0.0222
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  501.42 sec
+----------------------------------------
+AUC:            0.9936 ± 0.0009
+Avg Precision:  0.9669 ± 0.0036
+FPR@95:         0.0290 ± 0.0057
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  501.02 sec
+----------------------------------------
+AUC:            0.9993 ± 0.0002
+Avg Precision:  0.9939 ± 0.0014
+FPR@95:         0.0030 ± 0.0010
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  499.95 sec
+----------------------------------------
+AUC:            0.9913 ± 0.0015
+Avg Precision:  0.9644 ± 0.0048
+FPR@95:         0.0517 ± 0.0084
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  502.38 sec
+----------------------------------------
+AUC:            0.9939 ± 0.0005
+Avg Precision:  0.9533 ± 0.0035
+FPR@95:         0.0202 ± 0.0049
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  518.79 sec
+----------------------------------------
+AUC:            0.9951 ± 0.0018
+Avg Precision:  0.9575 ± 0.0083
+FPR@95:         0.0727 ± 0.0120
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  521.33 sec
+----------------------------------------
+AUC:            0.9914 ± 0.0039
+Avg Precision:  0.9227 ± 0.0111
+FPR@95:         0.0900 ± 0.0280
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  1372.50 sec
+----------------------------------------
+AUC:            0.9556 ± 0.0033
+Avg Precision:  0.7523 ± 0.0137
+FPR@95:         0.1689 ± 0.0070
+========================================
+

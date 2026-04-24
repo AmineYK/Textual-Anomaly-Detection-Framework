@@ -184,28 +184,32 @@ class FlowDiTTokSen(nn.Module):
             if return_attention and attn_w is not None:
                 all_attentions.append(attn_w)
 
+        if h.shape[1] == 1:
+            # S=1 : pas besoin d'attention pooling
+            h_sentence = h.squeeze(1)         
+        else:
+            query = self.attn_pool_query.expand(B, 1, -1)
 
-        query = self.attn_pool_query.expand(B, 1, -1)
+            # ignore PAD in attention pooling
+            if attention_mask is not None:
+                # S = 1
+                if attention_mask.shape[1] == 1:
+                    # no padding to ignore
+                    key_padding_mask = None
+                else:
+                    key_padding_mask = (attention_mask == 0)   
 
-        # ignore PAD in attention pooling
-        if attention_mask is not None:
-            # S = 1
-            if attention_mask.shape[1] == 1:
-                # no padding to ignore
-                key_padding_mask = None
-            else:
-                key_padding_mask = (attention_mask == 0)   
+            pool_out, pool_attn = self.attn_pool(
+                query,                                      
+                h,                                          
+                h,                                          
+                key_padding_mask=key_padding_mask,
+                need_weights=True,
+                average_attn_weights=True
+            )
 
-        pool_out, pool_attn = self.attn_pool(
-            query,                                      
-            h,                                          
-            h,                                          
-            key_padding_mask=key_padding_mask,
-            need_weights=True,
-            average_attn_weights=True
-        )
-
-        h_sentence = pool_out.squeeze(1)             
+            h_sentence = pool_out.squeeze(1)
+             
         v_sentence = self.final_layer(h_sentence, c)  
         v_tokens = self.final_layer(h, c)            
 
@@ -228,7 +232,6 @@ class FlowMatchingTransformersTokSen(nn.Module):
         self.device = config['device']
 
         if self.source.dim() == 2:
-            print("HERE")
             self.attentions_mask = torch.ones(
                 self.source.shape[0], 1,
                 device=self.device
@@ -270,32 +273,76 @@ class FlowMatchingTransformersTokSen(nn.Module):
 
 
 
+    # def _euler_integrate_single(self, x_0, mask, N_steps=10, save_all=False):
+    #     with torch.no_grad():
+
+    #         mask_exp     = mask.unsqueeze(-1).float()
+    #         x_0_sentence = (x_0 * mask_exp).sum(dim=1) / \
+    #                         mask_exp.sum(dim=1).clamp(min=1e-8)  
+
+    #         x_t_sent = x_0_sentence.clone()
+    #         dt = 1.0 / N_steps
+
+    #         if save_all:
+    #             velocities_tokens = []
+    #             x_t_inter         = [x_t_sent.detach().cpu()]
+
+    #         for i in range(N_steps):
+    #             t_val = i * dt
+    #             t     = torch.full(
+    #                 (x_t_sent.shape[0],), t_val, device=self.device
+    #             )
+
+    #             residual   = x_0 - x_0_sentence.unsqueeze(1)
+    #             x_t_tokens = x_t_sent.unsqueeze(1) + residual     
+
+    #             v_sentence, v_tokens, _ = self.model(x_t_tokens, t, mask)
+                
+    #             x_t_sent = x_t_sent + dt * v_sentence            
+
+    #             if save_all:
+    #                 velocities_tokens.append(v_tokens.detach().cpu())
+    #                 x_t_inter.append(x_t_sent.detach().cpu())
+
+    #         if save_all:
+    #             velocities_tokens = torch.stack(velocities_tokens)
+    #             x_t_inter         = torch.stack(x_t_inter)
+    #         else:
+    #             velocities_tokens, x_t_inter = None, None
+
+    #     return x_t_sent, velocities_tokens, x_t_inter
+
     def _euler_integrate_single(self, x_0, mask, N_steps=10, save_all=False):
         with torch.no_grad():
-
-            mask_exp     = mask.unsqueeze(-1).float()
-            x_0_sentence = (x_0 * mask_exp).sum(dim=1) / \
-                            mask_exp.sum(dim=1).clamp(min=1e-8)  
+            if x_0.dim() == 2:
+                x_0_sentence = x_0
+            else:
+                # masked mean pooling
+                mask_exp     = mask.unsqueeze(-1).float()           
+                x_0_sentence = (x_0 * mask_exp).sum(dim=1) / \
+                                mask_exp.sum(dim=1).clamp(min=1e-8)
 
             x_t_sent = x_0_sentence.clone()
             dt = 1.0 / N_steps
 
             if save_all:
                 velocities_tokens = []
-                x_t_inter         = [x_t_sent.detach().cpu()]
+                x_t_inter = [x_t_sent.detach().cpu()]
 
             for i in range(N_steps):
                 t_val = i * dt
-                t     = torch.full(
+                t = torch.full(
                     (x_t_sent.shape[0],), t_val, device=self.device
                 )
 
-                residual   = x_0 - x_0_sentence.unsqueeze(1)
-                x_t_tokens = x_t_sent.unsqueeze(1) + residual     
+                if x_0.dim() == 2:
+                    x_t_input = x_t_sent                            
+                else:
+                    residual   = x_0 - x_0_sentence.unsqueeze(1)   
+                    x_t_input  = x_t_sent.unsqueeze(1) + residual
 
-                v_sentence, v_tokens, _ = self.model(x_t_tokens, t, mask)
-                
-                x_t_sent = x_t_sent + dt * v_sentence            
+                v_sentence, v_tokens, _ = self.model(x_t_input, t, mask)
+                x_t_sent = x_t_sent + dt * v_sentence
 
                 if save_all:
                     velocities_tokens.append(v_tokens.detach().cpu())
@@ -459,8 +506,7 @@ class FlowMatchingTransformersTokSen(nn.Module):
             loss_total.backward()
 
             torch.nn.utils.clip_grad_norm_(
-                list(self.model.parameters()) + [self.log_r],
-                self.config['grad_clip']
+                list(self.model.parameters()) + [self.log_r],0.5
             )
 
             self.optimizer.step()
@@ -475,7 +521,6 @@ class FlowMatchingTransformersTokSen(nn.Module):
     def train(self, verbose=True):
 
         optimizer = AdamW(
-            # self.model.parameters(),
             list(self.model.parameters()) + [self.log_r],
             lr=self.config['lr'],
             weight_decay=self.config['weight_decay'],
@@ -512,28 +557,65 @@ class FlowMatchingTransformersTokSen(nn.Module):
 
         return total_loss_liste, loss_fm_liste, loss_svdd_liste
 
+    # @torch.no_grad()
+    # def compute_anomaly_scores(self, X_test, attentions_test_mask,
+    #                         type='norm-centroid',
+    #                         n_steps=20):
+        
+    #     x_final, _, _ = self.euler_integrate(X_test.to(self.device), attentions_test_mask.to(self.device), n_steps, False)
+    #     x_1_test = x_final.cpu().numpy()
+
+    #     if type == 'norm':
+    #         scores = np.sum(x_1_test ** 2, axis=1)
+
+    #     elif type == 'norm-centroid':
+    #         # scores = np.sum((x_1_test[:, 0, :] - self.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
+    #         scores = np.sum((x_1_test - self.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
+
+    #     return scores
+
     @torch.no_grad()
     def compute_anomaly_scores(self, X_test, attentions_test_mask,
-                            type='norm-centroid',
-                            n_steps=20):
-        
-        x_final, _, _ = self.euler_integrate(X_test.to(self.device), attentions_test_mask.to(self.device), n_steps, False)
+                                type='norm-centroid', n_steps=20):
+
+        x_final, _, _ = self.euler_integrate(
+            X_test.to(self.device),
+            attentions_test_mask.to(self.device),
+            n_steps, False
+        )
         x_1_test = x_final.cpu().numpy()
 
-        if type == 'norm':
-            scores = np.sum(x_1_test ** 2, axis=1)
-
-        elif type == 'norm-centroid':
-            # scores = np.sum((x_1_test[:, 0, :] - self.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
-            scores = np.sum((x_1_test - self.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
+        if type == 'norm-centroid':
+            centroid_np = self.centroid.cpu().numpy() 
+            scores = np.sum(
+                (x_1_test - centroid_np) ** 2, axis=1
+            )
 
         return scores
 
-    def test(self, X_test, y_test, attentions_test_mask=None, type='norm-centroid', n_steps=20):
+    # def test(self, X_test, y_test, attentions_test_mask=None, type='norm-centroid', n_steps=20):
 
-        # sentence-level
+    #     # sentence-level
+    #     if attentions_test_mask is None:
+    #         attentions_test_mask = torch.ones(X_test.shape[0], 1) 
+
+    #     scores = self.compute_anomaly_scores(X_test, attentions_test_mask, type, n_steps)
+    #     return ev.evaluation(y_test, scores, True)
+
+    def test(self, X_test, y_test, attentions_test_mask=None, 
+        type='norm-centroid', n_steps=20):
+
         if attentions_test_mask is None:
-            attentions_test_mask = torch.ones(X_test.shape[0], 1) 
+            if X_test.dim() == 2:
+                # mask (B, 1)
+                attentions_test_mask = torch.ones(X_test.shape[0], 1)
+            else:
+                # mask (B, T)
+                attentions_test_mask = torch.ones(
+                    X_test.shape[0], X_test.shape[1]
+                )
 
-        scores = self.compute_anomaly_scores(X_test, attentions_test_mask, type, n_steps)
+        scores = self.compute_anomaly_scores(
+            X_test, attentions_test_mask, type, n_steps
+        )
         return ev.evaluation(y_test, scores, True)

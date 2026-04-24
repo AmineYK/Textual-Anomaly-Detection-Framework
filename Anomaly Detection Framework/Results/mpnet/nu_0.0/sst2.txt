@@ -1,0 +1,120 @@
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: mpnet
+AD model:       AE
+Training time:  8.90 sec
+----------------------------------------
+AUC:            0.6800 ± 0.0166
+Avg Precision:  0.1824 ± 0.0082
+FPR@95:         0.7931 ± 0.0222
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  242.03 sec
+----------------------------------------
+AUC:            0.6866 ± 0.0203
+Avg Precision:  0.1849 ± 0.0088
+FPR@95:         0.7800 ± 0.0408
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  169.48 sec
+----------------------------------------
+AUC:            0.6853 ± 0.0178
+Avg Precision:  0.1858 ± 0.0068
+FPR@95:         0.8044 ± 0.0281
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  15.06 sec
+----------------------------------------
+AUC:            0.6841 ± 0.0101
+Avg Precision:  0.2238 ± 0.0223
+FPR@95:         0.8194 ± 0.0199
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: mpnet
+AD model:       AE
+Training time:  6.68 sec
+----------------------------------------
+AUC:            0.5699 ± 0.0189
+Avg Precision:  0.1305 ± 0.0193
+FPR@95:         0.8031 ± 0.0365
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  709.10 sec
+----------------------------------------
+AUC:            0.5374 ± 0.0186
+Avg Precision:  0.1228 ± 0.0144
+FPR@95:         0.8931 ± 0.0440
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  103.31 sec
+----------------------------------------
+AUC:            0.6469 ± 0.0291
+Avg Precision:  0.1745 ± 0.0254
+FPR@95:         0.7565 ± 0.0244
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  11.98 sec
+----------------------------------------
+AUC:            0.5234 ± 0.0154
+Avg Precision:  0.1090 ± 0.0084
+FPR@95:         0.8575 ± 0.0110
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  859.35 sec
+----------------------------------------
+AUC:            0.5192 ± 0.0221
+Avg Precision:  0.1089 ± 0.0071
+FPR@95:         0.8782 ± 0.0235
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  2677.14 sec
+----------------------------------------
+AUC:            0.6790 ± 0.0101
+Avg Precision:  0.1976 ± 0.0054
+FPR@95:         0.8050 ± 0.0439
+========================================
+

@@ -1,0 +1,840 @@
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: mpnet
+AD model:       AE
+Training time:  9.02 sec
+----------------------------------------
+AUC:            0.9631 ± 0.0044
+Avg Precision:  0.7933 ± 0.0055
+FPR@95:         0.1732 ± 0.0280
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  240.45 sec
+----------------------------------------
+AUC:            0.9432 ± 0.0039
+Avg Precision:  0.7372 ± 0.0079
+FPR@95:         0.3049 ± 0.0117
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  165.04 sec
+----------------------------------------
+AUC:            0.9778 ± 0.0017
+Avg Precision:  0.8892 ± 0.0012
+FPR@95:         0.1029 ± 0.0151
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  14.39 sec
+----------------------------------------
+AUC:            0.9237 ± 0.0033
+Avg Precision:  0.6166 ± 0.0155
+FPR@95:         0.3281 ± 0.0165
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: mpnet
+AD model:       AE
+Training time:  9.40 sec
+----------------------------------------
+AUC:            0.9967 ± 0.0006
+Avg Precision:  0.9706 ± 0.0026
+FPR@95:         0.0079 ± 0.0017
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  245.19 sec
+----------------------------------------
+AUC:            0.9764 ± 0.0008
+Avg Precision:  0.9435 ± 0.0029
+FPR@95:         0.0883 ± 0.0015
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  210.43 sec
+----------------------------------------
+AUC:            0.9976 ± 0.0007
+Avg Precision:  0.9814 ± 0.0027
+FPR@95:         0.0045 ± 0.0007
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  15.25 sec
+----------------------------------------
+AUC:            0.9931 ± 0.0008
+Avg Precision:  0.9509 ± 0.0019
+FPR@95:         0.0236 ± 0.0030
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: mpnet
+AD model:       AE
+Training time:  9.60 sec
+----------------------------------------
+AUC:            0.9919 ± 0.0010
+Avg Precision:  0.9549 ± 0.0034
+FPR@95:         0.0328 ± 0.0055
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  248.33 sec
+----------------------------------------
+AUC:            0.9631 ± 0.0025
+Avg Precision:  0.9126 ± 0.0035
+FPR@95:         0.1124 ± 0.0092
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  165.39 sec
+----------------------------------------
+AUC:            0.9906 ± 0.0007
+Avg Precision:  0.9555 ± 0.0040
+FPR@95:         0.0467 ± 0.0104
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  14.68 sec
+----------------------------------------
+AUC:            0.9845 ± 0.0017
+Avg Precision:  0.9165 ± 0.0046
+FPR@95:         0.0787 ± 0.0132
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: mpnet
+AD model:       AE
+Training time:  9.20 sec
+----------------------------------------
+AUC:            0.9981 ± 0.0006
+Avg Precision:  0.9892 ± 0.0020
+FPR@95:         0.0059 ± 0.0016
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  250.04 sec
+----------------------------------------
+AUC:            0.9980 ± 0.0004
+Avg Precision:  0.9887 ± 0.0019
+FPR@95:         0.0032 ± 0.0009
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  170.92 sec
+----------------------------------------
+AUC:            0.9986 ± 0.0005
+Avg Precision:  0.9919 ± 0.0016
+FPR@95:         0.0032 ± 0.0004
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  14.57 sec
+----------------------------------------
+AUC:            0.9986 ± 0.0003
+Avg Precision:  0.9888 ± 0.0020
+FPR@95:         0.0051 ± 0.0021
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: mpnet
+AD model:       AE
+Training time:  9.94 sec
+----------------------------------------
+AUC:            0.9966 ± 0.0010
+Avg Precision:  0.9720 ± 0.0043
+FPR@95:         0.0117 ± 0.0018
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  255.12 sec
+----------------------------------------
+AUC:            0.9957 ± 0.0002
+Avg Precision:  0.9703 ± 0.0037
+FPR@95:         0.0128 ± 0.0021
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  211.86 sec
+----------------------------------------
+AUC:            0.9981 ± 0.0004
+Avg Precision:  0.9850 ± 0.0021
+FPR@95:         0.0068 ± 0.0010
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  15.94 sec
+----------------------------------------
+AUC:            0.9953 ± 0.0006
+Avg Precision:  0.9599 ± 0.0029
+FPR@95:         0.0152 ± 0.0019
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: mpnet
+AD model:       AE
+Training time:  9.63 sec
+----------------------------------------
+AUC:            0.9990 ± 0.0006
+Avg Precision:  0.9920 ± 0.0015
+FPR@95:         0.0012 ± 0.0005
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  246.51 sec
+----------------------------------------
+AUC:            0.9991 ± 0.0006
+Avg Precision:  0.9953 ± 0.0016
+FPR@95:         0.0012 ± 0.0004
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  229.93 sec
+----------------------------------------
+AUC:            0.9990 ± 0.0007
+Avg Precision:  0.9954 ± 0.0018
+FPR@95:         0.0011 ± 0.0003
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  14.64 sec
+----------------------------------------
+AUC:            0.9984 ± 0.0006
+Avg Precision:  0.9863 ± 0.0026
+FPR@95:         0.0033 ± 0.0007
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: mpnet
+AD model:       AE
+Training time:  10.27 sec
+----------------------------------------
+AUC:            0.9931 ± 0.0007
+Avg Precision:  0.9516 ± 0.0030
+FPR@95:         0.0336 ± 0.0056
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  240.30 sec
+----------------------------------------
+AUC:            0.9701 ± 0.0012
+Avg Precision:  0.8964 ± 0.0037
+FPR@95:         0.0953 ± 0.0042
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  242.34 sec
+----------------------------------------
+AUC:            0.9910 ± 0.0017
+Avg Precision:  0.9554 ± 0.0061
+FPR@95:         0.0324 ± 0.0110
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  14.97 sec
+----------------------------------------
+AUC:            0.9780 ± 0.0025
+Avg Precision:  0.9007 ± 0.0050
+FPR@95:         0.1327 ± 0.0215
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: mpnet
+AD model:       AE
+Training time:  9.46 sec
+----------------------------------------
+AUC:            0.9983 ± 0.0003
+Avg Precision:  0.9887 ± 0.0013
+FPR@95:         0.0059 ± 0.0008
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  246.25 sec
+----------------------------------------
+AUC:            0.9964 ± 0.0008
+Avg Precision:  0.9820 ± 0.0031
+FPR@95:         0.0079 ± 0.0014
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  213.48 sec
+----------------------------------------
+AUC:            0.9986 ± 0.0003
+Avg Precision:  0.9929 ± 0.0012
+FPR@95:         0.0036 ± 0.0006
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  14.75 sec
+----------------------------------------
+AUC:            0.9936 ± 0.0013
+Avg Precision:  0.9693 ± 0.0046
+FPR@95:         0.0337 ± 0.0162
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: mpnet
+AD model:       AE
+Training time:  10.08 sec
+----------------------------------------
+AUC:            0.9959 ± 0.0006
+Avg Precision:  0.9718 ± 0.0037
+FPR@95:         0.0226 ± 0.0032
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  242.16 sec
+----------------------------------------
+AUC:            0.9968 ± 0.0009
+Avg Precision:  0.9805 ± 0.0031
+FPR@95:         0.0136 ± 0.0041
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  199.78 sec
+----------------------------------------
+AUC:            0.9966 ± 0.0011
+Avg Precision:  0.9795 ± 0.0040
+FPR@95:         0.0162 ± 0.0035
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  14.86 sec
+----------------------------------------
+AUC:            0.9983 ± 0.0004
+Avg Precision:  0.9870 ± 0.0023
+FPR@95:         0.0084 ± 0.0025
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: mpnet
+AD model:       AE
+Training time:  10.28 sec
+----------------------------------------
+AUC:            0.9993 ± 0.0002
+Avg Precision:  0.9953 ± 0.0014
+FPR@95:         0.0019 ± 0.0006
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  241.16 sec
+----------------------------------------
+AUC:            0.9990 ± 0.0003
+Avg Precision:  0.9941 ± 0.0018
+FPR@95:         0.0008 ± 0.0004
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  303.56 sec
+----------------------------------------
+AUC:            0.9949 ± 0.0014
+Avg Precision:  0.9781 ± 0.0041
+FPR@95:         0.0206 ± 0.0024
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  14.89 sec
+----------------------------------------
+AUC:            0.9971 ± 0.0007
+Avg Precision:  0.9841 ± 0.0031
+FPR@95:         0.0094 ± 0.0041
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: mpnet
+AD model:       AE
+Training time:  10.17 sec
+----------------------------------------
+AUC:            0.9974 ± 0.0004
+Avg Precision:  0.9760 ± 0.0014
+FPR@95:         0.0035 ± 0.0006
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  243.89 sec
+----------------------------------------
+AUC:            0.9981 ± 0.0004
+Avg Precision:  0.9700 ± 0.0059
+FPR@95:         0.0031 ± 0.0002
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  303.65 sec
+----------------------------------------
+AUC:            0.9979 ± 0.0003
+Avg Precision:  0.9761 ± 0.0016
+FPR@95:         0.0065 ± 0.0020
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  15.13 sec
+----------------------------------------
+AUC:            0.9953 ± 0.0007
+Avg Precision:  0.9617 ± 0.0033
+FPR@95:         0.0093 ± 0.0035
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: mpnet
+AD model:       AE
+Training time:  9.68 sec
+----------------------------------------
+AUC:            0.9946 ± 0.0018
+Avg Precision:  0.9737 ± 0.0041
+FPR@95:         0.0059 ± 0.0021
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  256.70 sec
+----------------------------------------
+AUC:            0.9899 ± 0.0014
+Avg Precision:  0.9583 ± 0.0026
+FPR@95:         0.0393 ± 0.0083
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  282.88 sec
+----------------------------------------
+AUC:            0.9974 ± 0.0008
+Avg Precision:  0.9868 ± 0.0019
+FPR@95:         0.0020 ± 0.0004
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  15.08 sec
+----------------------------------------
+AUC:            0.9870 ± 0.0022
+Avg Precision:  0.9498 ± 0.0075
+FPR@95:         0.0507 ± 0.0190
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: mpnet
+AD model:       AE
+Training time:  11.34 sec
+----------------------------------------
+AUC:            0.9982 ± 0.0003
+Avg Precision:  0.9889 ± 0.0017
+FPR@95:         0.0036 ± 0.0003
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  241.47 sec
+----------------------------------------
+AUC:            0.9932 ± 0.0013
+Avg Precision:  0.9676 ± 0.0048
+FPR@95:         0.0249 ± 0.0073
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  301.73 sec
+----------------------------------------
+AUC:            0.9990 ± 0.0002
+Avg Precision:  0.9933 ± 0.0009
+FPR@95:         0.0023 ± 0.0003
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  15.18 sec
+----------------------------------------
+AUC:            0.9913 ± 0.0011
+Avg Precision:  0.9551 ± 0.0047
+FPR@95:         0.0427 ± 0.0086
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: mpnet
+AD model:       AE
+Training time:  9.33 sec
+----------------------------------------
+AUC:            0.9813 ± 0.0009
+Avg Precision:  0.8334 ± 0.0035
+FPR@95:         0.0587 ± 0.0082
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  240.15 sec
+----------------------------------------
+AUC:            0.9811 ± 0.0017
+Avg Precision:  0.9013 ± 0.0034
+FPR@95:         0.0881 ± 0.0188
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  169.97 sec
+----------------------------------------
+AUC:            0.9789 ± 0.0021
+Avg Precision:  0.8827 ± 0.0018
+FPR@95:         0.0834 ± 0.0184
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  14.62 sec
+----------------------------------------
+AUC:            0.9490 ± 0.0017
+Avg Precision:  0.6622 ± 0.0107
+FPR@95:         0.2167 ± 0.0089
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  943.55 sec
+----------------------------------------
+AUC:            0.9658 ± 0.0052
+Avg Precision:  0.8792 ± 0.0155
+FPR@95:         0.1496 ± 0.0327
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  533.93 sec
+----------------------------------------
+AUC:            0.9920 ± 0.0004
+Avg Precision:  0.9339 ± 0.0036
+FPR@95:         0.0336 ± 0.0046
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  537.41 sec
+----------------------------------------
+AUC:            0.9873 ± 0.0018
+Avg Precision:  0.9165 ± 0.0060
+FPR@95:         0.0557 ± 0.0115
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  534.69 sec
+----------------------------------------
+AUC:            0.9990 ± 0.0001
+Avg Precision:  0.9905 ± 0.0010
+FPR@95:         0.0038 ± 0.0005
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  536.36 sec
+----------------------------------------
+AUC:            0.9867 ± 0.0028
+Avg Precision:  0.9588 ± 0.0062
+FPR@95:         0.0888 ± 0.0218
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  542.34 sec
+----------------------------------------
+AUC:            0.9983 ± 0.0006
+Avg Precision:  0.9833 ± 0.0034
+FPR@95:         0.0041 ± 0.0017
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  543.57 sec
+----------------------------------------
+AUC:            0.9958 ± 0.0007
+Avg Precision:  0.9607 ± 0.0029
+FPR@95:         0.0137 ± 0.0010
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  550.26 sec
+----------------------------------------
+AUC:            0.9988 ± 0.0003
+Avg Precision:  0.9911 ± 0.0016
+FPR@95:         0.0046 ± 0.0016
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  532.40 sec
+----------------------------------------
+AUC:            0.9960 ± 0.0012
+Avg Precision:  0.9785 ± 0.0046
+FPR@95:         0.0193 ± 0.0104
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  556.25 sec
+----------------------------------------
+AUC:            0.9948 ± 0.0006
+Avg Precision:  0.9721 ± 0.0034
+FPR@95:         0.0276 ± 0.0086
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  528.88 sec
+----------------------------------------
+AUC:            0.9965 ± 0.0003
+Avg Precision:  0.9653 ± 0.0029
+FPR@95:         0.0125 ± 0.0037
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  531.16 sec
+----------------------------------------
+AUC:            0.9889 ± 0.0020
+Avg Precision:  0.9454 ± 0.0083
+FPR@95:         0.0547 ± 0.0209
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  993.28 sec
+----------------------------------------
+AUC:            0.9450 ± 0.0028
+Avg Precision:  0.6059 ± 0.0156
+FPR@95:         0.2181 ± 0.0316
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  534.02 sec
+----------------------------------------
+AUC:            0.9907 ± 0.0013
+Avg Precision:  0.9469 ± 0.0064
+FPR@95:         0.0418 ± 0.0082
+========================================
+

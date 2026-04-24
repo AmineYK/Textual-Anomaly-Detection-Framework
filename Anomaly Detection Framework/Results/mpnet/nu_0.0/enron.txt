@@ -1,0 +1,60 @@
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: mpnet
+AD model:       AE
+Training time:  3.85 sec
+----------------------------------------
+AUC:            0.9498 ± 0.0043
+Avg Precision:  0.7351 ± 0.0027
+FPR@95:         0.2477 ± 0.0350
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  101.86 sec
+----------------------------------------
+AUC:            0.9505 ± 0.0051
+Avg Precision:  0.7364 ± 0.0155
+FPR@95:         0.2482 ± 0.0325
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  22.65 sec
+----------------------------------------
+AUC:            0.9143 ± 0.0095
+Avg Precision:  0.6258 ± 0.0079
+FPR@95:         0.4159 ± 0.0971
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  6.18 sec
+----------------------------------------
+AUC:            0.9381 ± 0.0074
+Avg Precision:  0.6850 ± 0.0177
+FPR@95:         0.2688 ± 0.0422
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  772.64 sec
+----------------------------------------
+AUC:            0.9565 ± 0.0048
+Avg Precision:  0.7222 ± 0.0208
+FPR@95:         0.1716 ± 0.0376
+========================================
+

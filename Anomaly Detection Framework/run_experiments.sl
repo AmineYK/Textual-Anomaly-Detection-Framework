@@ -4,12 +4,12 @@
 #SBATCH --error=jobs/%j/%x-%j.err
 # SBATCH --partition=gpu
 #SBATCH --partition=hpda_mig
-#SBATCH --nodes=1
+# SBATCH --partition=hpda
+# SBATCH --nodes=1
 # SBATCH --gres=gpu:1
 #SBATCH --gres=gpu:a100_3g.40gb
-#SBATCH --time 00:30:00
-# --time 00:10:00
-# --cpus-per-task 16
+#SBATCH --time 01:20:00
+#SBATCH --array=0-13
 
 # environments                                                                                                                                                                                
 # ---------------------------------                                                                                                                                                           
@@ -22,44 +22,37 @@ module load aidl/pytorch/2.5.1-cuda12.4
 # mkdir -p ${JOB_DIR}
 
 echo "Job ID: ${SLURM_JOB_ID}"
-echo "Requested time: ${SLURM_TIMELIMIT}"
 
 export PYTHONUNBUFFERED=1
 
-srun python3 run_indep_anom.py --dataset_name m4 --inlier_topic "wikipedia" --type_emb bert --nu 0.0 --nb_runs 4 --ocsvm --ae --tccm
-# srun python3 run_indep_anom.py --dataset_name m4 --inlier_topic "reddit_chatgpt" --type_emb bert --nu 0.0 --nb_runs 6 --fm_trans
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --runall --type_emb bert --nu 0.0 --nb_runs 5 --ocsvm --ae --rsrae --tccm
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --runall --type_emb bert --nu 0.0 --nb_runs 3 --ocsvm --ae --rsrae --tccm --date --cvdd
-# srun python3 run_indep_anom.py --dataset_name sst2 --inlier_topic positive --type_emb bert --nu 0.0 --nb_runs 6 --date
-# srun python3 run_indep_anom.py --dataset_name enron --runall --type_emb bert --nu 0.0 --nb_runs 6 --cvdd
-# srun python3 run_indep_anom.py --dataset_name sst2 --inlier_topic positive --type_emb bert --nu 0.0 --nb_runs 3 --fm_trans
-# srun python3 create_tables_latex.py --type_embedding bert --nu 0.0 --all_metrics
+# topics=('earn' 'trade' 'acq' 'money-fx' 'crude' 'ship' 'interest')
+# topics=('computer' 'recreation' 'science' 'miscellaneous' 'politics' 'religion')
+topics=("Building" "Natural Place" "Village" "Animal" "Plant" "Album" "Film" "Written Work" \
+    "Company" "Educational Institution" "Artist" "Athlete" "Office Holder" "Mean Of Transportation")
+# # topics=("World" "Business" "Sports" "Sci-Tech")
+
+topic=${topics[$SLURM_ARRAY_TASK_ID]}
+
+srun python3 run_sentence_level.py \
+    --dataset_name dbpedia14 \
+    --inlier_topic "$topic" \
+    --type_emb distilroberta \
+    --nu 0.0 \
+    --nb_runs 3 \
+    --fate
 
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Company" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Educational Institution" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Artist" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
+# srun python3 run_sentence_level.py --dataset_name imdb --runall --type_emb st5 --nu 0.0 --nb_runs 5 --rsrae --ae --ocsvm --tccm
+# srun python3 run_sentence_level.py --dataset_name sst2 --inlier_topic "positive" --type_emb st5 --nu 0.0 --nb_runs 5 --fm_trans
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Athlete" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
+# srun python3 run_sentence_level.py --dataset_name dbpedia14 --runall --type_emb st5 --nu 0.0 --nb_runs 5 --rsrae --ae --ocsvm --tccm
+# srun python3 run_sentence_level.py --dataset_name imdb --inlier_topic "positive" --type_emb st5 --nu 0.0 --nb_runs 5 --fm_trans
+# srun python3 run_sentence_level.py --dataset_name reuters --runall --type_emb mpnet --nu 0.0 --nb_runs 6 --fm_trans
+# srun python3 run_embedding.py --split "train"
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Office Holder" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Mean Of Transportation" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
+# srun python3 run_sentence_level.py --dataset_name reuters --runall --type_emb distilroberta --nu 0.0 --nb_runs 6 --fm_trans
+# srun python3 run_sentence_level.py --dataset_name dbpedia14 --inlier_topic "Company" --type_emb distilroberta --nu 0.0 --nb_runs 3 --fate
 
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Building" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
-
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Natural Place" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
-
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Village" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
-
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Animal" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
-
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Plant" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
-
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Album" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
-
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Film" --type_emb bert --nu 0.0 --nb_runs 4 --date --rsrae
-
-# srun python3 run_indep_anom.py --dataset_name dbpedia14 --inlier_topic "Written Work" --type_emb bert --nu 0.0 --nb_runs 4 --date

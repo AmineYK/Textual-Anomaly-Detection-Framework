@@ -1,0 +1,23 @@
+Dataset: agnews
+Inlier topic: Business
+Type Embedding: distilroberta
+Number of Runs: 6
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42

@@ -1,0 +1,146 @@
+Job ID: 1969847
+Running topic: Sports
+
+<<<<<<<<<<<<<< agnews >>>>>>>>>>>>>>>>>>>
+
+------------------------ Sports(1/1) -----------------------------
+st5_large_embedding
+torch.Size([27000, 768])
++++++++++++++++++++++ run : 1 / 5 +++++++++++++++++
+
+st5_large_embedding
+torch.Size([1900, 768])
+
+Epoch 1/350
+Train Loss: 0.0107, LR: 0.000007
+tensor(0.9996, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 117/350
+Train Loss: 0.0014, LR: 0.000775
+tensor(0.2730, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 233/350
+Train Loss: 0.0013, LR: 0.000639
+tensor(0.1852, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 349/350
+Train Loss: 0.0012, LR: 0.000000
+tensor(0.1725, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 11.669 mn
+AUC:        0.9877
+Avg Precision: 0.9419
+FPR@95:     0.0380
+FM --> AUC: 0.9877 | FPR@95: 0.0380 | AP: 0.9419
+
++++++++++++++++++++++ run : 2 / 5 +++++++++++++++++
+
+st5_large_embedding
+torch.Size([1900, 768])
+
+Epoch 1/350
+Train Loss: 0.0107, LR: 0.000007
+tensor(0.9996, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 117/350
+Train Loss: 0.0014, LR: 0.000775
+tensor(0.2731, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 233/350
+Train Loss: 0.0012, LR: 0.000639
+tensor(0.1831, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 349/350
+Train Loss: 0.0012, LR: 0.000000
+tensor(0.1716, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 11.631 mn
+AUC:        0.9754
+Avg Precision: 0.9287
+FPR@95:     0.0643
+FM --> AUC: 0.9754 | FPR@95: 0.0643 | AP: 0.9287
+
++++++++++++++++++++++ run : 3 / 5 +++++++++++++++++
+
+st5_large_embedding
+torch.Size([1900, 768])
+
+Epoch 1/350
+Train Loss: 0.0107, LR: 0.000007
+tensor(0.9996, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 117/350
+Train Loss: 0.0014, LR: 0.000775
+tensor(0.2731, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 233/350
+Train Loss: 0.0012, LR: 0.000639
+tensor(0.1845, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 349/350
+Train Loss: 0.0012, LR: 0.000000
+tensor(0.1724, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 11.607 mn
+AUC:        0.9860
+Avg Precision: 0.9324
+FPR@95:     0.0567
+FM --> AUC: 0.9860 | FPR@95: 0.0567 | AP: 0.9324
+
++++++++++++++++++++++ run : 4 / 5 +++++++++++++++++
+
+st5_large_embedding
+torch.Size([1900, 768])
+
+Epoch 1/350
+Train Loss: 0.0107, LR: 0.000007
+tensor(0.9996, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 117/350
+Train Loss: 0.0014, LR: 0.000775
+tensor(0.2732, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 233/350
+Train Loss: 0.0012, LR: 0.000639
+tensor(0.1838, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 349/350
+Train Loss: 0.0012, LR: 0.000000
+tensor(0.1718, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 11.636 mn
+AUC:        0.9838
+Avg Precision: 0.9277
+FPR@95:     0.0398
+FM --> AUC: 0.9838 | FPR@95: 0.0398 | AP: 0.9277
+
++++++++++++++++++++++ run : 5 / 5 +++++++++++++++++
+
+st5_large_embedding
+torch.Size([1900, 768])
+
+Epoch 1/350
+Train Loss: 0.0107, LR: 0.000007
+tensor(0.9996, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 117/350
+Train Loss: 0.0014, LR: 0.000775
+tensor(0.2731, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 233/350
+Train Loss: 0.0012, LR: 0.000639
+tensor(0.1847, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 349/350
+Train Loss: 0.0012, LR: 0.000000
+tensor(0.1723, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 11.698 mn
+AUC:        0.9788
+Avg Precision: 0.9217
+FPR@95:     0.0556
+FM --> AUC: 0.9788 | FPR@95: 0.0556 | AP: 0.9217
+
+Sports 0.9823502616189597 0.050877192982456146 0.9304793645708006
+Nouveaux résultats ajoutés pour (agnews, Sports, st5, flow-matching-Transformers-Comp, nu=0.0).
+Hyperparameters appended to /home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/hyperparameters/fmt_toksen/hyper.txt

@@ -22,6 +22,7 @@ from Modelisation.Baselines.DATE.date import DATEModel
 from Modelisation.FlowMatching.flow_matching import BasicFlowMatching
 from Modelisation.FlowMatching.flow_matching_transformers import FlowDiT, FlowMatchingTransformers
 from Modelisation.FlowMatching.flow_matching_transformers_token import FlowDiTToken,  FlowMatchingTransformersToken
+from Modelisation.FlowMatching.flow_matching_transformers_toksen import FlowDiTTokSen, FlowMatchingTransformersTokSen
 from utils import save_results
 import numpy as np
 import os
@@ -75,6 +76,7 @@ def main(args):
             return batch
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    len_seq = 128
     # create_tables()
     # print("Using device:", device)
 
@@ -191,7 +193,7 @@ def main(args):
             bertmodel.eval()
 
             # X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train[:10000][COL], device, 64, 256)
-            X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train[COL], device, 64, 128)
+            X_inlier, tokens_train, attentions_train_mask = encode_tokens(bertmodel, tokenizer, data_train[COL], device, 64, len_seq)
             # X_inlier = X_inlier.mean(dim=1)
         else: raise Exception("type_emb must be completed !")
 
@@ -239,7 +241,7 @@ def main(args):
             
             elif args.type_emb == 'bert':
                 # X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test[:5000][COL], device, 64, 256)
-                X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test[COL], device, 64, 128)
+                X_test,  tokens_test, attentions_test_mask  = encode_tokens(bertmodel, tokenizer, data_test[COL], device, 64, len_seq)
                 # X_test = X_test.mean(dim=1)
 
             else: raise Exception("type_emb must be completed !")
@@ -463,7 +465,7 @@ def main(args):
                     "weight_decay" : 0,
                     "lambda_p": 0.1,
                     "n_epochs": 30,
-                    "batch_size": 64,
+                    "batch_size": 256,
                     "device": device
                     }
                 
@@ -505,7 +507,7 @@ def main(args):
                     "seq_len": 256,
                     "ratio": 0.50,
                     "n_epochs": 50,
-                    "batch_size": 64,
+                    "batch_size": 256,
                     "device": device
                     }
                             
@@ -614,46 +616,93 @@ def main(args):
 #          ####################################################### 
             if args.fm_trans:
                 config = {
-                    'latent_dim': 768,
-                    'hidden_dim': 64,
-                    'depth': 4,
-                    'n_heads': 4,
-                    'lr': 1e-3,
-                    'weight_decay': 1e-3,
-                    'lambda_svdd': 1e-2,
-                    # 'lambda_push': 1e-2,
-                    'lambda_push': 0,
-                    'lambda_margin': 0,
-                    'epochs': 300,
-                    'lr_epochs':100,
-                    'warmup_epochs': -1,
-                    'grad_clip': 1.0,
-                    'flow_type': 'linear',  
-                    'sigma': 0.1, 
-                    'batch_size' : 32,
-                    'lambda_reg_angle': None,
-                    'lambda_reg_kl': None,
-                    'n_step_euler_integrate':1,
-                    'coef_var': 1,
-                    'rate_neg_batch':1.0,
-                    'sig_levels_neg' : [0.5, 0.7],
-                    'target' : 'gaussian-neigh',
-                    'source' : X_inlier.to(device)
+                        'latent_dim': 768,
+                        'hidden_dim': 128,
+                        'depth': 4,
+                        'n_heads': 4,
+                        'mlp_ratio': 4.0,
+                        'freq_embed_size': 128,
+                        'lr': 1e-3,
+                        'weight_decay': 1e-5,
+                        'lambda_svdd': 1e-3,
+                        'epochs': 200,
+                        'lr_epochs': 80,
+                        'grad_clip': 0.5,
+                        'batch_size' : 64,
+                        'n_step_euler_integrate' : 1,
+                        'coef_var': 1,
+                        'target' : 'gaussian-neigh',
+                        'source' : X_inlier,
+                        'attentions_mask': attentions_train_mask,
+                        # 'source' : X_inlier,
+                        # 'attentions_mask': None,
+                        'device': device
                 }
 
-                model = FlowDiTToken(
-                    latent_dim=config['latent_dim'],
-                    hidden_dim=config['hidden_dim'],
-                    depth=config['depth'],
-                    n_heads=config['n_heads']
-                ).to(device)
+                flowmodel = FlowDiTTokSen(
+                            latent_dim=config['latent_dim'],
+                            hidden_dim=config['hidden_dim'],
+                            depth=config['depth'],
+                            n_heads=config['n_heads']
+                    ).to(device)
 
-                fm_transformer = FlowMatchingTransformersToken(model, config['source'], config['target'], config, noise_is_target=True, rectified=None)
+                fm_transformer = FlowMatchingTransformersTokSen(flowmodel, config)
 
                 taac = time.time()
-                fm_transformer.train(attentions_train_mask.to(device), True)
+                fm_transformer.train(True)
                 tiic = time.time()
                 print(f"\nFM Transformer finishing... after {(tiic-taac)/60:.3f} mn")
+
+                auc_fm_trans, fpr95_fm_trans, ap_fm_trans = fm_transformer.test(X_test, y_test, attentions_test_mask, type='norm-centroid', n_steps=10)
+                print(f"FM --> AUC: {auc_fm_trans:.4f} | FPR@95: {fpr95_fm_trans:.4f} | AP: {ap_fm_trans:.4f}\n")
+
+                list_auc_fm_trans.append(auc_fm_trans)
+                list_fpr_fm_trans.append(fpr95_fm_trans)    
+                list_ap_fm_trans.append(ap_fm_trans)
+                list_time_fm_trans.append((tiic-taac))
+                # config = {
+                #     'latent_dim': 768,
+                #     'hidden_dim': 128,
+                #     'depth': 4,
+                #     'n_heads': 4,
+                #     'lr': 1e-3,
+                #     'weight_decay': 1e-3,
+                #     'lambda_svdd': 1e-2,
+                #     # 'lambda_push': 1e-2,
+                #     'lambda_push': 0,
+                #     'lambda_margin': 0,
+                #     'epochs': 250,
+                #     'lr_epochs':80,
+                #     'warmup_epochs': -1,
+                #     'grad_clip': 1.0,
+                #     'flow_type': 'linear',  
+                #     'sigma': 0.1, 
+                #     'batch_size' : 256,
+                #     'lambda_reg_angle': None,
+                #     'lambda_reg_kl': None,
+                #     'n_step_euler_integrate':1,
+                #     'coef_var': 1,
+                #     'rate_neg_batch':1.0,
+                #     'sig_levels_neg' : [0.5, 0.7],
+                #     'target' : 'gaussian-neigh',
+                #     'source' : X_inlier.to(device)
+                # }
+
+                # model = FlowDiTToken(
+                #     latent_dim=config['latent_dim'],
+                #     hidden_dim=config['hidden_dim'],
+                #     depth=config['depth'],
+                #     n_heads=config['n_heads']
+                # ).to(device)
+
+                # fm_transformer = FlowMatchingTransformersToken(model, config['source'], config['target'], config, noise_is_target=True, rectified=None)
+
+                # taac = time.time()
+                # fm_transformer.train(attentions_train_mask.to(device), True)
+                # tiic = time.time()
+                # print(f"\nFM Transformer finishing... after {(tiic-taac)/60:.3f} mn")
+
+
 
 
                 # for method in methods:                    
@@ -690,18 +739,12 @@ def main(args):
 
 
                 # auc_fm_trans, fpr95_fm_trans, ap_fm_trans = fm_transformer.test(X_test, y_test, X_inlier, 'norm-centroid')
-                x_final, _, _ = fm_transformer.euler_integrate(X_test.to(device), attentions_test_mask.to(device), 15, False)
+                # x_final, _, _ = fm_transformer.euler_integrate(X_test.to(device), attentions_test_mask.to(device), 15, False)
 
-                x_1_test = x_final.cpu().numpy()
-                scores = np.sum((x_1_test - fm_transformer.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
-                auc_fm_trans, fpr95_fm_trans, ap_fm_trans = ev.evaluation(y_test, scores)
+                # x_1_test = x_final.cpu().numpy()
+                # scores = np.sum((x_1_test - fm_transformer.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
+                # auc_fm_trans, fpr95_fm_trans, ap_fm_trans = ev.evaluation(y_test, scores)
 
-                print(f"FM --> AUC: {auc_fm_trans:.4f} | FPR@95: {fpr95_fm_trans:.4f} | AP: {ap_fm_trans:.4f}\n")
-
-                list_auc_fm_trans.append(auc_fm_trans)
-                list_fpr_fm_trans.append(fpr95_fm_trans)    
-                list_ap_fm_trans.append(ap_fm_trans)
-                list_time_fm_trans.append((tiic-taac))
 
         if args.fm:
             print(inlier_topic, np.mean(list_auc_fm))
@@ -709,17 +752,17 @@ def main(args):
                 dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching",
                 auc_mean=np.mean(list_auc_fm), ap_mean=np.mean(list_ap_fm),fpr_mean=np.mean(list_fpr_fm),
                 auc_std = np.std(list_auc_fm),ap_std =  np.std(list_ap_fm),fpr_std = np.std(list_fpr_fm),
-                train_time = np.mean(list_time_fm),nu=args.nu,overwrite='smart'
+                train_time = np.mean(list_time_fm),nu=args.nu,overwrite='naive'
                 )
             
         if args.fm_trans:
             print(inlier_topic, np.mean(list_auc_fm_trans), np.mean(list_fpr_fm_trans), np.mean(list_ap_fm_trans))
-            save_results(
-                dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers-Comp",
-                auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
-                auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
-                train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='smart'
-                )
+            # save_results(
+            #     dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="flow-matching-Transformers-Comp",
+            #     auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans),fpr_mean=np.mean(list_fpr_fm_trans),
+            #     auc_std = np.std(list_auc_fm_trans),ap_std =  np.std(list_ap_fm_trans),fpr_std = np.std(list_fpr_fm_trans),
+            #     train_time = np.mean(list_time_fm_trans), nu=args.nu, overwrite='naive'
+            #     )
             # for method in methods:
             #     print(np.mean(metrics[method]["auc"]), np.mean(metrics[method]["ap"]), np.mean(metrics[method]["fpr"]))
             #     save_results(
@@ -779,7 +822,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="CVDD",
             auc_mean=np.mean(list_auc_cvdd), ap_mean=np.mean(list_ap_cvdd),fpr_mean=np.mean(list_fpr_cvdd),
             auc_std = np.std(list_auc_cvdd),ap_std =  np.std(list_ap_cvdd),fpr_std = np.std(list_fpr_cvdd),
-            train_time = np.mean(list_time_cvdd), nu=args.nu, overwrite='smart'
+            train_time = np.mean(list_time_cvdd), nu=args.nu, overwrite='naive'
             )
 
         if args.date:
@@ -787,7 +830,7 @@ def main(args):
             dataset_name=args.dataset_name, inlier_topic=inlier_topic ,type_emb=args.type_emb ,ad_model="DATE",
             auc_mean=np.mean(list_auc_date), ap_mean=np.mean(list_ap_date),fpr_mean=np.mean(list_fpr_date),
             auc_std = np.std(list_auc_date),ap_std =  np.std(list_ap_date),fpr_std = np.std(list_fpr_date),
-            train_time = np.mean(list_time_date), nu=args.nu, overwrite='smart'
+            train_time = np.mean(list_time_date), nu=args.nu, overwrite='naive'
             )
 
         if args.fate:

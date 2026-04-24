@@ -1,0 +1,48 @@
+\subsection {Mpnet}
+
+\begin{table}[H]
+\centering
+\caption{AUC on all datasets}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lc}
+\toprule
+Model & Reuters \\
+\midrule
+OCSVM & 0.9814 $\pm$ 0.0225 \\
+AE & \textbf{0.9901 $\pm$ 0.0102} \\
+\midrule
+RSRAE & \underline{0.9868 $\pm$ 0.0129} \\
+CVDD & — \\
+DATE & — \\
+FATE & — \\
+\midrule
+TCCM & 0.9828 $\pm$ 0.0203 \\
+FMTToken-Sentence & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:global}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AUC on Reuters}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lccccccc}
+\toprule
+Model & earn & trade & acq & money-fx & crude & ship & interest \\
+\midrule
+OCSVM & 0.9835 $\pm$ 0.0036 & 0.9857 $\pm$ 0.0190 & \underline{0.9866 $\pm$ 0.0028} & 0.9540 $\pm$ 0.0804 & \textbf{0.9989 $\pm$ 0.0014} & 0.9688 $\pm$ 0.0349 & 0.9923 $\pm$ 0.0154 \\
+AE & \textbf{0.9950 $\pm$ 0.0015} & \textbf{0.9957 $\pm$ 0.0036} & \textbf{0.9878 $\pm$ 0.0045} & \textbf{0.9762 $\pm$ 0.0450} & \underline{0.9978 $\pm$ 0.0020} & \textbf{0.9833 $\pm$ 0.0083} & \underline{0.9946 $\pm$ 0.0067} \\
+\midrule
+RSRAE & \underline{0.9928 $\pm$ 0.0025} & \underline{0.9931 $\pm$ 0.0054} & 0.9819 $\pm$ 0.0031 & \underline{0.9698 $\pm$ 0.0603} & 0.9898 $\pm$ 0.0080 & \underline{0.9833 $\pm$ 0.0083} & \textbf{0.9969 $\pm$ 0.0029} \\
+CVDD & — & — & — & — & — & — & — \\
+DATE & — & — & — & — & — & — & — \\
+FATE & — & — & — & — & — & — & — \\
+\midrule
+TCCM & 0.9920 $\pm$ 0.0026 & 0.9913 $\pm$ 0.0123 & 0.9762 $\pm$ 0.0019 & 0.9603 $\pm$ 0.0767 & 0.9964 $\pm$ 0.0033 & 0.9729 $\pm$ 0.0306 & 0.9908 $\pm$ 0.0149 \\
+FMTToken-Sentence & — & — & — & — & — & — & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:reuters}
+\end{table}
+

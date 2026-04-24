@@ -1,0 +1,209 @@
+\subsection {Mpnet}
+
+\begin{table}[H]
+\centering
+\caption{AP on all datasets}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcccccccc}
+\toprule
+Model & Reuters & 20newsgroups & Agnews & Dbpedia14 & Sms & Enron & Sst2 & Imdb \\
+\midrule
+OCSVM & \textbf{0.9329 $\pm$ 0.0564} & 0.6825 $\pm$ 0.0287 & 0.6585 $\pm$ 0.0166 & \textbf{0.9674 $\pm$ 0.0025} & 0.0881 $\pm$ 0.0042 & 0.6258 $\pm$ 0.0079 & \textbf{0.1801 $\pm$ 0.0161} & 0.0955 $\pm$ 0.0017 \\
+AE & \underline{0.9275 $\pm$ 0.0439} & 0.6478 $\pm$ 0.0271 & 0.6645 $\pm$ 0.0144 & \underline{0.9537 $\pm$ 0.0028} & 0.0984 $\pm$ 0.0040 & \underline{0.7351 $\pm$ 0.0027} & 0.1565 $\pm$ 0.0138 & \underline{0.1127 $\pm$ 0.0026} \\
+\midrule
+RSRAE & 0.9118 $\pm$ 0.0557 & 0.7050 $\pm$ 0.0260 & \underline{0.7136 $\pm$ 0.0125} & 0.9427 $\pm$ 0.0036 & \underline{0.1161 $\pm$ 0.0064} & \textbf{0.7364 $\pm$ 0.0155} & 0.1539 $\pm$ 0.0116 & 0.1027 $\pm$ 0.0024 \\
+CVDD & — & — & — & — & — & — & — & — \\
+DATE & — & — & — & — & — & — & — & — \\
+FATE & — & — & — & — & — & — & — & — \\
+\midrule
+TCCM & 0.9243 $\pm$ 0.0642 & \underline{0.7292 $\pm$ 0.0294} & 0.7099 $\pm$ 0.0166 & 0.9135 $\pm$ 0.0050 & 0.1112 $\pm$ 0.0047 & 0.6850 $\pm$ 0.0177 & \underline{0.1664 $\pm$ 0.0153} & 0.0958 $\pm$ 0.0012 \\
+FMTToken-Sentence & 0.9108 $\pm$ 0.0547 & \textbf{0.7443 $\pm$ 0.0275} & \textbf{0.7283 $\pm$ 0.0138} & 0.9306 $\pm$ 0.0058 & \textbf{0.1392 $\pm$ 0.0047} & 0.7222 $\pm$ 0.0208 & 0.1532 $\pm$ 0.0063 & \textbf{0.1255 $\pm$ 0.0016} \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:global}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AP on Reuters}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lccccccc}
+\toprule
+Model & earn & trade & acq & money-fx & crude & ship & interest \\
+\midrule
+OCSVM & 0.9234 $\pm$ 0.0070 & \underline{0.9472 $\pm$ 0.0706} & \underline{0.9156 $\pm$ 0.0119} & 0.9160 $\pm$ 0.1075 & \textbf{0.9901 $\pm$ 0.0126} & \textbf{0.8645 $\pm$ 0.1321} & \underline{0.9733 $\pm$ 0.0533} \\
+AE & 0.9332 $\pm$ 0.0039 & 0.9094 $\pm$ 0.0266 & \textbf{0.9170 $\pm$ 0.0189} & 0.9437 $\pm$ 0.0933 & \underline{0.9829 $\pm$ 0.0152} & 0.8389 $\pm$ 0.1089 & 0.9672 $\pm$ 0.0404 \\
+\midrule
+RSRAE & 0.9299 $\pm$ 0.0045 & 0.9130 $\pm$ 0.0302 & 0.8825 $\pm$ 0.0140 & \textbf{0.9445 $\pm$ 0.1110} & 0.8985 $\pm$ 0.0996 & 0.8389 $\pm$ 0.1089 & \textbf{0.9752 $\pm$ 0.0220} \\
+CVDD & — & — & — & — & — & — & — \\
+DATE & — & — & — & — & — & — & — \\
+FATE & — & — & — & — & — & — & — \\
+\midrule
+TCCM & \textbf{0.9428 $\pm$ 0.0057} & \textbf{0.9554 $\pm$ 0.0575} & 0.8648 $\pm$ 0.0131 & 0.9341 $\pm$ 0.1122 & 0.9740 $\pm$ 0.0237 & \underline{0.8400 $\pm$ 0.1831} & 0.9587 $\pm$ 0.0541 \\
+FMTToken-Sentence & \underline{0.9428 $\pm$ 0.0071} & 0.9412 $\pm$ 0.0458 & 0.9110 $\pm$ 0.0073 & \underline{0.9443 $\pm$ 0.1113} & 0.9358 $\pm$ 0.0396 & 0.7511 $\pm$ 0.1202 & 0.9491 $\pm$ 0.0514 \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:reuters}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AP on 20newsgroups}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcccccc}
+\toprule
+Model & computer & recreation & science & miscellaneous & politics & religion \\
+\midrule
+OCSVM & 0.7837 $\pm$ 0.0256 & 0.7171 $\pm$ 0.0330 & 0.2825 $\pm$ 0.0267 & \textbf{0.8358 $\pm$ 0.0186} & 0.7934 $\pm$ 0.0181 & 0.6823 $\pm$ 0.0502 \\
+AE & 0.7767 $\pm$ 0.0324 & 0.6990 $\pm$ 0.0262 & 0.2643 $\pm$ 0.0271 & 0.7200 $\pm$ 0.0348 & 0.7805 $\pm$ 0.0120 & 0.6461 $\pm$ 0.0301 \\
+\midrule
+RSRAE & 0.8219 $\pm$ 0.0155 & 0.7253 $\pm$ 0.0248 & 0.3346 $\pm$ 0.0302 & 0.8147 $\pm$ 0.0363 & \underline{0.8294 $\pm$ 0.0109} & 0.7038 $\pm$ 0.0380 \\
+CVDD & — & — & — & — & — & — \\
+DATE & — & — & — & — & — & — \\
+FATE & — & — & — & — & — & — \\
+\midrule
+TCCM & \underline{0.8480 $\pm$ 0.0213} & \underline{0.7664 $\pm$ 0.0319} & \underline{0.3957 $\pm$ 0.0396} & \underline{0.8208 $\pm$ 0.0252} & 0.8003 $\pm$ 0.0242 & \textbf{0.7439 $\pm$ 0.0340} \\
+FMTToken-Sentence & \textbf{0.8678 $\pm$ 0.0209} & \textbf{0.7699 $\pm$ 0.0298} & \textbf{0.4369 $\pm$ 0.0358} & 0.8179 $\pm$ 0.0311 & \textbf{0.8348 $\pm$ 0.0130} & \underline{0.7384 $\pm$ 0.0342} \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:20newsgroups}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AP on Agnews}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcccc}
+\toprule
+Model & World & Sports & Business & Sci-Tech \\
+\midrule
+OCSVM & 0.4844 $\pm$ 0.0156 & 0.9527 $\pm$ 0.0050 & 0.6496 $\pm$ 0.0193 & 0.5473 $\pm$ 0.0266 \\
+AE & 0.5111 $\pm$ 0.0251 & \underline{0.9583 $\pm$ 0.0068} & 0.6508 $\pm$ 0.0106 & 0.5380 $\pm$ 0.0153 \\
+\midrule
+RSRAE & 0.5420 $\pm$ 0.0155 & \textbf{0.9608 $\pm$ 0.0055} & \underline{0.6705 $\pm$ 0.0116} & \textbf{0.6810 $\pm$ 0.0175} \\
+CVDD & — & — & — & — \\
+DATE & — & — & — & — \\
+FATE & — & — & — & — \\
+\midrule
+TCCM & \underline{0.6328 $\pm$ 0.0231} & 0.9449 $\pm$ 0.0083 & 0.6620 $\pm$ 0.0168 & 0.6000 $\pm$ 0.0182 \\
+FMTToken-Sentence & \textbf{0.6549 $\pm$ 0.0187} & 0.9515 $\pm$ 0.0066 & \textbf{0.6877 $\pm$ 0.0096} & \underline{0.6190 $\pm$ 0.0201} \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:agnews}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AP on Dbpedia14}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcccccccccccccc}
+\toprule
+Model & Company & Educational Institution & Artist & Athlete & Office Holder & Mean Of Transportation & Building & Natural Place & Village & Animal & Plant & Album & Film & Written Work \\
+\midrule
+OCSVM & \textbf{0.8892 $\pm$ 0.0012} & \textbf{0.9814 $\pm$ 0.0027} & \textbf{0.9555 $\pm$ 0.0040} & \textbf{0.9919 $\pm$ 0.0016} & \textbf{0.9850 $\pm$ 0.0021} & \textbf{0.9954 $\pm$ 0.0018} & \underline{0.9554 $\pm$ 0.0061} & \textbf{0.9929 $\pm$ 0.0012} & 0.9795 $\pm$ 0.0040 & 0.9781 $\pm$ 0.0041 & \textbf{0.9761 $\pm$ 0.0016} & \textbf{0.9868 $\pm$ 0.0019} & \textbf{0.9933 $\pm$ 0.0009} & \underline{0.8827 $\pm$ 0.0018} \\
+AE & 0.7933 $\pm$ 0.0055 & \underline{0.9706 $\pm$ 0.0026} & \underline{0.9549 $\pm$ 0.0034} & 0.9892 $\pm$ 0.0020 & \underline{0.9720 $\pm$ 0.0043} & 0.9920 $\pm$ 0.0015 & 0.9516 $\pm$ 0.0030 & \underline{0.9887 $\pm$ 0.0013} & 0.9718 $\pm$ 0.0037 & \textbf{0.9953 $\pm$ 0.0014} & \underline{0.9760 $\pm$ 0.0014} & \underline{0.9737 $\pm$ 0.0041} & \underline{0.9889 $\pm$ 0.0017} & 0.8334 $\pm$ 0.0035 \\
+\midrule
+RSRAE & 0.7372 $\pm$ 0.0079 & 0.9435 $\pm$ 0.0029 & 0.9126 $\pm$ 0.0035 & 0.9887 $\pm$ 0.0019 & 0.9703 $\pm$ 0.0037 & \underline{0.9953 $\pm$ 0.0016} & 0.8964 $\pm$ 0.0037 & 0.9820 $\pm$ 0.0031 & 0.9805 $\pm$ 0.0031 & \underline{0.9941 $\pm$ 0.0018} & 0.9700 $\pm$ 0.0059 & 0.9583 $\pm$ 0.0026 & 0.9676 $\pm$ 0.0048 & \textbf{0.9013 $\pm$ 0.0034} \\
+CVDD & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+DATE & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+FATE & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+\midrule
+TCCM & 0.6166 $\pm$ 0.0155 & 0.9509 $\pm$ 0.0019 & 0.9165 $\pm$ 0.0046 & 0.9888 $\pm$ 0.0020 & 0.9599 $\pm$ 0.0029 & 0.9863 $\pm$ 0.0026 & 0.9007 $\pm$ 0.0050 & 0.9693 $\pm$ 0.0046 & \underline{0.9870 $\pm$ 0.0023} & 0.9841 $\pm$ 0.0031 & 0.9617 $\pm$ 0.0033 & 0.9498 $\pm$ 0.0075 & 0.9551 $\pm$ 0.0047 & 0.6622 $\pm$ 0.0107 \\
+FMTToken-Sentence & \underline{0.8792 $\pm$ 0.0155} & 0.9339 $\pm$ 0.0036 & 0.9165 $\pm$ 0.0060 & \underline{0.9905 $\pm$ 0.0010} & 0.9607 $\pm$ 0.0029 & 0.9833 $\pm$ 0.0034 & \textbf{0.9588 $\pm$ 0.0062} & 0.9721 $\pm$ 0.0034 & \textbf{0.9911 $\pm$ 0.0016} & 0.9785 $\pm$ 0.0046 & 0.9653 $\pm$ 0.0029 & 0.9454 $\pm$ 0.0083 & 0.9469 $\pm$ 0.0064 & 0.6059 $\pm$ 0.0156 \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:dbpedia14}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AP on Sms}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lc}
+\toprule
+Model & normal \\
+\midrule
+OCSVM & 0.0881 $\pm$ 0.0042 \\
+AE & 0.0984 $\pm$ 0.0040 \\
+\midrule
+RSRAE & \underline{0.1161 $\pm$ 0.0064} \\
+CVDD & — \\
+DATE & — \\
+FATE & — \\
+\midrule
+TCCM & 0.1112 $\pm$ 0.0047 \\
+FMTToken-Sentence & \textbf{0.1392 $\pm$ 0.0047} \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:sms}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AP on Enron}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lc}
+\toprule
+Model & normal \\
+\midrule
+OCSVM & 0.6258 $\pm$ 0.0079 \\
+AE & \underline{0.7351 $\pm$ 0.0027} \\
+\midrule
+RSRAE & \textbf{0.7364 $\pm$ 0.0155} \\
+CVDD & — \\
+DATE & — \\
+FATE & — \\
+\midrule
+TCCM & 0.6850 $\pm$ 0.0177 \\
+FMTToken-Sentence & 0.7222 $\pm$ 0.0208 \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:enron}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AP on Sst2}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcc}
+\toprule
+Model & positive & negative \\
+\midrule
+OCSVM & 0.1858 $\pm$ 0.0068 & \textbf{0.1745 $\pm$ 0.0254} \\
+AE & 0.1824 $\pm$ 0.0082 & \underline{0.1305 $\pm$ 0.0193} \\
+\midrule
+RSRAE & 0.1849 $\pm$ 0.0088 & 0.1228 $\pm$ 0.0144 \\
+CVDD & — & — \\
+DATE & — & — \\
+FATE & — & — \\
+\midrule
+TCCM & \textbf{0.2238 $\pm$ 0.0223} & 0.1090 $\pm$ 0.0084 \\
+FMTToken-Sentence & \underline{0.1976 $\pm$ 0.0054} & 0.1089 $\pm$ 0.0071 \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:sst2}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AP on Imdb}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcc}
+\toprule
+Model & positive & negative \\
+\midrule
+OCSVM & 0.1005 $\pm$ 0.0011 & 0.0905 $\pm$ 0.0023 \\
+AE & \textbf{0.1490 $\pm$ 0.0039} & 0.0763 $\pm$ 0.0013 \\
+\midrule
+RSRAE & \underline{0.1127 $\pm$ 0.0018} & \underline{0.0927 $\pm$ 0.0031} \\
+CVDD & — & — \\
+DATE & — & — \\
+FATE & — & — \\
+\midrule
+TCCM & 0.1032 $\pm$ 0.0012 & 0.0885 $\pm$ 0.0012 \\
+FMTToken-Sentence & 0.0901 $\pm$ 0.0019 & \textbf{0.1610 $\pm$ 0.0014} \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:imdb}
+\end{table}
+

@@ -1,0 +1,288 @@
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: distilroberta
+AD model:       AE
+Training time:  6.83 sec
+----------------------------------------
+AUC:            0.9876 ± 0.0043
+Avg Precision:  0.9466 ± 0.0075
+FPR@95:         0.0244 ± 0.0064
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  177.91 sec
+----------------------------------------
+AUC:            0.9842 ± 0.0034
+Avg Precision:  0.9450 ± 0.0112
+FPR@95:         0.0442 ± 0.0330
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  125.76 sec
+----------------------------------------
+AUC:            0.9900 ± 0.0024
+Avg Precision:  0.9462 ± 0.0081
+FPR@95:         0.0228 ± 0.0052
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  10.81 sec
+----------------------------------------
+AUC:            0.9857 ± 0.0035
+Avg Precision:  0.9317 ± 0.0118
+FPR@95:         0.0404 ± 0.0122
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: distilroberta
+AD model:       AE
+Training time:  6.97 sec
+----------------------------------------
+AUC:            0.9247 ± 0.0028
+Avg Precision:  0.5285 ± 0.0198
+FPR@95:         0.2325 ± 0.0156
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  177.56 sec
+----------------------------------------
+AUC:            0.9193 ± 0.0058
+Avg Precision:  0.5456 ± 0.0288
+FPR@95:         0.3005 ± 0.0172
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  126.22 sec
+----------------------------------------
+AUC:            0.8511 ± 0.0083
+Avg Precision:  0.4574 ± 0.0296
+FPR@95:         0.5835 ± 0.0493
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  10.85 sec
+----------------------------------------
+AUC:            0.9316 ± 0.0029
+Avg Precision:  0.5756 ± 0.0308
+FPR@95:         0.2393 ± 0.0145
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: distilroberta
+AD model:       AE
+Training time:  6.84 sec
+----------------------------------------
+AUC:            0.9030 ± 0.0027
+Avg Precision:  0.5762 ± 0.0157
+FPR@95:         0.4985 ± 0.0654
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  178.67 sec
+----------------------------------------
+AUC:            0.9175 ± 0.0057
+Avg Precision:  0.6532 ± 0.0075
+FPR@95:         0.4109 ± 0.0441
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  115.46 sec
+----------------------------------------
+AUC:            0.8740 ± 0.0077
+Avg Precision:  0.5578 ± 0.0217
+FPR@95:         0.5902 ± 0.0504
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  10.82 sec
+----------------------------------------
+AUC:            0.8957 ± 0.0029
+Avg Precision:  0.5413 ± 0.0202
+FPR@95:         0.5025 ± 0.0781
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: distilroberta
+AD model:       AE
+Training time:  7.14 sec
+----------------------------------------
+AUC:            0.9155 ± 0.0102
+Avg Precision:  0.6277 ± 0.0066
+FPR@95:         0.3595 ± 0.0757
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  173.81 sec
+----------------------------------------
+AUC:            0.9108 ± 0.0062
+Avg Precision:  0.6690 ± 0.0082
+FPR@95:         0.3966 ± 0.0755
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  122.82 sec
+----------------------------------------
+AUC:            0.8817 ± 0.0095
+Avg Precision:  0.6038 ± 0.0123
+FPR@95:         0.5968 ± 0.0868
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  10.58 sec
+----------------------------------------
+AUC:            0.9169 ± 0.0082
+Avg Precision:  0.6619 ± 0.0147
+FPR@95:         0.3968 ± 0.0548
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  503.72 sec
+----------------------------------------
+AUC:            0.9354 ± 0.0022
+Avg Precision:  0.6027 ± 0.0309
+FPR@95:         0.2351 ± 0.0228
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  515.39 sec
+----------------------------------------
+AUC:            0.9250 ± 0.0083
+Avg Precision:  0.6818 ± 0.0111
+FPR@95:         0.3606 ± 0.0881
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  509.06 sec
+----------------------------------------
+AUC:            0.9020 ± 0.0057
+Avg Precision:  0.5840 ± 0.0167
+FPR@95:         0.5015 ± 0.0719
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  521.51 sec
+----------------------------------------
+AUC:            0.9856 ± 0.0030
+Avg Precision:  0.9365 ± 0.0081
+FPR@95:         0.0344 ± 0.0066
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  376.95 sec
+----------------------------------------
+AUC:            0.9047 ± 0.0198
+Avg Precision:  0.6267 ± 0.0498
+FPR@95:         0.4477 ± 0.0967
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  225.83 sec
+----------------------------------------
+AUC:            0.9609 ± 0.0154
+Avg Precision:  0.9046 ± 0.0322
+FPR@95:         0.2504 ± 0.1640
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  191.33 sec
+----------------------------------------
+AUC:            0.9123 ± 0.0125
+Avg Precision:  0.7493 ± 0.0254
+FPR@95:         0.5168 ± 0.0852
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  191.09 sec
+----------------------------------------
+AUC:            0.9106 ± 0.0177
+Avg Precision:  0.7735 ± 0.0246
+FPR@95:         0.5580 ± 0.1147
+========================================
+

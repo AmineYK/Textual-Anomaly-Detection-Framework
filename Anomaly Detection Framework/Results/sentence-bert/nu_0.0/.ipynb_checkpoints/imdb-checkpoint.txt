@@ -1,0 +1,240 @@
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       AE
+Training time:  1.22 sec
+----------------------------------------
+AUC:            0.5058 ± 0.0062
+Avg Precision:  0.0972 ± 0.0013
+FPR@95:         0.9337 ± 0.0095
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       RSRAE
+Training time:  0.44 sec
+----------------------------------------
+AUC:            0.4811 ± 0.0070
+Avg Precision:  0.0917 ± 0.0016
+FPR@95:         0.9299 ± 0.0079
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       ocsvm
+Training time:  12.85 sec
+----------------------------------------
+AUC:            0.5034 ± 0.0074
+Avg Precision:  0.0966 ± 0.0017
+FPR@95:         0.9281 ± 0.0086
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       TCCM
+Training time:  4.24 sec
+----------------------------------------
+AUC:            0.5047 ± 0.0063
+Avg Precision:  0.0989 ± 0.0019
+FPR@95:         0.9420 ± 0.0100
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       DATE
+Training time:  253.34 sec
+----------------------------------------
+AUC:            0.4961 ± 0.0097
+Avg Precision:  0.0954 ± 0.0023
+FPR@95:         0.9285 ± 0.0073
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       AE
+Training time:  1.12 sec
+----------------------------------------
+AUC:            0.7066 ± 0.0049
+Avg Precision:  0.2031 ± 0.0056
+FPR@95:         0.7872 ± 0.0133
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       RSRAE
+Training time:  0.39 sec
+----------------------------------------
+AUC:            0.7092 ± 0.0046
+Avg Precision:  0.1920 ± 0.0058
+FPR@95:         0.7669 ± 0.0150
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       ocsvm
+Training time:  13.10 sec
+----------------------------------------
+AUC:            0.7152 ± 0.0053
+Avg Precision:  0.2078 ± 0.0064
+FPR@95:         0.7848 ± 0.0153
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       TCCM
+Training time:  4.31 sec
+----------------------------------------
+AUC:            0.6351 ± 0.0069
+Avg Precision:  0.1557 ± 0.0037
+FPR@95:         0.8666 ± 0.0092
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       DATE
+Training time:  254.21 sec
+----------------------------------------
+AUC:            0.6077 ± 0.0055
+Avg Precision:  0.1472 ± 0.0039
+FPR@95:         0.9050 ± 0.0088
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  771.54 sec
+----------------------------------------
+AUC:            0.4670 ± 0.0062
+Avg Precision:  0.0911 ± 0.0013
+FPR@95:         0.9504 ± 0.0027
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  765.96 sec
+----------------------------------------
+AUC:            0.6640 ± 0.0047
+Avg Precision:  0.1722 ± 0.0037
+FPR@95:         0.8540 ± 0.0234
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       flow-matching
+Training time:  5.32 sec
+----------------------------------------
+AUC:            0.5015 ± 0.0076
+Avg Precision:  0.0979 ± 0.0020
+FPR@95:         0.9448 ± 0.0089
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       flow-matching
+Training time:  5.17 sec
+----------------------------------------
+AUC:            0.6605 ± 0.0072
+Avg Precision:  0.1699 ± 0.0043
+FPR@95:         0.8437 ± 0.0129
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  107.75 sec
+----------------------------------------
+AUC:            0.5388 ± 0.0294
+Avg Precision:  0.1268 ± 0.0255
+FPR@95:         0.9545 ± 0.0138
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  107.78 sec
+----------------------------------------
+AUC:            0.6448 ± 0.0324
+Avg Precision:  0.1674 ± 0.0308
+FPR@95:         0.8763 ± 0.0244
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  205.29 sec
+----------------------------------------
+AUC:            0.5232 ± 0.0047
+Avg Precision:  0.1054 ± 0.0017
+FPR@95:         0.9368 ± 0.0077
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  637.30 sec
+----------------------------------------
+AUC:            0.6394 ± 0.0068
+Avg Precision:  0.1590 ± 0.0038
+FPR@95:         0.8645 ± 0.0086
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-PP
+Training time:  1163.28 sec
+----------------------------------------
+AUC:            0.5143 ± 0.0086
+Avg Precision:  0.1018 ± 0.0030
+FPR@95:         0.9365 ± 0.0077
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-PP
+Training time:  218.20 sec
+----------------------------------------
+AUC:            0.6526 ± 0.0070
+Avg Precision:  0.1658 ± 0.0040
+FPR@95:         0.8522 ± 0.0102
+========================================
+

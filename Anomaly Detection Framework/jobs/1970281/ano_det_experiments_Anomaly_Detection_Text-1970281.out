@@ -1,0 +1,42 @@
+Job ID: 1970281
+
+<<<<<<<<<<<<<< dbpedia14 >>>>>>>>>>>>>>>>>>>
+
+------------------------ Building(1/8) -----------------------------
+st5_large_embedding
+torch.Size([36000, 768])
++++++++++++++++++++++ run : 1 / 4 +++++++++++++++++
+
+st5_large_embedding
+torch.Size([5000, 768])
+
+Epoch 1/350
+Train Loss: 0.0106, LR: 0.000007
+tensor(0.9995, grad_fn=<ExpBackward0>)
+
+Epoch 117/350
+Train Loss: 0.0010, LR: 0.000775
+tensor(0.2038, grad_fn=<ExpBackward0>)
+
+Epoch 233/350
+Train Loss: 0.0009, LR: 0.000639
+tensor(0.1340, grad_fn=<ExpBackward0>)
+
+Epoch 349/350
+Train Loss: 0.0009, LR: 0.000000
+tensor(0.1193, grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 111.697 mn
+AUC:        0.9692
+Avg Precision: 0.8610
+FPR@95:     0.2053
+FM --> AUC: 0.9692 | FPR@95: 0.2053 | AP: 0.8610
+
++++++++++++++++++++++ run : 2 / 4 +++++++++++++++++
+
+st5_large_embedding
+torch.Size([5000, 768])
+
+Epoch 1/350
+Train Loss: 0.0106, LR: 0.000007
+tensor(0.9995, grad_fn=<ExpBackward0>)

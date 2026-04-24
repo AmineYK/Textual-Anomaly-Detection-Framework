@@ -1,0 +1,84 @@
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       AE
+Training time:  1.60 sec
+----------------------------------------
+AUC:            0.5284 ± 0.0196
+Avg Precision:  0.1034 ± 0.0063
+FPR@95:         0.8692 ± 0.0044
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  26.83 sec
+----------------------------------------
+AUC:            0.6554 ± 0.0156
+Avg Precision:  0.1564 ± 0.0108
+FPR@95:         0.7722 ± 0.0261
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  1.27 sec
+----------------------------------------
+AUC:            0.5381 ± 0.0152
+Avg Precision:  0.1092 ± 0.0056
+FPR@95:         0.9405 ± 0.0066
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  1.60 sec
+----------------------------------------
+AUC:            0.6191 ± 0.0104
+Avg Precision:  0.1250 ± 0.0061
+FPR@95:         0.7170 ± 0.0209
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  188.58 sec
+----------------------------------------
+AUC:            0.6796 ± 0.0082
+Avg Precision:  0.1431 ± 0.0040
+FPR@95:         0.6117 ± 0.0435
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  440.05 sec
+----------------------------------------
+AUC:            0.5472 ± 0.2440
+Avg Precision:  0.2513 ± 0.3020
+FPR@95:         0.8476 ± 0.2946
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  160.82 sec
+----------------------------------------
+AUC:            0.5574 ± 0.3050
+Avg Precision:  0.2973 ± 0.2516
+FPR@95:         0.7845 ± 0.2802
+========================================
+

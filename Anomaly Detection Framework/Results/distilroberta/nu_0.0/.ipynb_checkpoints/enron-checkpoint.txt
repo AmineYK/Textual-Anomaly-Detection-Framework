@@ -1,0 +1,72 @@
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       AE
+Training time:  3.86 sec
+----------------------------------------
+AUC:            0.9007 ± 0.0095
+Avg Precision:  0.6104 ± 0.0345
+FPR@95:         0.4991 ± 0.0987
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  101.59 sec
+----------------------------------------
+AUC:            0.9122 ± 0.0111
+Avg Precision:  0.6224 ± 0.0414
+FPR@95:         0.4627 ± 0.0657
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  20.30 sec
+----------------------------------------
+AUC:            0.9152 ± 0.0133
+Avg Precision:  0.6109 ± 0.0395
+FPR@95:         0.4636 ± 0.0397
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  6.23 sec
+----------------------------------------
+AUC:            0.9019 ± 0.0119
+Avg Precision:  0.6036 ± 0.0382
+FPR@95:         0.5113 ± 0.0701
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  665.29 sec
+----------------------------------------
+AUC:            0.9310 ± 0.0089
+Avg Precision:  0.6261 ± 0.0186
+FPR@95:         0.3214 ± 0.0510
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  67.50 sec
+----------------------------------------
+AUC:            0.6028 ± 0.1193
+Avg Precision:  0.1692 ± 0.0743
+FPR@95:         0.8869 ± 0.1603
+========================================
+

@@ -1,0 +1,9 @@
+Dataset: 20newsgroups
+Inlier topic: religion
+Type Embedding: distilroberta
+Number of Runs: 6
+
+Hyperparameters:
+nu: 0.1
+kernel: rbf
+gamma: scale

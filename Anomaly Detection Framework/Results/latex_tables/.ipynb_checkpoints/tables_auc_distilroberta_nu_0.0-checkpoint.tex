@@ -1,0 +1,80 @@
+\subsection {Distilroberta}
+
+\begin{table}[H]
+\centering
+\caption{AUC on all datasets}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcc}
+\toprule
+Model & Reuters & 20newsgroups \\
+\midrule
+OCSVM & 0.9594 $\pm$ 0.0347 & 0.8947 $\pm$ 0.0119 \\
+AE & \textbf{0.9767 $\pm$ 0.0231} & 0.9182 $\pm$ 0.0108 \\
+\midrule
+RSRAE & 0.9717 $\pm$ 0.0257 & \underline{0.9225 $\pm$ 0.0114} \\
+CVDD & — & — \\
+DATE & — & — \\
+FATE & — & — \\
+\midrule
+TCCM & \underline{0.9745 $\pm$ 0.0234} & \textbf{0.9275 $\pm$ 0.0092} \\
+flow-matching & — & — \\
+flow-matching-Transformers & — & — \\
+flow-matching-Transformers-PP & — & — \\
+FMTToken-Sentence & — & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:global}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AUC on Reuters}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lccccccc}
+\toprule
+Model & earn & trade & acq & money-fx & crude & ship & interest \\
+\midrule
+OCSVM & 0.9393 $\pm$ 0.0046 & 0.9749 $\pm$ 0.0293 & \textbf{0.9797 $\pm$ 0.0061} & 0.9455 $\pm$ 0.0730 & \textbf{0.9909 $\pm$ 0.0075} & 0.9104 $\pm$ 0.0883 & 0.9754 $\pm$ 0.0339 \\
+AE & 0.9798 $\pm$ 0.0011 & 0.9823 $\pm$ 0.0198 & \underline{0.9732 $\pm$ 0.0088} & \textbf{0.9598 $\pm$ 0.0625} & 0.9880 $\pm$ 0.0083 & \underline{0.9667 $\pm$ 0.0434} & \textbf{0.9869 $\pm$ 0.0175} \\
+\midrule
+RSRAE & \textbf{0.9822 $\pm$ 0.0014} & \underline{0.9900 $\pm$ 0.0126} & 0.9531 $\pm$ 0.0097 & \underline{0.9481 $\pm$ 0.0752} & 0.9800 $\pm$ 0.0146 & 0.9667 $\pm$ 0.0468 & 0.9815 $\pm$ 0.0198 \\
+CVDD & — & — & — & — & — & — & — \\
+DATE & — & — & — & — & — & — & — \\
+FATE & — & — & — & — & — & — & — \\
+\midrule
+TCCM & \underline{0.9819 $\pm$ 0.0011} & \textbf{0.9905 $\pm$ 0.0121} & 0.9565 $\pm$ 0.0073 & 0.9466 $\pm$ 0.0764 & \underline{0.9887 $\pm$ 0.0081} & \textbf{0.9729 $\pm$ 0.0352} & \underline{0.9846 $\pm$ 0.0238} \\
+flow-matching & — & — & — & — & — & — & — \\
+flow-matching-Transformers & — & — & — & — & — & — & — \\
+flow-matching-Transformers-PP & — & — & — & — & — & — & — \\
+FMTToken-Sentence & — & — & — & — & — & — & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:reuters}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{AUC on 20newsgroups}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcccccc}
+\toprule
+Model & computer & recreation & science & miscellaneous & politics & religion \\
+\midrule
+OCSVM & 0.9330 $\pm$ 0.0163 & 0.9044 $\pm$ 0.0092 & 0.7391 $\pm$ 0.0151 & 0.9602 $\pm$ 0.0066 & 0.9289 $\pm$ 0.0129 & 0.9024 $\pm$ 0.0114 \\
+AE & 0.9500 $\pm$ 0.0098 & 0.9331 $\pm$ 0.0070 & 0.7989 $\pm$ 0.0145 & 0.9562 $\pm$ 0.0113 & 0.9517 $\pm$ 0.0087 & \underline{0.9195 $\pm$ 0.0133} \\
+\midrule
+RSRAE & \underline{0.9573 $\pm$ 0.0086} & \underline{0.9388 $\pm$ 0.0084} & \underline{0.8020 $\pm$ 0.0187} & \textbf{0.9628 $\pm$ 0.0120} & \textbf{0.9550 $\pm$ 0.0076} & 0.9190 $\pm$ 0.0129 \\
+CVDD & — & — & — & — & — & — \\
+DATE & — & — & — & — & — & — \\
+FATE & — & — & — & — & — & — \\
+\midrule
+TCCM & \textbf{0.9581 $\pm$ 0.0090} & \textbf{0.9452 $\pm$ 0.0059} & \textbf{0.8242 $\pm$ 0.0147} & \underline{0.9608 $\pm$ 0.0087} & \underline{0.9525 $\pm$ 0.0079} & \textbf{0.9242 $\pm$ 0.0088} \\
+flow-matching & — & — & — & — & — & — \\
+flow-matching-Transformers & — & — & — & — & — & — \\
+flow-matching-Transformers-PP & — & — & — & — & — & — \\
+FMTToken-Sentence & — & — & — & — & — & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:20newsgroups}
+\end{table}
+

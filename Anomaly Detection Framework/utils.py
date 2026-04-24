@@ -18,7 +18,7 @@ BASE_RESULTS_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/A
 OUTPUT_LATEX_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/latex_tables"
 
 DATASETS = ["reuters","20newsgroups", "agnews", "dbpedia14", "sms", "enron", "sst2", "imdb", "m4"]
-ENCODING_TYPES = ["sentence-bert", "bert", "fasttext"]
+ENCODING_TYPES = ["sentence-bert", "distilroberta", "mpnet", "st5" ,"bert"]
 NU_VALUES = [0.0, 0.1]
 
 os.makedirs(OUTPUT_LATEX_DIR, exist_ok=True)
@@ -33,9 +33,9 @@ MODEL_GROUPS = [
     ("Deep baselines", ["RSRAE", "CVDD", "DATE", "FATE"]),
     ("Flow-based models", [
         "TCCM",
-        "flow-matching",
-        "flow-matching-Transformers",
-        "flow-matching-Transformers-PP",
+        # "flow-matching",
+        # "flow-matching-Transformers",
+        # "flow-matching-Transformers-PP",
         "flow-matching-Transformers-Comp"
     ]),
 ]
@@ -61,10 +61,10 @@ MODEL_LATEX_BY_ENCODING = {
         "CVDD": "CVDD",
         "DATE": "DATE",
         "FATE": "FATE",
-        "TCCM": "TCCM",
-        "flow-matching": "\\textbf{BasicFM}",
-        "flow-matching-Transformers": "\\textbf{TranFM}",
-        "flow-matching-Transformers-PP": "\\textbf{TranFM-PP}",
+        "TCCM": "TCCM"
+        # "flow-matching": "\\textbf{BasicFM}",
+        # "flow-matching-Transformers": "\\textbf{TranFM}",
+        # "flow-matching-Transformers-PP": "\\textbf{TranFM-PP}"
     },
 
     "bert": {
@@ -73,7 +73,33 @@ MODEL_LATEX_BY_ENCODING = {
         "RSRAE": "RSRAE",
         "CVDD": "CVDD",
         "TCCM": "TCCM",
-        "flow-matching-Transformers-Comp": "FMTToken-Sentence",
+        "flow-matching-Transformers-Comp": "FMTToken-Sentence"
+    },
+
+    "distilroberta": {
+        "ocsvm": "OCSVM",
+        "AE": "AE",
+        "RSRAE": "RSRAE",
+        "TCCM": "TCCM",
+        "FATE": "FATE",
+        "flow-matching-Transformers-Comp": "FMTToken-Sentence"
+    },
+
+    "mpnet": {
+        "ocsvm": "OCSVM",
+        "AE": "AE",
+        "RSRAE": "RSRAE",
+        "TCCM": "TCCM",
+        "FATE": "FATE",
+        "flow-matching-Transformers-Comp": "FMTToken-Sentence"
+    },
+    "st5": {
+        "ocsvm": "OCSVM",
+        "AE": "AE",
+        "RSRAE": "RSRAE",
+        "TCCM": "TCCM",
+        "FATE": "FATE",
+        "flow-matching-Transformers-Comp": "FMTToken-Sentence"
     }
 }
 
@@ -434,55 +460,66 @@ def save_results(
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(existing_content)
 
+    return (not match or do_replace)
 
 
-def save_hyperparameters(dataset_name, inlier_topic,
-                         batch_size=32,
-                         latent_dim=256,
-                         sinu=False,
-                         batchnorm=False,
-                         dropout=0.1,
-                         lr=1e-4,
-                         weight_decay=1e-6,
-                         n_epochs=25,
-                         target=None,
-                         source='sphere',
-                         save_dir="Results"):
-    
+# def save_hyperparameters(model_args, args, inlier_topic, model_name, base_dir="/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/hyperparameters"):
+
+#     # 🔹 construire le chemin : hyperparameters/model/
+#     # model_name = getattr(args, "model", "default_model")
+#     save_dir = os.path.join(base_dir, model_name)
+
+#     # 🔹 créer le dossier s'il n'existe pas
+#     os.makedirs(save_dir, exist_ok=True)
+
+#     # 🔹 fichier de sortie
+#     file_path = os.path.join(save_dir, "hyper.txt")
+
+#     # 🔹 écrire le contenu
+#     with open(file_path, "w") as f:
+#         f.write(f"Dataset: {args.dataset_name}\n")
+#         f.write(f"Inlier topic: {inlier_topic}\n")
+#         f.write(f"Type Embedding: {args.type_emb}\n")
+#         f.write(f"Number of Runs: {args.nb_runs}\n")
+#         f.write("\nHyperparameters:\n")
+
+#         for key, value in model_args.items():
+#             f.write(f"{key}: {value}\n")
+
+#     print(f"Hyperparameters saved to {file_path}")    
+
+
+import os
+from datetime import datetime
+
+def save_hyperparameters(model_args, args, inlier_topic, model_name, base_dir="/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/hyperparameters"):
+
+    # model_name = getattr(args, "model", "default_model")
+    save_dir = os.path.join(base_dir, model_name)
     os.makedirs(save_dir, exist_ok=True)
 
-    filename = "hyperparams.txt"
-    filepath = os.path.join(save_dir, filename)
+    file_path = os.path.join(save_dir, "hyper.txt")
 
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # 🔹 append mode
+    with open(file_path, "a") as f:
+        # 🔹 séparateur de run
+        f.write("\n" + "="*50 + "\n")
 
-    content = [
-        "========================================",
-        f"Run date : {now}",
-        f"dataset_name : {dataset_name}",
-        f"inlier_topic : {inlier_topic}",
-        "",
-        "Hyperparameters :",
-        f"batch_size : {batch_size}",
-        f"latent_dim : {latent_dim}",
-        f"sinu : {sinu}",
-        f"batchnorm : {batchnorm}",
-        f"dropout : {dropout}",
-        f"lr : {lr}",
-        f"weight_decay : {weight_decay}",
-        f"n_epochs : {n_epochs}",
-        f"source : {source}",
-        f"target : {target}",
-        "========================================",
-        "\n"
-    ]
+        # 🔹 timestamp
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        f.write(f"Run time: {timestamp}\n")
 
-    with open(filepath, "a") as f:
-        f.write("\n".join(content))
+        f.write(f"Dataset: {args.dataset_name}\n")
+        f.write(f"Inlier topic: {inlier_topic}\n")
+        f.write(f"Type Embedding: {args.type_emb}\n")
+        f.write(f"Number of Runs: {args.nb_runs}\n")
 
-    print(f"Hyperparameters saved to: {filepath}")
-    
-    
+        # 🔹 hyperparams
+        f.write("\nHyperparameters:\n")
+        for key, value in model_args.items():
+            f.write(f"{key}: {value}\n")
+
+    print(f"Hyperparameters appended to {file_path}")
     
 import re
 

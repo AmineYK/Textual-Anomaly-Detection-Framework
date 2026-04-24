@@ -1,0 +1,96 @@
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: distilroberta
+AD model:       AE
+Training time:  3.66 sec
+----------------------------------------
+AUC:            0.5265 ± 0.0031
+Avg Precision:  0.1034 ± 0.0018
+FPR@95:         0.9282 ± 0.0084
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  84.11 sec
+----------------------------------------
+AUC:            0.5138 ± 0.0028
+Avg Precision:  0.1007 ± 0.0019
+FPR@95:         0.9303 ± 0.0104
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  14.61 sec
+----------------------------------------
+AUC:            0.5058 ± 0.0034
+Avg Precision:  0.0977 ± 0.0013
+FPR@95:         0.9335 ± 0.0062
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   positive
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  5.22 sec
+----------------------------------------
+AUC:            0.4995 ± 0.0033
+Avg Precision:  0.0977 ± 0.0015
+FPR@95:         0.9440 ± 0.0038
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: distilroberta
+AD model:       AE
+Training time:  3.73 sec
+----------------------------------------
+AUC:            0.6872 ± 0.0027
+Avg Precision:  0.1993 ± 0.0047
+FPR@95:         0.8353 ± 0.0029
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: distilroberta
+AD model:       RSRAE
+Training time:  86.20 sec
+----------------------------------------
+AUC:            0.6503 ± 0.0054
+Avg Precision:  0.1664 ± 0.0054
+FPR@95:         0.8587 ± 0.0133
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: distilroberta
+AD model:       ocsvm
+Training time:  14.43 sec
+----------------------------------------
+AUC:            0.7140 ± 0.0011
+Avg Precision:  0.2050 ± 0.0034
+FPR@95:         0.7967 ± 0.0088
+========================================
+
+========================================
+Dataset:        imdb
+Inlier class:   negative
+Embedding type: distilroberta
+AD model:       TCCM
+Training time:  5.21 sec
+----------------------------------------
+AUC:            0.6280 ± 0.0041
+Avg Precision:  0.1529 ± 0.0040
+FPR@95:         0.8735 ± 0.0042
+========================================
+

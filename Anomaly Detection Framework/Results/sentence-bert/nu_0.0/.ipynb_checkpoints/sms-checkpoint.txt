@@ -1,0 +1,133 @@
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       ocsvm
+Training time:  1.15 sec
+----------------------------------------
+AUC:            0.5398 ± 0.0161
+Avg Precision:  0.1096 ± 0.0061
+FPR@95:         0.9397 ± 0.0072
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       AE
+Training time:  0.63 sec
+----------------------------------------
+AUC:            0.5835 ± 0.0159
+Avg Precision:  0.1204 ± 0.0075
+FPR@95:         0.8570 ± 0.0196
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       RSRAE
+Training time:  1.08 sec
+----------------------------------------
+AUC:            0.5741 ± 0.0132
+Avg Precision:  0.1142 ± 0.0059
+FPR@95:         0.8460 ± 0.0132
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       TCCM
+Training time:  1.32 sec
+----------------------------------------
+AUC:            0.5862 ± 0.0158
+Avg Precision:  0.1145 ± 0.0059
+FPR@95:         0.8214 ± 0.0173
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       CVDD
+Training time:  65.81 sec
+----------------------------------------
+AUC:            0.6717 ± 0.0962
+Avg Precision:  0.1645 ± 0.0448
+FPR@95:         0.8111 ± 0.0961
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       DATE
+Training time:  18.54 sec
+----------------------------------------
+AUC:            0.5172 ± 0.0763
+Avg Precision:  0.1081 ± 0.0202
+FPR@95:         0.9894 ± 0.0167
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers
+Training time:  63.23 sec
+----------------------------------------
+AUC:            0.6504 ± 0.0106
+Avg Precision:  0.1294 ± 0.0042
+FPR@95:         0.6718 ± 0.0302
+========================================
+
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       flow-matching
+Training time:  3.24 sec
+----------------------------------------
+AUC:            0.5922 ± 0.0139
+Avg Precision:  0.1186 ± 0.0062
+FPR@95:         0.8049 ± 0.0127
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       FATE
+Training time:  16.82 sec
+----------------------------------------
+AUC:            0.5574 ± 0.3050
+Avg Precision:  0.2973 ± 0.2516
+FPR@95:         0.7845 ± 0.2802
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-EneRepu
+Training time:  97.60 sec
+----------------------------------------
+AUC:            0.6664 ± 0.0174
+Avg Precision:  0.1383 ± 0.0102
+FPR@95:         0.6543 ± 0.0240
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: sentence-bert
+AD model:       flow-matching-Transformers-PP
+Training time:  651.89 sec
+----------------------------------------
+AUC:            0.7403 ± 0.0340
+Avg Precision:  0.1899 ± 0.0251
+FPR@95:         0.6078 ± 0.0393
+========================================
+

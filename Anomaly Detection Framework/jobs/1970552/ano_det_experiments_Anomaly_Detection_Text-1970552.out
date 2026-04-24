@@ -1,0 +1,118 @@
+Job ID: 1970552
+
+<<<<<<<<<<<<<< imdb >>>>>>>>>>>>>>>>>>>
+
+------------------------ negative(1/1) -----------------------------
+st5_large_embedding
+torch.Size([12500, 768])
++++++++++++++++++++++ run : 1 / 4 +++++++++++++++++
+
+st5_large_embedding
+torch.Size([12500, 768])
+
+Epoch 1/350
+Train Loss: 0.0104, LR: 0.000007
+tensor(0.9997, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 117/350
+Train Loss: 0.0047, LR: 0.000775
+tensor(0.2898, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 233/350
+Train Loss: 0.0006, LR: 0.000639
+tensor(0.1258, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 349/350
+Train Loss: 0.0005, LR: 0.000000
+tensor(0.0968, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 10.666 mn
+AUC:        0.7319
+Avg Precision: 0.2049
+FPR@95:     0.7328
+FM --> AUC: 0.7319 | FPR@95: 0.7328 | AP: 0.2049
+
++++++++++++++++++++++ run : 2 / 4 +++++++++++++++++
+
+st5_large_embedding
+torch.Size([12500, 768])
+
+Epoch 1/350
+Train Loss: 0.0104, LR: 0.000007
+tensor(0.9997, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 117/350
+Train Loss: 0.0012, LR: 0.000775
+tensor(0.2844, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 233/350
+Train Loss: 0.0006, LR: 0.000639
+tensor(0.1421, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 349/350
+Train Loss: 0.0005, LR: 0.000000
+tensor(0.1030, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 10.920 mn
+AUC:        0.7640
+Avg Precision: 0.2232
+FPR@95:     0.6142
+FM --> AUC: 0.7640 | FPR@95: 0.6142 | AP: 0.2232
+
++++++++++++++++++++++ run : 3 / 4 +++++++++++++++++
+
+st5_large_embedding
+torch.Size([12500, 768])
+
+Epoch 1/350
+Train Loss: 0.0104, LR: 0.000007
+tensor(0.9997, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 117/350
+Train Loss: 0.0012, LR: 0.000775
+tensor(0.2844, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 233/350
+Train Loss: 0.0007, LR: 0.000639
+tensor(0.1528, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 349/350
+Train Loss: 0.0005, LR: 0.000000
+tensor(0.1030, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 11.276 mn
+AUC:        0.7616
+Avg Precision: 0.2261
+FPR@95:     0.6440
+FM --> AUC: 0.7616 | FPR@95: 0.6440 | AP: 0.2261
+
++++++++++++++++++++++ run : 4 / 4 +++++++++++++++++
+
+st5_large_embedding
+torch.Size([12500, 768])
+
+Epoch 1/350
+Train Loss: 0.0104, LR: 0.000007
+tensor(0.9997, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 117/350
+Train Loss: 0.0012, LR: 0.000775
+tensor(0.2845, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 233/350
+Train Loss: 0.0006, LR: 0.000639
+tensor(0.1228, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 349/350
+Train Loss: 0.0005, LR: 0.000000
+tensor(0.0966, device='cuda:0', grad_fn=<ExpBackward0>)
+
+FM Transformer finishing... after 10.630 mn
+AUC:        0.7293
+Avg Precision: 0.1971
+FPR@95:     0.6951
+FM --> AUC: 0.7293 | FPR@95: 0.6951 | AP: 0.1971
+
+negative 0.7467086577777778 0.6715333333333334 0.212843306595399
+Résultats mis à jour pour (imdb, negative, st5, flow-matching-Transformers-Comp, nu=0.0).
+Hyperparameters appended to /home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/hyperparameters/fmt_toksen/hyper.txt

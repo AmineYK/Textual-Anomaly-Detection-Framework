@@ -14,7 +14,7 @@ import os
 ################################################
 
 class EmbeddingEncoder:
-    def __init__(self, model_name=None, type_emd='glove', device='cuda'):
+    def __init__(self, model_name=None, name_column_emb='sbert_embeddings', type_emd='glove', device='cuda'):
 
         if type_emd == 'glove':
             self.model = GloVeEmbeddingEncoder(model_name)
@@ -29,7 +29,7 @@ class EmbeddingEncoder:
             self.model = BERTEmbeddingEncoder(model_name, device) 
 
         elif type_emd == 'sentencebert':
-            self.model = SetenceBERTEmbeddingEncoder(model_name, device) 
+            self.model = SetenceBERTEmbeddingEncoder(model_name, name_column_emb, device) 
       
         else : raise Exception ("'model' & 'model_name' are None type, at least one is requered")
         
@@ -98,13 +98,14 @@ class TFIDFEmbeddingEncoder(BaseEmbeddingEncoder):
 
 
 class SetenceBERTEmbeddingEncoder(BaseEmbeddingEncoder):
-    def __init__(self, model_name, device):
+    def __init__(self, model_name, name_column_emb, device):
         super().__init__(model_name)
 
         self.model_name = model_name
         self.device = device
 # all-MiniLM-L6-v2
         self.setencebert_model = SentenceTransformer(model_name, device=device)
+        self.name_column_emb = name_column_emb 
 
 
     def forward(self, dataset, text_column="text"):
@@ -117,7 +118,7 @@ class SetenceBERTEmbeddingEncoder(BaseEmbeddingEncoder):
                     batch_size=32
                 ).cpu().numpy()
 
-                return {"sbert_embeddings": np.array(emb)}
+                return {self.name_column_emb: np.array(emb)}
 
         dataset = dataset.map(
             compute_embedding,

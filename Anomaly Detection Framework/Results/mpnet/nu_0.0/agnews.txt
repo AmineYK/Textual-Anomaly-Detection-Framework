@@ -1,0 +1,240 @@
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: mpnet
+AD model:       AE
+Training time:  6.77 sec
+----------------------------------------
+AUC:            0.9259 ± 0.0040
+Avg Precision:  0.5111 ± 0.0251
+FPR@95:         0.2105 ± 0.0314
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  181.89 sec
+----------------------------------------
+AUC:            0.9257 ± 0.0038
+Avg Precision:  0.5420 ± 0.0155
+FPR@95:         0.2768 ± 0.0243
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  93.01 sec
+----------------------------------------
+AUC:            0.8701 ± 0.0128
+Avg Precision:  0.4844 ± 0.0156
+FPR@95:         0.5123 ± 0.0658
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  10.87 sec
+----------------------------------------
+AUC:            0.9424 ± 0.0018
+Avg Precision:  0.6328 ± 0.0231
+FPR@95:         0.2194 ± 0.0240
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: mpnet
+AD model:       AE
+Training time:  6.18 sec
+----------------------------------------
+AUC:            0.9897 ± 0.0036
+Avg Precision:  0.9583 ± 0.0068
+FPR@95:         0.0184 ± 0.0047
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  180.02 sec
+----------------------------------------
+AUC:            0.9874 ± 0.0024
+Avg Precision:  0.9608 ± 0.0055
+FPR@95:         0.0146 ± 0.0054
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  81.25 sec
+----------------------------------------
+AUC:            0.9915 ± 0.0033
+Avg Precision:  0.9527 ± 0.0050
+FPR@95:         0.0123 ± 0.0022
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  10.74 sec
+----------------------------------------
+AUC:            0.9866 ± 0.0032
+Avg Precision:  0.9449 ± 0.0083
+FPR@95:         0.0223 ± 0.0107
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: mpnet
+AD model:       AE
+Training time:  6.73 sec
+----------------------------------------
+AUC:            0.9153 ± 0.0088
+Avg Precision:  0.6508 ± 0.0106
+FPR@95:         0.3863 ± 0.0671
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  179.51 sec
+----------------------------------------
+AUC:            0.9081 ± 0.0081
+Avg Precision:  0.6705 ± 0.0116
+FPR@95:         0.4604 ± 0.0741
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  84.89 sec
+----------------------------------------
+AUC:            0.8650 ± 0.0145
+Avg Precision:  0.6496 ± 0.0193
+FPR@95:         0.7738 ± 0.0749
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  10.81 sec
+----------------------------------------
+AUC:            0.9174 ± 0.0091
+Avg Precision:  0.6620 ± 0.0168
+FPR@95:         0.3784 ± 0.0572
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: mpnet
+AD model:       AE
+Training time:  6.66 sec
+----------------------------------------
+AUC:            0.9132 ± 0.0066
+Avg Precision:  0.5380 ± 0.0153
+FPR@95:         0.3763 ± 0.0437
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: mpnet
+AD model:       RSRAE
+Training time:  177.71 sec
+----------------------------------------
+AUC:            0.9259 ± 0.0064
+Avg Precision:  0.6810 ± 0.0175
+FPR@95:         0.3281 ± 0.0595
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: mpnet
+AD model:       ocsvm
+Training time:  88.17 sec
+----------------------------------------
+AUC:            0.8892 ± 0.0103
+Avg Precision:  0.5473 ± 0.0266
+FPR@95:         0.5243 ± 0.0413
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: mpnet
+AD model:       TCCM
+Training time:  10.79 sec
+----------------------------------------
+AUC:            0.9149 ± 0.0072
+Avg Precision:  0.6000 ± 0.0182
+FPR@95:         0.3905 ± 0.0794
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  2472.60 sec
+----------------------------------------
+AUC:            0.9494 ± 0.0014
+Avg Precision:  0.6549 ± 0.0187
+FPR@95:         0.1717 ± 0.0103
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  2426.73 sec
+----------------------------------------
+AUC:            0.9278 ± 0.0021
+Avg Precision:  0.6877 ± 0.0096
+FPR@95:         0.3208 ± 0.0358
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  2212.92 sec
+----------------------------------------
+AUC:            0.9877 ± 0.0029
+Avg Precision:  0.9515 ± 0.0066
+FPR@95:         0.0149 ± 0.0021
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  1908.82 sec
+----------------------------------------
+AUC:            0.9177 ± 0.0063
+Avg Precision:  0.6190 ± 0.0201
+FPR@95:         0.4090 ± 0.0803
+========================================
+
