@@ -1,0 +1,1007 @@
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: qwen
+AD model:       AE
+Training time:  9.95 sec
+----------------------------------------
+AUC:            0.8321 ± 0.0129
+Avg Precision:  0.3351 ± 0.0174
+FPR@95:         0.5801 ± 0.0666
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.99 sec
+----------------------------------------
+AUC:            0.7293 ± 0.0086
+Avg Precision:  0.2014 ± 0.0075
+FPR@95:         0.7210 ± 0.0066
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  162.72 sec
+----------------------------------------
+AUC:            0.6297 ± 0.0118
+Avg Precision:  0.1746 ± 0.0089
+FPR@95:         0.9033 ± 0.0043
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: qwen
+AD model:       TCCM
+Training time:  19.33 sec
+----------------------------------------
+AUC:            0.8679 ± 0.0098
+Avg Precision:  0.4794 ± 0.0255
+FPR@95:         0.4861 ± 0.0149
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: qwen
+AD model:       AE
+Training time:  9.75 sec
+----------------------------------------
+AUC:            0.8716 ± 0.0045
+Avg Precision:  0.4416 ± 0.0165
+FPR@95:         0.4936 ± 0.0212
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.75 sec
+----------------------------------------
+AUC:            0.6082 ± 0.0084
+Avg Precision:  0.1157 ± 0.0020
+FPR@95:         0.7637 ± 0.0202
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  174.01 sec
+----------------------------------------
+AUC:            0.5450 ± 0.0079
+Avg Precision:  0.1096 ± 0.0053
+FPR@95:         0.8984 ± 0.0146
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: qwen
+AD model:       TCCM
+Training time:  18.75 sec
+----------------------------------------
+AUC:            0.9199 ± 0.0057
+Avg Precision:  0.6509 ± 0.0183
+FPR@95:         0.3803 ± 0.0262
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: qwen
+AD model:       AE
+Training time:  10.04 sec
+----------------------------------------
+AUC:            0.9730 ± 0.0023
+Avg Precision:  0.7869 ± 0.0109
+FPR@95:         0.1109 ± 0.0057
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.95 sec
+----------------------------------------
+AUC:            0.7970 ± 0.0054
+Avg Precision:  0.2540 ± 0.0045
+FPR@95:         0.5527 ± 0.0150
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  168.45 sec
+----------------------------------------
+AUC:            0.8402 ± 0.0016
+Avg Precision:  0.3154 ± 0.0041
+FPR@95:         0.4296 ± 0.0121
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: qwen
+AD model:       TCCM
+Training time:  18.77 sec
+----------------------------------------
+AUC:            0.9824 ± 0.0025
+Avg Precision:  0.8729 ± 0.0099
+FPR@95:         0.0805 ± 0.0082
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: qwen
+AD model:       AE
+Training time:  9.81 sec
+----------------------------------------
+AUC:            0.9407 ± 0.0084
+Avg Precision:  0.6922 ± 0.0200
+FPR@95:         0.2970 ± 0.0737
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.84 sec
+----------------------------------------
+AUC:            0.7226 ± 0.0103
+Avg Precision:  0.1633 ± 0.0031
+FPR@95:         0.5383 ± 0.0318
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  170.96 sec
+----------------------------------------
+AUC:            0.7124 ± 0.0057
+Avg Precision:  0.2049 ± 0.0063
+FPR@95:         0.7174 ± 0.0061
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: qwen
+AD model:       TCCM
+Training time:  18.69 sec
+----------------------------------------
+AUC:            0.9529 ± 0.0074
+Avg Precision:  0.8008 ± 0.0204
+FPR@95:         0.2791 ± 0.0653
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: qwen
+AD model:       AE
+Training time:  9.91 sec
+----------------------------------------
+AUC:            0.9476 ± 0.0033
+Avg Precision:  0.7094 ± 0.0086
+FPR@95:         0.2848 ± 0.0264
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  5.07 sec
+----------------------------------------
+AUC:            0.7471 ± 0.0017
+Avg Precision:  0.2001 ± 0.0052
+FPR@95:         0.6431 ± 0.0207
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  158.96 sec
+----------------------------------------
+AUC:            0.7281 ± 0.0102
+Avg Precision:  0.2312 ± 0.0128
+FPR@95:         0.6836 ± 0.0177
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: qwen
+AD model:       TCCM
+Training time:  19.06 sec
+----------------------------------------
+AUC:            0.9492 ± 0.0020
+Avg Precision:  0.7709 ± 0.0077
+FPR@95:         0.2865 ± 0.0278
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: qwen
+AD model:       AE
+Training time:  9.65 sec
+----------------------------------------
+AUC:            0.9169 ± 0.0041
+Avg Precision:  0.6932 ± 0.0038
+FPR@95:         0.4731 ± 0.0476
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.74 sec
+----------------------------------------
+AUC:            0.7313 ± 0.0029
+Avg Precision:  0.1762 ± 0.0032
+FPR@95:         0.6684 ± 0.0149
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  170.79 sec
+----------------------------------------
+AUC:            0.5479 ± 0.0081
+Avg Precision:  0.1380 ± 0.0072
+FPR@95:         0.9081 ± 0.0123
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: qwen
+AD model:       TCCM
+Training time:  18.44 sec
+----------------------------------------
+AUC:            0.9328 ± 0.0032
+Avg Precision:  0.7459 ± 0.0030
+FPR@95:         0.4043 ± 0.0057
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: qwen
+AD model:       AE
+Training time:  9.80 sec
+----------------------------------------
+AUC:            0.8708 ± 0.0043
+Avg Precision:  0.4789 ± 0.0090
+FPR@95:         0.4860 ± 0.0426
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.99 sec
+----------------------------------------
+AUC:            0.6479 ± 0.0055
+Avg Precision:  0.1351 ± 0.0015
+FPR@95:         0.7353 ± 0.0055
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  161.01 sec
+----------------------------------------
+AUC:            0.5746 ± 0.0112
+Avg Precision:  0.1238 ± 0.0028
+FPR@95:         0.9204 ± 0.0099
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: qwen
+AD model:       TCCM
+Training time:  19.37 sec
+----------------------------------------
+AUC:            0.8937 ± 0.0042
+Avg Precision:  0.5845 ± 0.0022
+FPR@95:         0.4691 ± 0.0189
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: qwen
+AD model:       AE
+Training time:  9.78 sec
+----------------------------------------
+AUC:            0.7750 ± 0.0160
+Avg Precision:  0.3088 ± 0.0126
+FPR@95:         0.7442 ± 0.0358
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.78 sec
+----------------------------------------
+AUC:            0.6475 ± 0.0049
+Avg Precision:  0.1491 ± 0.0006
+FPR@95:         0.8221 ± 0.0177
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  162.65 sec
+----------------------------------------
+AUC:            0.6020 ± 0.0070
+Avg Precision:  0.1378 ± 0.0036
+FPR@95:         0.8945 ± 0.0062
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: qwen
+AD model:       TCCM
+Training time:  18.57 sec
+----------------------------------------
+AUC:            0.7898 ± 0.0138
+Avg Precision:  0.3745 ± 0.0095
+FPR@95:         0.7299 ± 0.0435
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: qwen
+AD model:       AE
+Training time:  10.20 sec
+----------------------------------------
+AUC:            0.7108 ± 0.0029
+Avg Precision:  0.2340 ± 0.0111
+FPR@95:         0.8126 ± 0.0035
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  5.13 sec
+----------------------------------------
+AUC:            0.6593 ± 0.0135
+Avg Precision:  0.1608 ± 0.0097
+FPR@95:         0.8178 ± 0.0233
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  174.02 sec
+----------------------------------------
+AUC:            0.6000 ± 0.0195
+Avg Precision:  0.1465 ± 0.0109
+FPR@95:         0.9057 ± 0.0124
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: qwen
+AD model:       TCCM
+Training time:  19.84 sec
+----------------------------------------
+AUC:            0.7390 ± 0.0033
+Avg Precision:  0.2866 ± 0.0137
+FPR@95:         0.7530 ± 0.0085
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: qwen
+AD model:       AE
+Training time:  9.92 sec
+----------------------------------------
+AUC:            0.8544 ± 0.0048
+Avg Precision:  0.3940 ± 0.0101
+FPR@95:         0.5234 ± 0.0289
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.82 sec
+----------------------------------------
+AUC:            0.7368 ± 0.0050
+Avg Precision:  0.1936 ± 0.0045
+FPR@95:         0.6718 ± 0.0183
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  156.89 sec
+----------------------------------------
+AUC:            0.7401 ± 0.0082
+Avg Precision:  0.2090 ± 0.0055
+FPR@95:         0.7011 ± 0.0333
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: qwen
+AD model:       TCCM
+Training time:  18.77 sec
+----------------------------------------
+AUC:            0.8752 ± 0.0026
+Avg Precision:  0.4875 ± 0.0065
+FPR@95:         0.4799 ± 0.0027
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: qwen
+AD model:       AE
+Training time:  9.89 sec
+----------------------------------------
+AUC:            0.7811 ± 0.0130
+Avg Precision:  0.3405 ± 0.0190
+FPR@95:         0.7867 ± 0.0371
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  5.03 sec
+----------------------------------------
+AUC:            0.5760 ± 0.0067
+Avg Precision:  0.1153 ± 0.0024
+FPR@95:         0.8439 ± 0.0039
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  163.38 sec
+----------------------------------------
+AUC:            0.5054 ± 0.0045
+Avg Precision:  0.1020 ± 0.0018
+FPR@95:         0.9627 ± 0.0067
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: qwen
+AD model:       TCCM
+Training time:  19.23 sec
+----------------------------------------
+AUC:            0.8324 ± 0.0105
+Avg Precision:  0.4838 ± 0.0188
+FPR@95:         0.6812 ± 0.0369
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: qwen
+AD model:       AE
+Training time:  9.73 sec
+----------------------------------------
+AUC:            0.8971 ± 0.0058
+Avg Precision:  0.5724 ± 0.0052
+FPR@95:         0.4899 ± 0.0345
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.96 sec
+----------------------------------------
+AUC:            0.6866 ± 0.0068
+Avg Precision:  0.1731 ± 0.0036
+FPR@95:         0.7701 ± 0.0175
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  167.49 sec
+----------------------------------------
+AUC:            0.6437 ± 0.0085
+Avg Precision:  0.1656 ± 0.0049
+FPR@95:         0.8632 ± 0.0064
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: qwen
+AD model:       TCCM
+Training time:  19.26 sec
+----------------------------------------
+AUC:            0.9293 ± 0.0040
+Avg Precision:  0.7098 ± 0.0047
+FPR@95:         0.3724 ± 0.0482
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: qwen
+AD model:       AE
+Training time:  9.78 sec
+----------------------------------------
+AUC:            0.8695 ± 0.0060
+Avg Precision:  0.4507 ± 0.0046
+FPR@95:         0.4679 ± 0.0279
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.91 sec
+----------------------------------------
+AUC:            0.6868 ± 0.0062
+Avg Precision:  0.1591 ± 0.0063
+FPR@95:         0.7262 ± 0.0101
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  170.41 sec
+----------------------------------------
+AUC:            0.6179 ± 0.0194
+Avg Precision:  0.1550 ± 0.0119
+FPR@95:         0.9083 ± 0.0174
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: qwen
+AD model:       TCCM
+Training time:  19.21 sec
+----------------------------------------
+AUC:            0.9003 ± 0.0069
+Avg Precision:  0.5872 ± 0.0042
+FPR@95:         0.3989 ± 0.0229
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: qwen
+AD model:       AE
+Training time:  9.65 sec
+----------------------------------------
+AUC:            0.8969 ± 0.0066
+Avg Precision:  0.5818 ± 0.0145
+FPR@95:         0.4413 ± 0.0170
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.79 sec
+----------------------------------------
+AUC:            0.7269 ± 0.0099
+Avg Precision:  0.2077 ± 0.0144
+FPR@95:         0.7122 ± 0.0228
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  169.16 sec
+----------------------------------------
+AUC:            0.6315 ± 0.0147
+Avg Precision:  0.1803 ± 0.0127
+FPR@95:         0.8829 ± 0.0133
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: qwen
+AD model:       TCCM
+Training time:  18.57 sec
+----------------------------------------
+AUC:            0.9303 ± 0.0053
+Avg Precision:  0.7021 ± 0.0126
+FPR@95:         0.3323 ± 0.0202
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2215.08 sec
+----------------------------------------
+AUC:            0.9095 ± 0.0021
+Avg Precision:  0.6833 ± 0.0030
+FPR@95:         0.1598 ± 0.0179
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3311.22 sec
+----------------------------------------
+AUC:            0.9578 ± 0.0020
+Avg Precision:  0.6965 ± 0.0182
+FPR@95:         0.1482 ± 0.0059
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2217.03 sec
+----------------------------------------
+AUC:            0.8744 ± 0.0059
+Avg Precision:  0.4045 ± 0.0223
+FPR@95:         0.3845 ± 0.0120
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3313.23 sec
+----------------------------------------
+AUC:            0.8880 ± 0.0039
+Avg Precision:  0.4188 ± 0.0243
+FPR@95:         0.3762 ± 0.0088
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2212.44 sec
+----------------------------------------
+AUC:            0.9046 ± 0.0001
+Avg Precision:  0.4943 ± 0.0037
+FPR@95:         0.2743 ± 0.0035
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3325.74 sec
+----------------------------------------
+AUC:            0.9161 ± 0.0030
+Avg Precision:  0.4933 ± 0.0095
+FPR@95:         0.2670 ± 0.0061
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2213.28 sec
+----------------------------------------
+AUC:            0.9786 ± 0.0004
+Avg Precision:  0.8084 ± 0.0016
+FPR@95:         0.0859 ± 0.0004
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3328.20 sec
+----------------------------------------
+AUC:            0.9809 ± 0.0040
+Avg Precision:  0.8029 ± 0.0184
+FPR@95:         0.0769 ± 0.0245
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2210.61 sec
+----------------------------------------
+AUC:            0.9691 ± 0.0005
+Avg Precision:  0.8870 ± 0.0006
+FPR@95:         0.1463 ± 0.0361
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3366.00 sec
+----------------------------------------
+AUC:            0.9668 ± 0.0015
+Avg Precision:  0.8427 ± 0.0023
+FPR@95:         0.1518 ± 0.0163
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2213.79 sec
+----------------------------------------
+AUC:            0.9873 ± 0.0014
+Avg Precision:  0.9159 ± 0.0071
+FPR@95:         0.0782 ± 0.0121
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3327.51 sec
+----------------------------------------
+AUC:            0.9798 ± 0.0012
+Avg Precision:  0.8929 ± 0.0042
+FPR@95:         0.1099 ± 0.0011
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2224.23 sec
+----------------------------------------
+AUC:            0.9510 ± 0.0025
+Avg Precision:  0.7394 ± 0.0125
+FPR@95:         0.1898 ± 0.0148
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3325.26 sec
+----------------------------------------
+AUC:            0.9652 ± 0.0008
+Avg Precision:  0.7631 ± 0.0036
+FPR@95:         0.1723 ± 0.0078
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2220.57 sec
+----------------------------------------
+AUC:            0.9051 ± 0.0066
+Avg Precision:  0.4601 ± 0.0337
+FPR@95:         0.3890 ± 0.0178
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3328.95 sec
+----------------------------------------
+AUC:            0.9000 ± 0.0063
+Avg Precision:  0.4826 ± 0.0346
+FPR@95:         0.3769 ± 0.0192
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2221.26 sec
+----------------------------------------
+AUC:            0.8009 ± 0.0055
+Avg Precision:  0.3260 ± 0.0137
+FPR@95:         0.5613 ± 0.0162
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3321.54 sec
+----------------------------------------
+AUC:            0.8195 ± 0.0042
+Avg Precision:  0.3351 ± 0.0110
+FPR@95:         0.5550 ± 0.0259
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2217.33 sec
+----------------------------------------
+AUC:            0.8380 ± 0.0118
+Avg Precision:  0.3447 ± 0.0293
+FPR@95:         0.5270 ± 0.0593
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3321.72 sec
+----------------------------------------
+AUC:            0.8348 ± 0.0045
+Avg Precision:  0.3511 ± 0.0192
+FPR@95:         0.5308 ± 0.0206
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2216.28 sec
+----------------------------------------
+AUC:            0.8858 ± 0.0044
+Avg Precision:  0.3750 ± 0.0326
+FPR@95:         0.3048 ± 0.0136
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3333.24 sec
+----------------------------------------
+AUC:            0.8964 ± 0.0090
+Avg Precision:  0.3663 ± 0.0274
+FPR@95:         0.2937 ± 0.0344
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2222.22 sec
+----------------------------------------
+AUC:            0.8296 ± 0.0007
+Avg Precision:  0.3212 ± 0.0112
+FPR@95:         0.6217 ± 0.0209
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3359.73 sec
+----------------------------------------
+AUC:            0.8397 ± 0.0117
+Avg Precision:  0.3409 ± 0.0058
+FPR@95:         0.6138 ± 0.0751
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2212.08 sec
+----------------------------------------
+AUC:            0.9545 ± 0.0051
+Avg Precision:  0.8015 ± 0.0036
+FPR@95:         0.2796 ± 0.0267
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3365.97 sec
+----------------------------------------
+AUC:            0.9559 ± 0.0003
+Avg Precision:  0.8102 ± 0.0052
+FPR@95:         0.2698 ± 0.0059
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: qwen
+AD model:       CVDD
+Training time:  2222.97 sec
+----------------------------------------
+AUC:            0.9161 ± 0.0073
+Avg Precision:  0.4277 ± 0.0240
+FPR@95:         0.2502 ± 0.0445
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3347.70 sec
+----------------------------------------
+AUC:            0.9152 ± 0.0080
+Avg Precision:  0.4309 ± 0.0322
+FPR@95:         0.2348 ± 0.0234
+========================================

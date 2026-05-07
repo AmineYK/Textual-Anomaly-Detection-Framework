@@ -1,0 +1,186 @@
+\subsection {Modernbert}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on all datasets}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lccccccc}
+\toprule
+Model & Reuters & 20newsgroups & Dbpedia14 & Sms & Enron & Sst2 & Imdb \\
+\midrule
+OCSVM & 0.7322 $\pm$ 0.1431 & 0.9078 $\pm$ 0.0256 & 0.6562 $\pm$ 0.0184 & 0.7811 $\pm$ 0.0452 & 0.9563 $\pm$ 0.0073 & 0.9512 $\pm$ 0.0187 & 0.9465 $\pm$ 0.0071 \\
+AE & 0.5085 $\pm$ 0.1013 & 0.8865 $\pm$ 0.0297 & \underline{0.3443 $\pm$ 0.0242} & 0.7593 $\pm$ 0.0145 & 0.8137 $\pm$ 0.0256 & 0.9475 $\pm$ 0.0165 & 0.9379 $\pm$ 0.0060 \\
+\midrule
+RSRAE & 0.3779 $\pm$ 0.1774 & 0.8900 $\pm$ 0.0254 & 0.5940 $\pm$ 0.0155 & \textbf{0.5457 $\pm$ 0.0497} & 0.7644 $\pm$ 0.0458 & \underline{0.9456 $\pm$ 0.0202} & \textbf{0.9259 $\pm$ 0.0066} \\
+CVDD & 0.6606 $\pm$ 0.1815 & 0.8310 $\pm$ 0.0461 & — & \underline{0.6379 $\pm$ 0.1874} & \underline{0.6198 $\pm$ 0.0129} & — & — \\
+DATE & \underline{0.3336 $\pm$ 0.1738} & \textbf{0.7343 $\pm$ 0.0761} & — & 0.8655 $\pm$ 0.0184 & 0.9367 $\pm$ 0.0039 & — & — \\
+FATE & — & — & — & — & — & — & — \\
+\midrule
+TCCM & 0.4584 $\pm$ 0.1610 & 0.8925 $\pm$ 0.0269 & \textbf{0.2845 $\pm$ 0.0231} & 0.7846 $\pm$ 0.0127 & 0.7798 $\pm$ 0.0235 & \textbf{0.9363 $\pm$ 0.0272} & \underline{0.9363 $\pm$ 0.0054} \\
+FMTToken-Sentence & \textbf{0.2879 $\pm$ 0.1071} & \underline{0.7671 $\pm$ 0.0463} & — & 0.7284 $\pm$ 0.0217 & \textbf{0.5706 $\pm$ 0.0532} & — & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:global}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on Reuters}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lccccccc}
+\toprule
+Model & trade & earn & crude & acq & interest & money-fx & ship \\
+\midrule
+OCSVM & 0.8364 $\pm$ 0.0537 & 0.9729 $\pm$ 0.0101 & 0.6222 $\pm$ 0.3285 & 0.7420 $\pm$ 0.0583 & 0.6500 $\pm$ 0.2385 & 0.7016 $\pm$ 0.1418 & 0.6000 $\pm$ 0.1705 \\
+AE & 0.5333 $\pm$ 0.2262 & \underline{0.3243 $\pm$ 0.0390} & 0.6933 $\pm$ 0.0788 & 0.4902 $\pm$ 0.0308 & 0.4385 $\pm$ 0.0783 & 0.3175 $\pm$ 0.1430 & 0.7625 $\pm$ 0.1128 \\
+\midrule
+RSRAE & 0.3970 $\pm$ 0.2330 & 0.3243 $\pm$ 0.0479 & \underline{0.4289 $\pm$ 0.1482} & \underline{0.4122 $\pm$ 0.1031} & 0.6038 $\pm$ 0.2748 & 0.2667 $\pm$ 0.1786 & \textbf{0.2125 $\pm$ 0.2565} \\
+CVDD & 0.5455 $\pm$ 0.2924 & 0.7651 $\pm$ 0.0770 & 0.7778 $\pm$ 0.1493 & 0.5228 $\pm$ 0.1015 & 0.7212 $\pm$ 0.2042 & 0.6825 $\pm$ 0.0855 & 0.6094 $\pm$ 0.3607 \\
+DATE & 0.2917 $\pm$ 0.1985 & \textbf{0.2415 $\pm$ 0.2827} & 0.4389 $\pm$ 0.1458 & 0.4387 $\pm$ 0.1779 & \underline{0.3173 $\pm$ 0.1294} & \textbf{0.1071 $\pm$ 0.0935} & 0.5000 $\pm$ 0.1888 \\
+FATE & — & — & — & — & — & — & — \\
+\midrule
+TCCM & \underline{0.2758 $\pm$ 0.2266} & 0.3313 $\pm$ 0.0410 & 0.5400 $\pm$ 0.1585 & 0.4894 $\pm$ 0.0793 & 0.6846 $\pm$ 0.1859 & 0.6317 $\pm$ 0.2234 & 0.2562 $\pm$ 0.2123 \\
+FMTToken-Sentence & \textbf{0.2455 $\pm$ 0.2072} & 0.3692 $\pm$ 0.0177 & \textbf{0.3822 $\pm$ 0.1010} & \textbf{0.2887 $\pm$ 0.0452} & \textbf{0.2385 $\pm$ 0.0784} & \underline{0.2540 $\pm$ 0.1270} & \underline{0.2375 $\pm$ 0.1730} \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:reuters}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on 20newsgroups}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcccccc}
+\toprule
+Model & miscellaneous & recreation & computer & science & politics & religion \\
+\midrule
+OCSVM & 0.8692 $\pm$ 0.0571 & 0.9101 $\pm$ 0.0185 & 0.9025 $\pm$ 0.0134 & 0.9242 $\pm$ 0.0211 & 0.9158 $\pm$ 0.0227 & 0.9251 $\pm$ 0.0210 \\
+AE & 0.8547 $\pm$ 0.0670 & 0.8822 $\pm$ 0.0350 & 0.8283 $\pm$ 0.0128 & 0.9338 $\pm$ 0.0170 & 0.9022 $\pm$ 0.0213 & 0.9180 $\pm$ 0.0250 \\
+\midrule
+RSRAE & 0.8273 $\pm$ 0.0583 & 0.9025 $\pm$ 0.0286 & 0.8390 $\pm$ 0.0103 & 0.9289 $\pm$ 0.0178 & 0.9102 $\pm$ 0.0076 & 0.9319 $\pm$ 0.0296 \\
+CVDD & \underline{0.8270 $\pm$ 0.1190} & 0.8105 $\pm$ 0.0252 & \underline{0.7344 $\pm$ 0.0249} & \textbf{0.8621 $\pm$ 0.0366} & 0.8249 $\pm$ 0.0452 & 0.9273 $\pm$ 0.0254 \\
+DATE & \textbf{0.7827 $\pm$ 0.1259} & \textbf{0.6845 $\pm$ 0.0415} & \textbf{0.5483 $\pm$ 0.1552} & 0.9248 $\pm$ 0.0274 & \underline{0.7635 $\pm$ 0.0722} & \textbf{0.7021 $\pm$ 0.0343} \\
+FATE & — & — & — & — & — & — \\
+\midrule
+TCCM & 0.8953 $\pm$ 0.0665 & 0.8995 $\pm$ 0.0192 & 0.8106 $\pm$ 0.0147 & 0.9259 $\pm$ 0.0129 & 0.9054 $\pm$ 0.0170 & 0.9182 $\pm$ 0.0309 \\
+FMTToken-Sentence & 0.8576 $\pm$ 0.0825 & \underline{0.7349 $\pm$ 0.0306} & 0.7452 $\pm$ 0.0310 & \underline{0.8787 $\pm$ 0.0304} & \textbf{0.6680 $\pm$ 0.0709} & \underline{0.7183 $\pm$ 0.0323} \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:20newsgroups}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on Dbpedia14}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcccccccccccccc}
+\toprule
+Model & Building & Village & Natural Place & Animal & Plant & Album & Film & Company & Written Work & Educational Institution & Artist & Athlete & Office Holder & Mean Of Transportation \\
+\midrule
+OCSVM & 0.6665 $\pm$ 0.0226 & 0.4829 $\pm$ 0.0141 & 0.7246 $\pm$ 0.0155 & 0.4872 $\pm$ 0.0256 & 0.4886 $\pm$ 0.0142 & 0.5552 $\pm$ 0.0198 & 0.6617 $\pm$ 0.0259 & 0.8356 $\pm$ 0.0020 & 0.7399 $\pm$ 0.0184 & 0.6894 $\pm$ 0.0162 & 0.8194 $\pm$ 0.0093 & 0.7146 $\pm$ 0.0210 & 0.6820 $\pm$ 0.0251 & 0.6391 $\pm$ 0.0281 \\
+AE & \underline{0.4957 $\pm$ 0.0200} & \underline{0.0662 $\pm$ 0.0043} & \underline{0.2739 $\pm$ 0.0130} & \underline{0.1679 $\pm$ 0.0266} & \textbf{0.2001 $\pm$ 0.0566} & \underline{0.2046 $\pm$ 0.0280} & \underline{0.3008 $\pm$ 0.0210} & \underline{0.7268 $\pm$ 0.0191} & \underline{0.5303 $\pm$ 0.0386} & \underline{0.3178 $\pm$ 0.0202} & \underline{0.5821 $\pm$ 0.0254} & \underline{0.2426 $\pm$ 0.0136} & \underline{0.4014 $\pm$ 0.0268} & \underline{0.3094 $\pm$ 0.0255} \\
+\midrule
+RSRAE & 0.5396 $\pm$ 0.0149 & 0.4071 $\pm$ 0.0070 & 0.6382 $\pm$ 0.0157 & 0.4182 $\pm$ 0.0222 & 0.4820 $\pm$ 0.0118 & 0.5087 $\pm$ 0.0155 & 0.6157 $\pm$ 0.0122 & 0.7606 $\pm$ 0.0170 & 0.7163 $\pm$ 0.0221 & 0.5607 $\pm$ 0.0101 & 0.7788 $\pm$ 0.0288 & 0.6727 $\pm$ 0.0046 & 0.6653 $\pm$ 0.0262 & 0.5517 $\pm$ 0.0082 \\
+CVDD & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+DATE & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+FATE & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+\midrule
+TCCM & \textbf{0.3509 $\pm$ 0.0325} & \textbf{0.0353 $\pm$ 0.0022} & \textbf{0.1983 $\pm$ 0.0080} & \textbf{0.1552 $\pm$ 0.0254} & \underline{0.2101 $\pm$ 0.0563} & \textbf{0.1935 $\pm$ 0.0297} & \textbf{0.2565 $\pm$ 0.0203} & \textbf{0.5884 $\pm$ 0.0240} & \textbf{0.5259 $\pm$ 0.0383} & \textbf{0.2706 $\pm$ 0.0096} & \textbf{0.5323 $\pm$ 0.0151} & \textbf{0.1437 $\pm$ 0.0152} & \textbf{0.2857 $\pm$ 0.0244} & \textbf{0.2361 $\pm$ 0.0225} \\
+FMTToken-Sentence & — & — & — & — & — & — & — & — & — & — & — & — & — & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:dbpedia14}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on Sms}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lc}
+\toprule
+Model & normal \\
+\midrule
+OCSVM & 0.7811 $\pm$ 0.0452 \\
+AE & 0.7593 $\pm$ 0.0145 \\
+\midrule
+RSRAE & \textbf{0.5457 $\pm$ 0.0497} \\
+CVDD & \underline{0.6379 $\pm$ 0.1874} \\
+DATE & 0.8655 $\pm$ 0.0184 \\
+FATE & — \\
+\midrule
+TCCM & 0.7846 $\pm$ 0.0127 \\
+FMTToken-Sentence & 0.7284 $\pm$ 0.0217 \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:sms}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on Enron}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lc}
+\toprule
+Model & normal \\
+\midrule
+OCSVM & 0.9563 $\pm$ 0.0073 \\
+AE & 0.8137 $\pm$ 0.0256 \\
+\midrule
+RSRAE & 0.7644 $\pm$ 0.0458 \\
+CVDD & \underline{0.6198 $\pm$ 0.0129} \\
+DATE & 0.9367 $\pm$ 0.0039 \\
+FATE & — \\
+\midrule
+TCCM & 0.7798 $\pm$ 0.0235 \\
+FMTToken-Sentence & \textbf{0.5706 $\pm$ 0.0532} \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:enron}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on Sst2}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lc}
+\toprule
+Model & positive \\
+\midrule
+OCSVM & 0.9512 $\pm$ 0.0187 \\
+AE & 0.9475 $\pm$ 0.0165 \\
+\midrule
+RSRAE & \underline{0.9456 $\pm$ 0.0202} \\
+CVDD & — \\
+DATE & — \\
+FATE & — \\
+\midrule
+TCCM & \textbf{0.9363 $\pm$ 0.0272} \\
+FMTToken-Sentence & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:sst2}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{FPR95 on Imdb}\resizebox{1.1\textwidth}{!}{
+\begin{tabular}{lcc}
+\toprule
+Model & positive & negative \\
+\midrule
+OCSVM & 0.9434 $\pm$ 0.0057 & 0.9495 $\pm$ 0.0085 \\
+AE & \textbf{0.9344 $\pm$ 0.0056} & 0.9414 $\pm$ 0.0065 \\
+\midrule
+RSRAE & 0.9572 $\pm$ 0.0058 & \textbf{0.8945 $\pm$ 0.0073} \\
+CVDD & — & — \\
+DATE & — & — \\
+FATE & — & — \\
+\midrule
+TCCM & \underline{0.9348 $\pm$ 0.0057} & \underline{0.9378 $\pm$ 0.0051} \\
+FMTToken-Sentence & — & — \\
+\bottomrule
+\end{tabular}
+}
+\label{tab:imdb}
+\end{table}
+

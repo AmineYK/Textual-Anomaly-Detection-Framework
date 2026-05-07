@@ -1,0 +1,84 @@
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       AE
+Training time:  1.50 sec
+----------------------------------------
+AUC:            0.7328 ± 0.0097
+Avg Precision:  0.2112 ± 0.0144
+FPR@95:         0.7593 ± 0.0145
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       RSRAE
+Training time:  43.35 sec
+----------------------------------------
+AUC:            0.8333 ± 0.0099
+Avg Precision:  0.2988 ± 0.0139
+FPR@95:         0.5457 ± 0.0497
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       ocsvm
+Training time:  1.07 sec
+----------------------------------------
+AUC:            0.7036 ± 0.0070
+Avg Precision:  0.2042 ± 0.0113
+FPR@95:         0.7811 ± 0.0452
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       TCCM
+Training time:  2.04 sec
+----------------------------------------
+AUC:            0.7186 ± 0.0109
+Avg Precision:  0.1873 ± 0.0107
+FPR@95:         0.7846 ± 0.0127
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       CVDD
+Training time:  530.94 sec
+----------------------------------------
+AUC:            0.7906 ± 0.1071
+Avg Precision:  0.3187 ± 0.1641
+FPR@95:         0.6379 ± 0.1874
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       DATE
+Training time:  117.95 sec
+----------------------------------------
+AUC:            0.6694 ± 0.0024
+Avg Precision:  0.1803 ± 0.0158
+FPR@95:         0.8655 ± 0.0184
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       flow-matching-Transformers-Comp
+Training time:  2946.09 sec
+----------------------------------------
+AUC:            0.7211 ± 0.0141
+Avg Precision:  0.1761 ± 0.0069
+FPR@95:         0.7284 ± 0.0217
+========================================
+

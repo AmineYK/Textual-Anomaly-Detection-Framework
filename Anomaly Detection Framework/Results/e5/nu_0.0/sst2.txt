@@ -1,0 +1,120 @@
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: e5
+AD model:       AE
+Training time:  8.74 sec
+----------------------------------------
+AUC:            0.6597 ± 0.0242
+Avg Precision:  0.1601 ± 0.0098
+FPR@95:         0.7669 ± 0.0423
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: e5
+AD model:       RSRAE
+Training time:  231.49 sec
+----------------------------------------
+AUC:            0.6359 ± 0.0147
+Avg Precision:  0.1404 ± 0.0042
+FPR@95:         0.7631 ± 0.0849
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: e5
+AD model:       ocsvm
+Training time:  162.14 sec
+----------------------------------------
+AUC:            0.6541 ± 0.0281
+Avg Precision:  0.1986 ± 0.0341
+FPR@95:         0.8862 ± 0.0493
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: e5
+AD model:       TCCM
+Training time:  14.40 sec
+----------------------------------------
+AUC:            0.6181 ± 0.0177
+Avg Precision:  0.1325 ± 0.0038
+FPR@95:         0.7819 ± 0.0495
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: e5
+AD model:       AE
+Training time:  6.58 sec
+----------------------------------------
+AUC:            0.7120 ± 0.0286
+Avg Precision:  0.2136 ± 0.0198
+FPR@95:         0.7260 ± 0.0812
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: e5
+AD model:       RSRAE
+Training time:  182.47 sec
+----------------------------------------
+AUC:            0.6507 ± 0.0168
+Avg Precision:  0.1796 ± 0.0113
+FPR@95:         0.8148 ± 0.0732
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: e5
+AD model:       ocsvm
+Training time:  98.70 sec
+----------------------------------------
+AUC:            0.8048 ± 0.0235
+Avg Precision:  0.4003 ± 0.0533
+FPR@95:         0.6425 ± 0.0484
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: e5
+AD model:       TCCM
+Training time:  11.39 sec
+----------------------------------------
+AUC:            0.6080 ± 0.0121
+Avg Precision:  0.1823 ± 0.0187
+FPR@95:         0.8426 ± 0.0783
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  995.31 sec
+----------------------------------------
+AUC:            0.5793 ± 0.0284
+Avg Precision:  0.1170 ± 0.0068
+FPR@95:         0.7856 ± 0.0526
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   negative
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  789.54 sec
+----------------------------------------
+AUC:            0.6062 ± 0.0115
+Avg Precision:  0.1901 ± 0.0253
+FPR@95:         0.8517 ± 0.0548
+========================================
+

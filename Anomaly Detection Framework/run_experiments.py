@@ -1,103 +1,250 @@
 import os
+import torch
+import numpy as np
+from torch import Tensor
+from transformers import AutoTokenizer, AutoModel
 
-# === Paramètres ===
-# list_dataset_name = ["reuters"]
-list_dataset_name = ["20newsgroups", "reuters"]
-
-list_list_inlier_topic = [
-    ["computer", "recreation", "science", "miscellaneous", "politics", "religion"],
-    ["earn", "acq", "crude", "trade", "money-fx", "interest", "ship"]
-]
-
-# list_embeddings = ["fasttext"]
-list_embeddings = ["glove", "fasttext"]
-list_models = ["cvdd"]
-
-# ocsvm_params_dict = {
-#     "20newsgroups": {
-#         "computer": {"nu": 0.05, "kernel": "rbf", "gamma": 0.5},
-#         "recreation": {"nu": 0.1, "kernel": "rbf", "gamma": 1.0},
-#         "science": {"nu": 0.05, "kernel": "rbf", "gamma": 0.8},
-#         "miscellaneous": {"nu": 0.1, "kernel": "linear", "gamma": 1.0},
-#         "politics": {"nu": 0.05, "kernel": "rbf", "gamma": 0.6},
-#         "religion": {"nu": 0.05, "kernel": "linear", "gamma": 1.0},
-#     },
-#     "reuters": {
-#         "earn": {"nu": 0.05, "kernel": "rbf", "gamma": 1.0},
-#         "acq": {"nu": 0.1, "kernel": "rbf", "gamma": 0.8},
-#         "crude": {"nu": 0.05, "kernel": "linear", "gamma": 1.0},
-#         "trade": {"nu": 0.05, "kernel": "rbf", "gamma": 0.5},
-#         "money-fx": {"nu": 0.05, "kernel": "rbf", "gamma": 0.6},
-#         "interest": {"nu": 0.1, "kernel": "linear", "gamma": 1.0},
-#         "ship": {"nu": 0.05, "kernel": "rbf", "gamma": 0.7},
-#     }
-# }
-
-ocsvm_params_dict = {
-    '20newsgroups': {
-        'computer':      {'kernel': 'sigmoid', 'nu': 0.1,  'gamma': 1},
-        'recreation':    {'kernel': 'sigmoid', 'nu': 0.1,  'gamma': 1},
-        'science':       {'kernel': 'rbf',     'nu': 0.1,  'gamma': 0.001},
-        'miscellaneous': {'kernel': 'sigmoid', 'nu': 0.05, 'gamma': 1},
-        'politics':      {'kernel': 'rbf',     'nu': 0.15, 'gamma': 1},
-        'religion':      {'kernel': 'sigmoid', 'nu': 0.05, 'gamma': 1}
-    },
-    'reuters': {
-        'earn':     {'kernel': 'sigmoid', 'nu': 0.05, 'gamma': 0.001},
-        'acq':      {'kernel': 'rbf',     'nu': 0.05, 'gamma': 1},
-        'crude':    {'kernel': 'rbf',     'nu': 0.15, 'gamma': 1},
-        'trade':    {'kernel': 'rbf',     'nu': 0.05, 'gamma': 1},
-        'money-fx': {'kernel': 'rbf',     'nu': 0.05, 'gamma': 1},
-        'interest': {'kernel': 'rbf',     'nu': 0.05, 'gamma': 0.1},
-        'ship':     {'kernel': 'sigmoid', 'nu': 0.1,  'gamma': 0.01}
-    }
-}
+# =========================
+# IMPORTS PROJET
+# =========================
+# Adapte ces imports selon ton arborescence
+import sys
+sys.path.append('./Textual-Anomaly-Detection-Framework/Anomaly Detection Framework')
+from Modelisation.FlowMatching.flow_matching_transformers_token import FlowDiTToken, FlowMatchingTransformersToken
+from Data_Preparation.utils import encode_tokens
+from utils import load_data_inlier, load_data_test
 
 
-for i, dataset_name in enumerate(list_dataset_name):
-    list_inlier_topic = list_list_inlier_topic[i]
-    for inlier_topic in list_inlier_topic:
-        for embedding in list_embeddings:
-            for ad_model in list_models:
+# =========================
+# MAIN
+# =========================
 
-                cmd = (
-                    f"python3 main_all_runs.py "
-                    f"--dataset_name {dataset_name} "
-                    f"--training_mode one_class "
-                    f"--device cuda "
-                    f"--inlier_topic {inlier_topic} "
-                    f"--type_tac ruff "
-                    f"--anomaly_rate 0.1 "
-                    f"--emb_model {embedding}_300d.kv "
-                    f"--type_emb {embedding} "
-                    f"--batch_size 64 "
-                    f"--shuffle "
-                    f"--ad_model {ad_model} "
-                )
+def main():
 
-                if ad_model == "cvdd":
-                    cmd += (
-                        f"--attention_size 150 "
-                        f"--n_attention_heads 10 "
-                        f"--lambda_p 1.0 "
-                        f"--alpha_scheduler logarithmic "
-                        f"--n_epochs 100 "
-                        f"--lr 0.01 "
-                        f"--lr_milestones 40 60"
-                    )
-                elif ad_model == "ocsvm":
-                    params = ocsvm_params_dict[dataset_name][inlier_topic]
-                    cmd += f"--nu {params['nu']} --kernel {params['kernel']} --gamma {params['gamma']}"
+    # -------------------------------------------------
+    # DEVICE
+    # -------------------------------------------------
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Device: {device}")
+
+    # -------------------------------------------------
+    # PARAMS
+    # -------------------------------------------------
+    dataset_name = '20newsgroups'
+    inlier_topic = 'computer'
+    type_tac = None
+    anomaly_rate = 0.1
+
+    save_dir = (
+        "/home/2017025/ayouce01/"
+        "Textual-Anomaly-Detection-Framework/"
+        "Anomaly Detection Framework/Data"
+    )
+
+    n_run = 2
+
+    # -------------------------------------------------
+    # LOAD DATA
+    # -------------------------------------------------
+    print("\nLoading train data...")
+    data_train = load_data_inlier(
+        dataset_name,
+        inlier_topic,
+        save_dir,
+        is_infec=False,
+        is_cvdd=True
+    )
+
+    print("\nLoading test data...")
+    data_test = load_data_test(
+        dataset_name,
+        inlier_topic,
+        n_run,
+        save_dir,
+        is_cvdd=True
+    )
+
+    print("\nTrain data:")
+    print(data_train)
+
+    print("\nTest data:")
+    print(data_test)
+
+    # -------------------------------------------------
+    # EMBEDDINGS
+    # -------------------------------------------------
+    X_inlier = Tensor(data_train['sbert_embeddings']).to(device)
+
+    X_test = Tensor(
+        data_test['sbert_embeddings']
+    ).to(device)
+
+    y_test = np.array(
+        data_test['anomaly_class']
+    )
+
+    print(f"\nX_inlier shape: {X_inlier.shape}")
+    print(f"X_test shape: {X_test.shape}")
+    print(f"y_test shape: {y_test.shape}")
+
+    # -------------------------------------------------
+    # TOKENIZER + BERT
+    # -------------------------------------------------
+    model_name = "roberta-base"
+    # model_name = "microsoft/deberta-v3-base"
+
+    print(f"\nLoading tokenizer/model: {model_name}")
+
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+    bertmodel = AutoModel.from_pretrained(
+        model_name
+    ).to(device)
+
+    bertmodel.eval()
+
+    # -------------------------------------------------
+    # TEXT COLUMN
+    # -------------------------------------------------
+    # COL = 'content'
+    COL = 'text'
+
+    # -------------------------------------------------
+    # ENCODE TRAIN TOKENS
+    # -------------------------------------------------
+    print("\nEncoding train tokens...")
+
+    X_tokens_train, tokens_train, attentions_train_mask = encode_tokens(
+        bertmodel,
+        tokenizer,
+        data_train[COL],
+        device,
+        batch_size=64,
+        max_length=128,
+        model_type='encoder'
+    )
+
+    # -------------------------------------------------
+    # ENCODE TEST TOKENS
+    # -------------------------------------------------
+    print("\nEncoding test tokens...")
+
+    X_tokens_test, tokens_test, attentions_test_mask = encode_tokens(
+        bertmodel,
+        tokenizer,
+        data_test[COL],
+        device,
+        batch_size=64,
+        max_length=128,
+        model_type='encoder'
+    )
+
+    print(f"\nX_tokens_test shape: {X_tokens_test.shape}")
+
+    # -------------------------------------------------
+    # LOAD FLOW MODEL
+    # -------------------------------------------------
+    name = "computer_128_256_ep300"
+
+    saving_path = (
+        "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/"
+        "Anomaly Detection Framework/"
+        f"fm_trained_models/{name}"
+    )
+
+    print(f"\nLoading checkpoint: {saving_path}")
+
+    checkpoint = torch.load(
+        saving_path,
+        map_location=device
+    )
+
+    config = checkpoint["config"]
+
+    # -------------------------------------------------
+    # BUILD MODEL
+    # -------------------------------------------------
+    flowmodel = FlowDiTToken(
+        latent_dim=config['latent_dim'],
+        hidden_dim=config['hidden_dim'],
+        depth=config['depth'],
+        n_heads=config['n_heads']
+    ).to(device)
+
+    flowmodel.load_state_dict(
+        checkpoint["model"]
+    )
+
+    flowmodel.eval()
+
+    # -------------------------------------------------
+    # FLOW MATCHING WRAPPER
+    # -------------------------------------------------
+    fm_transformer = FlowMatchingTransformersToken(
+        flowmodel,
+        config['source'],
+        config['target'],
+        config,
+        noise_is_target=True,
+        rectified=None
+    )
+
+    # -------------------------------------------------
+    # EULER INTEGRATION
+    # -------------------------------------------------
+    print("\nRunning Euler integration...")
+
+    with torch.no_grad():
+
+        x_final, velocities, x_inter = (
+            fm_transformer.euler_integrate(
+                X_tokens_test,
+                attentions_test_mask,
+                5,
+                True
+            )
+        )
+
+    print("\nIntegration done.")
+
+    # -------------------------------------------------
+    # SAVE RESULTS
+    # -------------------------------------------------
+    output_dir = (
+        "./saved_fm_outputs/"
+        f"{dataset_name}_{inlier_topic}_run{n_run}"
+    )
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    print(f"\nSaving outputs in: {output_dir}")
+
+    torch.save(
+        x_final.cpu(),
+        os.path.join(output_dir, "x_final.pt")
+    )
+
+    torch.save(
+        velocities.cpu(),
+        os.path.join(output_dir, "velocities.pt")
+    )
+
+    torch.save(
+        x_inter.cpu(),
+        os.path.join(output_dir, "x_inter.pt")
+    )
+
+    print("\nSaved files:")
+    print(f"- {os.path.join(output_dir, 'x_final.pt')}")
+    print(f"- {os.path.join(output_dir, 'velocities.pt')}")
+    print(f"- {os.path.join(output_dir, 'x_inter.pt')}")
+
+    print("\nDone.")
 
 
-                # # === Log & exécution ===
-                # os.makedirs("logs", exist_ok=True)
-                # log_file = f"logs/{dataset_name}_{inlier_topic}_{embedding}_{ad_model}.txt"
+# =========================
+# ENTRYPOINT
+# =========================
 
-                # print(f"\n🚀 Running: {cmd}")
-                # print(f"📝 Log file: {log_file}")
-
-                # os.system(f"{cmd} > {log_file} 2>&1")
-                print(f"\nRunning: {cmd}")
-                os.system(cmd)
-
+if __name__ == "__main__":
+    main()

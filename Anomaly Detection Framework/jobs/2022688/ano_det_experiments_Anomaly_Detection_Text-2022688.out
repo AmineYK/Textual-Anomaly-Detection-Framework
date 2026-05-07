@@ -1,0 +1,19 @@
+Job ID: 2022688
+
+<<<<<<<<<<<<<< sst2 >>>>>>>>>>>>>>>>>>>
+
+------------------------ positive(1/1) -----------------------------
+e5_embedding
+torch.Size([37563, 768])
++++++++++++++++++++++ run : 1 / 4 +++++++++++++++++
+
+e5_embedding
+torch.Size([444, 768])
+
+Epoch 1/350
+Train Loss: 0.0007, LR: 0.000007
+tensor(0.2231, device='cuda:0', grad_fn=<ExpBackward0>)
+
+Epoch 117/350
+Train Loss: 0.0004, LR: 0.000775
+tensor(0.1461, device='cuda:0', grad_fn=<ExpBackward0>)

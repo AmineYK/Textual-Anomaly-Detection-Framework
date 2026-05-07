@@ -1,0 +1,504 @@
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: modernbert
+AD model:       AE
+Training time:  0.76 sec
+----------------------------------------
+AUC:            0.6190 ± 0.0442
+Avg Precision:  0.1655 ± 0.0385
+FPR@95:         0.8547 ± 0.0670
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: modernbert
+AD model:       RSRAE
+Training time:  22.25 sec
+----------------------------------------
+AUC:            0.6586 ± 0.0412
+Avg Precision:  0.1738 ± 0.0298
+FPR@95:         0.8273 ± 0.0583
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: modernbert
+AD model:       ocsvm
+Training time:  0.06 sec
+----------------------------------------
+AUC:            0.5933 ± 0.0516
+Avg Precision:  0.1487 ± 0.0272
+FPR@95:         0.8692 ± 0.0571
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: modernbert
+AD model:       TCCM
+Training time:  0.34 sec
+----------------------------------------
+AUC:            0.6065 ± 0.0380
+Avg Precision:  0.1546 ± 0.0277
+FPR@95:         0.8953 ± 0.0665
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: modernbert
+AD model:       AE
+Training time:  1.12 sec
+----------------------------------------
+AUC:            0.6239 ± 0.0313
+Avg Precision:  0.1868 ± 0.0157
+FPR@95:         0.8822 ± 0.0350
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: modernbert
+AD model:       RSRAE
+Training time:  21.35 sec
+----------------------------------------
+AUC:            0.6253 ± 0.0359
+Avg Precision:  0.1652 ± 0.0161
+FPR@95:         0.9025 ± 0.0286
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: modernbert
+AD model:       ocsvm
+Training time:  0.44 sec
+----------------------------------------
+AUC:            0.5639 ± 0.0110
+Avg Precision:  0.1229 ± 0.0030
+FPR@95:         0.9101 ± 0.0185
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: modernbert
+AD model:       TCCM
+Training time:  1.10 sec
+----------------------------------------
+AUC:            0.6081 ± 0.0303
+Avg Precision:  0.1660 ± 0.0130
+FPR@95:         0.8995 ± 0.0192
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: modernbert
+AD model:       AE
+Training time:  1.34 sec
+----------------------------------------
+AUC:            0.6497 ± 0.0227
+Avg Precision:  0.1698 ± 0.0170
+FPR@95:         0.8283 ± 0.0128
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: modernbert
+AD model:       RSRAE
+Training time:  22.99 sec
+----------------------------------------
+AUC:            0.6825 ± 0.0204
+Avg Precision:  0.1838 ± 0.0178
+FPR@95:         0.8390 ± 0.0103
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: modernbert
+AD model:       ocsvm
+Training time:  0.72 sec
+----------------------------------------
+AUC:            0.5850 ± 0.0145
+Avg Precision:  0.1380 ± 0.0077
+FPR@95:         0.9025 ± 0.0134
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: modernbert
+AD model:       TCCM
+Training time:  1.54 sec
+----------------------------------------
+AUC:            0.6581 ± 0.0218
+Avg Precision:  0.1700 ± 0.0164
+FPR@95:         0.8106 ± 0.0147
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: modernbert
+AD model:       AE
+Training time:  1.16 sec
+----------------------------------------
+AUC:            0.5457 ± 0.0205
+Avg Precision:  0.1315 ± 0.0095
+FPR@95:         0.9338 ± 0.0170
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: modernbert
+AD model:       RSRAE
+Training time:  22.27 sec
+----------------------------------------
+AUC:            0.5587 ± 0.0189
+Avg Precision:  0.1365 ± 0.0065
+FPR@95:         0.9289 ± 0.0178
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: modernbert
+AD model:       ocsvm
+Training time:  0.47 sec
+----------------------------------------
+AUC:            0.5768 ± 0.0077
+Avg Precision:  0.1332 ± 0.0047
+FPR@95:         0.9242 ± 0.0211
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: modernbert
+AD model:       TCCM
+Training time:  1.17 sec
+----------------------------------------
+AUC:            0.5428 ± 0.0182
+Avg Precision:  0.1284 ± 0.0068
+FPR@95:         0.9259 ± 0.0129
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: modernbert
+AD model:       AE
+Training time:  1.01 sec
+----------------------------------------
+AUC:            0.5769 ± 0.0178
+Avg Precision:  0.2053 ± 0.0271
+FPR@95:         0.9022 ± 0.0213
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: modernbert
+AD model:       RSRAE
+Training time:  22.85 sec
+----------------------------------------
+AUC:            0.6105 ± 0.0150
+Avg Precision:  0.2047 ± 0.0255
+FPR@95:         0.9102 ± 0.0076
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: modernbert
+AD model:       ocsvm
+Training time:  0.25 sec
+----------------------------------------
+AUC:            0.5742 ± 0.0323
+Avg Precision:  0.1823 ± 0.0307
+FPR@95:         0.9158 ± 0.0227
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: modernbert
+AD model:       TCCM
+Training time:  0.78 sec
+----------------------------------------
+AUC:            0.5909 ± 0.0179
+Avg Precision:  0.2040 ± 0.0309
+FPR@95:         0.9054 ± 0.0170
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: modernbert
+AD model:       AE
+Training time:  1.06 sec
+----------------------------------------
+AUC:            0.6030 ± 0.0398
+Avg Precision:  0.2368 ± 0.0274
+FPR@95:         0.9180 ± 0.0250
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: modernbert
+AD model:       RSRAE
+Training time:  22.85 sec
+----------------------------------------
+AUC:            0.6411 ± 0.0308
+Avg Precision:  0.2722 ± 0.0252
+FPR@95:         0.9319 ± 0.0296
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: modernbert
+AD model:       ocsvm
+Training time:  0.21 sec
+----------------------------------------
+AUC:            0.6105 ± 0.0191
+Avg Precision:  0.1958 ± 0.0261
+FPR@95:         0.9251 ± 0.0210
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: modernbert
+AD model:       TCCM
+Training time:  0.70 sec
+----------------------------------------
+AUC:            0.6151 ± 0.0355
+Avg Precision:  0.2469 ± 0.0246
+FPR@95:         0.9182 ± 0.0309
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: modernbert
+AD model:       flow-matching-Transformers-Comp
+Training time:  1583.14 sec
+----------------------------------------
+AUC:            0.6942 ± 0.0176
+Avg Precision:  0.1618 ± 0.0097
+FPR@95:         0.7349 ± 0.0306
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: modernbert
+AD model:       flow-matching-Transformers-Comp
+Training time:  2056.77 sec
+----------------------------------------
+AUC:            0.7134 ± 0.0250
+Avg Precision:  0.1862 ± 0.0244
+FPR@95:         0.7452 ± 0.0310
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: modernbert
+AD model:       flow-matching-Transformers-Comp
+Training time:  468.43 sec
+----------------------------------------
+AUC:            0.6190 ± 0.0452
+Avg Precision:  0.1457 ± 0.0288
+FPR@95:         0.8576 ± 0.0825
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: modernbert
+AD model:       flow-matching-Transformers-Comp
+Training time:  1595.12 sec
+----------------------------------------
+AUC:            0.6203 ± 0.0259
+Avg Precision:  0.1447 ± 0.0168
+FPR@95:         0.8787 ± 0.0304
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: modernbert
+AD model:       flow-matching-Transformers-Comp
+Training time:  456.74 sec
+----------------------------------------
+AUC:            0.7726 ± 0.0250
+Avg Precision:  0.2405 ± 0.0246
+FPR@95:         0.7183 ± 0.0323
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: modernbert
+AD model:       flow-matching-Transformers-Comp
+Training time:  1054.82 sec
+----------------------------------------
+AUC:            0.8021 ± 0.0070
+Avg Precision:  0.2617 ± 0.0157
+FPR@95:         0.6680 ± 0.0709
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: modernbert
+AD model:       CVDD
+Training time:  889.41 sec
+----------------------------------------
+AUC:            0.6270 ± 0.0073
+Avg Precision:  0.1264 ± 0.0036
+FPR@95:         0.8105 ± 0.0252
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: modernbert
+AD model:       CVDD
+Training time:  1108.24 sec
+----------------------------------------
+AUC:            0.6895 ± 0.0143
+Avg Precision:  0.1575 ± 0.0093
+FPR@95:         0.7344 ± 0.0249
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: modernbert
+AD model:       CVDD
+Training time:  222.51 sec
+----------------------------------------
+AUC:            0.5545 ± 0.0816
+Avg Precision:  0.1245 ± 0.0380
+FPR@95:         0.8270 ± 0.1190
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: modernbert
+AD model:       CVDD
+Training time:  896.11 sec
+----------------------------------------
+AUC:            0.5885 ± 0.0155
+Avg Precision:  0.1290 ± 0.0107
+FPR@95:         0.8621 ± 0.0366
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: modernbert
+AD model:       CVDD
+Training time:  597.45 sec
+----------------------------------------
+AUC:            0.6459 ± 0.0169
+Avg Precision:  0.1459 ± 0.0127
+FPR@95:         0.8249 ± 0.0452
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: modernbert
+AD model:       DATE
+Training time:  72.20 sec
+----------------------------------------
+AUC:            0.8798 ± 0.0105
+Avg Precision:  0.4585 ± 0.0252
+FPR@95:         0.5483 ± 0.1552
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: modernbert
+AD model:       CVDD
+Training time:  186.55 sec
+----------------------------------------
+AUC:            0.5573 ± 0.0516
+Avg Precision:  0.1174 ± 0.0151
+FPR@95:         0.9273 ± 0.0254
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: modernbert
+AD model:       DATE
+Training time:  58.18 sec
+----------------------------------------
+AUC:            0.8008 ± 0.0302
+Avg Precision:  0.3096 ± 0.0510
+FPR@95:         0.6845 ± 0.0415
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: modernbert
+AD model:       DATE
+Training time:  14.73 sec
+----------------------------------------
+AUC:            0.7579 ± 0.0200
+Avg Precision:  0.2328 ± 0.0261
+FPR@95:         0.7827 ± 0.1259
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: modernbert
+AD model:       DATE
+Training time:  58.39 sec
+----------------------------------------
+AUC:            0.6358 ± 0.0173
+Avg Precision:  0.1687 ± 0.0197
+FPR@95:         0.9248 ± 0.0274
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: modernbert
+AD model:       DATE
+Training time:  39.16 sec
+----------------------------------------
+AUC:            0.8266 ± 0.0293
+Avg Precision:  0.4190 ± 0.0535
+FPR@95:         0.7021 ± 0.0343
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: modernbert
+AD model:       DATE
+Training time:  38.88 sec
+----------------------------------------
+AUC:            0.7230 ± 0.1578
+Avg Precision:  0.2990 ± 0.1279
+FPR@95:         0.7635 ± 0.0722
+========================================
+

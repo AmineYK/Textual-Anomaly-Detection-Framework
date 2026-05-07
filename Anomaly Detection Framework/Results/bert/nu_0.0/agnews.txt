@@ -289,3 +289,39 @@ Avg Precision:  0.1951 ± 0.0714
 FPR@95:         0.8340 ± 0.0927
 ========================================
 
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: bert
+AD model:       DATE
+Training time:  91.42 sec
+----------------------------------------
+AUC:            0.9089 ± 0.0052
+Avg Precision:  0.4625 ± 0.0125
+FPR@95:         0.4059 ± 0.0345
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: bert
+AD model:       DATE
+Training time:  92.13 sec
+----------------------------------------
+AUC:            0.8133 ± 0.0176
+Avg Precision:  0.3159 ± 0.0178
+FPR@95:         0.7309 ± 0.0966
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: bert
+AD model:       DATE
+Training time:  89.42 sec
+----------------------------------------
+AUC:            0.7912 ± 0.0137
+Avg Precision:  0.2437 ± 0.0075
+FPR@95:         0.7208 ± 0.0796
+========================================
+

@@ -339,11 +339,11 @@ Dataset:        reuters
 Inlier class:   earn
 Embedding type: distilroberta
 AD model:       flow-matching-Transformers-Comp
-Training time:  232.09 sec
+Training time:  408.08 sec
 ----------------------------------------
-AUC:            0.9826 ± 0.0015
-Avg Precision:  0.8749 ± 0.0169
-FPR@95:         0.0721 ± 0.0118
+AUC:            0.9835 ± 0.0007
+Avg Precision:  0.8864 ± 0.0094
+FPR@95:         0.0831 ± 0.0083
 ========================================
 
 ========================================
@@ -351,11 +351,11 @@ Dataset:        reuters
 Inlier class:   trade
 Embedding type: distilroberta
 AD model:       flow-matching-Transformers-Comp
-Training time:  23.08 sec
+Training time:  42.31 sec
 ----------------------------------------
-AUC:            0.9879 ± 0.0148
-Avg Precision:  0.9336 ± 0.0760
-FPR@95:         0.0576 ± 0.0601
+AUC:            0.9887 ± 0.0111
+Avg Precision:  0.9370 ± 0.0520
+FPR@95:         0.0636 ± 0.0562
 ========================================
 
 ========================================
@@ -387,11 +387,11 @@ Dataset:        reuters
 Inlier class:   crude
 Embedding type: distilroberta
 AD model:       flow-matching-Transformers-Comp
-Training time:  23.55 sec
+Training time:  43.96 sec
 ----------------------------------------
-AUC:            0.9707 ± 0.0190
-Avg Precision:  0.8861 ± 0.0630
-FPR@95:         0.2000 ± 0.1333
+AUC:            0.9733 ± 0.0190
+Avg Precision:  0.8894 ± 0.0632
+FPR@95:         0.1822 ± 0.1369
 ========================================
 
 ========================================
@@ -399,11 +399,11 @@ Dataset:        reuters
 Inlier class:   ship
 Embedding type: distilroberta
 AD model:       flow-matching-Transformers-Comp
-Training time:  12.69 sec
+Training time:  23.06 sec
 ----------------------------------------
-AUC:            0.9542 ± 0.0565
-Avg Precision:  0.7211 ± 0.2474
-FPR@95:         0.0688 ± 0.0776
+AUC:            0.9646 ± 0.0370
+Avg Precision:  0.7733 ± 0.1757
+FPR@95:         0.0625 ± 0.0656
 ========================================
 
 ========================================
@@ -411,11 +411,11 @@ Dataset:        reuters
 Inlier class:   interest
 Embedding type: distilroberta
 AD model:       flow-matching-Transformers-Comp
-Training time:  11.70 sec
+Training time:  21.99 sec
 ----------------------------------------
-AUC:            0.9831 ± 0.0282
-Avg Precision:  0.9343 ± 0.0889
-FPR@95:         0.0731 ± 0.1182
+AUC:            0.9869 ± 0.0225
+Avg Precision:  0.9432 ± 0.0879
+FPR@95:         0.0538 ± 0.0897
 ========================================
 
 ========================================

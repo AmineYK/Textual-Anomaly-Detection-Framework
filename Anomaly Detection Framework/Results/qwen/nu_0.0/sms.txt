@@ -1,0 +1,72 @@
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: qwen
+AD model:       AE
+Training time:  2.69 sec
+----------------------------------------
+AUC:            0.6403 ± 0.0014
+Avg Precision:  0.1281 ± 0.0010
+FPR@95:         0.6632 ± 0.0023
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  2.99 sec
+----------------------------------------
+AUC:            0.6643 ± 0.0123
+Avg Precision:  0.1523 ± 0.0026
+FPR@95:         0.6994 ± 0.0029
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  1.33 sec
+----------------------------------------
+AUC:            0.6463 ± 0.0066
+Avg Precision:  0.1406 ± 0.0014
+FPR@95:         0.7207 ± 0.0161
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: qwen
+AD model:       TCCM
+Training time:  2.22 sec
+----------------------------------------
+AUC:            0.6920 ± 0.0023
+Avg Precision:  0.1651 ± 0.0009
+FPR@95:         0.7011 ± 0.0264
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: qwen
+AD model:       CVDD
+Training time:  84.47 sec
+----------------------------------------
+AUC:            0.6810 ± 0.0177
+Avg Precision:  0.1605 ± 0.0389
+FPR@95:         0.8931 ± 0.0147
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  1832.36 sec
+----------------------------------------
+AUC:            0.7258 ± 0.0006
+Avg Precision:  0.1739 ± 0.0015
+FPR@95:         0.7351 ± 0.0132
+========================================
+

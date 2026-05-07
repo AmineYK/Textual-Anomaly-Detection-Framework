@@ -668,3 +668,171 @@ Avg Precision:  0.8413 ± 0.0042
 FPR@95:         0.1649 ± 0.0209
 ========================================
 
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  947.51 sec
+----------------------------------------
+AUC:            0.9672 ± 0.0033
+Avg Precision:  0.8598 ± 0.0024
+FPR@95:         0.2134 ± 0.0364
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  979.32 sec
+----------------------------------------
+AUC:            0.9990 ± 0.0002
+Avg Precision:  0.9922 ± 0.0017
+FPR@95:         0.0034 ± 0.0016
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  989.80 sec
+----------------------------------------
+AUC:            0.9885 ± 0.0007
+Avg Precision:  0.9625 ± 0.0009
+FPR@95:         0.0349 ± 0.0044
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  933.49 sec
+----------------------------------------
+AUC:            0.9926 ± 0.0007
+Avg Precision:  0.9703 ± 0.0020
+FPR@95:         0.0347 ± 0.0103
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  928.78 sec
+----------------------------------------
+AUC:            0.9895 ± 0.0038
+Avg Precision:  0.9609 ± 0.0079
+FPR@95:         0.0184 ± 0.0108
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  941.24 sec
+----------------------------------------
+AUC:            0.9958 ± 0.0003
+Avg Precision:  0.9570 ± 0.0020
+FPR@95:         0.0171 ± 0.0027
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  927.81 sec
+----------------------------------------
+AUC:            0.9950 ± 0.0011
+Avg Precision:  0.9709 ± 0.0043
+FPR@95:         0.0186 ± 0.0016
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  931.14 sec
+----------------------------------------
+AUC:            0.9533 ± 0.0020
+Avg Precision:  0.7500 ± 0.0090
+FPR@95:         0.1961 ± 0.0205
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  943.79 sec
+----------------------------------------
+AUC:            0.9232 ± 0.0045
+Avg Precision:  0.6131 ± 0.0206
+FPR@95:         0.3321 ± 0.0191
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  931.63 sec
+----------------------------------------
+AUC:            0.9834 ± 0.0012
+Avg Precision:  0.9129 ± 0.0071
+FPR@95:         0.0725 ± 0.0089
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  943.63 sec
+----------------------------------------
+AUC:            0.9879 ± 0.0011
+Avg Precision:  0.9148 ± 0.0073
+FPR@95:         0.0679 ± 0.0044
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  932.50 sec
+----------------------------------------
+AUC:            0.9993 ± 0.0001
+Avg Precision:  0.9929 ± 0.0010
+FPR@95:         0.0035 ± 0.0002
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  916.27 sec
+----------------------------------------
+AUC:            0.9956 ± 0.0002
+Avg Precision:  0.9601 ± 0.0048
+FPR@95:         0.0133 ± 0.0031
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: st5
+AD model:       flow-matching-Transformers-Comp
+Training time:  944.05 sec
+----------------------------------------
+AUC:            0.9986 ± 0.0005
+Avg Precision:  0.9894 ± 0.0015
+FPR@95:         0.0051 ± 0.0007
+========================================
+

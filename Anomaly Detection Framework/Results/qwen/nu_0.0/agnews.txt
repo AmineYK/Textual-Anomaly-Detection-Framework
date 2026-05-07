@@ -1,0 +1,288 @@
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: qwen
+AD model:       AE
+Training time:  7.87 sec
+----------------------------------------
+AUC:            0.7995 ± 0.0144
+Avg Precision:  0.3182 ± 0.0217
+FPR@95:         0.6889 ± 0.0320
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.62 sec
+----------------------------------------
+AUC:            0.7139 ± 0.0127
+Avg Precision:  0.2036 ± 0.0106
+FPR@95:         0.7419 ± 0.0513
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  103.73 sec
+----------------------------------------
+AUC:            0.6833 ± 0.0174
+Avg Precision:  0.2023 ± 0.0121
+FPR@95:         0.8244 ± 0.0448
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: qwen
+AD model:       TCCM
+Training time:  14.49 sec
+----------------------------------------
+AUC:            0.8394 ± 0.0099
+Avg Precision:  0.3799 ± 0.0151
+FPR@95:         0.5400 ± 0.0148
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: qwen
+AD model:       AE
+Training time:  7.77 sec
+----------------------------------------
+AUC:            0.7365 ± 0.0151
+Avg Precision:  0.2330 ± 0.0089
+FPR@95:         0.7708 ± 0.0034
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.83 sec
+----------------------------------------
+AUC:            0.5852 ± 0.0052
+Avg Precision:  0.1192 ± 0.0043
+FPR@95:         0.8491 ± 0.0201
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  87.09 sec
+----------------------------------------
+AUC:            0.6462 ± 0.0200
+Avg Precision:  0.1553 ± 0.0016
+FPR@95:         0.8166 ± 0.0277
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: qwen
+AD model:       TCCM
+Training time:  14.56 sec
+----------------------------------------
+AUC:            0.7996 ± 0.0080
+Avg Precision:  0.3217 ± 0.0102
+FPR@95:         0.6846 ± 0.0116
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: qwen
+AD model:       AE
+Training time:  8.02 sec
+----------------------------------------
+AUC:            0.9110 ± 0.0007
+Avg Precision:  0.5808 ± 0.0206
+FPR@95:         0.3827 ± 0.0139
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.88 sec
+----------------------------------------
+AUC:            0.7327 ± 0.0084
+Avg Precision:  0.2107 ± 0.0107
+FPR@95:         0.7105 ± 0.0105
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  104.08 sec
+----------------------------------------
+AUC:            0.7814 ± 0.0134
+Avg Precision:  0.2652 ± 0.0165
+FPR@95:         0.6429 ± 0.0051
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: qwen
+AD model:       TCCM
+Training time:  15.01 sec
+----------------------------------------
+AUC:            0.9500 ± 0.0026
+Avg Precision:  0.7267 ± 0.0066
+FPR@95:         0.2119 ± 0.0436
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: qwen
+AD model:       AE
+Training time:  7.77 sec
+----------------------------------------
+AUC:            0.7055 ± 0.0262
+Avg Precision:  0.1841 ± 0.0161
+FPR@95:         0.7791 ± 0.0607
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  4.77 sec
+----------------------------------------
+AUC:            0.6149 ± 0.0109
+Avg Precision:  0.1290 ± 0.0061
+FPR@95:         0.8172 ± 0.0279
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  87.54 sec
+----------------------------------------
+AUC:            0.5745 ± 0.0090
+Avg Precision:  0.1118 ± 0.0037
+FPR@95:         0.8509 ± 0.0017
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: qwen
+AD model:       TCCM
+Training time:  14.89 sec
+----------------------------------------
+AUC:            0.7713 ± 0.0123
+Avg Precision:  0.2361 ± 0.0198
+FPR@95:         0.6990 ± 0.0773
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: qwen
+AD model:       CVDD
+Training time:  3600.02 sec
+----------------------------------------
+AUC:            0.8699 ± 0.0137
+Avg Precision:  0.4308 ± 0.0146
+FPR@95:         0.4915 ± 0.0119
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: qwen
+AD model:       CVDD
+Training time:  3600.02 sec
+----------------------------------------
+AUC:            0.7835 ± 0.0137
+Avg Precision:  0.3419 ± 0.0146
+FPR@95:         0.7539 ± 0.0119
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: qwen
+AD model:       CVDD
+Training time:  3600.02 sec
+----------------------------------------
+AUC:            0.9674 ± 0.0137
+Avg Precision:  0.8385 ± 0.0146
+FPR@95:         0.1702 ± 0.0119
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: qwen
+AD model:       CVDD
+Training time:  3600.02 sec
+----------------------------------------
+AUC:            0.7617 ± 0.0137
+Avg Precision:  0.2734 ± 0.0146
+FPR@95:         0.6943 ± 0.0119
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3600.02 sec
+----------------------------------------
+AUC:            0.8521 ± 0.0137
+Avg Precision:  0.4237 ± 0.0146
+FPR@95:         0.4673 ± 0.0119
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3600.02 sec
+----------------------------------------
+AUC:            0.9730 ± 0.0137
+Avg Precision:  0.8440 ± 0.0146
+FPR@95:         0.0936 ± 0.0119
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3600.02 sec
+----------------------------------------
+AUC:            0.8224 ± 0.0137
+Avg Precision:  0.3787 ± 0.0146
+FPR@95:         0.5977 ± 0.0119
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: qwen
+AD model:       flow-matching-Transformers-Comp
+Training time:  3600.02 sec
+----------------------------------------
+AUC:            0.7834 ± 0.0137
+Avg Precision:  0.2986 ± 0.0146
+FPR@95:         0.6684 ± 0.0119
+========================================
+

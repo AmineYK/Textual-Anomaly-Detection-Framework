@@ -226,3 +226,62 @@ Avg Precision:  0.9515 ± 0.0066
 FPR@95:         0.0149 ± 0.0021
 ========================================
 
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: mpnet
+AD model:       flow-matching-Transformers-Comp
+Training time:  1908.82 sec
+----------------------------------------
+AUC:            0.9177 ± 0.0063
+Avg Precision:  0.6190 ± 0.0201
+FPR@95:         0.4090 ± 0.0803
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   World
+Embedding type: mpnet
+AD model:       FATE
+Training time:  384.12 sec
+----------------------------------------
+AUC:            0.9118 ± 0.0175
+Avg Precision:  0.6429 ± 0.0451
+FPR@95:         0.4213 ± 0.0884
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sports
+Embedding type: mpnet
+AD model:       FATE
+Training time:  232.67 sec
+----------------------------------------
+AUC:            0.9667 ± 0.0132
+Avg Precision:  0.9148 ± 0.0285
+FPR@95:         0.2286 ± 0.1423
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Business
+Embedding type: mpnet
+AD model:       FATE
+Training time:  198.45 sec
+----------------------------------------
+AUC:            0.9195 ± 0.0113
+Avg Precision:  0.7642 ± 0.0221
+FPR@95:         0.4879 ± 0.0796
+========================================
+
+========================================
+Dataset:        agnews
+Inlier class:   Sci-Tech
+Embedding type: mpnet
+AD model:       FATE
+Training time:  197.88 sec
+----------------------------------------
+AUC:            0.9184 ± 0.0156
+Avg Precision:  0.7887 ± 0.0228
+FPR@95:         0.5261 ± 0.1029
+========================================

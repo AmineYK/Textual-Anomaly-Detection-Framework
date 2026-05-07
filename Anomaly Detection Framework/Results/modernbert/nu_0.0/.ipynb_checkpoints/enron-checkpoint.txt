@@ -1,0 +1,83 @@
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       AE
+Training time:  4.74 sec
+----------------------------------------
+AUC:            0.7076 ± 0.0175
+Avg Precision:  0.2747 ± 0.0298
+FPR@95:         0.8137 ± 0.0256
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       RSRAE
+Training time:  44.18 sec
+----------------------------------------
+AUC:            0.7419 ± 0.0122
+Avg Precision:  0.2612 ± 0.0187
+FPR@95:         0.7644 ± 0.0458
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       ocsvm
+Training time:  21.56 sec
+----------------------------------------
+AUC:            0.5753 ± 0.0313
+Avg Precision:  0.1581 ± 0.0205
+FPR@95:         0.9563 ± 0.0073
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       TCCM
+Training time:  8.13 sec
+----------------------------------------
+AUC:            0.7291 ± 0.0157
+Avg Precision:  0.3086 ± 0.0170
+FPR@95:         0.7798 ± 0.0235
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       DATE
+Training time:  477.81 sec
+----------------------------------------
+AUC:            0.5456 ± 0.0408
+Avg Precision:  0.1448 ± 0.0406
+FPR@95:         0.9367 ± 0.0039
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       CVDD
+Training time:  2276.07 sec
+----------------------------------------
+AUC:            0.7914 ± 0.0005
+Avg Precision:  0.2755 ± 0.0138
+FPR@95:         0.6198 ± 0.0129
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: modernbert
+AD model:       flow-matching-Transformers-Comp
+Training time:  4133.55 sec
+----------------------------------------
+AUC:            0.8184 ± 0.0389
+Avg Precision:  0.3188 ± 0.0690
+FPR@95:         0.5706 ± 0.0532
+========================================

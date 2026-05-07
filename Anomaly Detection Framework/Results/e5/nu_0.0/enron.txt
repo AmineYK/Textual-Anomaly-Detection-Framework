@@ -1,0 +1,60 @@
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: e5
+AD model:       AE
+Training time:  3.96 sec
+----------------------------------------
+AUC:            0.9051 ± 0.0089
+Avg Precision:  0.4346 ± 0.0196
+FPR@95:         0.3052 ± 0.0495
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: e5
+AD model:       RSRAE
+Training time:  98.48 sec
+----------------------------------------
+AUC:            0.9111 ± 0.0130
+Avg Precision:  0.4605 ± 0.0216
+FPR@95:         0.3138 ± 0.0720
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: e5
+AD model:       ocsvm
+Training time:  20.37 sec
+----------------------------------------
+AUC:            0.7924 ± 0.0105
+Avg Precision:  0.2877 ± 0.0142
+FPR@95:         0.6145 ± 0.0859
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: e5
+AD model:       TCCM
+Training time:  6.00 sec
+----------------------------------------
+AUC:            0.9297 ± 0.0127
+Avg Precision:  0.5350 ± 0.0282
+FPR@95:         0.2786 ± 0.0887
+========================================
+
+========================================
+Dataset:        enron
+Inlier class:   normal
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  453.81 sec
+----------------------------------------
+AUC:            0.9501 ± 0.0114
+Avg Precision:  0.6222 ± 0.0339
+FPR@95:         0.2094 ± 0.0775
+========================================
+

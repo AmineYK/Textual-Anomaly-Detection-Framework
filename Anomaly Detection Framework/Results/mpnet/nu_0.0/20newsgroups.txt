@@ -357,4 +357,75 @@ AUC:            0.9254 ± 0.0137
 Avg Precision:  0.7384 ± 0.0342
 FPR@95:         0.3889 ± 0.0792
 ========================================
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: mpnet
+AD model:       FATE
+Training time:  151.92 sec
+----------------------------------------
+AUC:            0.9378 ± 0.0189
+Avg Precision:  0.7816 ± 0.0421
+FPR@95:         0.3615 ± 0.1284
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: mpnet
+AD model:       FATE
+Training time:  150.37 sec
+----------------------------------------
+AUC:            0.9512 ± 0.0087
+Avg Precision:  0.7845 ± 0.0294
+FPR@95:         0.2689 ± 0.0643
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: mpnet
+AD model:       FATE
+Training time:  152.64 sec
+----------------------------------------
+AUC:            0.8217 ± 0.0215
+Avg Precision:  0.4879 ± 0.0308
+FPR@95:         0.7426 ± 0.0881
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: mpnet
+AD model:       FATE
+Training time:  149.88 sec
+----------------------------------------
+AUC:            0.9446 ± 0.0231
+Avg Precision:  0.7412 ± 0.0663
+FPR@95:         0.3124 ± 0.1897
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: mpnet
+AD model:       FATE
+Training time:  151.03 sec
+----------------------------------------
+AUC:            0.9127 ± 0.0119
+Avg Precision:  0.7458 ± 0.0210
+FPR@95:         0.4728 ± 0.0895
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: mpnet
+AD model:       FATE
+Training time:  150.56 sec
+----------------------------------------
+AUC:            0.9021 ± 0.0193
+Avg Precision:  0.6894 ± 0.0412
+FPR@95:         0.5347 ± 0.1082
+========================================
 

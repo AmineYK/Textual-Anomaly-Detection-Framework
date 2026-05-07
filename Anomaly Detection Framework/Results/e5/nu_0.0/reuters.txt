@@ -1,0 +1,420 @@
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: e5
+AD model:       AE
+Training time:  0.36 sec
+----------------------------------------
+AUC:            0.9940 ± 0.0042
+Avg Precision:  0.9481 ± 0.0399
+FPR@95:         0.0227 ± 0.0076
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: e5
+AD model:       RSRAE
+Training time:  1.63 sec
+----------------------------------------
+AUC:            0.9946 ± 0.0058
+Avg Precision:  0.9574 ± 0.0435
+FPR@95:         0.0189 ± 0.0165
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.01 sec
+----------------------------------------
+AUC:            0.9832 ± 0.0178
+Avg Precision:  0.9243 ± 0.0569
+FPR@95:         0.0909 ± 0.0787
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: e5
+AD model:       TCCM
+Training time:  0.10 sec
+----------------------------------------
+AUC:            0.9865 ± 0.0155
+Avg Precision:  0.9375 ± 0.0645
+FPR@95:         0.0606 ± 0.0557
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: e5
+AD model:       AE
+Training time:  1.16 sec
+----------------------------------------
+AUC:            0.9957 ± 0.0025
+Avg Precision:  0.9728 ± 0.0071
+FPR@95:         0.0159 ± 0.0037
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: e5
+AD model:       RSRAE
+Training time:  15.58 sec
+----------------------------------------
+AUC:            0.9948 ± 0.0023
+Avg Precision:  0.9645 ± 0.0071
+FPR@95:         0.0191 ± 0.0042
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.38 sec
+----------------------------------------
+AUC:            0.9853 ± 0.0027
+Avg Precision:  0.9189 ± 0.0074
+FPR@95:         0.0862 ± 0.0194
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: e5
+AD model:       TCCM
+Training time:  0.94 sec
+----------------------------------------
+AUC:            0.9945 ± 0.0030
+Avg Precision:  0.9680 ± 0.0055
+FPR@95:         0.0215 ± 0.0042
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: e5
+AD model:       AE
+Training time:  0.57 sec
+----------------------------------------
+AUC:            0.9805 ± 0.0043
+Avg Precision:  0.8892 ± 0.0177
+FPR@95:         0.1042 ± 0.0271
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: e5
+AD model:       RSRAE
+Training time:  8.96 sec
+----------------------------------------
+AUC:            0.9776 ± 0.0070
+Avg Precision:  0.8822 ± 0.0262
+FPR@95:         0.1364 ± 0.0480
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.12 sec
+----------------------------------------
+AUC:            0.9617 ± 0.0075
+Avg Precision:  0.8482 ± 0.0194
+FPR@95:         0.1753 ± 0.0363
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: e5
+AD model:       TCCM
+Training time:  0.53 sec
+----------------------------------------
+AUC:            0.9821 ± 0.0054
+Avg Precision:  0.8961 ± 0.0219
+FPR@95:         0.1033 ± 0.0415
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: e5
+AD model:       AE
+Training time:  0.35 sec
+----------------------------------------
+AUC:            0.9491 ± 0.0499
+Avg Precision:  0.8569 ± 0.0963
+FPR@95:         0.2103 ± 0.1899
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: e5
+AD model:       RSRAE
+Training time:  1.64 sec
+----------------------------------------
+AUC:            0.9358 ± 0.0731
+Avg Precision:  0.8718 ± 0.1037
+FPR@95:         0.2659 ± 0.2582
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.00 sec
+----------------------------------------
+AUC:            0.8902 ± 0.0956
+Avg Precision:  0.8088 ± 0.1167
+FPR@95:         0.4444 ± 0.3635
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: e5
+AD model:       TCCM
+Training time:  0.09 sec
+----------------------------------------
+AUC:            0.9259 ± 0.0854
+Avg Precision:  0.8761 ± 0.1087
+FPR@95:         0.3175 ± 0.3121
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: e5
+AD model:       AE
+Training time:  0.36 sec
+----------------------------------------
+AUC:            0.9856 ± 0.0051
+Avg Precision:  0.9035 ± 0.0387
+FPR@95:         0.0750 ± 0.0144
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: e5
+AD model:       RSRAE
+Training time:  1.64 sec
+----------------------------------------
+AUC:            0.9517 ± 0.0029
+Avg Precision:  0.9030 ± 0.0207
+FPR@95:         0.0983 ± 0.0265
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.01 sec
+----------------------------------------
+AUC:            0.9892 ± 0.0028
+Avg Precision:  0.9264 ± 0.0155
+FPR@95:         0.0639 ± 0.0327
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: e5
+AD model:       TCCM
+Training time:  0.10 sec
+----------------------------------------
+AUC:            0.9750 ± 0.0010
+Avg Precision:  0.8289 ± 0.0178
+FPR@95:         0.1028 ± 0.0164
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: e5
+AD model:       AE
+Training time:  0.34 sec
+----------------------------------------
+AUC:            0.9323 ± 0.0491
+Avg Precision:  0.7222 ± 0.1145
+FPR@95:         0.1562 ± 0.1250
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: e5
+AD model:       RSRAE
+Training time:  0.82 sec
+----------------------------------------
+AUC:            0.9257 ± 0.0356
+Avg Precision:  0.6008 ± 0.1510
+FPR@95:         0.2138 ± 0.0625
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.00 sec
+----------------------------------------
+AUC:            0.8698 ± 0.0970
+Avg Precision:  0.7277 ± 0.1977
+FPR@95:         0.3125 ± 0.1926
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: e5
+AD model:       TCCM
+Training time:  0.05 sec
+----------------------------------------
+AUC:            0.8568 ± 0.1050
+Avg Precision:  0.6747 ± 0.1377
+FPR@95:         0.3516 ± 0.2454
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: e5
+AD model:       AE
+Training time:  0.35 sec
+----------------------------------------
+AUC:            0.9740 ± 0.0175
+Avg Precision:  0.8760 ± 0.0665
+FPR@95:         0.1106 ± 0.0583
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: e5
+AD model:       RSRAE
+Training time:  0.83 sec
+----------------------------------------
+AUC:            0.9721 ± 0.0197
+Avg Precision:  0.8483 ± 0.0680
+FPR@95:         0.1106 ± 0.0809
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.00 sec
+----------------------------------------
+AUC:            0.9721 ± 0.0150
+Avg Precision:  0.8523 ± 0.0741
+FPR@95:         0.1154 ± 0.0593
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: e5
+AD model:       TCCM
+Training time:  0.05 sec
+----------------------------------------
+AUC:            0.9365 ± 0.0228
+Avg Precision:  0.7746 ± 0.0693
+FPR@95:         0.2404 ± 0.0396
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  65.51 sec
+----------------------------------------
+AUC:            0.9948 ± 0.0027
+Avg Precision:  0.9670 ± 0.0067
+FPR@95:         0.0210 ± 0.0069
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  12.54 sec
+----------------------------------------
+AUC:            0.9892 ± 0.0142
+Avg Precision:  0.9358 ± 0.0694
+FPR@95:         0.0394 ± 0.0424
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  38.56 sec
+----------------------------------------
+AUC:            0.9797 ± 0.0085
+Avg Precision:  0.8872 ± 0.0369
+FPR@95:         0.0959 ± 0.0541
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  12.31 sec
+----------------------------------------
+AUC:            0.9593 ± 0.0433
+Avg Precision:  0.8763 ± 0.0893
+FPR@95:         0.2095 ± 0.2241
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  12.76 sec
+----------------------------------------
+AUC:            0.9667 ± 0.0114
+Avg Precision:  0.7898 ± 0.0923
+FPR@95:         0.1778 ± 0.0843
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  12.20 sec
+----------------------------------------
+AUC:            0.9396 ± 0.0179
+Avg Precision:  0.5886 ± 0.0493
+FPR@95:         0.1125 ± 0.0468
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  12.52 sec
+----------------------------------------
+AUC:            0.9683 ± 0.0264
+Avg Precision:  0.8392 ± 0.0938
+FPR@95:         0.1010 ± 0.0629
+========================================
+

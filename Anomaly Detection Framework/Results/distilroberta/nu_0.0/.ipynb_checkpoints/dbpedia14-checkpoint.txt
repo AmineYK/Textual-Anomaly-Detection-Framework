@@ -838,3 +838,171 @@ Avg Precision:  0.7523 ± 0.0137
 FPR@95:         0.1689 ± 0.0070
 ========================================
 
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  487.12 sec
+----------------------------------------
+AUC:            0.9012 ± 0.0011
+Avg Precision:  0.6378 ± 0.0042
+FPR@95:         0.3956 ± 0.0061
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  493.55 sec
+----------------------------------------
+AUC:            0.9825 ± 0.0010
+Avg Precision:  0.8903 ± 0.0038
+FPR@95:         0.1228 ± 0.0052
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  498.45 sec
+----------------------------------------
+AUC:            0.9945 ± 0.0007
+Avg Precision:  0.9589 ± 0.0031
+FPR@95:         0.0187 ± 0.0038
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  503.77 sec
+----------------------------------------
+AUC:            0.9528 ± 0.0009
+Avg Precision:  0.9012 ± 0.0037
+FPR@95:         0.1115 ± 0.0045
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  489.91 sec
+----------------------------------------
+AUC:            0.9717 ± 0.0012
+Avg Precision:  0.9085 ± 0.0040
+FPR@95:         0.0849 ± 0.0058
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  496.83 sec
+----------------------------------------
+AUC:            0.9831 ± 0.0008
+Avg Precision:  0.9244 ± 0.0035
+FPR@95:         0.0907 ± 0.0043
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  509.21 sec
+----------------------------------------
+AUC:            0.9451 ± 0.0006
+Avg Precision:  0.8927 ± 0.0029
+FPR@95:         0.1273 ± 0.0032
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  495.63 sec
+----------------------------------------
+AUC:            0.9733 ± 0.0008
+Avg Precision:  0.9256 ± 0.0034
+FPR@95:         0.0899 ± 0.0041
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  491.28 sec
+----------------------------------------
+AUC:            0.9722 ± 0.0010
+Avg Precision:  0.9199 ± 0.0039
+FPR@95:         0.0931 ± 0.0050
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  501.88 sec
+----------------------------------------
+AUC:            0.9660 ± 0.0004
+Avg Precision:  0.9084 ± 0.0025
+FPR@95:         0.0958 ± 0.0029
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  502.38 sec
+----------------------------------------
+AUC:            0.9839 ± 0.0005
+Avg Precision:  0.9433 ± 0.0035
+FPR@95:         0.0602 ± 0.0049
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  488.76 sec
+----------------------------------------
+AUC:            0.9719 ± 0.0011
+Avg Precision:  0.9288 ± 0.0041
+FPR@95:         0.0542 ± 0.0056
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  492.34 sec
+----------------------------------------
+AUC:            0.9721 ± 0.0010
+Avg Precision:  0.8997 ± 0.0039
+FPR@95:         0.1034 ± 0.0050
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: distilroberta
+AD model:       FATE
+Training time:  505.67 sec
+----------------------------------------
+AUC:            0.9640 ± 0.0007
+Avg Precision:  0.8771 ± 0.0032
+FPR@95:         0.1391 ± 0.0037
+========================================
+

@@ -418,3 +418,87 @@ Avg Precision:  0.9491 ± 0.0514
 FPR@95:         0.0346 ± 0.0353
 ========================================
 
+========================================
+Dataset:        reuters
+Inlier class:   earn
+Embedding type: mpnet
+AD model:       FATE
+Training time:  19.84 sec
+----------------------------------------
+AUC:            0.9296 ± 0.0054
+Avg Precision:  0.6027 ± 0.0312
+FPR@95:         0.2398 ± 0.0246
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   trade
+Embedding type: mpnet
+AD model:       FATE
+Training time:  2.05 sec
+----------------------------------------
+AUC:            0.9143 ± 0.0528
+Avg Precision:  0.7421 ± 0.1024
+FPR@95:         0.3986 ± 0.2547
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   acq
+Embedding type: mpnet
+AD model:       FATE
+Training time:  11.02 sec
+----------------------------------------
+AUC:            0.9389 ± 0.0127
+Avg Precision:  0.7745 ± 0.0298
+FPR@95:         0.3214 ± 0.0916
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   money-fx
+Embedding type: mpnet
+AD model:       FATE
+Training time:  1.52 sec
+----------------------------------------
+AUC:            0.8897 ± 0.1015
+Avg Precision:  0.6718 ± 0.1984
+FPR@95:         0.3297 ± 0.2413
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   crude
+Embedding type: mpnet
+AD model:       FATE
+Training time:  2.08 sec
+----------------------------------------
+AUC:            0.8619 ± 0.0653
+Avg Precision:  0.6672 ± 0.1321
+FPR@95:         0.5614 ± 0.1628
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   ship
+Embedding type: mpnet
+AD model:       FATE
+Training time:  1.19 sec
+----------------------------------------
+AUC:            0.8956 ± 0.0724
+Avg Precision:  0.6810 ± 0.1897
+FPR@95:         0.2543 ± 0.1498
+========================================
+
+========================================
+Dataset:        reuters
+Inlier class:   interest
+Embedding type: mpnet
+AD model:       FATE
+Training time:  1.24 sec
+----------------------------------------
+AUC:            0.8928 ± 0.0546
+Avg Precision:  0.6693 ± 0.1042
+FPR@95:         0.3265 ± 0.1411
+========================================
+

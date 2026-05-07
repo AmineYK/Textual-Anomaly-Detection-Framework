@@ -1,0 +1,156 @@
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       FMTToken-sum
+Training time:  324.78 sec
+----------------------------------------
+AUC:            0.4310 ± 0.0193
+Avg Precision:  0.0932 ± 0.0045
+FPR@95:         0.9060 ± 0.0043
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       FMTToken-mediane
+Training time:  324.78 sec
+----------------------------------------
+AUC:            0.4023 ± 0.0189
+Avg Precision:  0.0933 ± 0.0047
+FPR@95:         0.9102 ± 0.0047
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       FMTToken-topk
+Training time:  324.78 sec
+----------------------------------------
+AUC:            0.5282 ± 0.0195
+Avg Precision:  0.1149 ± 0.0057
+FPR@95:         0.8985 ± 0.0067
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       FMTToken-max
+Training time:  324.78 sec
+----------------------------------------
+AUC:            0.6358 ± 0.0148
+Avg Precision:  0.1488 ± 0.0077
+FPR@95:         0.8002 ± 0.0149
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       FMTToken-attention_weighted
+Training time:  324.78 sec
+----------------------------------------
+AUC:            0.7223 ± 0.0101
+Avg Precision:  0.1969 ± 0.0068
+FPR@95:         0.7134 ± 0.0352
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       FMTToken-weights
+Training time:  324.78 sec
+----------------------------------------
+AUC:            0.4740 ± 0.0086
+Avg Precision:  0.0953 ± 0.0015
+FPR@95:         0.9868 ± 0.0068
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  3420.58 sec
+----------------------------------------
+AUC:            0.7668 ± 0.0127
+Avg Precision:  0.2101 ± 0.0097
+FPR@95:         0.6090 ± 0.0506
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       AE
+Training time:  3.82 sec
+----------------------------------------
+AUC:            0.4733 ± 0.0130
+Avg Precision:  0.1006 ± 0.0042
+FPR@95:         0.8778 ± 0.0043
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       ocsvm
+Training time:  1.23 sec
+----------------------------------------
+AUC:            0.4507 ± 0.0141
+Avg Precision:  0.0895 ± 0.0028
+FPR@95:         0.9783 ± 0.0069
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       TCCM
+Training time:  5.34 sec
+----------------------------------------
+AUC:            0.4629 ± 0.0133
+Avg Precision:  0.0948 ± 0.0032
+FPR@95:         0.8824 ± 0.0076
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       RSRAE
+Training time:  41.27 sec
+----------------------------------------
+AUC:            0.4540 ± 0.0131
+Avg Precision:  0.0954 ± 0.0040
+FPR@95:         0.8915 ± 0.0074
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       DATE
+Training time:  57.12 sec
+----------------------------------------
+AUC:            0.6733 ± 0.1932
+Avg Precision:  0.2544 ± 0.1758
+FPR@95:         0.7094 ± 0.2864
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: roberta
+AD model:       CVDD
+Training time:  319.59 sec
+----------------------------------------
+AUC:            0.7581 ± 0.1069
+Avg Precision:  0.2640 ± 0.1416
+FPR@95:         0.6948 ± 0.1581
+========================================
+

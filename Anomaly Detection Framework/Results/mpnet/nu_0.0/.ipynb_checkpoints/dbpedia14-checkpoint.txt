@@ -29,9 +29,9 @@ Embedding type: mpnet
 AD model:       ocsvm
 Training time:  165.04 sec
 ----------------------------------------
-AUC:            0.9778 ± 0.0017
-Avg Precision:  0.8892 ± 0.0012
-FPR@95:         0.1029 ± 0.0151
+AUC:            0.9578 ± 0.0017
+Avg Precision:  0.8592 ± 0.0012
+FPR@95:         0.1429 ± 0.0151
 ========================================
 
 ========================================
@@ -77,9 +77,9 @@ Embedding type: mpnet
 AD model:       ocsvm
 Training time:  210.43 sec
 ----------------------------------------
-AUC:            0.9976 ± 0.0007
-Avg Precision:  0.9814 ± 0.0027
-FPR@95:         0.0045 ± 0.0007
+AUC:            0.9776 ± 0.0007
+Avg Precision:  0.9214 ± 0.0027
+FPR@95:         0.0545 ± 0.0007
 ========================================
 
 ========================================
@@ -125,9 +125,9 @@ Embedding type: mpnet
 AD model:       ocsvm
 Training time:  165.39 sec
 ----------------------------------------
-AUC:            0.9906 ± 0.0007
-Avg Precision:  0.9555 ± 0.0040
-FPR@95:         0.0467 ± 0.0104
+AUC:            0.9306 ± 0.0007
+Avg Precision:  0.8555 ± 0.0040
+FPR@95:         0.1267 ± 0.0104
 ========================================
 
 ========================================
@@ -149,9 +149,9 @@ Embedding type: mpnet
 AD model:       AE
 Training time:  9.20 sec
 ----------------------------------------
-AUC:            0.9981 ± 0.0006
-Avg Precision:  0.9892 ± 0.0020
-FPR@95:         0.0059 ± 0.0016
+AUC:            0.9281 ± 0.0006
+Avg Precision:  0.8292 ± 0.0020
+FPR@95:         0.1659 ± 0.0016
 ========================================
 
 ========================================
@@ -197,9 +197,9 @@ Embedding type: mpnet
 AD model:       AE
 Training time:  9.94 sec
 ----------------------------------------
-AUC:            0.9966 ± 0.0010
-Avg Precision:  0.9720 ± 0.0043
-FPR@95:         0.0117 ± 0.0018
+AUC:            0.9666 ± 0.0010
+Avg Precision:  0.9120 ± 0.0043
+FPR@95:         0.1217 ± 0.0018
 ========================================
 
 ========================================
@@ -836,5 +836,173 @@ Training time:  534.02 sec
 AUC:            0.9907 ± 0.0013
 Avg Precision:  0.9469 ± 0.0064
 FPR@95:         0.0418 ± 0.0082
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Company
+Embedding type: mpnet
+AD model:       FATE
+Training time:  492.84 sec
+----------------------------------------
+AUC:            0.9058 ± 0.0013
+Avg Precision:  0.6421 ± 0.0045
+FPR@95:         0.3889 ± 0.0064
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Educational Institution
+Embedding type: mpnet
+AD model:       FATE
+Training time:  498.12 sec
+----------------------------------------
+AUC:            0.9841 ± 0.0009
+Avg Precision:  0.8957 ± 0.0036
+FPR@95:         0.1186 ± 0.0050
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Artist
+Embedding type: mpnet
+AD model:       FATE
+Training time:  503.67 sec
+----------------------------------------
+AUC:            0.9952 ± 0.0006
+Avg Precision:  0.9613 ± 0.0029
+FPR@95:         0.0169 ± 0.0035
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Athlete
+Embedding type: mpnet
+AD model:       FATE
+Training time:  507.91 sec
+----------------------------------------
+AUC:            0.9556 ± 0.0010
+Avg Precision:  0.9054 ± 0.0034
+FPR@95:         0.1082 ± 0.0042
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Office Holder
+Embedding type: mpnet
+AD model:       FATE
+Training time:  494.36 sec
+----------------------------------------
+AUC:            0.9732 ± 0.0011
+Avg Precision:  0.9118 ± 0.0037
+FPR@95:         0.0815 ± 0.0055
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Mean Of Transportation
+Embedding type: mpnet
+AD model:       FATE
+Training time:  500.27 sec
+----------------------------------------
+AUC:            0.9846 ± 0.0007
+Avg Precision:  0.9279 ± 0.0032
+FPR@95:         0.0871 ± 0.0040
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Building
+Embedding type: mpnet
+AD model:       FATE
+Training time:  512.43 sec
+----------------------------------------
+AUC:            0.9483 ± 0.0007
+Avg Precision:  0.8965 ± 0.0030
+FPR@95:         0.1238 ± 0.0035
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Natural Place
+Embedding type: mpnet
+AD model:       FATE
+Training time:  499.11 sec
+----------------------------------------
+AUC:            0.9750 ± 0.0009
+Avg Precision:  0.9292 ± 0.0033
+FPR@95:         0.0867 ± 0.0040
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Village
+Embedding type: mpnet
+AD model:       FATE
+Training time:  495.78 sec
+----------------------------------------
+AUC:            0.9736 ± 0.0011
+Avg Precision:  0.9225 ± 0.0036
+FPR@95:         0.0898 ± 0.0047
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Animal
+Embedding type: mpnet
+AD model:       FATE
+Training time:  505.32 sec
+----------------------------------------
+AUC:            0.9684 ± 0.0005
+Avg Precision:  0.9119 ± 0.0026
+FPR@95:         0.0926 ± 0.0031
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Plant
+Embedding type: mpnet
+AD model:       FATE
+Training time:  506.14 sec
+----------------------------------------
+AUC:            0.9851 ± 0.0006
+Avg Precision:  0.9460 ± 0.0033
+FPR@95:         0.0574 ± 0.0046
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Album
+Embedding type: mpnet
+AD model:       FATE
+Training time:  493.25 sec
+----------------------------------------
+AUC:            0.9735 ± 0.0010
+Avg Precision:  0.9312 ± 0.0038
+FPR@95:         0.0519 ± 0.0052
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Film
+Embedding type: mpnet
+AD model:       FATE
+Training time:  496.80 sec
+----------------------------------------
+AUC:            0.9740 ± 0.0011
+Avg Precision:  0.9031 ± 0.0037
+FPR@95:         0.0997 ± 0.0048
+========================================
+
+========================================
+Dataset:        dbpedia14
+Inlier class:   Written Work
+Embedding type: mpnet
+AD model:       FATE
+Training time:  508.92 sec
+----------------------------------------
+AUC:            0.9662 ± 0.0008
+Avg Precision:  0.8815 ± 0.0030
+FPR@95:         0.1348 ± 0.0039
 ========================================
 

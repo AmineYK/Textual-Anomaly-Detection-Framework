@@ -1,0 +1,48 @@
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: modernbert
+AD model:       AE
+Training time:  11.37 sec
+----------------------------------------
+AUC:            0.5426 ± 0.0545
+Avg Precision:  0.1227 ± 0.0172
+FPR@95:         0.9475 ± 0.0165
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: modernbert
+AD model:       RSRAE
+Training time:  6.09 sec
+----------------------------------------
+AUC:            0.4538 ± 0.0440
+Avg Precision:  0.0984 ± 0.0108
+FPR@95:         0.9456 ± 0.0202
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: modernbert
+AD model:       ocsvm
+Training time:  200.43 sec
+----------------------------------------
+AUC:            0.4618 ± 0.0423
+Avg Precision:  0.0989 ± 0.0094
+FPR@95:         0.9512 ± 0.0187
+========================================
+
+========================================
+Dataset:        sst2
+Inlier class:   positive
+Embedding type: modernbert
+AD model:       TCCM
+Training time:  20.50 sec
+----------------------------------------
+AUC:            0.5785 ± 0.0489
+Avg Precision:  0.1348 ± 0.0190
+FPR@95:         0.9363 ± 0.0272
+========================================
+

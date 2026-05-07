@@ -1,0 +1,60 @@
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: qwen
+AD model:       AE
+Training time:  1.85 sec
+----------------------------------------
+AUC:            0.7564 ± 0.0194
+Avg Precision:  0.2753 ± 0.0342
+FPR@95:         0.6969 ± 0.0428
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: qwen
+AD model:       RSRAE
+Training time:  3.38 sec
+----------------------------------------
+AUC:            0.7248 ± 0.0060
+Avg Precision:  0.1808 ± 0.0061
+FPR@95:         0.5586 ± 0.0113
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: qwen
+AD model:       ocsvm
+Training time:  1.11 sec
+----------------------------------------
+AUC:            0.6899 ± 0.0154
+Avg Precision:  0.1810 ± 0.0142
+FPR@95:         0.8034 ± 0.0043
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: qwen
+AD model:       TCCM
+Training time:  2.03 sec
+----------------------------------------
+AUC:            0.7957 ± 0.0177
+Avg Precision:  0.3224 ± 0.0389
+FPR@95:         0.6402 ± 0.0147
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: qwen
+AD model:       CVDD
+Training time:  84.47 sec
+----------------------------------------
+AUC:            0.6810 ± 0.0177
+Avg Precision:  0.1605 ± 0.0389
+FPR@95:         0.8931 ± 0.0147
+========================================
+

@@ -1,0 +1,420 @@
+========================================
+Dataset:        m4
+Inlier class:   wikipedia
+Embedding type: roberta
+AD model:       AE
+Training time:  3.62 sec
+----------------------------------------
+AUC:            0.6137 ± 0.0005
+Avg Precision:  0.1490 ± 0.0050
+FPR@95:         0.8984 ± 0.0237
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikipedia
+Embedding type: roberta
+AD model:       ocsvm
+Training time:  8.66 sec
+----------------------------------------
+AUC:            0.5286 ± 0.0070
+Avg Precision:  0.1066 ± 0.0026
+FPR@95:         0.9045 ± 0.0007
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikipedia
+Embedding type: roberta
+AD model:       TCCM
+Training time:  5.44 sec
+----------------------------------------
+AUC:            0.6160 ± 0.0028
+Avg Precision:  0.1471 ± 0.0050
+FPR@95:         0.8805 ± 0.0157
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikipedia
+Embedding type: roberta
+AD model:       RSRAE
+Training time:  43.89 sec
+----------------------------------------
+AUC:            0.6159 ± 0.0106
+Avg Precision:  0.1488 ± 0.0085
+FPR@95:         0.8871 ± 0.0067
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv
+Embedding type: roberta
+AD model:       AE
+Training time:  3.31 sec
+----------------------------------------
+AUC:            0.5894 ± 0.0051
+Avg Precision:  0.1199 ± 0.0012
+FPR@95:         0.8406 ± 0.0135
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv
+Embedding type: roberta
+AD model:       RSRAE
+Training time:  43.65 sec
+----------------------------------------
+AUC:            0.5876 ± 0.0064
+Avg Precision:  0.1236 ± 0.0017
+FPR@95:         0.8898 ± 0.0117
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv
+Embedding type: roberta
+AD model:       ocsvm
+Training time:  11.54 sec
+----------------------------------------
+AUC:            0.5391 ± 0.0178
+Avg Precision:  0.1079 ± 0.0047
+FPR@95:         0.9175 ± 0.0158
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv
+Embedding type: roberta
+AD model:       TCCM
+Training time:  6.35 sec
+----------------------------------------
+AUC:            0.6094 ± 0.0067
+Avg Precision:  0.1285 ± 0.0012
+FPR@95:         0.8437 ± 0.0218
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikihow
+Embedding type: roberta
+AD model:       AE
+Training time:  3.26 sec
+----------------------------------------
+AUC:            0.6425 ± 0.0056
+Avg Precision:  0.1511 ± 0.0024
+FPR@95:         0.8156 ± 0.0243
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikihow
+Embedding type: roberta
+AD model:       RSRAE
+Training time:  43.70 sec
+----------------------------------------
+AUC:            0.6320 ± 0.0039
+Avg Precision:  0.1456 ± 0.0043
+FPR@95:         0.8136 ± 0.0118
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikihow
+Embedding type: roberta
+AD model:       ocsvm
+Training time:  10.01 sec
+----------------------------------------
+AUC:            0.5775 ± 0.0011
+Avg Precision:  0.1255 ± 0.0010
+FPR@95:         0.8851 ± 0.0059
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikihow
+Embedding type: roberta
+AD model:       TCCM
+Training time:  5.83 sec
+----------------------------------------
+AUC:            0.6188 ± 0.0085
+Avg Precision:  0.1397 ± 0.0055
+FPR@95:         0.8525 ± 0.0194
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikipedia
+Embedding type: roberta
+AD model:       DATE
+Training time:  221.45 sec
+----------------------------------------
+AUC:            0.5057 ± 0.0919
+Avg Precision:  0.1144 ± 0.0231
+FPR@95:         0.9612 ± 0.0132
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit
+Embedding type: roberta
+AD model:       AE
+Training time:  2.64 sec
+----------------------------------------
+AUC:            0.5413 ± 0.0126
+Avg Precision:  0.1087 ± 0.0026
+FPR@95:         0.9098 ± 0.0119
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit
+Embedding type: roberta
+AD model:       RSRAE
+Training time:  43.91 sec
+----------------------------------------
+AUC:            0.5409 ± 0.0173
+Avg Precision:  0.1121 ± 0.0036
+FPR@95:         0.9227 ± 0.0112
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit
+Embedding type: roberta
+AD model:       ocsvm
+Training time:  10.19 sec
+----------------------------------------
+AUC:            0.3872 ± 0.0095
+Avg Precision:  0.0755 ± 0.0010
+FPR@95:         0.9766 ± 0.0021
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit
+Embedding type: roberta
+AD model:       TCCM
+Training time:  5.25 sec
+----------------------------------------
+AUC:            0.5743 ± 0.0172
+Avg Precision:  0.1206 ± 0.0056
+FPR@95:         0.8947 ± 0.0014
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   peerread
+Embedding type: roberta
+AD model:       AE
+Training time:  0.74 sec
+----------------------------------------
+AUC:            0.8211 ± 0.0229
+Avg Precision:  0.3237 ± 0.0264
+FPR@95:         0.5823 ± 0.1655
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   peerread
+Embedding type: roberta
+AD model:       RSRAE
+Training time:  44.09 sec
+----------------------------------------
+AUC:            0.7825 ± 0.0123
+Avg Precision:  0.2685 ± 0.0203
+FPR@95:         0.6635 ± 0.0906
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   peerread
+Embedding type: roberta
+AD model:       ocsvm
+Training time:  0.21 sec
+----------------------------------------
+AUC:            0.6974 ± 0.0313
+Avg Precision:  0.2303 ± 0.0292
+FPR@95:         0.8455 ± 0.0680
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   peerread
+Embedding type: roberta
+AD model:       TCCM
+Training time:  0.99 sec
+----------------------------------------
+AUC:            0.8404 ± 0.0224
+Avg Precision:  0.3494 ± 0.0351
+FPR@95:         0.6154 ± 0.1042
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv
+Embedding type: roberta
+AD model:       DATE
+Training time:  234.83 sec
+----------------------------------------
+AUC:            0.5737 ± 0.0790
+Avg Precision:  0.1197 ± 0.0224
+FPR@95:         0.8365 ± 0.1000
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikihow
+Embedding type: roberta
+AD model:       DATE
+Training time:  235.42 sec
+----------------------------------------
+AUC:            0.5120 ± 0.0240
+Avg Precision:  0.1038 ± 0.0080
+FPR@95:         0.9499 ± 0.0093
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit
+Embedding type: roberta
+AD model:       DATE
+Training time:  207.37 sec
+----------------------------------------
+AUC:            0.4755 ± 0.0244
+Avg Precision:  0.0944 ± 0.0046
+FPR@95:         0.9270 ± 0.0146
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   peerread
+Embedding type: roberta
+AD model:       DATE
+Training time:  37.24 sec
+----------------------------------------
+AUC:            0.8842 ± 0.0288
+Avg Precision:  0.3870 ± 0.1246
+FPR@95:         0.2861 ± 0.0270
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikipedia
+Embedding type: roberta
+AD model:       CVDD
+Training time:  1006.91 sec
+----------------------------------------
+AUC:            0.4715 ± 0.0056
+Avg Precision:  0.0963 ± 0.0047
+FPR@95:         0.9480 ± 0.0059
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikipedia
+Embedding type: roberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  2493.90 sec
+----------------------------------------
+AUC:            0.6274 ± 0.0228
+Avg Precision:  0.1825 ± 0.0068
+FPR@95:         0.8155 ± 0.0172
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv
+Embedding type: roberta
+AD model:       CVDD
+Training time:  1010.28 sec
+----------------------------------------
+AUC:            0.4057 ± 0.0145
+Avg Precision:  0.0783 ± 0.0026
+FPR@95:         0.9511 ± 0.0124
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit
+Embedding type: roberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  671.58 sec
+----------------------------------------
+AUC:            0.6000 ± 0.0114
+Avg Precision:  0.1416 ± 0.0033
+FPR@95:         0.8762 ± 0.0353
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   peerread
+Embedding type: roberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  942.24 sec
+----------------------------------------
+AUC:            0.9212 ± 0.0111
+Avg Precision:  0.4811 ± 0.0522
+FPR@95:         0.2009 ± 0.0376
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikihow
+Embedding type: roberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  2716.35 sec
+----------------------------------------
+AUC:            0.6266 ± 0.0058
+Avg Precision:  0.1440 ± 0.0003
+FPR@95:         0.8605 ± 0.0103
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   arxiv
+Embedding type: roberta
+AD model:       flow-matching-Transformers-Comp
+Training time:  2699.80 sec
+----------------------------------------
+AUC:            0.6192 ± 0.0660
+Avg Precision:  0.1847 ± 0.0236
+FPR@95:         0.7911 ± 0.0688
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   wikihow
+Embedding type: roberta
+AD model:       CVDD
+Training time:  1208.70 sec
+----------------------------------------
+AUC:            0.4851 ± 0.0119
+Avg Precision:  0.0973 ± 0.0034
+FPR@95:         0.9360 ± 0.0205
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   peerread
+Embedding type: roberta
+AD model:       CVDD
+Training time:  218.15 sec
+----------------------------------------
+AUC:            0.7935 ± 0.0143
+Avg Precision:  0.2785 ± 0.0233
+FPR@95:         0.6535 ± 0.0173
+========================================
+
+========================================
+Dataset:        m4
+Inlier class:   reddit
+Embedding type: roberta
+AD model:       CVDD
+Training time:  223.41 sec
+----------------------------------------
+AUC:            0.5609 ± 0.0113
+Avg Precision:  0.1221 ± 0.0056
+FPR@95:         0.9027 ± 0.0102
+========================================
+

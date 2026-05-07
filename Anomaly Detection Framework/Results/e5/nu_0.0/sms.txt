@@ -1,0 +1,60 @@
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: e5
+AD model:       AE
+Training time:  1.53 sec
+----------------------------------------
+AUC:            0.5352 ± 0.0166
+Avg Precision:  0.0997 ± 0.0041
+FPR@95:         0.9161 ± 0.0171
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: e5
+AD model:       RSRAE
+Training time:  25.07 sec
+----------------------------------------
+AUC:            0.5774 ± 0.0167
+Avg Precision:  0.1184 ± 0.0065
+FPR@95:         0.8833 ± 0.0142
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.94 sec
+----------------------------------------
+AUC:            0.3913 ± 0.0144
+Avg Precision:  0.0781 ± 0.0030
+FPR@95:         0.9853 ± 0.0131
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: e5
+AD model:       TCCM
+Training time:  1.52 sec
+----------------------------------------
+AUC:            0.6073 ± 0.0202
+Avg Precision:  0.1276 ± 0.0078
+FPR@95:         0.8532 ± 0.0146
+========================================
+
+========================================
+Dataset:        sms
+Inlier class:   normal
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  148.10 sec
+----------------------------------------
+AUC:            0.5979 ± 0.1557
+Avg Precision:  0.1462 ± 0.0626
+FPR@95:         0.8457 ± 0.1233
+========================================
+

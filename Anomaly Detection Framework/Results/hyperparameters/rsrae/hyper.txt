@@ -2907,3 +2907,991 @@ batch_show: 50
 normalize: True
 bn: False
 seed: 42
+
+==================================================
+Run time: 2026-05-07 12:21:20
+Dataset: reuters
+Inlier topic: trade
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:23:54
+Dataset: reuters
+Inlier topic: earn
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:24:03
+Dataset: reuters
+Inlier topic: trade
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:24:45
+Dataset: reuters
+Inlier topic: acq
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:24:53
+Dataset: reuters
+Inlier topic: money-fx
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:25:02
+Dataset: reuters
+Inlier topic: crude
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:25:07
+Dataset: reuters
+Inlier topic: ship
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:25:12
+Dataset: reuters
+Inlier topic: interest
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:26:31
+Dataset: 20newsgroups
+Inlier topic: computer
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:27:35
+Dataset: 20newsgroups
+Inlier topic: recreation
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:27:38
+Dataset: sms
+Inlier topic: normal
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:28:40
+Dataset: 20newsgroups
+Inlier topic: science
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:28:59
+Dataset: 20newsgroups
+Inlier topic: miscellaneous
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:29:42
+Dataset: 20newsgroups
+Inlier topic: politics
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:30:21
+Dataset: 20newsgroups
+Inlier topic: religion
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:33:33
+Dataset: imdb
+Inlier topic: positive
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:34:42
+Dataset: enron
+Inlier topic: normal
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:40:49
+Dataset: imdb
+Inlier topic: negative
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:43:42
+Dataset: agnews
+Inlier topic: World
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 12:56:09
+Dataset: sst2
+Inlier topic: positive
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 13:02:21
+Dataset: agnews
+Inlier topic: Sports
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 13:16:15
+Dataset: sst2
+Inlier topic: negative
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 13:20:51
+Dataset: agnews
+Inlier topic: Business
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 13:39:20
+Dataset: agnews
+Inlier topic: Sci-Tech
+Type Embedding: e5
+Number of Runs: 5
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 15:35:57
+Dataset: dbpedia14
+Inlier topic: Building
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 15:36:01
+Dataset: dbpedia14
+Inlier topic: Natural Place
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 15:36:23
+Dataset: dbpedia14
+Inlier topic: Village
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 15:45:02
+Dataset: dbpedia14
+Inlier topic: Animal
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 15:54:37
+Dataset: dbpedia14
+Inlier topic: Plant
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 15:57:23
+Dataset: dbpedia14
+Inlier topic: Written Work
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 15:57:26
+Dataset: dbpedia14
+Inlier topic: Album
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 15:57:28
+Dataset: dbpedia14
+Inlier topic: Film
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 15:57:49
+Dataset: dbpedia14
+Inlier topic: Company
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 16:06:26
+Dataset: dbpedia14
+Inlier topic: Educational Institution
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 16:12:00
+Dataset: dbpedia14
+Inlier topic: Artist
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 16:13:16
+Dataset: dbpedia14
+Inlier topic: Athlete
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 16:16:09
+Dataset: dbpedia14
+Inlier topic: Office Holder
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42
+
+==================================================
+Run time: 2026-05-07 16:18:38
+Dataset: dbpedia14
+Inlier topic: Mean Of Transportation
+Type Embedding: e5
+Number of Runs: 4
+
+Hyperparameters:
+input_dim: 768
+hidden_layer_sizes: (128, 64, 32)
+intrinsic_size: 10
+activation: ReLU()
+norm_type: l21
+loss_norm_type: mse
+if_rsr: True
+enforce_proj: True
+all_alt: True
+learning_rate: 0.001
+lambda1: 0.1
+lambda2: 0.1
+epoch_size: 200
+batch_show: 50
+normalize: True
+bn: False
+seed: 42

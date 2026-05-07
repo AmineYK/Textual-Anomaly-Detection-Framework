@@ -1,0 +1,360 @@
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: e5
+AD model:       AE
+Training time:  1.19 sec
+----------------------------------------
+AUC:            0.9402 ± 0.0101
+Avg Precision:  0.7073 ± 0.0210
+FPR@95:         0.3357 ± 0.0546
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: e5
+AD model:       RSRAE
+Training time:  16.80 sec
+----------------------------------------
+AUC:            0.9408 ± 0.0110
+Avg Precision:  0.7278 ± 0.0204
+FPR@95:         0.3118 ± 0.0593
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.43 sec
+----------------------------------------
+AUC:            0.9094 ± 0.0112
+Avg Precision:  0.6461 ± 0.0238
+FPR@95:         0.5460 ± 0.0346
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: e5
+AD model:       TCCM
+Training time:  1.01 sec
+----------------------------------------
+AUC:            0.9458 ± 0.0110
+Avg Precision:  0.7433 ± 0.0226
+FPR@95:         0.2954 ± 0.0577
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: e5
+AD model:       AE
+Training time:  0.71 sec
+----------------------------------------
+AUC:            0.9097 ± 0.0056
+Avg Precision:  0.5057 ± 0.0378
+FPR@95:         0.2896 ± 0.0426
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: e5
+AD model:       RSRAE
+Training time:  13.61 sec
+----------------------------------------
+AUC:            0.8981 ± 0.0070
+Avg Precision:  0.4668 ± 0.0319
+FPR@95:         0.3711 ± 0.0654
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.30 sec
+----------------------------------------
+AUC:            0.7816 ± 0.0144
+Avg Precision:  0.3133 ± 0.0429
+FPR@95:         0.7389 ± 0.0444
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: e5
+AD model:       TCCM
+Training time:  0.82 sec
+----------------------------------------
+AUC:            0.9019 ± 0.0088
+Avg Precision:  0.4757 ± 0.0370
+FPR@95:         0.3297 ± 0.0613
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: e5
+AD model:       AE
+Training time:  0.72 sec
+----------------------------------------
+AUC:            0.7943 ± 0.0024
+Avg Precision:  0.2872 ± 0.0179
+FPR@95:         0.6961 ± 0.0299
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: e5
+AD model:       RSRAE
+Training time:  13.71 sec
+----------------------------------------
+AUC:            0.7873 ± 0.0022
+Avg Precision:  0.2896 ± 0.0201
+FPR@95:         0.7219 ± 0.0243
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.28 sec
+----------------------------------------
+AUC:            0.6946 ± 0.0050
+Avg Precision:  0.2059 ± 0.0111
+FPR@95:         0.8512 ± 0.0262
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: e5
+AD model:       TCCM
+Training time:  0.82 sec
+----------------------------------------
+AUC:            0.7925 ± 0.0063
+Avg Precision:  0.2966 ± 0.0269
+FPR@95:         0.7091 ± 0.0101
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: e5
+AD model:       AE
+Training time:  0.42 sec
+----------------------------------------
+AUC:            0.9147 ± 0.0067
+Avg Precision:  0.5400 ± 0.0493
+FPR@95:         0.3263 ± 0.0283
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: e5
+AD model:       RSRAE
+Training time:  4.06 sec
+----------------------------------------
+AUC:            0.9102 ± 0.0115
+Avg Precision:  0.5318 ± 0.0659
+FPR@95:         0.3321 ± 0.0551
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.02 sec
+----------------------------------------
+AUC:            0.8984 ± 0.0180
+Avg Precision:  0.5592 ± 0.0610
+FPR@95:         0.4193 ± 0.1662
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: e5
+AD model:       TCCM
+Training time:  0.23 sec
+----------------------------------------
+AUC:            0.9095 ± 0.0119
+Avg Precision:  0.5482 ± 0.0664
+FPR@95:         0.3256 ± 0.0580
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: e5
+AD model:       AE
+Training time:  0.58 sec
+----------------------------------------
+AUC:            0.9002 ± 0.0064
+Avg Precision:  0.4828 ± 0.0185
+FPR@95:         0.3815 ± 0.0571
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: e5
+AD model:       RSRAE
+Training time:  8.94 sec
+----------------------------------------
+AUC:            0.9112 ± 0.0089
+Avg Precision:  0.5211 ± 0.0192
+FPR@95:         0.3447 ± 0.0572
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.13 sec
+----------------------------------------
+AUC:            0.8522 ± 0.0130
+Avg Precision:  0.4034 ± 0.0336
+FPR@95:         0.5436 ± 0.0471
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: e5
+AD model:       TCCM
+Training time:  0.54 sec
+----------------------------------------
+AUC:            0.9118 ± 0.0062
+Avg Precision:  0.5152 ± 0.0205
+FPR@95:         0.3452 ± 0.0407
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: e5
+AD model:       AE
+Training time:  0.56 sec
+----------------------------------------
+AUC:            0.8961 ± 0.0087
+Avg Precision:  0.5303 ± 0.0421
+FPR@95:         0.4914 ± 0.0452
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: e5
+AD model:       RSRAE
+Training time:  8.09 sec
+----------------------------------------
+AUC:            0.8872 ± 0.0162
+Avg Precision:  0.5335 ± 0.0473
+FPR@95:         0.4920 ± 0.0592
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: e5
+AD model:       ocsvm
+Training time:  0.12 sec
+----------------------------------------
+AUC:            0.8663 ± 0.0198
+Avg Precision:  0.4775 ± 0.0478
+FPR@95:         0.5963 ± 0.0615
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: e5
+AD model:       TCCM
+Training time:  0.50 sec
+----------------------------------------
+AUC:            0.8964 ± 0.0105
+Avg Precision:  0.5543 ± 0.0471
+FPR@95:         0.4710 ± 0.0726
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   computer
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  78.54 sec
+----------------------------------------
+AUC:            0.9532 ± 0.0094
+Avg Precision:  0.7985 ± 0.0241
+FPR@95:         0.2478 ± 0.0506
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   recreation
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  64.48 sec
+----------------------------------------
+AUC:            0.9122 ± 0.0103
+Avg Precision:  0.4919 ± 0.0445
+FPR@95:         0.3177 ± 0.0486
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   science
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  65.00 sec
+----------------------------------------
+AUC:            0.7559 ± 0.0593
+Avg Precision:  0.2708 ± 0.0793
+FPR@95:         0.6927 ± 0.0898
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   miscellaneous
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  25.42 sec
+----------------------------------------
+AUC:            0.9327 ± 0.0076
+Avg Precision:  0.6154 ± 0.0557
+FPR@95:         0.2471 ± 0.0333
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   politics
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  38.90 sec
+----------------------------------------
+AUC:            0.9249 ± 0.0061
+Avg Precision:  0.5859 ± 0.0215
+FPR@95:         0.2968 ± 0.0369
+========================================
+
+========================================
+Dataset:        20newsgroups
+Inlier class:   religion
+Embedding type: e5
+AD model:       flow-matching-Transformers-Comp
+Training time:  38.87 sec
+----------------------------------------
+AUC:            0.9084 ± 0.0142
+Avg Precision:  0.6240 ± 0.0539
+FPR@95:         0.4749 ± 0.1261
+========================================
+
