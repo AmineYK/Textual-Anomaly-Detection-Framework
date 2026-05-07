@@ -254,7 +254,8 @@ class FlowMatchingTransformersTokSen(nn.Module):
             self.centroid = mean_per_sample.mean(dim=0).to(self.device)   
             self.var = var_per_sample.mean(dim=0).to(self.device)
 
-        self.log_r = nn.Parameter(torch.tensor(0.0).to(self.device))
+        # self.log_r = nn.Parameter(torch.tensor(0.0).to(self.device))
+        self.log_r = nn.Parameter(torch.tensor(-1.5).to(self.device))
 
     @property
     def r_in(self):
@@ -518,7 +519,7 @@ class FlowMatchingTransformersTokSen(nn.Module):
         return np.mean(total_loss_liste), np.mean(loss_fm_liste), np.mean(loss_svdd_liste)
 
 
-    def train(self, verbose=True):
+    def train(self, verbose=True, show_details=False):
 
         optimizer = AdamW(
             list(self.model.parameters()) + [self.log_r],
@@ -532,6 +533,8 @@ class FlowMatchingTransformersTokSen(nn.Module):
         total_loss_liste = []
         loss_fm_liste = []
         loss_svdd_liste = []
+        interm_repre = []
+        liste_r = []
 
 
         for epoch in range(self.config['epochs']):
@@ -554,8 +557,21 @@ class FlowMatchingTransformersTokSen(nn.Module):
                 print(f"Train Loss: {loss_total:.4f}, LR: {lr:.6f}")
                 print(self.r_in)
 
+            if show_details and epoch % 150 == 0: 
+                print(f"<<<<<< Processing... - epoch : {epoch} >>>>>>>>")
+                x_final, _, _ = self.euler_integrate(
+                    self.source.to(self.device),
+                    self.attentions_mask.to(self.device),
+                    1, False
+                )
+                interm_repre.append(x_final)
+                liste_r.append(self.r_in.item())
+                print("finish...\n")
 
-        return total_loss_liste, loss_fm_liste, loss_svdd_liste
+        if not show_details:
+            return total_loss_liste, loss_fm_liste, loss_svdd_liste
+        else:
+            return total_loss_liste, loss_fm_liste, loss_svdd_liste, torch.stack(interm_repre), liste_r
 
     # @torch.no_grad()
     # def compute_anomaly_scores(self, X_test, attentions_test_mask,

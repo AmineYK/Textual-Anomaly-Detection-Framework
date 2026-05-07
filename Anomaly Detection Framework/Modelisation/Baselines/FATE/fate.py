@@ -449,23 +449,43 @@ def worker_init_fn_seed(worker_id):
     seed += worker_id
     np.random.seed(seed)
 
+# class CustomDataset(TensorDataset):
+#     def __init__(self, input_ids, attention_masks, labels, normal_idx=None, outlier_idx=None):
+#         super().__init__(input_ids, attention_masks, labels)
+#         self.normal_idx = normal_idx
+#         self.outlier_idx = outlier_idx
+
 class CustomDataset(TensorDataset):
-    def __init__(self, input_ids, attention_masks, labels, normal_idx=None, outlier_idx=None):
-        super().__init__(input_ids, attention_masks, labels)
-        self.normal_idx = normal_idx
+    def __init__(self, embeddings, labels, normal_idx=None, outlier_idx=None):
+        super().__init__(embeddings, labels)
+        self.normal_idx  = normal_idx
         self.outlier_idx = outlier_idx
 
 
+# class DeviationLoss(nn.Module):
+#     def __init__(self):
+#         super().__init__()
+
+#     def forward(self, y_pred, y_true):
+#         confidence_margin = 5.
+#         ref = torch.normal(mean=0., std=torch.full([5000], 1.)).to(y_pred.device)
+#         dev = (y_pred - torch.mean(ref)) / torch.std(ref)
+#         inlier_loss = torch.abs(dev)
+#         outlier_loss = torch.abs((confidence_margin - dev).clamp_(min=0.))
+#         return torch.mean((1 - y_true) * inlier_loss + y_true * outlier_loss)
+
 class DeviationLoss(nn.Module):
-    def __init__(self):
+    def __init__(self, confidence_margin=5., n_ref=5000):
         super().__init__()
+        self.confidence_margin = confidence_margin
+        ref = torch.normal(mean=0., std=torch.ones(n_ref))
+        self.mu_ref    = ref.mean().item()
+        self.sigma_ref = ref.std().item()
 
     def forward(self, y_pred, y_true):
-        confidence_margin = 5.
-        ref = torch.normal(mean=0., std=torch.full([5000], 1.)).to(y_pred.device)
-        dev = (y_pred - torch.mean(ref)) / torch.std(ref)
-        inlier_loss = torch.abs(dev)
-        outlier_loss = torch.abs((confidence_margin - dev).clamp_(min=0.))
+        dev = (y_pred - self.mu_ref) / self.sigma_ref
+        inlier_loss  = torch.abs(dev)
+        outlier_loss = torch.clamp(self.confidence_margin - dev, min=0.)
         return torch.mean((1 - y_true) * inlier_loss + y_true * outlier_loss)
 
 class SBERTWithAttention(nn.Module):

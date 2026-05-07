@@ -10,7 +10,8 @@ from transformers import (
     BertConfig, BertForMaskedLM, BertModel, BertTokenizerFast,
     ElectraConfig, ElectraForMaskedLM, ElectraModel, ElectraTokenizerFast,
     AlbertConfig, AlbertForMaskedLM, AlbertModel, AlbertTokenizer, 
-    RobertaConfig, RobertaForMaskedLM, RobertaModel, RobertaTokenizerFast
+    RobertaConfig, RobertaForMaskedLM, RobertaModel, RobertaTokenizerFast,
+    ModernBertConfig, ModernBertForMaskedLM, ModernBertModel
 )
 
 
@@ -67,6 +68,16 @@ class DateGenerator(nn.Module):
                 max_position_embeddings=512
             )
             self.model = RobertaForMaskedLM(config)
+        elif which_config == "modernbert":
+            config = ModernBertConfig(
+                vocab_size=vocab_size,
+                hidden_size=256,
+                num_hidden_layers=4,
+                num_attention_heads=4,
+                intermediate_size=1024,
+                max_position_embeddings=512
+            )
+            self.model = ModernBertForMaskedLM(config)
         else:
             raise ValueError(f"Unknown config: {which_config}")
 
@@ -131,6 +142,16 @@ class DateDiscriminator(nn.Module):
                 max_position_embeddings=512
             )
             self.encoder = RobertaModel(config)
+        elif which_config == "modernbert":
+            config = ModernBertConfig(
+                vocab_size=vocab_size,
+                hidden_size=256,
+                num_hidden_layers=4,
+                num_attention_heads=4,
+                intermediate_size=1024,
+                max_position_embeddings=512
+            )
+            self.encoder = ModernBertModel(config)
         else:
             raise ValueError(f"Unknown config: {which_config}")
 
@@ -193,6 +214,8 @@ class DATEModel(BaselineModel):
         elif self.which_config =='bert': 
             tokenizerObject = BertTokenizerFast
         elif self.which_config == 'roberta':
+            tokenizerObject = RobertaTokenizerFast
+        elif self.which_config == 'modernbert':
             tokenizerObject = RobertaTokenizerFast
         else: tokenizerObject = ElectraTokenizerFast
         

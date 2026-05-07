@@ -40,9 +40,9 @@ dataset_topics_dict= {
     '20newsgroups' : ['computer', 'recreation', 'science', 'miscellaneous', 'politics', 'religion'],
     'reuters' : ['earn', 'trade', 'acq', 'money-fx', 'crude', 'ship', 'interest'],
     'agnews' : ['World', 'Sports', 'Business', 'Sci-Tech'] ,
-    # 'dbpedia14' : ["Company", "Educational Institution", "Artist", "Athlete", "Office Holder", 
-    #               "Mean Of Transportation", "Building", "Natural Place", "Village", "Animal", "Plant", "Album", "Film", "Written Work"],
-    'dbpedia14' : ["Building", "Natural Place", "Village", "Animal", "Plant", "Album", "Film", "Written Work"],
+    'dbpedia14' : ["Company", "Educational Institution", "Artist", "Athlete", "Office Holder", 
+                  "Mean Of Transportation", "Building", "Natural Place", "Village", "Animal", "Plant", "Album", "Film", "Written Work"],
+    # 'dbpedia14' : ["Building", "Natural Place", "Village", "Animal", "Plant", "Album", "Film", "Written Work"],
     'sms' : ['normal'],
     'enron': ['normal'],
     'imdb' : ['positive', 'negative'],
@@ -51,8 +51,8 @@ dataset_topics_dict= {
     'm4': ["wikipedia", "arxiv", "wikihow", "reddit", "peerread"]
 
 }
-COL = 'text'
-# COL = 'content'
+# COL = 'text'
+COL = 'content'
 
 def main(args):
 
@@ -64,7 +64,7 @@ def main(args):
         nltk.download('punkt')
         nltk.download('stopwords')
 
-        stop_words = set(stopwords.words('english'))  # ou 'french'
+        stop_words = set(stopwords.words('english'))
 
         def remove_stopwords(text):
             tokens = word_tokenize(text)
@@ -146,20 +146,26 @@ def main(args):
         if args.fate:
             path = os.path.join(save_dir, f"{args.dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_anomaly.pt")
             data_train_anomaly_fate = datasets.load_from_disk(path)
+
             if args.type_emb == 'mpnet':
                 fate_name_model = "all-mpnet-base-v2"
             elif args.type_emb == 'distilroberta': 
                 fate_name_model = "all-distilroberta-v1"
+            elif args.type_emb == 'e5':
+                fate_name_model =  'intfloat/e5-base-v2'
 
-        elif args.type_emb in ['sentence-bert', 'distilroberta', 'mpnet', 'st5']:
+        if args.type_emb in ['sentence-bert', 'distilroberta', 'mpnet', 'st5', 'e5']:
             if args.type_emb == 'mpnet':
                 embedding_column = 'mpnet_embedding'
             elif args.type_emb == 'distilroberta' or args.type_emb == 'sentence-bert':
                 embedding_column = 'sbert_embeddings'
             elif args.type_emb == 'st5':
                 embedding_column = 'st5_large_embedding'
+            elif args.type_emb == 'e5':
+                embedding_column = 'e5_embedding'
+            
 
-            # X_inlier = Tensor(data_train['sbert_embeddings'][:12000]).to(device)
+            # X_inlier = Tensor(data_train[embedding_column][:1200]).to(device)
             print(embedding_column)
             X_inlier = Tensor(data_train[embedding_column]).to(device)
             print(X_inlier.shape)
@@ -182,7 +188,7 @@ def main(args):
 
             y_test = np.array(data_test['anomaly_class'])
 
-            if args.type_emb in ['sentence-bert', 'distilroberta', 'mpnet', 'st5']:
+            if args.type_emb in ['sentence-bert', 'distilroberta', 'mpnet', 'st5', 'e5']:
                 
                 if args.type_emb == 'mpnet':
                     embedding_column = 'mpnet_embedding'
@@ -190,6 +196,8 @@ def main(args):
                     embedding_column = 'sbert_embeddings'
                 elif args.type_emb == 'st5':
                     embedding_column = 'st5_large_embedding'
+                elif args.type_emb == 'e5':
+                    embedding_column = 'e5_embedding'
                 print(embedding_column)
                 X_test = Tensor(data_test[embedding_column]).to(device)
             
@@ -425,8 +433,8 @@ def main(args):
                 fate_args = {
                     "model_name": fate_name_model,
                     "device": device,
-                    "batch_size": 1024,
-                    "n_epochs": 2,
+                    "batch_size": 512,
+                    "n_epochs": 10,
                     "lr": 1e-3,
                     "include_regularization": True,
                     "top_k": 0.1,
@@ -459,17 +467,17 @@ def main(args):
             if args.fm_trans:
                 fm_trans_config = {
                         'latent_dim': 768,
-                        'hidden_dim': 256,
+                        'hidden_dim': 128,
                         'depth': 8,
                         'n_heads': 8,
                         'freq_embed_size': 128,
                         'lr': 1e-3,
                         'weight_decay': 1e-5,
-                        'lambda_svdd': 1e-2,
+                        'lambda_svdd': 1e-3,
                         'epochs': 350,
                         'lr_epochs': 150,
-                        'batch_size' : 256,
-                        'coef_var': 1,
+                        'batch_size' : 512,
+                        'coef_var': 0.4,
                         'target' : 'gaussian-neigh',
                         'source' : X_inlier,
                         'attentions_mask': None,

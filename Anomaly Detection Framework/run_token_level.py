@@ -18,6 +18,7 @@ from Modelisation.Baselines.CVDD.networks.model_bert import CVDDModel
 from Modelisation.Baselines.FATE.fate import FATEModel
 from Modelisation.Baselines.DATE.date import DATEModel
 from Modelisation.FlowMatching.flow_matching_transformers_toksen import FlowDiTTokSen, FlowMatchingTransformersTokSen
+from Modelisation.FlowMatching.flow_matching_transformers_token import FlowDiTToken, FlowMatchingTransformersToken
 from utils import save_results
 import numpy as np
 import os
@@ -57,11 +58,12 @@ TOKEN_MODEL_CONFIGS = {
         'model_type': 'encoder',
     },
     'modernbert': {
-        'model_name': 'answerdotai/ModernBERT-base',
+        # 'model_name': 'answerdotai/ModernBERT-base',
+        'model_name': 'answerdotai/ModernBERT-large',
         'model_type': 'encoder',
     },
     'qwen': {
-        'model_name': 'Qwen/Qwen2.5-1.5B',
+        'model_name': 'Qwen/Qwen2.5-0.5B',
         'model_type': 'decoder',
     },
     'mistral': {
@@ -73,7 +75,7 @@ TOKEN_MODEL_CONFIGS = {
 def main(args):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    len_seq = 128
+    len_seq = args.seq_len
 
     # topics à traiter
     if args.runall:
@@ -94,7 +96,8 @@ def main(args):
         tokenizer = AutoTokenizer.from_pretrained(cfg['model_name'])
         bertmodel = AutoModel.from_pretrained(
             cfg['model_name'],
-            torch_dtype=torch.float16 if cfg['model_type'] == 'decoder' else torch.float32
+            # torch_dtype=torch.float16 if cfg['model_type'] == 'decoder' else torch.float32
+            torch_dtype=torch.float32
         ).to(device)
         bertmodel.eval()
     else:
@@ -130,6 +133,7 @@ def main(args):
 
         # ── Chargement données train ───────────────────────────
         data_train = load_data_inlier(args.dataset_name, inlier_topic, save_dir, is_infec=False, is_cvdd=True)
+        # data_train = data_train[:10000]
 
         if args.fate:
             path = os.path.join(save_dir, f"{args.dataset_name}/{inlier_topic}/ds_train_{inlier_topic}_anomaly.pt")
@@ -207,8 +211,8 @@ def main(args):
                     "activation": nn.ReLU(), "norm_type": 'l21', "loss_norm_type": 'mse',
                     "if_rsr": True, "enforce_proj": True, "all_alt": True,
                     "learning_rate": 1e-4, "lambda1": 0.1, "lambda2": 0.1,
-                    "epoch_size": 100, "batch_show": 50, "normalize": True,
-                    "bn": False, "seed": 42, 'batch_size': X_inlier.shape[0] // 100
+                    "epoch_size": 50, "batch_show": 50, "normalize": True,
+                    "bn": False, "seed": 42, 'batch_size': X_inlier.shape[0] // 10
                 }
 
                 rsrae_model = RSRAE(rsrae_args)
@@ -298,16 +302,18 @@ def main(args):
             ########################################
 
             if args.cvdd:
+                cfg = TOKEN_MODEL_CONFIGS[args.type_emb]
                 cvdd_args = {
-                    "bert_name": "roberta-base",
-                    "hidden_size": 768,
+                    # "bert_name": "roberta-base",
+                    "bert_name": cfg['model_name'],
+                    "hidden_size": X_inlier.shape[-1],
                     "n_attention_heads": 10,
                     "attention_size": 64,
                     "freeze_bert": True,
                     "lr": 1e-3,
                     "weight_decay": 0,
                     "lambda_p": 0.1,
-                    "n_epochs": 30,
+                    "n_epochs": 20,
                     "batch_size": 256,
                     "device": device
                 }
@@ -335,15 +341,16 @@ def main(args):
             ########################################
 
             if args.date:
+                cfg = TOKEN_MODEL_CONFIGS[args.type_emb]
                 date_args = {
-                    "which_config": "roberta",
-                    "encoder_name": "roberta-base",
+                    "which_config": args.type_emb,
+                    "encoder_name": cfg['model_name'],
                     "K": 20,
                     "lr": 1e-3,
                     "weight_decay": 1e-4,
                     "seq_len": 256,
                     "ratio": 0.50,
-                    "n_epochs": 50,
+                    "n_epochs": 30,
                     "batch_size": 256,
                     "device": device
                 }
@@ -410,40 +417,107 @@ def main(args):
             ######################################################
 
             if args.fm_trans:
-                fm_trans_config = {
-                    'latent_dim': 768,
-                    'hidden_dim': 128,
-                    'depth': 8,
-                    'n_heads': 8,
-                    'freq_embed_size': 128,
-                    'lr': 1e-3,
-                    'weight_decay': 1e-5,
-                    'lambda_svdd': 1e-2,
-                    'epochs': 350,
-                    'lr_epochs': 150,
-                    'batch_size': 512,
-                    'coef_var': 1,
-                    'target': 'gaussian-neigh',
-                    'source': X_inlier,
-                    'attentions_mask': attentions_train_mask,
-                    'device': device
+                # fm_trans_config = {
+                #     'latent_dim': X_inlier.shape[-1],
+                #     'hidden_dim': 128,
+                #     'depth': 8,
+                #     'n_heads': 8,
+                #     'freq_embed_size': 128,
+                #     'lr': 1e-3,
+                #     'weight_decay': 1e-3,
+                #     'lambda_svdd': 1e-2,
+                #     'epochs': 350,
+                #     'lr_epochs': 150,
+                #     'batch_size': args.batch_size,
+                #     'coef_var': 0.4,
+                #     'target': 'gaussian-neigh',
+                #     'source': X_inlier,
+                #     'attentions_mask': attentions_train_mask,
+                #     'device': device
+                # }
+
+                # flowmodel = FlowDiTTokSen(
+                #     latent_dim=fm_trans_config['latent_dim'],
+                #     hidden_dim=fm_trans_config['hidden_dim'],
+                #     depth=fm_trans_config['depth'],
+                #     n_heads=fm_trans_config['n_heads']
+                # ).to(device)
+
+                # fm_transformer = FlowMatchingTransformersTokSen(flowmodel, fm_trans_config)
+
+                # taac = time.time()
+                # fm_transformer.train(True)
+                # tiic = time.time()
+                # print(f"\nFM Transformer finishing... after {(tiic-taac)/60:.3f} mn")
+
+                # auc_fm_trans, fpr95_fm_trans, ap_fm_trans = fm_transformer.test(X_test, y_test, attentions_test_mask, type='norm-centroid', n_steps=10)
+                # print(f"FM --> AUC: {auc_fm_trans:.4f} | FPR@95: {fpr95_fm_trans:.4f} | AP: {ap_fm_trans:.4f}\n")
+
+                # list_auc_fm_trans.append(auc_fm_trans)
+                # list_fpr_fm_trans.append(fpr95_fm_trans)
+                # list_ap_fm_trans.append(ap_fm_trans)
+                # list_time_fm_trans.append((tiic-taac))
+
+
+                nb_random_samples = 1000
+
+                config = {
+                        'latent_dim': X_inlier.shape[-1],
+                        'hidden_dim': 128,
+                        'depth': 8,
+                        'n_heads': 8,
+                        'mlp_ratio': 4.0,
+                        'n_patches': 1,
+                        'freq_embed_size': 128,
+                        'lr': 1e-3,
+                        'weight_decay': 1e-3,
+                        'lambda_svdd': 1e-2,
+                        'lambda_push': 0,
+                        'lambda_margin': 0,
+                        'epochs': 200,
+                        'lr_epochs': 90,
+                        'warmup_epochs': -1,
+                        'grad_clip': 0.5,
+                        'flow_type': 'linear',
+                        'sigma': 0.1,
+                        'batch_size' : args.batch_size,
+                        'lambda_reg_angle': None,
+                        'lambda_reg_kl': None,
+                        'n_step_euler_integrate' : 1,
+                        'coef_var': 1,
+                        'rate_neg_batch':1.0,
+                        'sig_levels_neg' : [0.5, 0.7],
+                        'target' : 'gaussian-neigh',
+                        # 'source' : X_inlier.to(device)
+                        'source' : X_inlier.to(device)
+                        
+                }
+                noise_is_target = True
+                naming_dis = {
+                    'target' : config['target'] if noise_is_target else 'SBert',
+                    'source' : config['source'] if not noise_is_target else 'SBert'
                 }
 
-                flowmodel = FlowDiTTokSen(
-                    latent_dim=fm_trans_config['latent_dim'],
-                    hidden_dim=fm_trans_config['hidden_dim'],
-                    depth=fm_trans_config['depth'],
-                    n_heads=fm_trans_config['n_heads']
-                ).to(device)
+                flowmodel = FlowDiTToken(
+                            latent_dim=config['latent_dim'],
+                            hidden_dim=config['hidden_dim'],
+                            depth=config['depth'],
+                            n_heads=config['n_heads']
+                    ).to(device)
 
-                fm_transformer = FlowMatchingTransformersTokSen(flowmodel, fm_trans_config)
+                fm_transformer = FlowMatchingTransformersToken(flowmodel, config['source'], config['target'], config, noise_is_target=noise_is_target, rectified=None)
 
                 taac = time.time()
-                fm_transformer.train(True)
+                _, _, _ = fm_transformer.train(attentions_train_mask.to(device), True)
                 tiic = time.time()
                 print(f"\nFM Transformer finishing... after {(tiic-taac)/60:.3f} mn")
 
-                auc_fm_trans, fpr95_fm_trans, ap_fm_trans = fm_transformer.test(X_test, y_test, attentions_test_mask, type='norm-centroid', n_steps=10)
+
+                x_final, _, _ = fm_transformer.euler_integrate(X_test.to(device), attentions_test_mask.to(device), 8, False)
+
+                x_1_test = x_final.cpu().numpy()
+                scores = np.sum((x_1_test - fm_transformer.centroid.repeat(x_1_test.shape[0],1).cpu().numpy()) ** 2, axis=1)
+                auc_fm_trans, fpr95_fm_trans, ap_fm_trans = ev.evaluation(y_test, scores)
                 print(f"FM --> AUC: {auc_fm_trans:.4f} | FPR@95: {fpr95_fm_trans:.4f} | AP: {ap_fm_trans:.4f}\n")
 
                 list_auc_fm_trans.append(auc_fm_trans)
@@ -458,7 +532,7 @@ def main(args):
                 dataset_name=args.dataset_name, inlier_topic=inlier_topic, type_emb=args.type_emb, ad_model="flow-matching-Transformers-Comp",
                 auc_mean=np.mean(list_auc_fm_trans), ap_mean=np.mean(list_ap_fm_trans), fpr_mean=np.mean(list_fpr_fm_trans),
                 auc_std=np.std(list_auc_fm_trans), ap_std=np.std(list_ap_fm_trans), fpr_std=np.std(list_fpr_fm_trans),
-                train_time=np.mean(list_time_fm_trans), nu=args.nu, overwrite='naive'
+                train_time=np.mean(list_time_fm_trans), nu=args.nu, overwrite='smart'
             )
 
         if args.ae:
@@ -536,6 +610,8 @@ if __name__ == "__main__":
     )
     parser.add_argument("--nu",      type=float, default=0.0)
     parser.add_argument("--nb_runs", type=int,   default=5)
+    parser.add_argument("--seq_len", type=int,   default=128)
+    parser.add_argument("--batch_size", type=int,   default=128)
 
     parser.add_argument("--fm",       action="store_true")
     parser.add_argument("--fm_trans", action="store_true")

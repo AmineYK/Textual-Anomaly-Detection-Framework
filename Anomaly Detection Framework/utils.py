@@ -18,7 +18,7 @@ BASE_RESULTS_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/A
 OUTPUT_LATEX_DIR = "/home/2017025/ayouce01/Textual-Anomaly-Detection-Framework/Anomaly Detection Framework/Results/latex_tables"
 
 DATASETS = ["reuters","20newsgroups", "agnews", "dbpedia14", "sms", "enron", "sst2", "imdb", "m4"]
-ENCODING_TYPES = ["sentence-bert", "distilroberta", "mpnet", "st5" ,"bert"]
+ENCODING_TYPES = ["sentence-bert", "distilroberta", "mpnet", "st5", "e5" ,"roberta", "modernbert", "qwen"]
 NU_VALUES = [0.0, 0.1]
 
 os.makedirs(OUTPUT_LATEX_DIR, exist_ok=True)
@@ -67,7 +67,7 @@ MODEL_LATEX_BY_ENCODING = {
         # "flow-matching-Transformers-PP": "\\textbf{TranFM-PP}"
     },
 
-    "bert": {
+    "roberta": {
         "ocsvm": "OCSVM",
         "AE": "AE",
         "RSRAE": "RSRAE",
@@ -93,12 +93,39 @@ MODEL_LATEX_BY_ENCODING = {
         "FATE": "FATE",
         "flow-matching-Transformers-Comp": "FMTToken-Sentence"
     },
+
+    "e5": {
+        "ocsvm": "OCSVM",
+        "AE": "AE",
+        "RSRAE": "RSRAE",
+        "TCCM": "TCCM",
+        "FATE": "FATE",
+        "flow-matching-Transformers-Comp": "FMTToken-Sentence"
+    },
     "st5": {
         "ocsvm": "OCSVM",
         "AE": "AE",
         "RSRAE": "RSRAE",
         "TCCM": "TCCM",
         "FATE": "FATE",
+        "flow-matching-Transformers-Comp": "FMTToken-Sentence"
+    },
+     "modernbert": {
+        "ocsvm": "OCSVM",
+        "AE": "AE",
+        "RSRAE": "RSRAE",
+        "TCCM": "TCCM",
+        "DATE": "DATE",
+        "CVDD": "CVDD",
+        "flow-matching-Transformers-Comp": "FMTToken-Sentence"
+    },
+    "qwen": {
+        "ocsvm": "OCSVM",
+        "AE": "AE",
+        "RSRAE": "RSRAE",
+        "TCCM": "TCCM",
+        "DATE": "DATE",
+        "CVDD": "CVDD",
         "flow-matching-Transformers-Comp": "FMTToken-Sentence"
     }
 }
